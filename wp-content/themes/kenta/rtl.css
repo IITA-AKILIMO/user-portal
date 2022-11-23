@@ -1,0 +1,102 @@
+/**
+Theme Name: Kenta
+
+Adding support for languages written in a Right To Left (RTL) direction is easy,
+it's just a matter of overwriting all the horizontal positioning attributes
+of your CSS stylesheet in a separate stylesheet file named rtl.css.
+
+https://codex.wordpress.org/Right-to-Left_Language_Support
+*/
+
+/* Reset */
+body {
+    direction: rtl;
+    unicode-bidi: embed;
+}
+
+/* Accessibility */
+.screen-reader-text:focus {
+    left: auto;
+    right: 5px;
+}
+
+/* Text align */
+.text-left {
+    text-align: right;
+}
+
+.text-right {
+    text-align: left;
+}
+
+/* Float */
+.float-right {
+    float: left;
+}
+
+.float-left {
+    float: right;
+}
+
+/* Wordpress alignment */
+.alignleft {
+    float: right;
+    margin-left: 24px;
+    margin-right: 0;
+}
+
+.alignright {
+    float: left;
+    margin-right: 24px;
+    margin-left: 0;
+}
+
+.kenta-no-sidebar [data-align="full"],
+.kenta-no-sidebar .alignfull {
+    margin-left: auto !important;
+    margin-right: calc(50% - 50vw) !important;
+}
+
+@media screen and (min-width: 1600px) {
+    .kenta-has-site-wrap .kenta-no-sidebar [data-align="full"],
+    .kenta-has-site-wrap .kenta-no-sidebar .alignfull {
+        width: var(--kenta-site-wrap-width, 1600px);
+        max-width: var(--kenta-site-wrap-width, 1600px);
+        margin-left: auto !important;
+        margin-right: calc(50% - var(--kenta-site-wrap-width, 1600px) / 2) !important;
+    }
+}
+
+/* Generic builder */
+.kenta-builder-column-desktop-dir-row > [data-builder-element],
+.kenta-builder-column-tablet-dir-row > [data-builder-element],
+.kenta-builder-column-mobile-dir-row > [data-builder-element] {
+    margin-right: unset;
+    margin-left: var(--kenta-builder-elements-gap, 12px);
+}
+
+.kenta-builder-column-desktop-dir-row > [data-builder-element]:last-child,
+.kenta-builder-column-tablet-dir-row > [data-builder-element]:last-child,
+.kenta-builder-column-mobile-dir-row > [data-builder-element]:last-child {
+    margin-right: unset;
+    margin-left: 0;
+}
+
+/* Menu Element */
+.kenta-menu.kenta-menu-has-arrow .menu-item-has-children > a > .kenta-menu-icon {
+    margin-left: 0;
+    margin-right: 0.5em;
+}
+
+/* Sidebars */
+@media (min-width: 1024px) {
+    .kenta-right-sidebar .kenta-sidebar {
+        margin-left: auto;
+        margin-right: var(--kenta-sidebar-gap, 0);
+    }
+
+    .kenta-left-sidebar .kenta-sidebar {
+        margin-right: auto;
+        margin-left: var(--kenta-sidebar-gap, 0);
+    }
+}

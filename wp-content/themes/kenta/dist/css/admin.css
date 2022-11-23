@@ -1,0 +1,326 @@
+/**
+    Color palettes
+ */
+/**
+    Spacing
+ */
+.kenta-button svg {
+  margin-right: 6px;
+}
+
+.kenta-admin-page .kenta-button,
+.kenta-icon-button,
+.kenta-button {
+  display: inline-block;
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+  outline: none;
+  padding: 0.75em 1.25em;
+  cursor: pointer;
+  border-radius: 2px;
+  line-height: 16px;
+  font-size: 14px;
+  vertical-align: center;
+  transition: all ease 0.2s;
+  background: var(--kenta-button-background-initial);
+  color: var(--kenta-button-text-initial);
+  border: 1px solid var(--kenta-button-border-initial);
+  text-decoration: none;
+}
+.kenta-admin-page .kenta-button *,
+.kenta-icon-button *,
+.kenta-button * {
+  vertical-align: middle;
+}
+.kenta-admin-page .kenta-button svg,
+.kenta-icon-button svg,
+.kenta-button svg {
+  width: 16px;
+  height: 16px;
+  fill: var(--kenta-button-text-initial);
+}
+.kenta-admin-page .kenta-button:focus, .kenta-admin-page .kenta-button:hover,
+.kenta-icon-button:focus,
+.kenta-icon-button:hover,
+.kenta-button:focus,
+.kenta-button:hover {
+  background: var(--kenta-button-background-hover);
+  color: var(--kenta-button-text-hover);
+  border: 1px solid var(--kenta-button-border-hover);
+}
+.kenta-admin-page .kenta-button:focus svg, .kenta-admin-page .kenta-button:hover svg,
+.kenta-icon-button:focus svg,
+.kenta-icon-button:hover svg,
+.kenta-button:focus svg,
+.kenta-button:hover svg {
+  fill: var(--kenta-button-text-hover);
+}
+
+.kenta-icon-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border-radius: 9999px;
+}
+
+.kenta-button-solid {
+  --kenta-button-text-initial: #ffffff;
+  --kenta-button-text-hover: #ffffff;
+  --kenta-button-background-initial: #0258c7;
+  --kenta-button-background-hover: #0e80e8;
+  --kenta-button-border-initial: #0258c7;
+  --kenta-button-border-hover: #0e80e8;
+}
+
+.kenta-button-outline {
+  --kenta-button-text-initial: #0258c7;
+  --kenta-button-text-hover: #ffffff;
+  --kenta-button-background-initial: transparent;
+  --kenta-button-background-hover: #0e80e8;
+  --kenta-button-border-initial: #0258c7;
+  --kenta-button-border-hover: #0e80e8;
+}
+
+.kenta-theme-notice {
+  border-left-color: #0258c7;
+  padding: 0;
+  display: flex;
+}
+.kenta-theme-notice .kenta-theme-notice-logo,
+.kenta-theme-notice .kcmp-upgrade-message,
+.kenta-theme-notice .kenta-theme-welcome-message {
+  padding: 24px;
+}
+.kenta-theme-notice .kenta-theme-notice-logo h1,
+.kenta-theme-notice .kcmp-upgrade-message h1,
+.kenta-theme-notice .kenta-theme-welcome-message h1 {
+  padding: 0;
+}
+.kenta-theme-notice .kenta-theme-notice-logo p,
+.kenta-theme-notice .kcmp-upgrade-message p,
+.kenta-theme-notice .kenta-theme-welcome-message p {
+  font-size: 1rem;
+}
+.kenta-theme-notice .kenta-theme-notice-logo {
+  background-color: #f2f8ff;
+}
+.kenta-theme-notice.notice-error {
+  border-color: #d63638;
+}
+.kenta-theme-notice.notice-error .kenta-theme-notice-logo {
+  background-color: #fbf3f3;
+}
+.kenta-theme-notice .action-buttons .kenta-button {
+  display: inline-block;
+  margin-right: 12px;
+}
+.kenta-theme-notice .action-buttons .kenta-button:last-of-type {
+  margin-right: 0;
+}
+.kenta-theme-notice h1 {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+.kenta-theme-notice p {
+  margin-bottom: 12px;
+  line-height: 1.5;
+}
+
+.kenta-admin-page {
+  color: #181f28;
+  background: #f8fafc;
+  box-shadow: 0 0 10px 0 #dedede;
+  border-radius: 3px;
+}
+.kenta-admin-page .notice {
+  display: none;
+}
+.kenta-admin-page .container {
+  max-width: 100%;
+  margin: 0 auto;
+}
+.kenta-admin-page h1, .kenta-admin-page h2, .kenta-admin-page h3, .kenta-admin-page h4, .kenta-admin-page h5, .kenta-admin-page h6 {
+  color: #334155;
+}
+.kenta-admin-page a {
+  color: #181f28;
+  text-decoration: underline;
+  outline-color: #0258c7;
+}
+.kenta-admin-page a:focus {
+  box-shadow: 0 0 1px 0 #0258c7;
+}
+.kenta-admin-page a:hover {
+  color: #0258c7;
+}
+.kenta-admin-page, .kenta-admin-page div, .kenta-admin-page a {
+  box-sizing: border-box;
+}
+.kenta-admin-page svg {
+  width: 14px;
+  height: 14px;
+  fill: #181f28;
+}
+.kenta-admin-page .page-body {
+  padding: 24px;
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: -48px;
+  margin-bottom: 48px;
+  background-color: #ffffff;
+  border-radius: 4px;
+  box-shadow: 0 0 3px 0 #e2e8f0;
+}
+.kenta-admin-page .page-body .page-sidebar,
+.kenta-admin-page .page-body .page-content {
+  flex-shrink: 0;
+  width: 100%;
+}
+.kenta-admin-page .page-body .page-sidebar {
+  padding: 12px;
+}
+.kenta-admin-page .customizer-items {
+  display: flex;
+  flex-wrap: wrap;
+}
+.kenta-admin-page .customizer-items .customizer-item-wrap {
+  width: 50%;
+  flex-shrink: 0;
+  padding: 12px;
+}
+.kenta-admin-page .customizer-items .customizer-item-wrap .customizer-item {
+  border: 1px solid #e2e8f0;
+  border-radius: 2px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+  font-weight: 500;
+  text-decoration: none;
+  font-size: 15px;
+  height: 100%;
+}
+.kenta-admin-page .customizer-items .customizer-item-wrap .customizer-item:hover {
+  border-color: #0258c7;
+}
+.kenta-admin-page .customizer-items .customizer-item-wrap .customizer-item:hover svg {
+  fill: #0258c7;
+}
+.kenta-admin-page .customizer-items .customizer-item-wrap .customizer-item > * {
+  margin-bottom: 24px;
+}
+.kenta-admin-page .customizer-items .customizer-item-wrap .customizer-item > *:last-child {
+  margin-bottom: 0;
+}
+.kenta-admin-page .customizer-items .customizer-item-wrap .customizer-item .customizer-item-icon svg {
+  width: 36px;
+  height: 36px;
+}
+.kenta-admin-page .page-widgets {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+}
+.kenta-admin-page .page-widgets .page-widget {
+  padding: 24px;
+  border-bottom: 1px solid #e2e8f0;
+}
+.kenta-admin-page .page-widgets .page-widget:last-child {
+  border-bottom: none;
+}
+.kenta-admin-page .page-widgets .page-widget .widget-title {
+  margin-top: 0;
+}
+.kenta-admin-page .page-widgets .page-widget .links .link-item {
+  display: flex;
+  align-items: center;
+  padding: 4px 0;
+}
+.kenta-admin-page .page-widgets .page-widget .links .link-item svg {
+  width: 16px;
+  height: 16px;
+  margin-right: 12px;
+}
+.kenta-admin-page .page-header {
+  background-color: #181f28;
+  padding: 48px 24px 96px 24px;
+}
+.kenta-admin-page .page-header .page-header-content {
+  padding: 0 36px;
+  text-align: center;
+}
+.kenta-admin-page .page-header .page-header-content .nav-tab-wrapper {
+  border-bottom: none !important;
+}
+.kenta-admin-page .page-header .page-header-content a {
+  text-decoration: none;
+}
+.kenta-admin-page .page-header .kenta-logo {
+  width: 72px;
+  height: 72px;
+  margin-bottom: 24px;
+}
+.kenta-admin-page .page-header h1, .kenta-admin-page .page-header p {
+  color: #ffffff;
+}
+.kenta-admin-page .page-header h1 {
+  font-size: 28px;
+  margin-top: 0;
+  margin-bottom: 18px;
+}
+.kenta-admin-page .page-header p {
+  opacity: 0.7;
+  font-size: 18px;
+  font-weight: 500;
+}
+.kenta-admin-page .page-footer {
+  background-color: #f8fafc;
+  border-top: 1px solid #f1f5f9;
+}
+.kenta-admin-page .upgrade-tips {
+  padding: 48px 24px;
+  text-align: center;
+  font-weight: 500;
+  max-width: 720px;
+  margin: 0 auto;
+}
+.kenta-admin-page .upgrade-tips h2 {
+  font-size: 28px;
+  font-weight: 700;
+  margin-top: 0;
+}
+.kenta-admin-page .upgrade-tips p {
+  font-size: 16px;
+  margin-bottom: 1em;
+}
+.kenta-admin-page .upgrade-tips code {
+  background-color: #0258c7;
+  color: #ffffff;
+  border-radius: 3px;
+}
+.kenta-admin-page .upgrade-tips .kenta-button {
+  margin-top: 2em;
+  padding: 12px 48px;
+  text-transform: uppercase;
+}
+@media screen and (min-width: 1024px) {
+  .kenta-admin-page .page-body .page-content {
+    width: 70%;
+  }
+  .kenta-admin-page .page-body .page-sidebar {
+    width: 30%;
+  }
+}
+@media screen and (min-width: 1366px) {
+  .kenta-admin-page .container {
+    max-width: 1280px;
+  }
+  .kenta-admin-page .customizer-items .customizer-item-wrap {
+    width: 25%;
+  }
+}

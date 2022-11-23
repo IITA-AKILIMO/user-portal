@@ -1,0 +1,169 @@
+.kenta-pagination-loader {
+  width: 48px;
+  height: 48px;
+  position: relative;
+  display: none;
+}
+
+.kenta-pagination-loader::after,
+.kenta-pagination-loader::before {
+  content: "";
+  box-sizing: border-box;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--kb-primary-color);
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform: scale(0);
+  opacity: 0;
+  -webkit-animation: paginationLoaderAnimation 1.4s linear infinite;
+          animation: paginationLoaderAnimation 1.4s linear infinite;
+}
+
+.kenta-pagination-loader::after {
+  -webkit-animation-delay: 0.7s;
+          animation-delay: 0.7s;
+}
+
+@-webkit-keyframes paginationLoaderAnimation {
+  0% {
+    transform: scale(0);
+    opacity: 0.65;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0;
+  }
+}
+
+@keyframes paginationLoaderAnimation {
+  0% {
+    transform: scale(0);
+    opacity: 0.65;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0;
+  }
+}
+.woocommerce-pagination .kenta-load-more-btn,
+nav.woocommerce-pagination .kenta-load-more-btn,
+.kenta-pagination .kenta-load-more-btn {
+  border-radius: var(--kenta-pagination-button-radius);
+  padding: var(--kenta-pagination-load-more-padding);
+  background-color: var(--kenta-pagination-load-more-button-initial-color);
+  color: var(--kenta-pagination-load-more-text-initial-color);
+  transition: all ease 0.25s;
+}
+.woocommerce-pagination .kenta-load-more-btn:hover,
+nav.woocommerce-pagination .kenta-load-more-btn:hover,
+.kenta-pagination .kenta-load-more-btn:hover {
+  color: var(--kenta-pagination-load-more-text-hover-color);
+  background-color: var(--kenta-pagination-load-more-button-hover-color);
+}
+.woocommerce-pagination .kenta-pagination-finish,
+nav.woocommerce-pagination .kenta-pagination-finish,
+.kenta-pagination .kenta-pagination-finish {
+  display: none;
+}
+
+.kenta-cookies-consent-container {
+  position: fixed;
+  width: 100%;
+  left: 0;
+  bottom: 0;
+}
+.kenta-cookies-consent-container .kenta-cookies-consent-wrap {
+  position: relative;
+  max-width: var(--kenta-site-wrap-width, inherit);
+  margin: 0 auto;
+}
+.kenta-cookies-consent-container .kenta-cookies-consent {
+  --kenta-button-padding: 0.65em 1.25em;
+  --kenta-button-radius: 2px;
+  padding: 24px;
+  font-size: 0.875rem;
+  position: absolute;
+  bottom: -12px;
+  opacity: 0;
+  pointer-events: none;
+  transition: all ease 0.35s;
+}
+.kenta-cookies-consent-container .kenta-cookies-consent .kenta-cookies-consent-text {
+  line-height: 1.5;
+  margin-bottom: 12px;
+}
+.kenta-cookies-consent-container .kenta-cookies-consent .kenta-cookies-consent-buttons .kenta-button {
+  display: inline-block;
+  margin-right: 6px;
+}
+.kenta-cookies-consent-container .kenta-cookies-consent .kenta-cookies-consent-buttons .kenta-button:last-of-type {
+  margin-right: 0;
+}
+.kenta-cookies-consent-container .kenta-cookies-consent.full-width {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+.kenta-cookies-consent-container .kenta-cookies-consent.full-width .kenta-cookies-consent-text {
+  margin-bottom: 0;
+  margin-right: 12px;
+}
+.kenta-cookies-consent-container .kenta-cookies-consent.left-bottom, .kenta-cookies-consent-container .kenta-cookies-consent.right-bottom {
+  border-radius: 2px;
+  max-width: var(--kenta-cookies-consent-width, 400px);
+}
+.kenta-cookies-consent-container .kenta-cookies-consent.left-bottom {
+  left: 24px;
+}
+.kenta-cookies-consent-container .kenta-cookies-consent.right-bottom {
+  right: 24px;
+}
+.kenta-cookies-consent-container .kenta-cookies-consent.right-bottom .kenta-cookies-consent-buttons {
+  text-align: right;
+}
+.kenta-cookies-consent-container.active .kenta-cookies-consent {
+  opacity: 1;
+  pointer-events: auto;
+  bottom: 0;
+}
+.kenta-cookies-consent-container.active .kenta-cookies-consent.left-bottom, .kenta-cookies-consent-container.active .kenta-cookies-consent.right-bottom {
+  bottom: 24px;
+}
+
+.kenta-header-row {
+  position: relative;
+}
+.kenta-header-row .container {
+  position: relative;
+  z-index: 9;
+}
+
+.kenta-overlay {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.kenta-data-time-element {
+  display: flex;
+  align-items: center;
+}
+.kenta-data-time-element .date {
+  color: var(--kenta-data-time-text-color);
+}
+.kenta-data-time-element .icon {
+  margin-right: var(--kenta-data-time-icon-spacing, 6px);
+  color: var(--kenta-data-time-icon-color);
+  font-size: var(--kenta-data-time-icon-size);
+}
+.kenta-data-time-element .icon svg {
+  width: var(--kenta-data-time-icon-size);
+  height: var(--kenta-data-time-icon-size);
+  fill: var(--kenta-data-time-icon-color);
+}
