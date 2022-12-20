@@ -772,6 +772,9 @@ select {
 div:not(.is-style-outline) > .wp-block-button__link,
 .wp-block-button.is-style-outline .wp-block-button__link,
 .yuki-form [type=submit],
+.yuki-article-content [type=submit],
+.yuki-raw-html [type=submit],
+.yuki-widget [type=submit],
 .yuki-button {
   display: inline-flex;
   cursor: pointer;
@@ -805,6 +808,9 @@ div:not(.is-style-outline) > .wp-block-button__link,
 div:not(.is-style-outline) > .wp-block-button__link:disabled,
 .wp-block-button.is-style-outline .wp-block-button__link:disabled,
 .yuki-form [type=submit]:disabled,
+.yuki-article-content [type=submit]:disabled,
+.yuki-raw-html [type=submit]:disabled,
+.yuki-widget [type=submit]:disabled,
 .yuki-button:disabled {
   cursor: not-allowed;
   opacity: 0.65;
@@ -826,6 +832,9 @@ div:not(.is-style-outline) > .wp-block-button__link:disabled,
 div:not(.is-style-outline) > .wp-block-button__link:not(:disabled):hover,
 .wp-block-button.is-style-outline .wp-block-button__link:not(:disabled):hover,
 .yuki-form [type=submit]:not(:disabled):hover,
+.yuki-article-content [type=submit]:not(:disabled):hover,
+.yuki-raw-html [type=submit]:not(:disabled):hover,
+.yuki-widget [type=submit]:not(:disabled):hover,
 .yuki-button:not(:disabled):hover {
   color: var(--yuki-button-text-hover-color);
   background-color: var(--yuki-button-hover-color);

@@ -16,9 +16,9 @@ class Route {
 		// get starter sites
 		$router->read( '/starter/demos', [ Route::class, 'demos' ] );
 		// import template
-		$router->create('/starter/demos', [Route::class, 'import']);
+		$router->create( '/starter/demos', [ Route::class, 'import' ] );
 		// install plugin
-		$router->create('/starter/plugins', [ Route::class, 'install_plugin' ] );
+		$router->create( '/starter/plugins', [ Route::class, 'install_plugin' ] );
 
 		$router->register();
 	}
@@ -57,18 +57,20 @@ class Route {
 	 * @return @return \WP_Error|\WP_HTTP_Response|\WP_REST_Response
 	 */
 	public static function import( $request ) {
-		$slug = $request->get_param('slug');
-		$type = $request->get_param('type');
+		$slug = $request->get_param( 'slug' );
+		$type = $request->get_param( 'type' );
 
 		// site_settings
-		if (!in_array($type, ['content', 'customizer', 'widgets', 'site_settings'])) {
+		if ( ! in_array( $type, [ 'content', 'customizer', 'widgets', 'site_settings' ] ) ) {
 			return rest_ensure_response(
-				self::handle_wp_error(new \WP_Error(422, __('Import type error')))
+				self::handle_wp_error( new \WP_Error( 422, __( 'Import type error' ) ) )
 			);
 		}
 
+		switch_theme( kcmp_current_template() );
+
 		return rest_ensure_response(
-			self::handle_wp_error(kcmp('demos')->import($slug, [$type]))
+			self::handle_wp_error( kcmp( 'demos' )->import( $slug, [ $type ] ) )
 		);
 	}
 
@@ -78,19 +80,19 @@ class Route {
 	 * @return \WP_Error|\WP_HTTP_Response|\WP_REST_Response
 	 */
 	public static function install_plugin( $request ) {
-		$slug = $request->get_param('slug');
-		$plugin = $request->get_param('plugin');
+		$slug   = $request->get_param( 'slug' );
+		$plugin = $request->get_param( 'plugin' );
 
 		return rest_ensure_response(
-			self::handle_wp_error(kcmp_install_plugin($slug, $plugin))
+			self::handle_wp_error( kcmp_install_plugin( $slug, $plugin ) )
 		);
 	}
 
-	protected static function handle_wp_error($response) {
-		
-		if (is_wp_error( $response )) {
+	protected static function handle_wp_error( $response ) {
+
+		if ( is_wp_error( $response ) ) {
 			$response = [
-				'errorCode' => $response->get_error_code(),
+				'errorCode'    => $response->get_error_code(),
 				'errorMessage' => $response->get_error_message(),
 			];
 		}

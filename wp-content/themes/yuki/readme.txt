@@ -1,10 +1,10 @@
 === Yuki ===
-Contributors: ibllex, freemius
+Contributors: ibllex
 Author: WP Moose
 Requires at least: WordPress 5.2+
 Tested up to: WordPress 6.1
 Requires PHP: 7.2
-Stable tag: 1.2.6
+Stable tag: 1.2.7
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Tags: news, blog, portfolio, grid-layout, one-column, two-columns, three-columns, four-columns, left-sidebar, right-sidebar, block-styles, custom-background, custom-colors, custom-header, custom-logo, custom-menu, editor-style, featured-image-header, featured-images, footer-widgets, full-width-template, rtl-language-support, sticky-post, threaded-comments, theme-options, translation-ready, wide-blocks
@@ -75,6 +75,13 @@ GPL v2 - src/lotta-framework/LICENSE
 Credits - src/lotta-framework/README.md
 
 == Changelog ==
+
+= 1.2.7 =
+
+* Add: WPML & Polylang support (Premium)
+* Add: Shortcode support in elements
+* Fix: Builder off canvas area can not edit after empty
+* Ref: Security updates
 
 = 1.2.6 =
 

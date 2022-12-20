@@ -353,4 +353,34 @@ class Utils {
 	public static function the_customizer_url( $location ) {
 		echo esc_url( self::customizer_url( $location ) );
 	}
+
+	/**
+	 * Register translation string
+	 *
+	 * @param $str
+	 * @param $domain
+	 */
+	public static function register_translate_string( $str, $domain ) {
+		if ( function_exists( 'pll_register_string' ) ) {
+			pll_register_string( $domain, $str, self::app()->id() );
+		} else {
+			do_action( 'wpml_register_single_string', self::app()->id(), $domain, $str );
+		}
+	}
+
+	/**
+	 * Get translate string
+	 *
+	 * @param string $str
+	 * @param string $domain
+	 *
+	 * @return mixed
+	 */
+	public static function __( $str, $domain ) {
+		if ( function_exists( 'pll__' ) ) {
+			return pll__( $str );
+		}
+
+		return apply_filters( 'wpml_translate_single_string', $str, self::app()->id(), $domain );
+	}
 }

@@ -11,7 +11,6 @@ use LottaFramework\Customizer\Controls\Select;
 use LottaFramework\Customizer\Controls\Separator;
 use LottaFramework\Customizer\Controls\Slider;
 use LottaFramework\Customizer\Controls\Tabs;
-use LottaFramework\Customizer\PageBuilder\Element;
 use LottaFramework\Facades\Css;
 use LottaFramework\Utils;
 
@@ -21,11 +20,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 if ( ! class_exists( 'Yuki_Magazine_Element' ) ) {
 
-	class Yuki_Magazine_Element extends Element {
+	class Yuki_Magazine_Element extends Yuki_Posts_Base_Element {
 
-		use Yuki_Post_Query;
-		use Yuki_Post_Structure;
-		use Yuki_Post_Card;
 		use Yuki_Password_Protected;
 
 		/**
@@ -272,13 +268,9 @@ if ( ! class_exists( 'Yuki_Magazine_Element' ) ) {
 			}
 
 			// Get Posts
-			$style        = $this->get( 'grid-layout', $settings );
-			$count        = Yuki_Magazine_Layout::all( $style )['count'] ?? 4;
-			$posts        = new \WP_Query( $this->getPostsQueryArgs( $count, $settings ) );
-			$structure    = $this->layers( 'structure', $settings );
-			$metas        = $this->layers( 'yuki_el_metas', $settings );
-			$title_tag    = $this->get( 'yuki_el_title_tag', $settings );
-			$excerpt_type = $this->get( 'yuki_el_excerpt_type', $settings );
+			$style = $this->get( 'grid-layout', $settings );
+			$count = Yuki_Magazine_Layout::all( $style )['count'] ?? 4;
+			$posts = new \WP_Query( $this->getPostsQueryArgs( $count, $settings ) );
 
 			?>
             <div <?php $this->print_attribute_string( $id ); ?>>
@@ -302,13 +294,7 @@ if ( ! class_exists( 'Yuki_Magazine_Element' ) ) {
                             <div class="yuki-post-item-content-wrapper">
                                 <div class="yuki-post-item-content yuki-scroll-reveal">
 									<?php
-									yuki_post_structure( 'el', $structure, $metas, [
-										'title_link'   => true,
-										'title_tag'    => $title_tag,
-										'excerpt_type' => $excerpt_type,
-										'options'      => $this,
-										'settings'     => $settings,
-									] );
+									yuki_post_structure( ...$this->get_post_structure_args( $id, $settings ) );
 									?>
                                 </div>
                             </div>

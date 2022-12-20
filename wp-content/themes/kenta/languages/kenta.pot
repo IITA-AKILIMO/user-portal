@@ -2,14 +2,14 @@
 # This file is distributed under the GNU General Public License v2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: Kenta 1.0.9\n"
+"Project-Id-Version: Kenta 1.0.10\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/theme/kenta\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2022-11-17T09:56:48+00:00\n"
+"POT-Creation-Date: 2022-11-27T08:32:04+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.7.1\n"
 "X-Domain: kenta\n"
@@ -111,7 +111,7 @@ msgstr ""
 
 #: inc/builder/class-builder-column.php:184
 #: inc/customizer/class-archive-section.php:167
-#: inc/customizer/class-single-post-section.php:131
+#: inc/customizer/class-single-post-section.php:167
 msgid "Padding"
 msgstr ""
 
@@ -207,11 +207,11 @@ msgstr ""
 #: inc/elements/class-logo-element.php:102
 #: inc/elements/class-menu-element.php:202
 #: inc/elements/class-search-element.php:82
-#: inc/elements/class-socials-element.php:87
 #: inc/elements/class-trigger-element.php:48
 #: inc/extensions/class-scroll-top-extension.php:166
 #: inc/traits/trait-post-structure.php:118
 #: inc/traits/trait-post-structure.php:358
+#: inc/traits/trait-socials-controls.php:69
 #: inc/traits/trait-widgets-controls.php:97
 msgid "Style"
 msgstr ""
@@ -311,8 +311,8 @@ msgstr ""
 #: inc/elements/class-button-element.php:42
 #: inc/elements/class-collapsable-menu-element.php:65
 #: inc/elements/class-logo-element.php:38
-#: inc/elements/class-socials-element.php:86
 #: inc/extensions/class-scroll-top-extension.php:110
+#: inc/traits/trait-socials-controls.php:68
 #: inc/traits/trait-widgets-controls.php:96
 msgid "Content"
 msgstr ""
@@ -331,12 +331,12 @@ msgstr ""
 #: inc/customizer/class-header-section.php:142
 #: inc/customizer/class-header-section.php:148
 #: inc/customizer/class-header-section.php:154
-#: inc/customizer/class-single-post-section.php:108
+#: inc/customizer/class-single-post-section.php:144
 #: inc/elements/class-collapsable-menu-element.php:117
 #: inc/elements/class-copyright-element.php:48
 #: inc/elements/class-logo-element.php:121
 #: inc/elements/class-logo-element.php:143
-#: inc/elements/class-socials-element.php:164
+#: inc/traits/trait-socials-controls.php:146
 msgid "Initial"
 msgstr ""
 
@@ -347,11 +347,11 @@ msgstr ""
 #: inc/customizer/class-header-section.php:143
 #: inc/customizer/class-header-section.php:149
 #: inc/customizer/class-header-section.php:155
-#: inc/customizer/class-single-post-section.php:109
+#: inc/customizer/class-single-post-section.php:145
 #: inc/elements/class-collapsable-menu-element.php:118
 #: inc/elements/class-copyright-element.php:49
 #: inc/elements/class-logo-element.php:123
-#: inc/elements/class-socials-element.php:165
+#: inc/traits/trait-socials-controls.php:147
 msgid "Hover"
 msgstr ""
 
@@ -412,62 +412,62 @@ msgstr ""
 msgid "Drawer Width"
 msgstr ""
 
-#: inc/customizer.php:98
+#: inc/customizer.php:99
 msgid "Install Companion Plugin"
 msgstr ""
 
-#: inc/customizer.php:107
+#: inc/customizer.php:108
 msgid "Upgrade To Pro"
 msgstr ""
 
-#: inc/customizer.php:117
+#: inc/customizer.php:118
 #: template-parts/admin-welcome.php:32
 msgid "Header Builder"
 msgstr ""
 
-#: inc/customizer.php:118
+#: inc/customizer.php:119
 #: template-parts/admin-welcome.php:37
 msgid "Footer Builder"
 msgstr ""
 
-#: inc/customizer.php:119
+#: inc/customizer.php:120
 msgid "Homepage Settings"
 msgstr ""
 
-#: inc/customizer.php:120
+#: inc/customizer.php:121
 #: inc/customizer/class-content-section.php:32
 #: inc/customizer/class-store-notice-section.php:29
 msgid "Colors"
 msgstr ""
 
-#: inc/customizer.php:121
+#: inc/customizer.php:122
 msgid "Global"
 msgstr ""
 
-#: inc/customizer.php:122
+#: inc/customizer.php:123
 #: template-parts/admin-welcome.php:57
 msgid "Archive Settings"
 msgstr ""
 
-#: inc/customizer.php:123
+#: inc/customizer.php:124
 #: template-parts/admin-welcome.php:42
 msgid "Content Settings"
 msgstr ""
 
-#: inc/customizer.php:124
+#: inc/customizer.php:125
 #: template-parts/admin-welcome.php:47
 msgid "Single Post Settings"
 msgstr ""
 
-#: inc/customizer.php:125
+#: inc/customizer.php:126
 msgid "Pages Settings"
 msgstr ""
 
-#: inc/customizer.php:134
+#: inc/customizer.php:135
 msgid "Store Notice"
 msgstr ""
 
-#: inc/customizer.php:135
+#: inc/customizer.php:136
 msgid "Product Catalog"
 msgstr ""
 
@@ -485,31 +485,31 @@ msgstr ""
 
 #: inc/customizer/class-archive-section.php:62
 #: inc/customizer/class-global-section.php:44
-#: inc/customizer/class-pages-section.php:32
-#: inc/customizer/class-single-post-section.php:39
+#: inc/customizer/class-pages-section.php:46
+#: inc/customizer/class-single-post-section.php:53
 #: inc/customizer/class-store-catalog-section.php:62
 msgid "Sidebar"
 msgstr ""
 
 #: inc/customizer/class-archive-section.php:66
-#: inc/customizer/class-pages-section.php:36
-#: inc/customizer/class-single-post-section.php:43
+#: inc/customizer/class-pages-section.php:50
+#: inc/customizer/class-single-post-section.php:57
 #: inc/customizer/class-store-catalog-section.php:66
 #: dist/js/block-editor.js:106
 msgid "Sidebar Layout"
 msgstr ""
 
 #: inc/customizer/class-archive-section.php:70
-#: inc/customizer/class-pages-section.php:40
-#: inc/customizer/class-single-post-section.php:47
+#: inc/customizer/class-pages-section.php:54
+#: inc/customizer/class-single-post-section.php:61
 #: inc/customizer/class-store-catalog-section.php:70
 #: dist/js/block-editor.js:115
 msgid "Left Sidebar"
 msgstr ""
 
 #: inc/customizer/class-archive-section.php:74
-#: inc/customizer/class-pages-section.php:44
-#: inc/customizer/class-single-post-section.php:51
+#: inc/customizer/class-pages-section.php:58
+#: inc/customizer/class-single-post-section.php:65
 #: inc/customizer/class-store-catalog-section.php:74
 #: dist/js/block-editor.js:118
 msgid "Right Sidebar"
@@ -585,7 +585,7 @@ msgstr ""
 #: inc/elements/class-trigger-element.php:33
 #: inc/elements/class-trigger-element.php:35
 #: inc/extensions/class-scroll-top-extension.php:112
-#: inc/extensions/class-socials-extension.php:144
+#: inc/extensions/class-socials-extension.php:159
 msgid "Icon"
 msgstr ""
 
@@ -626,7 +626,7 @@ msgid "Typography"
 msgstr ""
 
 #: inc/customizer/class-archive-section.php:430
-#: inc/customizer/class-single-post-section.php:103
+#: inc/customizer/class-single-post-section.php:139
 msgid "Text Color"
 msgstr ""
 
@@ -794,7 +794,7 @@ msgstr ""
 #: inc/customizer/class-content-section.php:55
 #: inc/elements/class-menu-element.php:56
 #: inc/elements/class-menu-element.php:133
-#: inc/template-tags.php:911
+#: inc/template-tags.php:917
 #: inc/traits/trait-button-controls.php:111
 #: inc/traits/trait-icon-button-controls.php:76
 msgid "Custom (Premium)"
@@ -972,18 +972,23 @@ msgstr ""
 msgid "Show Page Header"
 msgstr ""
 
-#: inc/customizer/class-pages-section.php:28
-#: inc/customizer/class-single-post-section.php:33
+#: inc/customizer/class-pages-section.php:42
+#: inc/customizer/class-single-post-section.php:47
 msgid "Container"
 msgstr ""
 
-#: inc/customizer/class-pages-section.php:53
+#: inc/customizer/class-pages-section.php:67
 msgid "Page Header"
 msgstr ""
 
-#: inc/customizer/class-pages-section.php:76
-#: inc/customizer/class-single-post-section.php:75
+#: inc/customizer/class-pages-section.php:90
+#: inc/customizer/class-single-post-section.php:89
 msgid "Featured Image"
+msgstr ""
+
+#: inc/customizer/class-pages-section.php:105
+#: inc/customizer/class-single-post-section.php:104
+msgid "Share Box"
 msgstr ""
 
 #: inc/customizer/class-placeholders.php:41
@@ -1043,16 +1048,16 @@ msgstr ""
 msgid "Fully customize your product card style in %sPro Version%s"
 msgstr ""
 
-#: inc/customizer/class-single-post-section.php:60
+#: inc/customizer/class-single-post-section.php:74
 msgid "Post Header"
 msgstr ""
 
-#: inc/customizer/class-single-post-section.php:90
+#: inc/customizer/class-single-post-section.php:124
 msgid "Posts Navigation"
 msgstr ""
 
-#: inc/customizer/class-single-post-section.php:113
-#: inc/customizer/class-single-post-section.php:123
+#: inc/customizer/class-single-post-section.php:149
+#: inc/customizer/class-single-post-section.php:159
 msgid "Prev Icon"
 msgstr ""
 
@@ -1085,12 +1090,12 @@ msgid "Button Link"
 msgstr ""
 
 #: inc/elements/class-button-element.php:50
-#: inc/elements/class-socials-element.php:108
+#: inc/traits/trait-socials-controls.php:90
 msgid "Open In New Tab"
 msgstr ""
 
 #: inc/elements/class-button-element.php:55
-#: inc/elements/class-socials-element.php:113
+#: inc/traits/trait-socials-controls.php:95
 msgid "No Follow"
 msgstr ""
 
@@ -1131,7 +1136,7 @@ msgid "Simple"
 msgstr ""
 
 #: inc/elements/class-collapsable-menu-element.php:89
-#: inc/template-tags.php:908
+#: inc/template-tags.php:914
 msgid "Bordered"
 msgstr ""
 
@@ -1208,7 +1213,7 @@ msgstr ""
 
 #: inc/elements/class-menu-element.php:51
 #: inc/elements/class-menu-element.php:129
-#: inc/template-tags.php:906
+#: inc/template-tags.php:912
 #: inc/traits/trait-button-controls.php:105
 #: inc/traits/trait-icon-button-controls.php:71
 msgid "Ghost"
@@ -1302,32 +1307,6 @@ msgstr ""
 msgid "Dark"
 msgstr ""
 
-#: inc/elements/class-socials-element.php:102
-msgid "Edit Social Network Accounts"
-msgstr ""
-
-#: inc/elements/class-socials-element.php:119
-msgid "Icons Size"
-msgstr ""
-
-#: inc/elements/class-socials-element.php:128
-msgid "Icons Spacing"
-msgstr ""
-
-#: inc/elements/class-socials-element.php:138
-#: inc/elements/class-socials-element.php:163
-msgid "Icons Color"
-msgstr ""
-
-#: inc/elements/class-socials-element.php:143
-msgid "Custom"
-msgstr ""
-
-#: inc/elements/class-socials-element.php:144
-#: inc/extensions/class-socials-extension.php:85
-msgid "Official"
-msgstr ""
-
 #: inc/extensions/class-scroll-top-extension.php:40
 msgid "Scroll Top"
 msgstr ""
@@ -1357,20 +1336,34 @@ msgstr ""
 msgid "Social Networks"
 msgstr ""
 
-#: inc/extensions/class-socials-extension.php:73
+#: inc/extensions/class-socials-extension.php:75
 #: inc/traits/trait-button-controls.php:45
 msgid "Label"
 msgstr ""
 
-#: inc/extensions/class-socials-extension.php:78
+#: inc/extensions/class-socials-extension.php:80
 msgid "URL"
 msgstr ""
 
-#: inc/extensions/class-socials-extension.php:84
+#: inc/extensions/class-socials-extension.php:85
+msgid "Share Link"
+msgstr ""
+
+#. translators: placeholder here means the actual URL.
+#: inc/extensions/class-socials-extension.php:90
+msgid "Social media sharing link formats, you can use {url} instead of the url of the current post and {text} instead of the title of the current post. %s Learn more %s"
+msgstr ""
+
+#: inc/extensions/class-socials-extension.php:99
 msgid "Official Color"
 msgstr ""
 
-#: inc/extensions/class-socials-extension.php:154
+#: inc/extensions/class-socials-extension.php:100
+#: inc/traits/trait-socials-controls.php:126
+msgid "Official"
+msgstr ""
+
+#: inc/extensions/class-socials-extension.php:169
 msgid "Add more social networks in %sPro Version%s"
 msgstr ""
 
@@ -1414,29 +1407,29 @@ msgstr ""
 msgid "Learn More"
 msgstr ""
 
-#: inc/template-functions.php:375
+#: inc/template-functions.php:391
 msgid "Page"
 msgstr ""
 
 #: inc/template-tags.php:424
-#: inc/template-tags.php:795
+#: inc/template-tags.php:801
 msgid "Edit"
 msgstr ""
 
-#: inc/template-tags.php:789
+#: inc/template-tags.php:795
 msgid "Pages:"
 msgstr ""
 
-#: inc/template-tags.php:907
+#: inc/template-tags.php:913
 #: inc/traits/trait-widgets-controls.php:138
 msgid "Plain"
 msgstr ""
 
-#: inc/template-tags.php:909
+#: inc/template-tags.php:915
 msgid "Shadowed"
 msgstr ""
 
-#: inc/template-tags.php:910
+#: inc/template-tags.php:916
 msgid "Mixed"
 msgstr ""
 
@@ -1735,6 +1728,27 @@ msgstr ""
 
 #: inc/traits/trait-post-structure.php:341
 msgid "Comments"
+msgstr ""
+
+#: inc/traits/trait-socials-controls.php:84
+msgid "Edit Social Network Accounts"
+msgstr ""
+
+#: inc/traits/trait-socials-controls.php:101
+msgid "Icons Size"
+msgstr ""
+
+#: inc/traits/trait-socials-controls.php:110
+msgid "Icons Spacing"
+msgstr ""
+
+#: inc/traits/trait-socials-controls.php:120
+#: inc/traits/trait-socials-controls.php:145
+msgid "Icons Color"
+msgstr ""
+
+#: inc/traits/trait-socials-controls.php:125
+msgid "Custom"
 msgstr ""
 
 #: inc/traits/trait-widgets-controls.php:90

@@ -214,6 +214,60 @@ var InfiniteScroll = /*#__PURE__*/_createClass(function InfiniteScroll($) {
 
 /***/ }),
 
+/***/ "./resources/js/extensions/magnific-popup.js":
+/*!***************************************************!*\
+  !*** ./resources/js/extensions/magnific-popup.js ***!
+  \***************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var MagnificPopup = /*#__PURE__*/_createClass(function MagnificPopup($) {
+  _classCallCheck(this, MagnificPopup);
+
+  // Check for magnific popup plugin
+  if ($.magnificPopup === undefined) {
+    return;
+  }
+
+  $('.kenta-lightbox *:not(.no-lightbox) > img').css('cursor', 'zoom-in');
+  $('.kenta-lightbox').magnificPopup({
+    delegate: '*:not(.no-lightbox) > img',
+    type: 'image',
+    gallery: {
+      enabled: true,
+      navigateByImgClick: true,
+      arrowMarkup: '<button title="%title%" type="button" class="kenta-mfp-arrow kenta-mfp-arrow-%dir%"></button>',
+      tPrev: 'Previous',
+      tNext: 'Next',
+      tCounter: '%curr% of %total%'
+    },
+    closeOnContentClick: true,
+    fixedContentPos: true,
+    fixedBgPos: true,
+    overflowY: 'auto',
+    removalDelay: 300,
+    mainClass: 'kenta-popup-zoom-in',
+    callbacks: {
+      elementParse: function elementParse(item) {
+        item.src = item.el.attr('src');
+      }
+    }
+  });
+});
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (MagnificPopup);
+
+/***/ }),
+
 /***/ "./resources/js/extensions/masonry.js":
 /*!********************************************!*\
   !*** ./resources/js/extensions/masonry.js ***!
@@ -461,6 +515,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _extensions_masonry__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./extensions/masonry */ "./resources/js/extensions/masonry.js");
 /* harmony import */ var _extensions_infinite_scroll__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./extensions/infinite-scroll */ "./resources/js/extensions/infinite-scroll.js");
 /* harmony import */ var _extensions_datetime__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./extensions/datetime */ "./resources/js/extensions/datetime.js");
+/* harmony import */ var _extensions_magnific_popup__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./extensions/magnific-popup */ "./resources/js/extensions/magnific-popup.js");
+
 
 
 
@@ -472,6 +528,7 @@ if (wp.customize && wp.customize.selectiveRefresh) {
     new _extensions_cookies_consent__WEBPACK_IMPORTED_MODULE_0__["default"](jQuery, 0);
     new _extensions_masonry__WEBPACK_IMPORTED_MODULE_1__["default"](jQuery);
     new _extensions_infinite_scroll__WEBPACK_IMPORTED_MODULE_2__["default"](jQuery);
+    new _extensions_magnific_popup__WEBPACK_IMPORTED_MODULE_4__["default"](jQuery);
   });
 }
 })();

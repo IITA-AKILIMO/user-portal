@@ -407,7 +407,22 @@ function yuki_dynamic_css()
         // Article typography
         $css = yuki_content_typography_css( '.yuki-article-content', $css );
         // Article button
-        $css['.yuki-article-content .wp-block-button, .yuki-comments-area [type="submit"]'] = yuki_content_buttons_css();
+        $button_selectors = [
+            // widgets
+            '.wp-block-search__button',
+            '.wc-block-product-search__button',
+            // article
+            '.yuki-article-content .wp-block-button',
+            '.yuki-article-content button',
+            '.yuki-article-content [type="submit"]',
+            '.yuki-form [type="submit"]',
+            '.yuki-raw-html [type="submit"]',
+            '.prose-yuki .wp-block-button',
+            '.prose-yuki button',
+            '.prose-yuki [type="submit"]',
+            '.yuki-comments-area [type="submit"]',
+        ];
+        $css[implode( ',', $button_selectors )] = yuki_content_buttons_css();
         // Share box
         
         if ( CZ::checked( 'yuki_' . $article_type . '_share_box' ) ) {
@@ -529,6 +544,13 @@ function yuki_dynamic_css()
             ]
         );
     }
+    // Forms
+    $css['.woocommerce form, .yuki-form'] = Css::typography( CZ::get( 'yuki_content_form_typography' ) );
+    $css['.woocommerce form, .yuki-form, .yuki-article-content, .prose-yuki, .yuki-widget, .yuki-raw-html'] = array_merge( yuki_form_style_preset( CZ::get( 'yuki_content_form_style' ) ), Css::colors( CZ::get( 'yuki_content_form_color' ), [
+        'background' => '--yuki-form-background-color',
+        'border'     => '--yuki-form-border-color',
+        'active'     => '--yuki-form-active-color',
+    ] ) );
     $css = apply_filters( 'yuki_filter_dynamic_css', $css );
     return Css::parse( $css );
 }

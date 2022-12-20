@@ -1108,7 +1108,9 @@ div#ays-pb-dicount-black-friday-month-main .btn-link {
 
 div#ays-pb-dicount-black-friday-month-main.ays_pb_dicount_info  {
     background-image: linear-gradient(45deg, #1E101D, #C60AF4);
-    padding: unset;
+    padding: unset;    
+    border-left-color: unset;
+    border-left: 0;
 }
 
 #ays-pb-dicount-black-friday-month-main .ays_pb_dicount_month {

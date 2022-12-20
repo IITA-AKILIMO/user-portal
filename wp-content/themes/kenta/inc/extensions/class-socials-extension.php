@@ -46,6 +46,7 @@ if ( ! class_exists( 'Kenta_Socials_Extension' ) ) {
 							'color' => [ 'official' => '#557dbc' ],
 							'label' => 'Facebook',
 							'url'   => '',
+							'share' => 'https://www.facebook.com/sharer/sharer.php?u={url}',
 							'icon'  => [ 'value' => 'fab fa-facebook', 'library' => 'fa-brands' ]
 						],
 					],
@@ -55,6 +56,7 @@ if ( ! class_exists( 'Kenta_Socials_Extension' ) ) {
 							'color' => [ 'official' => '#7acdee' ],
 							'label' => 'Twitter',
 							'url'   => '',
+							'share' => 'https://twitter.com/share?url={url}&text={text}',
 							'icon'  => [ 'value' => 'fab fa-twitter', 'library' => 'fa-brands' ]
 						],
 					],
@@ -77,6 +79,19 @@ if ( ! class_exists( 'Kenta_Socials_Extension' ) ) {
 					( new Text( 'url' ) )
 						->setLabel( __( 'URL', 'kenta' ) )
 						->displayInline()
+						->setDefaultValue( '' )
+					,
+					( new Text( 'share' ) )
+						->setLabel( __( 'Share Link', 'kenta' ) )
+						->displayInline()
+						->setDescription(
+							sprintf(
+							// translators: placeholder here means the actual URL.
+								__( 'Social media sharing link formats, you can use {url} instead of the url of the current post and {text} instead of the title of the current post. %s Learn more %s', 'kenta' ),
+								'<a href="https://kentatheme.com/docs/kenta-theme/general/social-networks/" target="_blank">',
+								'</a>'
+							)
+						)
 						->setDefaultValue( '' )
 					,
 					( new Separator() ),

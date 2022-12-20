@@ -18,12 +18,26 @@ if ( ! class_exists( 'Kenta_Pages_Section' ) ) {
 	class Kenta_Pages_Section extends CustomizerSection {
 
 		use Kenta_Article_Controls;
+		use Kenta_Socials_Controls;
+
+		/**
+		 * @param string $id
+		 *
+		 * @return string
+		 */
+		protected function getSocialControlId( $id ) {
+			if ( $id == '' ) {
+				return 'kenta_page_share_box';
+			}
+
+			return 'kenta_page_share_box_' . $id;
+		}
 
 		/**
 		 * {@inheritDoc}
 		 */
 		public function getControls() {
-			return [
+			$controls = [
 				( new Section( 'kenta_pages_container' ) )
 					->setLabel( __( 'Container', 'kenta' ) )
 					->setControls( $this->getContainerControls( 'pages' ) )
@@ -86,7 +100,29 @@ if ( ! class_exists( 'Kenta_Pages_Section' ) ) {
 						]
 					] ) )
 				,
+
+				( new Section( 'kenta_page_share_box' ) )
+					->setLabel( __( 'Share Box', 'kenta' ) )
+					->enableSwitch( false )
+					->setControls( $this->getSocialControls( array(
+						'selector'            => '.kenta-page-socials',
+						'icon-size'           => '18px',
+						'icons-shape'         => 'rounded',
+						'icons-color-initial' => 'var(--kenta-base-color)',
+						'icons-color-hover'   => 'var(--kenta-base-color)',
+						'icons-bg-initial'    => 'var(--kenta-official-color)',
+						'icons-bg-hover'      => 'var(--kenta-primary-color)',
+						'icons-box-spacing'   => [
+							'top'    => '48px',
+							'right'  => '0px',
+							'bottom' => '24px',
+							'left'   => '0px',
+						],
+					) ) )
+				,
 			];
+
+			return apply_filters( 'kenta_pages_section_controls', $controls );
 		}
 	}
 

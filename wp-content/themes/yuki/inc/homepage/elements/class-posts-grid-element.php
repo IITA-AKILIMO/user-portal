@@ -10,7 +10,6 @@ use LottaFramework\Customizer\Controls\Number;
 use LottaFramework\Customizer\Controls\Separator;
 use LottaFramework\Customizer\Controls\Slider;
 use LottaFramework\Customizer\Controls\Tabs;
-use LottaFramework\Customizer\PageBuilder\Element;
 use LottaFramework\Facades\Css;
 use LottaFramework\Utils;
 
@@ -20,11 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 if ( ! class_exists( 'Yuki_Posts_Grid_Element' ) ) {
 
-	class Yuki_Posts_Grid_Element extends Element {
-
-		use Yuki_Post_Query;
-		use Yuki_Post_Structure;
-		use Yuki_Post_Card;
+	class Yuki_Posts_Grid_Element extends Yuki_Posts_Base_Element {
 
 		/**
 		 * @return array
@@ -168,11 +163,7 @@ if ( ! class_exists( 'Yuki_Posts_Grid_Element' ) ) {
 				$this->add_render_attribute( $id, 'data-shortcut-location', $attrs['location'] );
 			}
 
-			$posts        = new \WP_Query( $this->getPostsQueryArgs( $this->get( 'posts-count', $settings ), $settings ) );
-			$structure    = $this->layers( 'structure', $settings );
-			$metas        = $this->layers( 'yuki_el_metas', $settings );
-			$title_tag    = $this->get( 'yuki_el_title_tag', $settings );
-			$excerpt_type = $this->get( 'yuki_el_excerpt_type', $settings );
+			$posts = new \WP_Query( $this->getPostsQueryArgs( $this->get( 'posts-count', $settings ), $settings ) );
 
 			?>
             <div <?php $this->print_attribute_string( $id ); ?>>
@@ -183,13 +174,7 @@ if ( ! class_exists( 'Yuki_Posts_Grid_Element' ) ) {
 							[ 'card-thumb-motion' => $this->checked( 'card_thumb_motion', $settings ) ]
 						); ?>">
 							<?php
-							yuki_post_structure( 'el', $structure, $metas, [
-								'title_link'   => true,
-								'title_tag'    => $title_tag,
-								'excerpt_type' => $excerpt_type,
-								'options'      => $this,
-								'settings'     => $settings,
-							] );
+							yuki_post_structure( ...$this->get_post_structure_args( $id, $settings ) );
 							?>
                         </article>
                     </div>

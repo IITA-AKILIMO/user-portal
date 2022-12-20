@@ -6,7 +6,7 @@ use Illuminate\Container\Container;
 
 class Application extends Container {
 
-	const VERSION = '2.0.4';
+	const VERSION = '2.0.5';
 
 	/**
 	 * Application id

@@ -89,8 +89,10 @@ return array(
         'link-hover'   => array( '--kenta-link-hover-color', '--kb-link-hover-color' ),
     ) ),
         kenta_blocks_css()->typography( kenta_blocks_block_attr( 'typography', $attrs, $metadata ) ),
+        kenta_blocks_css()->border( kenta_blocks_block_attr( 'border', $attrs, $metadata ) ),
         kenta_blocks_css()->shadow( kenta_blocks_block_attr( 'shadow', $attrs, $metadata ) ),
-        kenta_blocks_css()->background( kenta_blocks_block_attr( 'background', $attrs, $metadata ) )
+        kenta_blocks_css()->background( kenta_blocks_block_attr( 'background', $attrs, $metadata ) ),
+        kenta_blocks_css()->dimensions( kenta_blocks_block_attr( 'radius', $attrs, $metadata ), 'border-radius' )
     );
     return $css;
 },

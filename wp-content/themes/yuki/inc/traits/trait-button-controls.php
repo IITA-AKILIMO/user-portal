@@ -86,7 +86,7 @@ if ( ! trait_exists( 'Yuki_Button_Controls' ) ) {
 
 			$controls = [
 				( new Slider( $id . 'min_height' ) )
-					->setLabel( __( 'Mini Height', 'yuki' ) )
+					->setLabel( __( 'Min Height', 'yuki' ) )
 					->asyncCss( $selector, [ '--yuki-button-height' => 'value' ] )
 					->enableResponsive()
 					->setMin( 30 )

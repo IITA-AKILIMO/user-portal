@@ -19,7 +19,6 @@ use  LottaFramework\Customizer\Controls\Slider ;
 use  LottaFramework\Customizer\Controls\Spacing ;
 use  LottaFramework\Customizer\Controls\Tabs ;
 use  LottaFramework\Customizer\Controls\Toggle ;
-use  LottaFramework\Customizer\PageBuilder\Element ;
 use  LottaFramework\Customizer\Sanitizes ;
 use  LottaFramework\Facades\Css ;
 use  LottaFramework\Icons\IconsManager ;
@@ -31,11 +30,8 @@ if ( !defined( 'ABSPATH' ) ) {
 }
 
 if ( !class_exists( 'Yuki_Posts_Slider_Element' ) ) {
-    class Yuki_Posts_Slider_Element extends Element
+    class Yuki_Posts_Slider_Element extends Yuki_Posts_Base_Element
     {
-        use  Yuki_Post_Query ;
-        use  Yuki_Post_Structure ;
-        use  Yuki_Post_Card ;
         use  Yuki_Password_Protected ;
         /**
          * {@inheritDoc}
@@ -416,10 +412,6 @@ if ( !class_exists( 'Yuki_Posts_Slider_Element' ) ) {
             $this->add_render_attribute( $id . '_slick', 'data-slick', wp_json_encode( $slick_options ) );
             $postsNumber = 4;
             $posts = new \WP_Query( $this->getPostsQueryArgs( $postsNumber, $settings ) );
-            $structure = $this->layers( 'structure', $settings );
-            $metas = $this->layers( 'yuki_el_metas', $settings );
-            $title_tag = $this->get( 'yuki_el_title_tag', $settings );
-            $excerpt_type = $this->get( 'yuki_el_excerpt_type', $settings );
             ?>
             <div <?php 
             $this->print_attribute_string( $id );
@@ -451,18 +443,7 @@ if ( !class_exists( 'Yuki_Posts_Slider_Element' ) ) {
                                 <div class="yuki-post-item-content-wrapper">
                                     <div class="yuki-post-item-content">
 										<?php 
-                yuki_post_structure(
-                    'el',
-                    $structure,
-                    $metas,
-                    [
-                    'title_link'   => true,
-                    'title_tag'    => $title_tag,
-                    'excerpt_type' => $excerpt_type,
-                    'options'      => $this,
-                    'settings'     => $settings,
-                ]
-                );
+                yuki_post_structure( ...$this->get_post_structure_args( $id, $settings ) );
                 ?>
                                     </div>
                                 </div>

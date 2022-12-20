@@ -570,12 +570,12 @@ class Ays_Pb_Data {
                 $content[] = '<div id="ays-pb-dicount-black-friday-month" class="ays_pb_dicount_month">';
                     $content[] = '<div class="ays-pb-dicount-black-friday-box">';
                         $content[] = '<div class="ays-pb-dicount-black-friday-wrap-box ays-pb-dicount-black-friday-wrap-box-80" style="width: 70%;">';
-                            $content[] = '<div class="ays-pb-dicount-black-friday-title-row">' . __( 'Limited Time', AYS_PB_NAME ) .' '. '<a href="https://ays-pro.com/great-bundle" class="ays-pb-dicount-black-friday-button-sale" target="_blank">' . __( 'Sale', AYS_PB_NAME ) . '</a>' . '</div>';
-                            $content[] = '<div class="ays-pb-dicount-black-friday-title-row">' . __( '(Quiz + Survey + Popup + Copy + Poll)!', AYS_PB_NAME ) . '</div>';
+                            $content[] = '<div class="ays-pb-dicount-black-friday-title-row">' . __( 'Limited Time', AYS_PB_NAME ) .' '. '<a href="https://ays-pro.com/wordpress/popup-box" class="ays-pb-dicount-black-friday-button-sale" target="_blank">' . __( 'Sale', AYS_PB_NAME ) . '</a>' . '</div>';
+                            $content[] = '<div class="ays-pb-dicount-black-friday-title-row">' . __( 'Popup Box', AYS_PB_NAME ) . '</div>';
                         $content[] = '</div>';
 
                         $content[] = '<div class="ays-pb-dicount-black-friday-wrap-box ays-pb-dicount-black-friday-wrap-text-box">';
-                            $content[] = '<div class="ays-pb-dicount-black-friday-text-row">' . __( '65% off', AYS_PB_NAME ) . '</div>';
+                            $content[] = '<div class="ays-pb-dicount-black-friday-text-row">' . __( '20% off', AYS_PB_NAME ) . '</div>';
                         $content[] = '</div>';
 
                         $content[] = '<div class="ays-pb-dicount-black-friday-wrap-box" style="width: 25%;">';
@@ -600,7 +600,7 @@ class Ays_Pb_Data {
                         $content[] = '</div>';
 
                         $content[] = '<div class="ays-pb-dicount-black-friday-wrap-box" style="width: 25%;">';
-                            $content[] = '<a href="https://ays-pro.com/great-bundle" class="ays-pb-dicount-black-friday-button-buy-now" target="_blank">' . __( 'Get Your Deal', AYS_PB_NAME ) . '</a>';
+                            $content[] = '<a href="https://ays-pro.com/wordpress/popup-box" class="ays-pb-dicount-black-friday-button-buy-now" target="_blank">' . __( 'Get Your Deal', AYS_PB_NAME ) . '</a>';
                         $content[] = '</div>';
                     $content[] = '</div>';
                 $content[] = '</div>';

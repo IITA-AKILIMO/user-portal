@@ -351,6 +351,22 @@ function kenta_show_single_post_content() {
 add_action( 'kenta_action_single_post', 'kenta_show_single_post_content' );
 
 /**
+ * Show share box
+ */
+function kenta_add_post_share_box() {
+	if ( is_page() && ! is_front_page() && CZ::checked( 'kenta_page_share_box' ) ) {
+		kenta_show_share_box( 'page', 'kenta_pages:kenta_page_share_box' );
+	}
+
+	if ( is_single() && CZ::checked( 'kenta_post_share_box' ) ) {
+		kenta_show_share_box( 'post', 'kenta_single_post:kenta_post_share_box' );
+	}
+}
+
+add_action( 'kenta_action_after_single_post', 'kenta_add_post_share_box', 10 );
+add_action( 'kenta_action_after_page', 'kenta_add_post_share_box', 10 );
+
+/**
  * Show posts navigation
  */
 function kenta_add_post_navigation() {

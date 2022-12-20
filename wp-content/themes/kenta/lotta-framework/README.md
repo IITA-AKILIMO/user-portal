@@ -2,6 +2,10 @@
 
 ## Changelog
 
+### v2.0.5
+
+* Add: WPML & Polylang translate utils
+
 ### v2.0.4
 
 * Fix: Builder off canvas area can not edit after empty

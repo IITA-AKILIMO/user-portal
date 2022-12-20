@@ -8,11 +8,13 @@
 use  LottaFramework\Customizer\Controls\Border ;
 use  LottaFramework\Customizer\Controls\ColorPicker ;
 use  LottaFramework\Customizer\Controls\Placeholder ;
+use  LottaFramework\Customizer\Controls\Radio ;
 use  LottaFramework\Customizer\Controls\Section ;
 use  LottaFramework\Customizer\Controls\Separator ;
 use  LottaFramework\Customizer\Controls\Spacing ;
 use  LottaFramework\Customizer\Controls\Typography ;
 use  LottaFramework\Customizer\Section as CustomizerSection ;
+use  LottaFramework\Facades\AsyncCss ;
 
 if ( !defined( 'ABSPATH' ) ) {
     exit;
@@ -40,7 +42,8 @@ if ( !class_exists( 'Yuki_Content_Section' ) ) {
                 '.yuki-comments-area [type="submit"]'
             ],
             ] ) ),
-                ( new Section( 'yuki_content_comments' ) )->setLabel( __( 'Comments Area', 'yuki' ) )->setControls( $this->getCommentsControls() )
+                ( new Section( 'yuki_content_comments' ) )->setLabel( __( 'Comments Area', 'yuki' ) )->setControls( $this->getCommentsControls() ),
+                ( new Section( 'yuki_content_forms' ) )->setLabel( __( 'Forms', 'yuki' ) )->setControls( $this->getFormControls() )
             ];
         }
         
@@ -143,6 +146,27 @@ if ( !class_exists( 'Yuki_Content_Section' ) ) {
                 $controls[] = yuki_upsell_info_control( __( 'More options in %sPro Version%s', 'yuki' ) )->showBackground();
             }
             return $controls;
+        }
+        
+        /**
+         * @return array
+         */
+        protected function getFormControls()
+        {
+            $selectors = '.woocommerce form, .yuki-form, .yuki-raw-html, .yuki-article-content, .yuki-widget';
+            return [ ( new Radio( 'yuki_content_form_style' ) )->setLabel( __( 'Style', 'yuki' ) )->setDefaultValue( 'classic' )->buttonsGroupView()->setChoices( [
+                'classic' => __( 'Classic', 'yuki' ),
+                'modern'  => __( 'Modern', 'yuki' ),
+            ] ), ( new Typography( 'yuki_content_form_typography' ) )->setLabel( __( 'Typography', 'yuki' ) )->asyncCss( $selectors, AsyncCss::typography() )->setDefaultValue( [
+                'family'     => 'inherit',
+                'fontSize'   => '0.85rem',
+                'variant'    => '400',
+                'lineHeight' => '1.5em',
+            ] ), ( new ColorPicker( 'yuki_content_form_color' ) )->setLabel( __( 'Controls Color', 'yuki' ) )->enableAlpha()->asyncColors( $selectors, [
+                'background' => '--yuki-form-background-color',
+                'border'     => '--yuki-form-border-color',
+                'active'     => '--yuki-form-active-color',
+            ] )->addColor( 'background', __( 'Background', 'yuki' ), 'var(--yuki-base-color)' )->addColor( 'border', __( 'Border', 'yuki' ), 'var(--yuki-base-300)' )->addColor( 'active', __( 'Active', 'yuki' ), 'var(--yuki-primary-color)' ) ];
         }
     
     }

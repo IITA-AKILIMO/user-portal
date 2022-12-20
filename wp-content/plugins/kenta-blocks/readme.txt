@@ -1,8 +1,8 @@
-=== Kenta Gutenberg Blocks – Responsive Blocks for Gutenberg Editor, Website Builder, Page Builder with Section, Column, Heading, Buttons, Images and more ===
+=== Kenta Gutenberg Blocks – Responsive Blocks and block templates library for Gutenberg Editor, Website Builder, Page Builder with Section, Column, Heading, Buttons, Images and more ===
 Contributors: ibllex
 Tags: gutenberg, gutenberg blocks, block editor, blocks, block, editor, page builder
-Stable tag: 1.1.0
-Requires at least: 5.4
+Stable tag: 1.1.1
+Requires at least: 5.6
 Tested up to: 6.1
 Requires PHP: 7.2
 License: GPLv3
@@ -12,7 +12,7 @@ The Swiss Army knife of Gutenberg page builders. Use Section / Column blocks to 
 
 == Description ==
 
-Kenta Blocks has a set of responsive blocks with powerful options. It takes full advantage of the WordPress editor's features. With the simple and easy-to-use interface, you can visually design any post and page, whether you are a beginner or a professional designer.
+Kenta Blocks has a set of responsive blocks with powerful options and pre-designed templates library. It takes full advantage of the WordPress editor's features. With the simple and easy-to-use interface, you can visually design any post and page, whether you are a beginner or a professional designer.
 
 ### The Awesome Gutenberg blocks we have
 
@@ -24,6 +24,9 @@ Kenta Blocks has a set of responsive blocks with powerful options. It takes full
 * **Heading** Create a customizable title for each section with various markups from H1 to H6, You can also use 1000+ Google fonts.
 * **Paragraph** Create a customizable paragraph width 1000+ Google fonts and multiple setting options.
 * **Image** Core/image block enhancements, You can set shadows, borders, border radius and css filters for images.
+* **Group** Core/group block enhancements, You can set padding, margin, shadows, background, borders and border radius for group.
+* **Row** Core/row block enhancements, You can set padding, margin, shadows, background, borders and border radius for row.
+* **Stack** Core/stsack block enhancements, You can set padding, margin, shadows, background, borders and border radius for stack.
 
 == Frequently Asked Questions ==
 
@@ -40,6 +43,14 @@ No! You can create amazing websites without touching a single line of code.
 Absolutely Yes! Kenta Blocks has been created using the Gutenberg editor. So, it does not go well with classic editor or other page builder plugins.
 
 == Changelog ==
+
+= 1.1.1 =
+
+* Add: New group, row and stack block (Premium)
+* Add: Border and border radius attributes support for paragraph and heading block
+* Ref: WordPress 5.6+ support
+* Fix: Section block is not available
+* Fix: Templates library error
 
 = 1.1.0 =
 

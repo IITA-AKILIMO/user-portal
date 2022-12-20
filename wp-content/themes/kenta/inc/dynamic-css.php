@@ -572,6 +572,32 @@ function kenta_dynamic_css() {
 			Css::filters( CZ::get( "{$prefix}_featured_image_filter" ) )
 		);
 
+		// Share box
+		if ( CZ::checked( 'kenta_' . $article_type . '_share_box' ) ) {
+			$css[ '.kenta-' . $article_type . '-socials' ] = array_merge(
+				[
+					'--kenta-social-icons-size'    => CZ::get( 'kenta_' . $article_type . '_share_box_icons_size' ),
+					'--kenta-social-icons-spacing' => CZ::get( 'kenta_' . $article_type . '_share_box_icons_spacing' )
+				],
+				Css::dimensions( CZ::get( 'kenta_' . $article_type . '_share_box_padding' ), 'padding' )
+			);
+
+			$css[ '.kenta-' . $article_type . '-socials .kenta-social-link' ] = array_merge(
+				Css::colors( CZ::get( 'kenta_' . $article_type . '_share_box_icons_color' ), [
+					'initial' => '--kenta-social-icon-initial-color',
+					'hover'   => '--kenta-social-icon-hover-color',
+				] ),
+				Css::colors( CZ::get( 'kenta_' . $article_type . '_share_box_icons_bg_color' ), [
+					'initial' => '--kenta-social-bg-initial-color',
+					'hover'   => '--kenta-social-bg-hover-color',
+				] ),
+				Css::colors( CZ::get( 'kenta_' . $article_type . '_share_box_icons_border_color' ), [
+					'initial' => '--kenta-social-border-initial-color',
+					'hover'   => '--kenta-social-border-hover-color',
+				] )
+			);
+		}
+
 		// Post navigation
 		if ( is_single() ) {
 			$css['.kenta-post-navigation'] = array_merge(

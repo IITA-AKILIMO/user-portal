@@ -284,10 +284,10 @@ if ( !trait_exists( 'Yuki_Post_Structure' ) ) {
         protected function getReadMoreControls( $id, $defaults )
         {
             $selector = ( empty($defaults['selector']) ? '' : $defaults['selector'] . ' .entry-read-more' );
-            return $this->getButtonStyleControls( 'yuki_' . $id . '_read_more_', array_merge( $defaults, [
+            return array_merge( array( ( new Text( 'yuki_' . $id . '_read_more_text' ) )->setLabel( __( 'Text', 'yuki' ) )->setDefaultValue( __( 'Read More', 'yuki' ) ), new Separator() ), $this->getButtonStyleControls( 'yuki_' . $id . '_read_more_', array_merge( $defaults, [
                 'selective-refresh' => true,
                 'button-selector'   => $selector,
-            ] ) );
+            ] ) ) );
         }
         
         /**

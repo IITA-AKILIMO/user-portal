@@ -765,7 +765,13 @@ if ( ! function_exists( 'kenta_show_article' ) ) {
 	 */
 	function kenta_show_article( $preview_location, string $type = 'post', $header = true ) {
 		$content_attrs = [
-			'class' => 'kenta-article-content kenta-entry-content clearfix mx-auto prose prose-kenta',
+			'class' => Utils::clsx( apply_filters( 'kenta_article_content_classes', array(
+				'kenta-article-content',
+				'kenta-entry-content',
+				'clearfix',
+				'prose prose-kenta',
+				'mx-auto'
+			), $type ) ),
 		];
 
 		if ( is_customize_preview() ) {
@@ -1148,6 +1154,79 @@ if ( ! function_exists( 'kenta_show_archive_header' ) ) {
 				?>
             </div>
         </section>
+		<?php
+	}
+}
+
+if ( ! function_exists( 'kenta_show_share_box' ) ) {
+	/**
+	 * @param $type
+	 * @param $location
+	 */
+	function kenta_show_share_box( $type, $location ) {
+		$color = CZ::get( 'kenta_' . $type . '_share_box_icons_color_type' );
+		$shape = CZ::get( 'kenta_' . $type . '_share_box_icons_shape' );
+		$fill  = CZ::get( 'kenta_' . $type . '_share_box_shape_fill_type' );
+
+		$attrs = [
+			'class' => Utils::clsx( [
+				'kenta-socials',
+				'kenta-' . $type . '-socials',
+				'kenta-socials-' . $color,
+				'kenta-socials-' . $shape,
+				'kenta-socials-' . $fill => $shape !== 'none',
+			] )
+		];
+
+		if ( is_customize_preview() ) {
+			$attrs['data-shortcut']          = 'border';
+			$attrs['data-shortcut-location'] = $location;
+		}
+
+		$link_attrs = [
+			'class' => 'kenta-social-link',
+		];
+
+		if ( CZ::checked( 'kenta_' . $type . '_share_box_open_new_tab' ) ) {
+			$link_attrs['target'] = '_blank';
+		}
+
+		if ( CZ::checked( 'kenta_' . $type . '_share_box_no_follow' ) ) {
+			$link_attrs['rel'] = 'nofollow';
+		}
+
+		$socials = CZ::repeater( 'kenta_social_networks' );
+		?>
+        <div class="mx-auto kenta-max-w-content">
+            <div <?php Utils::print_attribute_string( $attrs ); ?>>
+				<?php
+				foreach ( $socials as $social ) {
+					if ( isset( $social['share'] ) ) {
+						$home_url  = Utils::encode_uri_component( get_the_permalink() );
+						$share_url = str_replace(
+							'{url}',
+							$home_url,
+							str_replace(
+								'{text}',
+								Utils::encode_uri_component( get_the_title() ),
+								$social['share']
+							)
+						);
+
+						?>
+                        <a <?php Utils::print_attribute_string( $link_attrs ); ?>
+                                style="--kenta-official-color: <?php echo esc_attr( $social['color']['official'] ?? 'var(--kenta-primary-active)' ) ?>;"
+                                href="<?php echo esc_url( $share_url ) ?>">
+                            <span class="kenta-social-icon">
+                                <?php IconsManager::print( $social['icon'] ); ?>
+                            </span>
+                        </a>
+						<?php
+					}
+				}
+				?>
+            </div>
+        </div>
 		<?php
 	}
 }

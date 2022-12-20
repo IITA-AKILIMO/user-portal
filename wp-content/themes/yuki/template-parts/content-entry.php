@@ -27,6 +27,7 @@ $card_attrs = [
 			'title_link'   => true,
 			'title_tag'    => CZ::get( 'yuki_entry_title_tag' ),
 			'excerpt_type' => CZ::get( 'yuki_entry_excerpt_type' ),
+			'trans_id'     => 'yuki_entry'
 		] ); ?>
     </article>
 </div>

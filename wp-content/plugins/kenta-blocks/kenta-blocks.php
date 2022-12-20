@@ -5,8 +5,8 @@
  * Plugin URI: https://kentatheme.com/blocks/
  * Description: The Swiss Army knife of Gutenberg page builders. Use Section / Column blocks to create any site layout. We also have unlimited colors, backgrounds, typography and more. All blocks are responsive. Always display perfectly and fully customize, whether desktop or mobile.
  * Author: WP Moose
- * Version: 1.1.0
- * Requires at least: 5.4
+ * Version: 1.1.1
+ * Requires at least: 5.6
  * Requires PHP: 7.2
  * License: GPLv3
  * Author URI: https://www.wpmoose.com
@@ -61,7 +61,7 @@ if ( function_exists( 'kb_fs' ) ) {
      *
      * @since 0.0.1
      */
-    define( 'KENTA_BLOCKS_VERSION', '1.1.0' );
+    define( 'KENTA_BLOCKS_VERSION', '1.1.1' );
     define( 'KENTA_BLOCKS_PLUGIN_FILE', __FILE__ );
     define( 'KENTA_BLOCKS_PLUGIN_PATH', trailingslashit( plugin_dir_path( KENTA_BLOCKS_PLUGIN_FILE ) ) );
     define( 'KENTA_BLOCKS_PLUGIN_URL', trailingslashit( plugins_url( '/', KENTA_BLOCKS_PLUGIN_FILE ) ) );

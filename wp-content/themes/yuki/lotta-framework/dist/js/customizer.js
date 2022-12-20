@@ -33532,9 +33532,25 @@ object-assign
                                         var value = (0, _utils__WEBPACK_IMPORTED_MODULE_2__.ensureBuilderValueStructure)(responsive, _this5.props.value, _this5.props.options.rows);
                                         changes.forEach((function(data) {
                                             var _data = _slicedToArray(data, 3), row = _data[0], col = _data[1], elements = _data[2];
+                                            var rowData = _this5.props.options.rows[row] || {};
+                                            var defaultColumn = rowData.type === "off-canvas" ? {
+                                                elements: [],
+                                                settings: {
+                                                    direction: "column"
+                                                }
+                                            } : {
+                                                elements: [],
+                                                settings: {}
+                                            };
                                             if (responsive) {
+                                                if (!value[row][device]["columns"][col]) {
+                                                    value[row][device]["columns"][col] = defaultColumn;
+                                                }
                                                 value[row][device]["columns"][col]["elements"] = (0, _utils__WEBPACK_IMPORTED_MODULE_3__.array_unique)(elements);
                                             } else {
+                                                if (!value[row]["columns"][col]) {
+                                                    value[row]["columns"][col] = defaultColumn;
+                                                }
                                                 value[row]["columns"][col]["elements"] = (0, _utils__WEBPACK_IMPORTED_MODULE_3__.array_unique)(elements);
                                             }
                                         }));
@@ -34153,6 +34169,18 @@ object-assign
                 value: function render() {
                     var _this$props = this.props, id = _this$props.id, row = _this$props.row, columns = _this$props.columns, elements = _this$props.elements, _onClick = _this$props.onClick, onAddColumn = _this$props.onAddColumn, onSettingColumn = _this$props.onSettingColumn, onRemoveColumn = _this$props.onRemoveColumn, onElementsChange = _this$props.onElementsChange, onElementClick = _this$props.onElementClick, onElementRemove = _this$props.onElementRemove;
                     var isOffCanvas = row.type === "off-canvas";
+                    var showColumns = columns;
+                    if (!Array.isArray(showColumns) || showColumns.length === 0) {
+                        showColumns = isOffCanvas ? [ {
+                            elements: [],
+                            settings: {
+                                direction: "column"
+                            }
+                        } ] : [ {
+                            elements: [],
+                            settings: {}
+                        } ];
+                    }
                     return (0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("div", {
                         className: "builder-row",
                         children: [ (0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("div", {
@@ -34171,7 +34199,7 @@ object-assign
                             })
                         }), (0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("div", {
                             className: "builder-columns",
-                            children: (columns || []).map((function(column, colIndex) {
+                            children: showColumns.map((function(column, colIndex) {
                                 var columnItems = column.elements || [];
                                 var sortableItems = columnItems.map((function(i) {
                                     return {
@@ -34181,7 +34209,7 @@ object-assign
                                 return (0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("div", {
                                     className: "builder-column",
                                     style: {
-                                        width: Math.floor(1 / columns.length * 100 * 100) / 100 + "%"
+                                        width: Math.floor(1 / showColumns.length * 100 * 100) / 100 + "%"
                                     },
                                     children: [ (0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("div", {
                                         className: "builder-column-content",
@@ -34229,7 +34257,7 @@ object-assign
                                         }) ]
                                     }), !isOffCanvas && (0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("div", {
                                         className: "builder-change-columns",
-                                        children: [ columns.length < row.maxColumns && (0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("button", {
+                                        children: [ showColumns.length < row.maxColumns && (0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("button", {
                                             className: "builder-add-column",
                                             type: "button",
                                             onClick: function onClick() {

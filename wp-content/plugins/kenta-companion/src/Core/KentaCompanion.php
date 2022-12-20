@@ -77,6 +77,9 @@ class KentaCompanion extends Container {
 			->register( 'pagination', [
 				'class' => \KentaCompanion\Extensions\Pagination::class,
 			] )
+			->register( 'lightbox', [
+				'class' => \KentaCompanion\Extensions\Lightbox::class,
+			] )
 			->bootstrap();
 	}
 

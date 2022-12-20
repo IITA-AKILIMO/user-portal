@@ -296,3 +296,67 @@ a.kb-icon-button {
   display: inline-block;
   transition: all ease 0.25s;
 }
+
+.kb-group {
+  position: relative;
+}
+.kb-group .kb-group-inner-container {
+  position: relative;
+}
+.kb-group.kb-group-has-overlay::after {
+  content: "";
+  display: block;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+.kb-group.kb-group-has-overlay .kb-group-inner-container {
+  z-index: 2;
+}
+
+.kb-row {
+  position: relative;
+}
+.kb-row .kb-row-inner-container {
+  display: flex;
+  position: relative;
+  align-items: center;
+}
+.kb-row.kb-row-has-overlay::after {
+  content: "";
+  display: block;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+.kb-row.kb-row-has-overlay .kb-row-inner-container {
+  z-index: 2;
+}
+
+.kb-stack {
+  position: relative;
+}
+.kb-stack .kb-stack-inner-container {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+.kb-stack.kb-stack-has-overlay::after {
+  content: "";
+  display: block;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+.kb-stack.kb-stack-has-overlay .kb-stack-inner-container {
+  z-index: 2;
+}

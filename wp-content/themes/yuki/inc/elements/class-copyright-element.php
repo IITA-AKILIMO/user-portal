@@ -24,6 +24,14 @@ if ( !class_exists( 'Yuki_Copyright_Element' ) ) {
     class Yuki_Copyright_Element extends Element
     {
         /**
+         * @param null $id
+         * @param array $data
+         */
+        public function after_register( $id = null, $data = array() )
+        {
+        }
+        
+        /**
          * {@inheritDoc}
          */
         public function getControls()

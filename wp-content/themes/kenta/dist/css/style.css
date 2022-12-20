@@ -3455,11 +3455,11 @@ body:not(.elementor-page) .gallery-item {
 .break-words {
   overflow-wrap: break-word;
 }
-.rounded-full {
-  border-radius: 9999px;
-}
 .rounded {
   border-radius: 0.25rem;
+}
+.rounded-full {
+  border-radius: 9999px;
 }
 .border {
   border-width: 1px;

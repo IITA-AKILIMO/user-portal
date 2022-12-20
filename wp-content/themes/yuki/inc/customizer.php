@@ -41,6 +41,7 @@ require get_template_directory() . '/inc/builder/class-header-builder.php';
 require get_template_directory() . '/inc/builder/class-footer-builder.php';
 // homepage customizer elements
 require get_template_directory() . '/inc/homepage/class-magazine-layout.php';
+require get_template_directory() . '/inc/homepage/class-posts-base-element.php';
 require get_template_directory() . '/inc/homepage/elements/class-heading-element.php';
 require get_template_directory() . '/inc/homepage/elements/class-text-element.php';
 require get_template_directory() . '/inc/homepage/elements/class-hero-element.php';

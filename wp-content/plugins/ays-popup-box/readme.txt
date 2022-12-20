@@ -4,7 +4,7 @@ Donate link: https://ays-pro.com/wordpress/popup-box
 Tags: popup maker, popup box, responsive popup, popup forms, wordpress popup plugin
 Requires at least: 4.0
 Tested up to: 6.1.1
-Stable tag: 3.2.7
+Stable tag: 3.2.8
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -257,6 +257,9 @@ Simply and effortlessly! Either you are switching from the free to pro, or the l
 This is not even a question! Surely, you can customize the best popups the way you wish. Choose one of our premade themes, change the background color, image, text, and everything that you can think of. Can’t find anything of your taste? You are free to add your **custom CSS code** to get your preferred design.
 
 == Changelog ==
+
+= 3.2.8 =
+* Fixed: CSS style issue on the admin page
 
 = 3.2.7 =
 * Added: German translation

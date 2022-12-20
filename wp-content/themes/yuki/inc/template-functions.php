@@ -205,13 +205,15 @@ function yuki_show_posts_pagination()
             echo  '<a href="' . esc_url( get_pagenum_link( $paged - 1, true ) ) . '" class="' . esc_attr( $btn_class . ' yuki-prev-btn yuki-prev-btn-' . $prev_type ) . '">' ;
         }
         
+        echo  '<span>' ;
         
         if ( $prev_type === 'text' ) {
-            echo  '<span>' . esc_html( CZ::get( 'yuki_pagination_prev_text' ) ) . '</span>' ;
+            esc_html_e( CZ::get( 'yuki_pagination_prev_text' ) );
         } else {
             IconsManager::print( CZ::get( 'yuki_pagination_prev_icon' ) );
         }
         
+        echo  '</span>' ;
         echo  ( $disabled ? '</span>' : '</a>' ) ;
     };
     $show_next_button = function ( $disabled = false ) use( $paged, $btn_class, $disabled_btn_class ) {

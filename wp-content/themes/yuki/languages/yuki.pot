@@ -2,14 +2,14 @@
 # This file is distributed under the GNU General Public License v2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: Yuki 1.2.6\n"
+"Project-Id-Version: Yuki 1.2.7\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/theme/yuki\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2022-11-13T03:06:54+00:00\n"
+"POT-Creation-Date: 2022-11-24T02:40:30+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.7.1\n"
 "X-Domain: yuki\n"
@@ -50,8 +50,8 @@ msgstr ""
 
 #: inc/builder/class-builder-column.php:122
 #: inc/homepage/class-homepage-column.php:108
-#: inc/homepage/elements/class-posts-slider-element.php:424
-#: inc/homepage/elements/class-posts-slider-element.php:451
+#: inc/homepage/elements/class-posts-slider-element.php:420
+#: inc/homepage/elements/class-posts-slider-element.php:447
 msgid "Width"
 msgstr ""
 
@@ -95,10 +95,10 @@ msgstr ""
 #: inc/homepage/class-homepage-column.php:158
 #: inc/homepage/class-homepage-row.php:128
 #: inc/homepage/class-homepage-row.php:149
-#: inc/homepage/elements/class-hero-element.php:123
-#: inc/homepage/elements/class-hero-element.php:149
-#: inc/homepage/elements/class-text-element.php:66
-#: inc/homepage/elements/class-text-element.php:85
+#: inc/homepage/elements/class-hero-element.php:138
+#: inc/homepage/elements/class-hero-element.php:164
+#: inc/homepage/elements/class-text-element.php:80
+#: inc/homepage/elements/class-text-element.php:99
 #: inc/traits/trait-article-controls.php:130
 #: inc/traits/trait-post-card.php:66
 #: inc/traits/trait-post-card.php:88
@@ -123,11 +123,11 @@ msgstr ""
 #: inc/builder/class-builder-column.php:175
 #: inc/customizer/class-archive-section.php:191
 #: inc/customizer/class-archive-section.php:539
-#: inc/customizer/class-content-section.php:362
+#: inc/customizer/class-content-section.php:369
 #: inc/customizer/class-global-section.php:427
 #: inc/customizer/class-single-post-section.php:148
-#: inc/elements__premium_only/class-contacts-element.php:180
-#: inc/elements__premium_only/class-html-element.php:75
+#: inc/elements__premium_only/class-contacts-element.php:197
+#: inc/elements__premium_only/class-html-element.php:86
 #: inc/homepage/class-homepage-column.php:215
 #: inc/homepage/class-homepage-row.php:223
 #: inc/traits/trait-button-controls.php:163
@@ -192,8 +192,8 @@ msgstr ""
 
 #: inc/builder/class-footer-builder.php:76
 #: inc/builder/class-header-builder.php:83
-#: inc/homepage/elements/class-features-element.php:167
 #: inc/homepage/elements/class-features-element.php:184
+#: inc/homepage/elements/class-features-element.php:201
 msgid "Image"
 msgstr ""
 
@@ -240,27 +240,28 @@ msgstr ""
 #: inc/builder/class-modal-row.php:111
 #: inc/customizer/class-archive-section.php:325
 #: inc/customizer/class-archive-section.php:341
+#: inc/customizer/class-content-section.php:400
 #: inc/customizer/class-global-section.php:402
-#: inc/elements/class-button-element.php:59
+#: inc/elements/class-button-element.php:70
 #: inc/elements/class-collapsable-menu-element.php:104
-#: inc/elements/class-copyright-element.php:34
+#: inc/elements/class-copyright-element.php:45
 #: inc/elements/class-logo-element.php:107
 #: inc/elements/class-menu-element.php:382
 #: inc/elements/class-menu-element.php:396
 #: inc/elements/class-search-element.php:54
 #: inc/elements/class-theme-switch-element.php:55
 #: inc/elements/class-trigger-element.php:47
-#: inc/elements__premium_only/class-contacts-element.php:141
+#: inc/elements__premium_only/class-contacts-element.php:158
 #: inc/elements__premium_only/class-datetime-element.php:100
-#: inc/elements__premium_only/class-html-element.php:50
+#: inc/elements__premium_only/class-html-element.php:61
 #: inc/homepage/class-homepage-column.php:167
 #: inc/homepage/class-homepage-row.php:175
-#: inc/homepage/elements/class-magazine-element.php:111
-#: inc/homepage/elements/class-posts-grid-element.php:93
-#: inc/homepage/elements/class-posts-slider-element.php:131
-#: inc/homepage/elements/class-text-element.php:94
+#: inc/homepage/elements/class-magazine-element.php:107
+#: inc/homepage/elements/class-posts-grid-element.php:88
+#: inc/homepage/elements/class-posts-slider-element.php:127
+#: inc/homepage/elements/class-text-element.php:108
 #: inc/traits/trait-post-structure.php:151
-#: inc/traits/trait-post-structure.php:637
+#: inc/traits/trait-post-structure.php:643
 #: inc/traits/trait-socials-controls.php:73
 #: inc/traits/trait-widgets-controls.php:101
 #: inc/traits/trait-widgets-controls.php:141
@@ -269,14 +270,15 @@ msgstr ""
 
 #: inc/builder/class-footer-row.php:156
 #: inc/builder/class-header-row.php:201
-#: inc/customizer/class-content-section.php:316
+#: inc/customizer/class-content-section.php:323
+#: inc/customizer/class-content-section.php:426
 #: inc/customizer/class-global-section.php:540
 #: inc/customizer/class-store-section.php:69
 #: inc/homepage/class-homepage-column.php:169
 #: inc/homepage/class-homepage-row.php:177
-#: inc/homepage/elements/class-hero-element.php:232
-#: inc/homepage/elements/class-posts-slider-element.php:351
-#: inc/homepage/elements/class-posts-slider-element.php:435
+#: inc/homepage/elements/class-hero-element.php:247
+#: inc/homepage/elements/class-posts-slider-element.php:347
+#: inc/homepage/elements/class-posts-slider-element.php:431
 #: inc/traits/trait-card-element-controls.php:105
 #: inc/traits/trait-password-protected.php:41
 #: inc/traits/trait-password-protected.php:60
@@ -287,13 +289,13 @@ msgstr ""
 
 #: inc/builder/class-footer-row.php:166
 #: inc/builder/class-header-row.php:160
-#: inc/customizer/class-content-section.php:346
+#: inc/customizer/class-content-section.php:353
 msgid "Top Border"
 msgstr ""
 
 #: inc/builder/class-footer-row.php:176
 #: inc/builder/class-header-row.php:170
-#: inc/customizer/class-content-section.php:354
+#: inc/customizer/class-content-section.php:361
 msgid "Bottom Border"
 msgstr ""
 
@@ -371,26 +373,27 @@ msgstr ""
 #: inc/customizer/class-archive-section.php:304
 #: inc/customizer/class-archive-section.php:340
 #: inc/customizer/class-global-section.php:353
-#: inc/elements/class-button-element.php:34
+#: inc/elements/class-button-element.php:45
 #: inc/elements/class-collapsable-menu-element.php:66
-#: inc/elements/class-copyright-element.php:33
+#: inc/elements/class-copyright-element.php:44
 #: inc/elements/class-logo-element.php:39
-#: inc/elements__premium_only/class-contacts-element.php:43
-#: inc/elements__premium_only/class-contacts-element.php:247
+#: inc/elements__premium_only/class-contacts-element.php:60
+#: inc/elements__premium_only/class-contacts-element.php:264
 #: inc/elements__premium_only/class-datetime-element.php:40
-#: inc/elements__premium_only/class-html-element.php:36
-#: inc/homepage/elements/class-hero-element.php:88
-#: inc/homepage/elements/class-magazine-element.php:40
-#: inc/homepage/elements/class-posts-grid-element.php:37
-#: inc/homepage/elements/class-posts-slider-element.php:49
-#: inc/homepage/elements/class-text-element.php:35
+#: inc/elements__premium_only/class-html-element.php:47
+#: inc/homepage/elements/class-hero-element.php:103
+#: inc/homepage/elements/class-magazine-element.php:36
+#: inc/homepage/elements/class-posts-grid-element.php:32
+#: inc/homepage/elements/class-posts-slider-element.php:45
+#: inc/homepage/elements/class-text-element.php:49
 #: inc/traits/trait-socials-controls.php:72
 #: inc/traits/trait-widgets-controls.php:100
 msgid "Content"
 msgstr ""
 
 #: inc/builder/class-header-row.php:118
-#: inc/homepage/elements/class-hero-element.php:164
+#: inc/homepage/elements/class-hero-element.php:179
+#: inc/traits/trait-button-controls.php:89
 msgid "Min Height"
 msgstr ""
 
@@ -408,12 +411,12 @@ msgstr ""
 #: inc/customizer/class-archive-section.php:237
 #: inc/customizer/class-archive-section.php:527
 #: inc/customizer/class-archive-section.php:534
-#: inc/customizer/class-content-section.php:309
+#: inc/customizer/class-content-section.php:316
 #: inc/customizer/class-global-section.php:416
 #: inc/customizer/class-global-section.php:422
 #: inc/customizer/class-single-post-section.php:117
 #: inc/elements/class-collapsable-menu-element.php:122
-#: inc/elements/class-copyright-element.php:54
+#: inc/elements/class-copyright-element.php:65
 #: inc/elements/class-logo-element.php:132
 #: inc/elements/class-logo-element.php:154
 #: inc/elements/class-menu-element.php:129
@@ -423,13 +426,13 @@ msgstr ""
 #: inc/elements/class-search-element.php:71
 #: inc/elements/class-search-element.php:78
 #: inc/elements/class-search-element.php:86
-#: inc/elements__premium_only/class-html-element.php:70
-#: inc/homepage/elements/class-hero-element.php:220
-#: inc/homepage/elements/class-hero-element.php:254
-#: inc/homepage/elements/class-hero-element.php:270
-#: inc/homepage/elements/class-posts-slider-element.php:347
-#: inc/homepage/elements/class-posts-slider-element.php:352
-#: inc/homepage/elements/class-posts-slider-element.php:436
+#: inc/elements__premium_only/class-html-element.php:81
+#: inc/homepage/elements/class-hero-element.php:235
+#: inc/homepage/elements/class-hero-element.php:269
+#: inc/homepage/elements/class-hero-element.php:285
+#: inc/homepage/elements/class-posts-slider-element.php:343
+#: inc/homepage/elements/class-posts-slider-element.php:348
+#: inc/homepage/elements/class-posts-slider-element.php:432
 #: inc/traits/trait-button-controls.php:106
 #: inc/traits/trait-button-controls.php:116
 #: inc/traits/trait-icon-button-controls.php:118
@@ -441,7 +444,7 @@ msgstr ""
 #: inc/traits/trait-post-structure.php:203
 #: inc/traits/trait-post-structure.php:282
 #: inc/traits/trait-post-structure.php:444
-#: inc/traits/trait-post-structure.php:572
+#: inc/traits/trait-post-structure.php:578
 #: inc/traits/trait-socials-controls.php:195
 #: inc/traits/trait-socials-controls.php:217
 #: inc/traits/trait-socials-controls.php:235
@@ -452,20 +455,20 @@ msgstr ""
 #: inc/builder/class-modal-row.php:124
 #: inc/customizer/class-archive-section.php:528
 #: inc/customizer/class-archive-section.php:535
-#: inc/customizer/class-content-section.php:310
+#: inc/customizer/class-content-section.php:317
 #: inc/customizer/class-global-section.php:417
 #: inc/customizer/class-global-section.php:423
 #: inc/customizer/class-single-post-section.php:118
 #: inc/elements/class-collapsable-menu-element.php:123
-#: inc/elements/class-copyright-element.php:55
+#: inc/elements/class-copyright-element.php:66
 #: inc/elements/class-logo-element.php:134
 #: inc/elements/class-menu-element.php:131
 #: inc/elements/class-menu-element.php:146
 #: inc/elements/class-menu-element.php:248
 #: inc/elements/class-search-element.php:87
-#: inc/elements__premium_only/class-html-element.php:71
-#: inc/homepage/elements/class-posts-slider-element.php:348
-#: inc/homepage/elements/class-posts-slider-element.php:353
+#: inc/elements__premium_only/class-html-element.php:82
+#: inc/homepage/elements/class-posts-slider-element.php:344
+#: inc/homepage/elements/class-posts-slider-element.php:349
 #: inc/traits/trait-button-controls.php:107
 #: inc/traits/trait-button-controls.php:117
 #: inc/traits/trait-icon-button-controls.php:119
@@ -475,7 +478,7 @@ msgstr ""
 #: inc/traits/trait-post-structure.php:195
 #: inc/traits/trait-post-structure.php:204
 #: inc/traits/trait-post-structure.php:285
-#: inc/traits/trait-post-structure.php:573
+#: inc/traits/trait-post-structure.php:579
 #: inc/traits/trait-socials-controls.php:196
 #: inc/traits/trait-socials-controls.php:218
 #: inc/traits/trait-socials-controls.php:236
@@ -519,10 +522,10 @@ msgstr ""
 #: inc/elements/class-logo-element.php:58
 #: inc/elements/class-logo-element.php:101
 #: inc/elements/class-menu-element.php:189
-#: inc/homepage/elements/class-hero-element.php:122
-#: inc/homepage/elements/class-hero-element.php:148
-#: inc/homepage/elements/class-text-element.php:62
-#: inc/homepage/elements/class-text-element.php:81
+#: inc/homepage/elements/class-hero-element.php:137
+#: inc/homepage/elements/class-hero-element.php:163
+#: inc/homepage/elements/class-text-element.php:76
+#: inc/homepage/elements/class-text-element.php:95
 #: inc/traits/trait-article-controls.php:126
 #: inc/traits/trait-post-card.php:62
 #: inc/traits/trait-widgets-controls.php:185
@@ -536,10 +539,10 @@ msgstr ""
 #: inc/elements/class-logo-element.php:59
 #: inc/elements/class-logo-element.php:103
 #: inc/elements/class-menu-element.php:190
-#: inc/homepage/elements/class-hero-element.php:124
-#: inc/homepage/elements/class-hero-element.php:150
-#: inc/homepage/elements/class-text-element.php:70
-#: inc/homepage/elements/class-text-element.php:89
+#: inc/homepage/elements/class-hero-element.php:139
+#: inc/homepage/elements/class-hero-element.php:165
+#: inc/homepage/elements/class-text-element.php:84
+#: inc/homepage/elements/class-text-element.php:103
 #: inc/traits/trait-article-controls.php:134
 #: inc/traits/trait-post-card.php:70
 #: inc/traits/trait-widgets-controls.php:193
@@ -550,46 +553,46 @@ msgstr ""
 msgid "Drawer Width"
 msgstr ""
 
-#: inc/customizer.php:119
+#: inc/customizer.php:120
 msgid "Header Settings"
 msgstr ""
 
-#: inc/customizer.php:120
+#: inc/customizer.php:121
 msgid "Footer Settings"
 msgstr ""
 
-#: inc/customizer.php:121
+#: inc/customizer.php:122
 msgid "Homepage Settings"
 msgstr ""
 
-#: inc/customizer.php:122
+#: inc/customizer.php:123
 msgid "Global Settings"
 msgstr ""
 
-#: inc/customizer.php:123
+#: inc/customizer.php:124
 #: template-parts/admin-welcome.php:17
 msgid "Colors Settings"
 msgstr ""
 
-#: inc/customizer.php:124
+#: inc/customizer.php:125
 #: template-parts/admin-welcome.php:62
 msgid "Archive Settings"
 msgstr ""
 
-#: inc/customizer.php:125
+#: inc/customizer.php:126
 msgid "Content Settings"
 msgstr ""
 
-#: inc/customizer.php:126
+#: inc/customizer.php:127
 #: template-parts/admin-welcome.php:52
 msgid "Single Post Settings"
 msgstr ""
 
-#: inc/customizer.php:127
+#: inc/customizer.php:128
 msgid "Pages Settings"
 msgstr ""
 
-#: inc/customizer.php:130
+#: inc/customizer.php:131
 msgid "Store Settings"
 msgstr ""
 
@@ -635,8 +638,8 @@ msgid "Right Sidebar"
 msgstr ""
 
 #: inc/customizer/class-archive-section.php:79
-#: inc/homepage/elements/class-posts-slider-element.php:151
-#: inc/homepage/elements/class-posts-slider-element.php:300
+#: inc/homepage/elements/class-posts-slider-element.php:147
+#: inc/homepage/elements/class-posts-slider-element.php:296
 msgid "Pagination"
 msgstr ""
 
@@ -644,9 +647,9 @@ msgstr ""
 #: inc/customizer/class-global-section.php:47
 #: inc/homepage/class-homepage-column.php:106
 #: inc/homepage/class-homepage-row.php:106
-#: inc/homepage/elements/class-hero-element.php:173
-#: inc/homepage/elements/class-magazine-element.php:108
-#: inc/homepage/elements/class-posts-grid-element.php:51
+#: inc/homepage/elements/class-hero-element.php:188
+#: inc/homepage/elements/class-magazine-element.php:104
+#: inc/homepage/elements/class-posts-grid-element.php:46
 msgid "Layout"
 msgstr ""
 
@@ -681,17 +684,17 @@ msgstr ""
 
 #: inc/customizer/class-archive-section.php:179
 #: inc/customizer/class-archive-section.php:468
-#: inc/homepage/elements/class-heading-element.php:64
+#: inc/homepage/elements/class-heading-element.php:78
 #: inc/traits/trait-card-element-controls.php:65
 msgid "Alignment"
 msgstr ""
 
 #: inc/customizer/class-archive-section.php:208
-#: inc/elements__premium_only/class-contacts-element.php:242
-#: inc/homepage/elements/class-features-element.php:191
-#: inc/homepage/elements/class-heading-element.php:33
-#: inc/homepage/elements/class-heading-element.php:60
-#: inc/homepage/elements/class-hero-element.php:90
+#: inc/elements__premium_only/class-contacts-element.php:259
+#: inc/homepage/elements/class-features-element.php:208
+#: inc/homepage/elements/class-heading-element.php:47
+#: inc/homepage/elements/class-heading-element.php:74
+#: inc/homepage/elements/class-hero-element.php:105
 #: inc/traits/trait-article-controls.php:96
 #: inc/traits/trait-post-structure.php:98
 msgid "Title"
@@ -700,9 +703,9 @@ msgstr ""
 #: inc/customizer/class-archive-section.php:210
 #: inc/customizer/class-archive-section.php:234
 #: inc/elements/class-collapsable-menu-element.php:116
-#: inc/elements/class-copyright-element.php:46
-#: inc/elements__premium_only/class-html-element.php:62
-#: inc/homepage/elements/class-posts-slider-element.php:346
+#: inc/elements/class-copyright-element.php:57
+#: inc/elements__premium_only/class-html-element.php:73
+#: inc/homepage/elements/class-posts-slider-element.php:342
 #: inc/traits/trait-post-structure.php:174
 msgid "Color"
 msgstr ""
@@ -710,17 +713,18 @@ msgstr ""
 #: inc/customizer/class-archive-section.php:217
 #: inc/customizer/class-archive-section.php:241
 #: inc/customizer/class-archive-section.php:490
-#: inc/customizer/class-content-section.php:37
-#: inc/customizer/class-content-section.php:296
+#: inc/customizer/class-content-section.php:39
+#: inc/customizer/class-content-section.php:303
+#: inc/customizer/class-content-section.php:409
 #: inc/customizer/class-store-section.php:55
 #: inc/elements/class-collapsable-menu-element.php:106
-#: inc/elements/class-copyright-element.php:36
+#: inc/elements/class-copyright-element.php:47
 #: inc/elements/class-menu-element.php:106
 #: inc/elements/class-menu-element.php:224
 #: inc/elements__premium_only/class-datetime-element.php:102
-#: inc/elements__premium_only/class-html-element.php:52
-#: inc/homepage/elements/class-reviews-element.php:46
-#: inc/homepage/elements/class-text-element.php:96
+#: inc/elements__premium_only/class-html-element.php:63
+#: inc/homepage/elements/class-reviews-element.php:64
+#: inc/homepage/elements/class-text-element.php:110
 #: inc/traits/trait-button-controls.php:148
 #: inc/traits/trait-password-protected.php:31
 #: inc/traits/trait-post-structure.php:165
@@ -730,9 +734,9 @@ msgid "Typography"
 msgstr ""
 
 #: inc/customizer/class-archive-section.php:232
-#: inc/homepage/elements/class-features-element.php:47
-#: inc/homepage/elements/class-features-element.php:196
-#: inc/homepage/elements/class-hero-element.php:95
+#: inc/homepage/elements/class-features-element.php:64
+#: inc/homepage/elements/class-features-element.php:213
+#: inc/homepage/elements/class-hero-element.php:110
 msgid "Description"
 msgstr ""
 
@@ -771,9 +775,10 @@ msgstr ""
 
 #: inc/customizer/class-archive-section.php:387
 #: inc/homepage/class-homepage-builder.php:38
-#: inc/homepage/elements/class-features-element.php:46
-#: inc/homepage/elements/class-text-element.php:108
+#: inc/homepage/elements/class-features-element.php:63
+#: inc/homepage/elements/class-text-element.php:122
 #: inc/traits/trait-password-protected.php:61
+#: inc/traits/trait-post-structure.php:470
 msgid "Text"
 msgstr ""
 
@@ -785,16 +790,16 @@ msgstr ""
 #: inc/elements/class-theme-switch-element.php:33
 #: inc/elements/class-trigger-element.php:33
 #: inc/elements/class-trigger-element.php:35
-#: inc/elements__premium_only/class-contacts-element.php:237
+#: inc/elements__premium_only/class-contacts-element.php:254
 #: inc/elements__premium_only/class-datetime-element.php:70
-#: inc/homepage/elements/class-features-element.php:45
-#: inc/homepage/elements/class-features-element.php:166
-#: inc/homepage/elements/class-features-element.php:175
-#: inc/traits/trait-post-structure.php:509
-#: inc/traits/trait-post-structure.php:518
-#: inc/traits/trait-post-structure.php:538
-#: inc/traits/trait-post-structure.php:547
-#: inc/traits/trait-post-structure.php:581
+#: inc/homepage/elements/class-features-element.php:62
+#: inc/homepage/elements/class-features-element.php:183
+#: inc/homepage/elements/class-features-element.php:192
+#: inc/traits/trait-post-structure.php:515
+#: inc/traits/trait-post-structure.php:524
+#: inc/traits/trait-post-structure.php:544
+#: inc/traits/trait-post-structure.php:553
+#: inc/traits/trait-post-structure.php:587
 msgid "Icon"
 msgstr ""
 
@@ -844,11 +849,11 @@ msgstr ""
 
 #: inc/customizer/class-archive-section.php:504
 #: inc/customizer/class-archive-section.php:524
-#: inc/customizer/class-content-section.php:307
+#: inc/customizer/class-content-section.php:314
 #: inc/customizer/class-single-post-section.php:115
 #: inc/elements/class-menu-element.php:122
 #: inc/elements/class-menu-element.php:239
-#: inc/elements__premium_only/class-contacts-element.php:169
+#: inc/elements__premium_only/class-contacts-element.php:186
 #: inc/elements__premium_only/class-datetime-element.php:113
 #: inc/traits/trait-button-controls.php:100
 #: inc/traits/trait-password-protected.php:54
@@ -859,9 +864,9 @@ msgid "Text Color"
 msgstr ""
 
 #: inc/customizer/class-archive-section.php:506
-#: inc/elements/class-copyright-element.php:53
-#: inc/elements__premium_only/class-contacts-element.php:175
-#: inc/elements__premium_only/class-html-element.php:69
+#: inc/elements/class-copyright-element.php:64
+#: inc/elements__premium_only/class-contacts-element.php:192
+#: inc/elements__premium_only/class-html-element.php:80
 #: inc/traits/trait-widgets-controls.php:235
 msgid "Text Initial"
 msgstr ""
@@ -876,12 +881,13 @@ msgid "Accent"
 msgstr ""
 
 #: inc/customizer/class-archive-section.php:511
-#: inc/customizer/class-content-section.php:317
+#: inc/customizer/class-content-section.php:324
+#: inc/customizer/class-content-section.php:427
 #: inc/customizer/class-store-section.php:70
 #: inc/homepage/class-homepage-column.php:186
 #: inc/homepage/class-homepage-row.php:194
-#: inc/homepage/elements/class-posts-slider-element.php:357
-#: inc/homepage/elements/class-posts-slider-element.php:440
+#: inc/homepage/elements/class-posts-slider-element.php:353
+#: inc/homepage/elements/class-posts-slider-element.php:436
 #: inc/traits/trait-button-controls.php:122
 #: inc/traits/trait-card-element-controls.php:95
 #: inc/traits/trait-password-protected.php:49
@@ -949,8 +955,8 @@ msgstr ""
 #: inc/customizer/class-colors-section.php:188
 #: inc/customizer/class-colors-section.php:224
 #: inc/customizer/class-colors-section.php:231
-#: inc/customizer/class-content-section.php:187
-#: inc/customizer/class-content-section.php:251
+#: inc/customizer/class-content-section.php:194
+#: inc/customizer/class-content-section.php:258
 msgid "Base Color"
 msgstr ""
 
@@ -977,20 +983,21 @@ msgstr ""
 #: inc/customizer/class-colors-section.php:219
 #: inc/traits/trait-article-controls.php:229
 #: inc/traits/trait-post-structure.php:155
-#: inc/traits/trait-post-structure.php:580
+#: inc/traits/trait-post-structure.php:586
 msgid "Default"
 msgstr ""
 
 #: inc/customizer/class-colors-section.php:211
 #: inc/customizer/class-colors-section.php:220
-#: inc/customizer/class-content-section.php:318
+#: inc/customizer/class-content-section.php:325
+#: inc/customizer/class-content-section.php:428
 #: inc/customizer/class-store-section.php:71
 #: inc/elements/class-collapsable-menu-element.php:124
 #: inc/elements/class-menu-element.php:133
 #: inc/elements/class-menu-element.php:148
 #: inc/elements/class-menu-element.php:250
 #: inc/elements/class-menu-element.php:263
-#: inc/homepage/elements/class-posts-slider-element.php:437
+#: inc/homepage/elements/class-posts-slider-element.php:433
 #: inc/traits/trait-password-protected.php:63
 msgid "Active"
 msgstr ""
@@ -999,117 +1006,130 @@ msgstr ""
 msgid "Fully customize your colors in %sPro Version%s"
 msgstr ""
 
-#: inc/customizer/class-content-section.php:33
+#: inc/customizer/class-content-section.php:35
 #: inc/customizer/class-global-section.php:534
-#: inc/homepage/elements/class-features-element.php:44
-#: inc/homepage/elements/class-heading-element.php:58
-#: inc/homepage/elements/class-reviews-element.php:39
-#: inc/homepage/elements/class-text-element.php:106
+#: inc/homepage/elements/class-features-element.php:61
+#: inc/homepage/elements/class-heading-element.php:72
+#: inc/homepage/elements/class-reviews-element.php:57
+#: inc/homepage/elements/class-text-element.php:120
 msgid "Colors"
 msgstr ""
 
-#: inc/customizer/class-content-section.php:41
+#: inc/customizer/class-content-section.php:43
 msgid "Buttons"
 msgstr ""
 
-#: inc/customizer/class-content-section.php:53
+#: inc/customizer/class-content-section.php:55
 msgid "Comments Area"
 msgstr ""
 
-#: inc/customizer/class-content-section.php:66
-#: inc/customizer/class-content-section.php:142
+#: inc/customizer/class-content-section.php:60
+msgid "Forms"
+msgstr ""
+
+#: inc/customizer/class-content-section.php:73
+#: inc/customizer/class-content-section.php:149
 msgid "Base Typography"
 msgstr ""
 
-#: inc/customizer/class-content-section.php:75
-#: inc/customizer/class-content-section.php:151
+#: inc/customizer/class-content-section.php:82
+#: inc/customizer/class-content-section.php:158
 msgid "Drop Cap"
 msgstr ""
 
-#: inc/customizer/class-content-section.php:85
+#: inc/customizer/class-content-section.php:92
 msgid "Heading 1 (H1)"
 msgstr ""
 
-#: inc/customizer/class-content-section.php:94
+#: inc/customizer/class-content-section.php:101
 msgid "Heading 2 (H2)"
 msgstr ""
 
-#: inc/customizer/class-content-section.php:103
+#: inc/customizer/class-content-section.php:110
 msgid "Heading 3 (H3)"
 msgstr ""
 
-#: inc/customizer/class-content-section.php:112
+#: inc/customizer/class-content-section.php:119
 msgid "Heading 4 (H4)"
 msgstr ""
 
-#: inc/customizer/class-content-section.php:121
+#: inc/customizer/class-content-section.php:128
 msgid "Heading 5 (H5)"
 msgstr ""
 
-#: inc/customizer/class-content-section.php:130
+#: inc/customizer/class-content-section.php:137
 msgid "Heading 6 (H6)"
 msgstr ""
 
-#: inc/customizer/class-content-section.php:173
+#: inc/customizer/class-content-section.php:180
 msgid "More typography options in %sPro Version%s"
 msgstr ""
 
-#: inc/customizer/class-content-section.php:193
+#: inc/customizer/class-content-section.php:200
 msgid "Drop Cap Color"
 msgstr ""
 
-#: inc/customizer/class-content-section.php:199
+#: inc/customizer/class-content-section.php:206
 msgid "Links Color"
 msgstr ""
 
-#: inc/customizer/class-content-section.php:206
-#: inc/customizer/class-content-section.php:257
+#: inc/customizer/class-content-section.php:213
+#: inc/customizer/class-content-section.php:264
 msgid "All Headings Color (H1 - H6)"
 msgstr ""
 
-#: inc/customizer/class-content-section.php:212
+#: inc/customizer/class-content-section.php:219
 msgid "Headings 1 (H1)"
 msgstr ""
 
-#: inc/customizer/class-content-section.php:218
+#: inc/customizer/class-content-section.php:225
 msgid "Headings 2 (H2)"
 msgstr ""
 
-#: inc/customizer/class-content-section.php:224
+#: inc/customizer/class-content-section.php:231
 msgid "Headings 3 (H3)"
 msgstr ""
 
-#: inc/customizer/class-content-section.php:230
+#: inc/customizer/class-content-section.php:237
 msgid "Headings 4 (H4)"
 msgstr ""
 
-#: inc/customizer/class-content-section.php:236
+#: inc/customizer/class-content-section.php:243
 msgid "Headings 5 (H5)"
 msgstr ""
 
-#: inc/customizer/class-content-section.php:242
+#: inc/customizer/class-content-section.php:249
 msgid "Headings 6 (H6)"
 msgstr ""
 
-#: inc/customizer/class-content-section.php:280
+#: inc/customizer/class-content-section.php:287
 msgid "More color options in %sPro Version%s"
 msgstr ""
 
-#: inc/customizer/class-content-section.php:313
+#: inc/customizer/class-content-section.php:320
+#: inc/customizer/class-content-section.php:419
 #: inc/customizer/class-store-section.php:66
 msgid "Controls Color"
 msgstr ""
 
-#: inc/customizer/class-content-section.php:369
+#: inc/customizer/class-content-section.php:376
 #: inc/customizer/class-single-post-section.php:158
 #: inc/homepage/class-homepage-column.php:203
 #: inc/homepage/class-homepage-row.php:211
 msgid "Margin"
 msgstr ""
 
-#: inc/customizer/class-content-section.php:378
-#: inc/homepage/elements/class-posts-slider-element.php:161
+#: inc/customizer/class-content-section.php:385
+#: inc/homepage/elements/class-posts-slider-element.php:157
 msgid "More options in %sPro Version%s"
+msgstr ""
+
+#: inc/customizer/class-content-section.php:404
+msgid "Classic"
+msgstr ""
+
+#: inc/customizer/class-content-section.php:405
+msgid "Modern"
 msgstr ""
 
 #: inc/customizer/class-footer-section.php:25
@@ -1232,7 +1252,7 @@ msgstr ""
 
 #: inc/customizer/class-global-section.php:364
 #: inc/elements__premium_only/class-datetime-element.php:79
-#: inc/homepage/elements/class-posts-slider-element.php:384
+#: inc/homepage/elements/class-posts-slider-element.php:380
 #: inc/traits/trait-icon-button-controls.php:41
 msgid "Icon Size"
 msgstr ""
@@ -1246,7 +1266,7 @@ msgid "Side Offset"
 msgstr ""
 
 #: inc/customizer/class-global-section.php:393
-#: inc/homepage/elements/class-text-element.php:56
+#: inc/homepage/elements/class-text-element.php:70
 msgid "Position"
 msgstr ""
 
@@ -1389,29 +1409,29 @@ msgstr ""
 msgid "Form"
 msgstr ""
 
-#: inc/elements/class-button-element.php:36
+#: inc/elements/class-button-element.php:47
 msgid "Button Label"
 msgstr ""
 
-#: inc/elements/class-button-element.php:38
+#: inc/elements/class-button-element.php:49
 msgid "Button"
 msgstr ""
 
-#: inc/elements/class-button-element.php:41
+#: inc/elements/class-button-element.php:52
 msgid "Button Link"
 msgstr ""
 
-#: inc/elements/class-button-element.php:48
-#: inc/elements__premium_only/class-contacts-element.php:118
+#: inc/elements/class-button-element.php:59
+#: inc/elements__premium_only/class-contacts-element.php:135
 #: inc/elements__premium_only/class-image-element.php:60
-#: inc/homepage/elements/class-hero-element.php:109
+#: inc/homepage/elements/class-hero-element.php:124
 #: inc/traits/trait-socials-controls.php:94
 msgid "Open In New Tab"
 msgstr ""
 
-#: inc/elements/class-button-element.php:53
+#: inc/elements/class-button-element.php:64
 #: inc/elements__premium_only/class-image-element.php:65
-#: inc/homepage/elements/class-hero-element.php:113
+#: inc/homepage/elements/class-hero-element.php:128
 #: inc/traits/trait-socials-controls.php:99
 msgid "No Follow"
 msgstr ""
@@ -1462,23 +1482,23 @@ msgstr ""
 
 #: inc/elements/class-collapsable-menu-element.php:128
 #: inc/elements/class-menu-element.php:268
-#: inc/traits/trait-post-structure.php:586
+#: inc/traits/trait-post-structure.php:592
 msgid "Items Divider"
 msgstr ""
 
-#: inc/elements/class-copyright-element.php:66
+#: inc/elements/class-copyright-element.php:77
 msgid "Copyright Text"
 msgstr ""
 
-#: inc/elements/class-copyright-element.php:67
+#: inc/elements/class-copyright-element.php:78
 msgid "You can insert some arbitrary HTML code tags: {current_year}, {site_title}, {about_theme} and {about_author}"
 msgstr ""
 
-#: inc/elements/class-copyright-element.php:76
+#: inc/elements/class-copyright-element.php:87
 msgid "Upgrade to our %sPro Version%s to change the copyright text"
 msgstr ""
 
-#: inc/elements/class-copyright-element.php:114
+#: inc/elements/class-copyright-element.php:125
 msgid "Theme"
 msgstr ""
 
@@ -1488,17 +1508,17 @@ msgid "Divider"
 msgstr ""
 
 #: inc/elements/class-divider-element.php:37
-#: inc/homepage/elements/class-posts-slider-element.php:459
+#: inc/homepage/elements/class-posts-slider-element.php:455
 #: inc/traits/trait-post-structure.php:333
 msgid "Height"
 msgstr ""
 
 #: inc/elements/class-divider-element.php:47
 #: inc/elements__premium_only/class-datetime-element.php:134
-#: inc/homepage/elements/class-features-element.php:83
-#: inc/homepage/elements/class-features-element.php:103
-#: inc/homepage/elements/class-heading-element.php:109
-#: inc/homepage/elements/class-text-element.php:114
+#: inc/homepage/elements/class-features-element.php:100
+#: inc/homepage/elements/class-features-element.php:120
+#: inc/homepage/elements/class-heading-element.php:123
+#: inc/homepage/elements/class-text-element.php:128
 #: inc/traits/trait-article-controls.php:140
 #: inc/traits/trait-article-controls.php:211
 #: inc/traits/trait-article-controls.php:268
@@ -1538,7 +1558,7 @@ msgid "Click here to change the site title and tagline."
 msgstr ""
 
 #: inc/elements/class-logo-element.php:96
-#: inc/homepage/elements/class-hero-element.php:118
+#: inc/homepage/elements/class-hero-element.php:133
 #: inc/traits/trait-article-controls.php:119
 #: inc/traits/trait-post-card.php:54
 #: inc/traits/trait-widgets-controls.php:177
@@ -1656,86 +1676,86 @@ msgstr ""
 msgid "Dark Icon"
 msgstr ""
 
-#: inc/elements__premium_only/class-contacts-element.php:52
-#: inc/elements__premium_only/class-contacts-element.php:53
+#: inc/elements__premium_only/class-contacts-element.php:69
+#: inc/elements__premium_only/class-contacts-element.php:70
 msgid "Email"
 msgstr ""
 
-#: inc/elements__premium_only/class-contacts-element.php:61
-#: inc/elements__premium_only/class-contacts-element.php:62
+#: inc/elements__premium_only/class-contacts-element.php:78
+#: inc/elements__premium_only/class-contacts-element.php:79
 msgid "Phone"
 msgstr ""
 
-#: inc/elements__premium_only/class-contacts-element.php:70
-#: inc/elements__premium_only/class-contacts-element.php:71
+#: inc/elements__premium_only/class-contacts-element.php:87
+#: inc/elements__premium_only/class-contacts-element.php:88
 msgid "Mobile"
 msgstr ""
 
-#: inc/elements__premium_only/class-contacts-element.php:79
-#: inc/elements__premium_only/class-contacts-element.php:80
+#: inc/elements__premium_only/class-contacts-element.php:96
+#: inc/elements__premium_only/class-contacts-element.php:97
 msgid "Business Hours"
 msgstr ""
 
-#: inc/elements__premium_only/class-contacts-element.php:88
-#: inc/elements__premium_only/class-contacts-element.php:89
+#: inc/elements__premium_only/class-contacts-element.php:105
+#: inc/elements__premium_only/class-contacts-element.php:106
 msgid "Address"
 msgstr ""
 
-#: inc/elements__premium_only/class-contacts-element.php:97
-#: inc/elements__premium_only/class-contacts-element.php:98
+#: inc/elements__premium_only/class-contacts-element.php:114
+#: inc/elements__premium_only/class-contacts-element.php:115
 msgid "Fax"
 msgstr ""
 
-#: inc/elements__premium_only/class-contacts-element.php:106
-#: inc/elements__premium_only/class-contacts-element.php:107
+#: inc/elements__premium_only/class-contacts-element.php:123
+#: inc/elements__premium_only/class-contacts-element.php:124
 msgid "Website"
 msgstr ""
 
-#: inc/elements__premium_only/class-contacts-element.php:123
+#: inc/elements__premium_only/class-contacts-element.php:140
 msgid "Show Title"
 msgstr ""
 
-#: inc/elements__premium_only/class-contacts-element.php:129
+#: inc/elements__premium_only/class-contacts-element.php:146
 msgid "Items Spacing"
 msgstr ""
 
-#: inc/elements__premium_only/class-contacts-element.php:146
-#: inc/homepage/elements/class-features-element.php:59
-#: inc/homepage/elements/class-heading-element.php:81
-#: inc/homepage/elements/class-hero-element.php:243
+#: inc/elements__premium_only/class-contacts-element.php:163
+#: inc/homepage/elements/class-features-element.php:76
+#: inc/homepage/elements/class-heading-element.php:95
+#: inc/homepage/elements/class-hero-element.php:258
 msgid "Title Typography"
 msgstr ""
 
-#: inc/elements__premium_only/class-contacts-element.php:158
+#: inc/elements__premium_only/class-contacts-element.php:175
 msgid "Content Typography"
 msgstr ""
 
-#: inc/elements__premium_only/class-contacts-element.php:176
+#: inc/elements__premium_only/class-contacts-element.php:193
 #: inc/elements__premium_only/class-datetime-element.php:117
 #: inc/elements__premium_only/class-datetime-element.php:128
-#: inc/homepage/elements/class-text-element.php:109
+#: inc/homepage/elements/class-text-element.php:123
 #: inc/traits/trait-widgets-controls.php:236
 msgid "Link Initial"
 msgstr ""
 
-#: inc/elements__premium_only/class-contacts-element.php:177
-#: inc/homepage/elements/class-text-element.php:110
+#: inc/elements__premium_only/class-contacts-element.php:194
+#: inc/homepage/elements/class-text-element.php:124
 #: inc/traits/trait-widgets-controls.php:237
 msgid "Link Hover"
 msgstr ""
 
-#: inc/elements__premium_only/class-contacts-element.php:252
+#: inc/elements__premium_only/class-contacts-element.php:269
 msgid "Link (Optional)"
 msgstr ""
 
 #: inc/elements__premium_only/class-datetime-element.php:42
-#: inc/traits/trait-post-structure.php:526
+#: inc/traits/trait-post-structure.php:532
 msgid "Date Format"
 msgstr ""
 
 #. translators: placeholder here means the actual URL.
 #: inc/elements__premium_only/class-datetime-element.php:45
-#: inc/traits/trait-post-structure.php:529
+#: inc/traits/trait-post-structure.php:535
 msgid "Date format %s instructions %s."
 msgstr ""
 
@@ -1755,17 +1775,17 @@ msgstr ""
 msgid "Icon Spacing"
 msgstr ""
 
-#: inc/elements__premium_only/class-html-element.php:38
-#: inc/homepage/elements/class-text-element.php:37
+#: inc/elements__premium_only/class-html-element.php:49
+#: inc/homepage/elements/class-text-element.php:51
 msgid "Prose Style"
 msgstr ""
 
-#: inc/elements__premium_only/class-html-element.php:44
-#: inc/homepage/elements/class-text-element.php:42
+#: inc/elements__premium_only/class-html-element.php:55
+#: inc/homepage/elements/class-text-element.php:56
 msgid "Text Content"
 msgstr ""
 
-#: inc/elements__premium_only/class-html-element.php:45
+#: inc/elements__premium_only/class-html-element.php:56
 msgid "You can add some arbitrary HTML code tags"
 msgstr ""
 
@@ -1795,12 +1815,12 @@ msgid "Hero"
 msgstr ""
 
 #: inc/homepage/class-homepage-builder.php:40
-#: inc/homepage/elements/class-features-element.php:123
+#: inc/homepage/elements/class-features-element.php:140
 msgid "Features"
 msgstr ""
 
 #: inc/homepage/class-homepage-builder.php:41
-#: inc/homepage/elements/class-reviews-element.php:89
+#: inc/homepage/elements/class-reviews-element.php:107
 msgid "Reviews"
 msgstr ""
 
@@ -1837,17 +1857,17 @@ msgid "Exclusive Features"
 msgstr ""
 
 #: inc/homepage/class-homepage-builder.php:92
-#: inc/homepage/elements/class-features-element.php:129
+#: inc/homepage/elements/class-features-element.php:146
 msgid "Online Business"
 msgstr ""
 
 #: inc/homepage/class-homepage-builder.php:101
-#: inc/homepage/elements/class-features-element.php:140
+#: inc/homepage/elements/class-features-element.php:157
 msgid "Blogging"
 msgstr ""
 
 #: inc/homepage/class-homepage-builder.php:110
-#: inc/homepage/elements/class-features-element.php:151
+#: inc/homepage/elements/class-features-element.php:168
 msgid "Powerful Design"
 msgstr ""
 
@@ -1868,8 +1888,8 @@ msgstr ""
 
 #: inc/homepage/class-homepage-column.php:191
 #: inc/homepage/class-homepage-row.php:199
-#: inc/homepage/elements/class-posts-slider-element.php:372
-#: inc/homepage/elements/class-posts-slider-element.php:480
+#: inc/homepage/elements/class-posts-slider-element.php:368
+#: inc/homepage/elements/class-posts-slider-element.php:476
 #: inc/traits/trait-article-controls.php:256
 #: inc/traits/trait-button-controls.php:155
 #: inc/traits/trait-post-card.php:220
@@ -1909,631 +1929,626 @@ msgstr ""
 msgid "Stretch the row to the full width of the page."
 msgstr ""
 
-#: inc/homepage/elements/class-features-element.php:51
-#: inc/homepage/elements/class-reviews-element.php:79
+#: inc/homepage/elements/class-features-element.php:68
+#: inc/homepage/elements/class-reviews-element.php:97
 msgid "Card Style"
 msgstr ""
 
-#: inc/homepage/elements/class-features-element.php:56
+#: inc/homepage/elements/class-features-element.php:73
 msgid "Title & Description"
 msgstr ""
 
-#: inc/homepage/elements/class-features-element.php:73
-#: inc/homepage/elements/class-hero-element.php:259
+#: inc/homepage/elements/class-features-element.php:90
+#: inc/homepage/elements/class-hero-element.php:274
 msgid "Description Typography"
 msgstr ""
 
-#: inc/homepage/elements/class-features-element.php:93
-#: inc/homepage/elements/class-hero-element.php:128
-#: inc/homepage/elements/class-hero-element.php:130
+#: inc/homepage/elements/class-features-element.php:110
+#: inc/homepage/elements/class-hero-element.php:143
+#: inc/homepage/elements/class-hero-element.php:145
 msgid "Media"
 msgstr ""
 
-#: inc/homepage/elements/class-features-element.php:96
+#: inc/homepage/elements/class-features-element.php:113
 msgid "Size"
 msgstr ""
 
-#: inc/homepage/elements/class-features-element.php:119
+#: inc/homepage/elements/class-features-element.php:136
 msgid "Awesome Feature"
 msgstr ""
 
-#: inc/homepage/elements/class-features-element.php:162
+#: inc/homepage/elements/class-features-element.php:179
 msgid "Media Type"
 msgstr ""
 
-#: inc/homepage/elements/class-features-element.php:203
+#: inc/homepage/elements/class-features-element.php:220
 msgid "Add More than 3 features in our %sPro Version%s"
 msgstr ""
 
-#: inc/homepage/elements/class-heading-element.php:34
+#: inc/homepage/elements/class-heading-element.php:48
 msgid "Awesome title"
 msgstr ""
 
-#: inc/homepage/elements/class-heading-element.php:38
-#: inc/homepage/elements/class-heading-element.php:61
+#: inc/homepage/elements/class-heading-element.php:52
+#: inc/homepage/elements/class-heading-element.php:75
 msgid "Sub Title"
 msgstr ""
 
-#: inc/homepage/elements/class-heading-element.php:43
+#: inc/homepage/elements/class-heading-element.php:57
 #: inc/traits/trait-widgets-controls.php:128
 msgid "Widget Title Tag"
 msgstr ""
 
-#: inc/homepage/elements/class-heading-element.php:95
+#: inc/homepage/elements/class-heading-element.php:109
 msgid "Sub Title Typography"
 msgstr ""
 
-#: inc/homepage/elements/class-hero-element.php:42
+#: inc/homepage/elements/class-hero-element.php:57
 msgid "Hero Content"
 msgstr ""
 
-#: inc/homepage/elements/class-hero-element.php:46
+#: inc/homepage/elements/class-hero-element.php:61
 msgid "Hero Layout"
 msgstr ""
 
-#: inc/homepage/elements/class-hero-element.php:50
+#: inc/homepage/elements/class-hero-element.php:65
 msgid "Hero Shape Divider"
 msgstr ""
 
-#: inc/homepage/elements/class-hero-element.php:54
+#: inc/homepage/elements/class-hero-element.php:69
 msgid "Hero Style"
 msgstr ""
 
-#: inc/homepage/elements/class-hero-element.php:59
+#: inc/homepage/elements/class-hero-element.php:74
 msgid "Hero Overlay"
 msgstr ""
 
-#: inc/homepage/elements/class-hero-element.php:63
+#: inc/homepage/elements/class-hero-element.php:78
 msgid "Overlay Color"
 msgstr ""
 
-#: inc/homepage/elements/class-hero-element.php:70
+#: inc/homepage/elements/class-hero-element.php:85
 msgid "Overlay Opacity"
 msgstr ""
 
-#: inc/homepage/elements/class-hero-element.php:91
+#: inc/homepage/elements/class-hero-element.php:106
 msgid "Build Your Awesome Business"
 msgstr ""
 
-#: inc/homepage/elements/class-hero-element.php:101
+#: inc/homepage/elements/class-hero-element.php:116
 msgid "Button Text"
 msgstr ""
 
-#: inc/homepage/elements/class-hero-element.php:102
+#: inc/homepage/elements/class-hero-element.php:117
 msgid "Get Started"
 msgstr ""
 
-#: inc/homepage/elements/class-hero-element.php:105
+#: inc/homepage/elements/class-hero-element.php:120
 msgid "Button URL"
 msgstr ""
 
-#: inc/homepage/elements/class-hero-element.php:136
+#: inc/homepage/elements/class-hero-element.php:151
 msgid "Media Height"
 msgstr ""
 
-#: inc/homepage/elements/class-hero-element.php:144
+#: inc/homepage/elements/class-hero-element.php:159
 msgid "Media Alignment"
 msgstr ""
 
-#: inc/homepage/elements/class-hero-element.php:176
+#: inc/homepage/elements/class-hero-element.php:191
 msgid "Content - Media"
 msgstr ""
 
-#: inc/homepage/elements/class-hero-element.php:177
+#: inc/homepage/elements/class-hero-element.php:192
 msgid "Media - Content"
 msgstr ""
 
-#: inc/homepage/elements/class-hero-element.php:189
+#: inc/homepage/elements/class-hero-element.php:204
 msgid "Shape Divider"
 msgstr ""
 
-#: inc/homepage/elements/class-hero-element.php:194
+#: inc/homepage/elements/class-hero-element.php:209
 msgid "Flip"
 msgstr ""
 
-#: inc/homepage/elements/class-hero-element.php:198
+#: inc/homepage/elements/class-hero-element.php:213
 msgid "Invert"
 msgstr ""
 
-#: inc/homepage/elements/class-hero-element.php:203
+#: inc/homepage/elements/class-hero-element.php:218
 msgid "Shape Divider Width"
 msgstr ""
 
-#: inc/homepage/elements/class-hero-element.php:210
+#: inc/homepage/elements/class-hero-element.php:225
 msgid "Shape Divider Height"
 msgstr ""
 
-#: inc/homepage/elements/class-hero-element.php:218
+#: inc/homepage/elements/class-hero-element.php:233
 msgid "Shape Color"
 msgstr ""
 
-#: inc/homepage/elements/class-hero-element.php:240
+#: inc/homepage/elements/class-hero-element.php:255
 msgid "Title & Description Style"
 msgstr ""
 
-#: inc/homepage/elements/class-hero-element.php:252
+#: inc/homepage/elements/class-hero-element.php:267
 msgid "Title Color"
 msgstr ""
 
-#: inc/homepage/elements/class-hero-element.php:268
+#: inc/homepage/elements/class-hero-element.php:283
 msgid "Description Color"
 msgstr ""
 
-#: inc/homepage/elements/class-hero-element.php:276
+#: inc/homepage/elements/class-hero-element.php:291
 msgid "Button Style"
 msgstr ""
 
-#: inc/homepage/elements/class-magazine-element.php:42
-#: inc/homepage/elements/class-posts-grid-element.php:39
-#: inc/homepage/elements/class-posts-slider-element.php:51
+#: inc/homepage/elements/class-magazine-element.php:38
+#: inc/homepage/elements/class-posts-grid-element.php:34
+#: inc/homepage/elements/class-posts-slider-element.php:47
 msgid "Query"
 msgstr ""
 
-#: inc/homepage/elements/class-magazine-element.php:46
-#: inc/homepage/elements/class-posts-slider-element.php:55
+#: inc/homepage/elements/class-magazine-element.php:42
+#: inc/homepage/elements/class-posts-slider-element.php:51
 msgid "Elements"
 msgstr ""
 
-#: inc/homepage/elements/class-magazine-element.php:113
-#: inc/homepage/elements/class-posts-grid-element.php:74
-#: inc/homepage/elements/class-posts-grid-element.php:95
-#: inc/homepage/elements/class-posts-slider-element.php:133
+#: inc/homepage/elements/class-magazine-element.php:109
+#: inc/homepage/elements/class-posts-grid-element.php:69
+#: inc/homepage/elements/class-posts-grid-element.php:90
+#: inc/homepage/elements/class-posts-slider-element.php:129
 msgid "Card"
+msgstr ""
+
+#: inc/homepage/elements/class-magazine-element.php:115
+#: inc/homepage/elements/class-posts-slider-element.php:135
+msgid "Overlay"
 msgstr ""
 
 #: inc/homepage/elements/class-magazine-element.php:119
 #: inc/homepage/elements/class-posts-slider-element.php:139
-msgid "Overlay"
-msgstr ""
-
-#: inc/homepage/elements/class-magazine-element.php:123
-#: inc/homepage/elements/class-posts-slider-element.php:143
 msgid "Password Protected"
 msgstr ""
 
-#: inc/homepage/elements/class-magazine-element.php:134
+#: inc/homepage/elements/class-magazine-element.php:130
 msgid "Select Layout"
 msgstr ""
 
-#: inc/homepage/elements/class-magazine-element.php:143
+#: inc/homepage/elements/class-magazine-element.php:139
 msgid "Unlock all magazine grid layouts in our %sPro Version%s"
 msgstr ""
 
-#: inc/homepage/elements/class-magazine-element.php:150
-#: inc/homepage/elements/class-posts-slider-element.php:200
+#: inc/homepage/elements/class-magazine-element.php:146
+#: inc/homepage/elements/class-posts-slider-element.php:196
 #: inc/traits/trait-article-controls.php:169
 msgid "Image Size"
 msgstr ""
 
-#: inc/homepage/elements/class-magazine-element.php:156
-#: inc/homepage/elements/class-posts-slider-element.php:206
+#: inc/homepage/elements/class-magazine-element.php:152
+#: inc/homepage/elements/class-posts-slider-element.php:202
 msgid "Container Height"
 msgstr ""
 
-#: inc/homepage/elements/class-magazine-element.php:165
+#: inc/homepage/elements/class-magazine-element.php:161
 msgid "Horizontal Gutter"
 msgstr ""
 
-#: inc/homepage/elements/class-magazine-element.php:173
+#: inc/homepage/elements/class-magazine-element.php:169
 msgid "Vertical Gutter"
 msgstr ""
 
-#: inc/homepage/elements/class-posts-grid-element.php:42
+#: inc/homepage/elements/class-posts-grid-element.php:37
 msgid "Posts Count"
 msgstr ""
 
-#: inc/homepage/elements/class-posts-grid-element.php:54
+#: inc/homepage/elements/class-posts-grid-element.php:49
 msgid "Grid Columns"
 msgstr ""
 
-#: inc/homepage/elements/class-posts-grid-element.php:66
+#: inc/homepage/elements/class-posts-grid-element.php:61
 msgid "Items Gap"
 msgstr ""
 
-#: inc/homepage/elements/class-posts-slider-element.php:128
+#: inc/homepage/elements/class-posts-slider-element.php:124
 msgid "Settings"
 msgstr ""
 
-#: inc/homepage/elements/class-posts-slider-element.php:147
-#: inc/homepage/elements/class-posts-slider-element.php:286
+#: inc/homepage/elements/class-posts-slider-element.php:143
+#: inc/homepage/elements/class-posts-slider-element.php:282
 msgid "Navigation"
 msgstr ""
 
-#: inc/homepage/elements/class-posts-slider-element.php:167
+#: inc/homepage/elements/class-posts-slider-element.php:163
 msgid "Posts Number"
 msgstr ""
 
-#: inc/homepage/elements/class-posts-slider-element.php:185
+#: inc/homepage/elements/class-posts-slider-element.php:181
 msgid "Left Arrow"
 msgstr ""
 
-#: inc/homepage/elements/class-posts-slider-element.php:192
+#: inc/homepage/elements/class-posts-slider-element.php:188
 msgid "Right Arrow"
 msgstr ""
 
-#: inc/homepage/elements/class-posts-slider-element.php:215
+#: inc/homepage/elements/class-posts-slider-element.php:211
 msgid "Slides to Show (Columns)"
 msgstr ""
 
-#: inc/homepage/elements/class-posts-slider-element.php:223
+#: inc/homepage/elements/class-posts-slider-element.php:219
 msgid "Items Gutter"
 msgstr ""
 
-#: inc/homepage/elements/class-posts-slider-element.php:231
+#: inc/homepage/elements/class-posts-slider-element.php:227
 msgid "Slides to Scroll"
 msgstr ""
 
-#: inc/homepage/elements/class-posts-slider-element.php:239
+#: inc/homepage/elements/class-posts-slider-element.php:235
 msgid "Css Ease"
 msgstr ""
 
-#: inc/homepage/elements/class-posts-slider-element.php:245
+#: inc/homepage/elements/class-posts-slider-element.php:241
 msgid "Slick Effect"
 msgstr ""
 
-#: inc/homepage/elements/class-posts-slider-element.php:246
+#: inc/homepage/elements/class-posts-slider-element.php:242
 msgid "Fade mode is valid only when Slides To Show is 1"
 msgstr ""
 
-#: inc/homepage/elements/class-posts-slider-element.php:250
+#: inc/homepage/elements/class-posts-slider-element.php:246
 msgid "Slide"
 msgstr ""
 
-#: inc/homepage/elements/class-posts-slider-element.php:251
+#: inc/homepage/elements/class-posts-slider-element.php:247
 msgid "Fade (Pro)"
 msgstr ""
 
-#: inc/homepage/elements/class-posts-slider-element.php:255
+#: inc/homepage/elements/class-posts-slider-element.php:251
 msgid "Effect Duration"
 msgstr ""
 
-#: inc/homepage/elements/class-posts-slider-element.php:262
+#: inc/homepage/elements/class-posts-slider-element.php:258
 msgid "Infinite Loop"
 msgstr ""
 
-#: inc/homepage/elements/class-posts-slider-element.php:267
+#: inc/homepage/elements/class-posts-slider-element.php:263
 msgid "Autoplay"
 msgstr ""
 
-#: inc/homepage/elements/class-posts-slider-element.php:274
+#: inc/homepage/elements/class-posts-slider-element.php:270
 msgid "Pause on Hover"
 msgstr ""
 
-#: inc/homepage/elements/class-posts-slider-element.php:278
+#: inc/homepage/elements/class-posts-slider-element.php:274
 msgid "Autoplay Speed"
 msgstr ""
 
-#: inc/homepage/elements/class-posts-slider-element.php:293
+#: inc/homepage/elements/class-posts-slider-element.php:289
 msgid "Display Navigation On Hover"
 msgstr ""
 
-#: inc/homepage/elements/class-posts-slider-element.php:307
+#: inc/homepage/elements/class-posts-slider-element.php:303
 msgid "Display Pagination On Hover"
 msgstr ""
 
-#: inc/homepage/elements/class-posts-slider-element.php:319
+#: inc/homepage/elements/class-posts-slider-element.php:315
 msgid "Fully customize slider navigation in our %sPro Version%s"
 msgstr ""
 
-#: inc/homepage/elements/class-posts-slider-element.php:392
+#: inc/homepage/elements/class-posts-slider-element.php:388
 msgid "Box Size"
 msgstr ""
 
-#: inc/homepage/elements/class-posts-slider-element.php:406
+#: inc/homepage/elements/class-posts-slider-element.php:402
 msgid "Fully customize slider pagination in our %sPro Version%s"
 msgstr ""
 
-#: inc/homepage/elements/class-posts-slider-element.php:471
+#: inc/homepage/elements/class-posts-slider-element.php:467
 msgid "Gutter"
+msgstr ""
+
+#: inc/homepage/elements/class-posts-slider-element.php:587
+#: inc/homepage/elements/class-posts-slider-element.php:619
+msgid "Linear"
+msgstr ""
+
+#: inc/homepage/elements/class-posts-slider-element.php:588
+#: inc/homepage/elements/class-posts-slider-element.php:620
+msgid "Ease"
+msgstr ""
+
+#: inc/homepage/elements/class-posts-slider-element.php:589
+#: inc/homepage/elements/class-posts-slider-element.php:621
+msgid "Ease In"
+msgstr ""
+
+#: inc/homepage/elements/class-posts-slider-element.php:590
+#: inc/homepage/elements/class-posts-slider-element.php:622
+msgid "Ease Out"
 msgstr ""
 
 #: inc/homepage/elements/class-posts-slider-element.php:591
 #: inc/homepage/elements/class-posts-slider-element.php:623
-msgid "Linear"
+msgid "Ease In Out"
 msgstr ""
 
 #: inc/homepage/elements/class-posts-slider-element.php:592
 #: inc/homepage/elements/class-posts-slider-element.php:624
-msgid "Ease"
+msgid "Ease In Sine"
 msgstr ""
 
 #: inc/homepage/elements/class-posts-slider-element.php:593
 #: inc/homepage/elements/class-posts-slider-element.php:625
-msgid "Ease In"
+msgid "Ease Out Sine"
 msgstr ""
 
 #: inc/homepage/elements/class-posts-slider-element.php:594
 #: inc/homepage/elements/class-posts-slider-element.php:626
-msgid "Ease Out"
+msgid "Ease In Out Sine"
 msgstr ""
 
 #: inc/homepage/elements/class-posts-slider-element.php:595
 #: inc/homepage/elements/class-posts-slider-element.php:627
-msgid "Ease In Out"
+msgid "Ease In Quad"
 msgstr ""
 
 #: inc/homepage/elements/class-posts-slider-element.php:596
 #: inc/homepage/elements/class-posts-slider-element.php:628
-msgid "Ease In Sine"
+msgid "Ease Out Quad"
 msgstr ""
 
 #: inc/homepage/elements/class-posts-slider-element.php:597
 #: inc/homepage/elements/class-posts-slider-element.php:629
-msgid "Ease Out Sine"
+msgid "Ease In Out Quad"
 msgstr ""
 
 #: inc/homepage/elements/class-posts-slider-element.php:598
 #: inc/homepage/elements/class-posts-slider-element.php:630
-msgid "Ease In Out Sine"
+msgid "Ease In Cubic"
 msgstr ""
 
 #: inc/homepage/elements/class-posts-slider-element.php:599
 #: inc/homepage/elements/class-posts-slider-element.php:631
-msgid "Ease In Quad"
+msgid "Ease Out Cubic"
 msgstr ""
 
 #: inc/homepage/elements/class-posts-slider-element.php:600
 #: inc/homepage/elements/class-posts-slider-element.php:632
-msgid "Ease Out Quad"
+msgid "Ease In Out Cubic"
 msgstr ""
 
 #: inc/homepage/elements/class-posts-slider-element.php:601
 #: inc/homepage/elements/class-posts-slider-element.php:633
-msgid "Ease In Out Quad"
+msgid "Ease In Quart"
 msgstr ""
 
 #: inc/homepage/elements/class-posts-slider-element.php:602
 #: inc/homepage/elements/class-posts-slider-element.php:634
-msgid "Ease In Cubic"
+msgid "Ease Out Quart"
 msgstr ""
 
 #: inc/homepage/elements/class-posts-slider-element.php:603
 #: inc/homepage/elements/class-posts-slider-element.php:635
-msgid "Ease Out Cubic"
+msgid "Ease In Out Quart"
 msgstr ""
 
 #: inc/homepage/elements/class-posts-slider-element.php:604
 #: inc/homepage/elements/class-posts-slider-element.php:636
-msgid "Ease In Out Cubic"
+msgid "Ease In Quint"
 msgstr ""
 
 #: inc/homepage/elements/class-posts-slider-element.php:605
 #: inc/homepage/elements/class-posts-slider-element.php:637
-msgid "Ease In Quart"
+msgid "Ease Out Quint"
 msgstr ""
 
 #: inc/homepage/elements/class-posts-slider-element.php:606
 #: inc/homepage/elements/class-posts-slider-element.php:638
-msgid "Ease Out Quart"
+msgid "Ease In Out Quint"
 msgstr ""
 
 #: inc/homepage/elements/class-posts-slider-element.php:607
 #: inc/homepage/elements/class-posts-slider-element.php:639
-msgid "Ease In Out Quart"
+msgid "Ease In Expo"
 msgstr ""
 
 #: inc/homepage/elements/class-posts-slider-element.php:608
 #: inc/homepage/elements/class-posts-slider-element.php:640
-msgid "Ease In Quint"
+msgid "Ease Out Expo"
 msgstr ""
 
 #: inc/homepage/elements/class-posts-slider-element.php:609
 #: inc/homepage/elements/class-posts-slider-element.php:641
-msgid "Ease Out Quint"
+msgid "Ease In Out Expo"
 msgstr ""
 
 #: inc/homepage/elements/class-posts-slider-element.php:610
 #: inc/homepage/elements/class-posts-slider-element.php:642
-msgid "Ease In Out Quint"
+msgid "Ease In Circ"
 msgstr ""
 
 #: inc/homepage/elements/class-posts-slider-element.php:611
 #: inc/homepage/elements/class-posts-slider-element.php:643
-msgid "Ease In Expo"
+msgid "Ease Out Circ"
 msgstr ""
 
 #: inc/homepage/elements/class-posts-slider-element.php:612
 #: inc/homepage/elements/class-posts-slider-element.php:644
-msgid "Ease Out Expo"
+msgid "Ease In Out Circ"
 msgstr ""
 
 #: inc/homepage/elements/class-posts-slider-element.php:613
 #: inc/homepage/elements/class-posts-slider-element.php:645
-msgid "Ease In Out Expo"
+msgid "Ease In Back"
 msgstr ""
 
 #: inc/homepage/elements/class-posts-slider-element.php:614
 #: inc/homepage/elements/class-posts-slider-element.php:646
-msgid "Ease In Circ"
-msgstr ""
-
-#: inc/homepage/elements/class-posts-slider-element.php:615
-#: inc/homepage/elements/class-posts-slider-element.php:647
-msgid "Ease Out Circ"
-msgstr ""
-
-#: inc/homepage/elements/class-posts-slider-element.php:616
-#: inc/homepage/elements/class-posts-slider-element.php:648
-msgid "Ease In Out Circ"
-msgstr ""
-
-#: inc/homepage/elements/class-posts-slider-element.php:617
-#: inc/homepage/elements/class-posts-slider-element.php:649
-msgid "Ease In Back"
-msgstr ""
-
-#: inc/homepage/elements/class-posts-slider-element.php:618
-#: inc/homepage/elements/class-posts-slider-element.php:650
 msgid "Ease Out Back"
 msgstr ""
 
-#: inc/homepage/elements/class-reviews-element.php:40
-#: inc/homepage/elements/class-reviews-element.php:132
+#: inc/homepage/elements/class-reviews-element.php:58
+#: inc/homepage/elements/class-reviews-element.php:150
 msgid "Rating"
 msgstr ""
 
-#: inc/homepage/elements/class-reviews-element.php:41
-#: inc/homepage/elements/class-reviews-element.php:140
+#: inc/homepage/elements/class-reviews-element.php:59
+#: inc/homepage/elements/class-reviews-element.php:158
 msgid "Message"
 msgstr ""
 
-#: inc/homepage/elements/class-reviews-element.php:42
-#: inc/homepage/elements/class-reviews-element.php:122
+#: inc/homepage/elements/class-reviews-element.php:60
+#: inc/homepage/elements/class-reviews-element.php:140
 msgid "Reviewer"
 msgstr ""
 
-#: inc/homepage/elements/class-reviews-element.php:43
-#: inc/homepage/elements/class-reviews-element.php:127
+#: inc/homepage/elements/class-reviews-element.php:61
+#: inc/homepage/elements/class-reviews-element.php:145
 msgid "Job Title"
 msgstr ""
 
-#: inc/homepage/elements/class-reviews-element.php:49
+#: inc/homepage/elements/class-reviews-element.php:67
 msgid "Message Typography"
 msgstr ""
 
-#: inc/homepage/elements/class-reviews-element.php:58
+#: inc/homepage/elements/class-reviews-element.php:76
 msgid "Reviewer Typography"
 msgstr ""
 
-#: inc/homepage/elements/class-reviews-element.php:68
+#: inc/homepage/elements/class-reviews-element.php:86
 msgid "Job Title Typography"
 msgstr ""
 
-#: inc/homepage/elements/class-reviews-element.php:123
+#: inc/homepage/elements/class-reviews-element.php:141
 msgid "Someone"
 msgstr ""
 
-#: inc/homepage/elements/class-reviews-element.php:146
+#: inc/homepage/elements/class-reviews-element.php:164
 msgid "Add More than 3 reviews in our %sPro Version%s"
 msgstr ""
 
-#: inc/homepage/elements/class-text-element.php:47
+#: inc/homepage/elements/class-text-element.php:61
 msgid "Max Width"
 msgstr ""
 
-#: inc/homepage/elements/class-text-element.php:75
+#: inc/homepage/elements/class-text-element.php:89
 msgid "Text Alignment"
 msgstr ""
 
-#: inc/template-functions.php:302
+#: inc/template-functions.php:312
 msgid "Upgrade to %sPro Version%s to enable this feature"
 msgstr ""
 
-#: inc/template-functions.php:417
+#: inc/template-functions.php:427
 msgid "Page"
 msgstr ""
 
-#: inc/template-functions.php:511
-#: inc/template-functions.php:512
+#: inc/template-functions.php:521
+#: inc/template-functions.php:522
 #: template-parts/admin-welcome.php:138
 msgid "Yuki Theme"
 msgstr ""
 
-#: inc/template-tags.php:492
-#: inc/template-tags.php:824
+#: inc/template-tags.php:515
+#: inc/template-tags.php:855
 msgid "Edit"
 msgstr ""
 
-#: inc/template-tags.php:537
-#: inc/traits/trait-post-structure.php:113
-msgid "Read More"
-msgstr ""
-
-#: inc/template-tags.php:818
+#: inc/template-tags.php:849
 msgid "Pages:"
 msgstr ""
 
-#: inc/template-tags.php:839
+#: inc/template-tags.php:870
 msgctxt "Shapes"
 msgid "None"
 msgstr ""
 
-#: inc/template-tags.php:843
+#: inc/template-tags.php:874
 msgctxt "Shapes"
 msgid "Tilt"
 msgstr ""
 
-#: inc/template-tags.php:847
+#: inc/template-tags.php:878
 msgctxt "Shapes"
 msgid "Mountains (Pro)"
 msgstr ""
 
-#: inc/template-tags.php:852
+#: inc/template-tags.php:883
 msgctxt "Shapes"
 msgid "Drops  (Pro)"
 msgstr ""
 
-#: inc/template-tags.php:857
+#: inc/template-tags.php:888
 msgctxt "Shapes"
 msgid "Clouds (Pro)"
 msgstr ""
 
-#: inc/template-tags.php:862
+#: inc/template-tags.php:893
 msgctxt "Shapes"
 msgid "Zigzag (Pro)"
 msgstr ""
 
-#: inc/template-tags.php:867
+#: inc/template-tags.php:898
 msgctxt "Shapes"
 msgid "Pyramids (Pro)"
 msgstr ""
 
-#: inc/template-tags.php:872
+#: inc/template-tags.php:903
 msgctxt "Shapes"
 msgid "Triangle (Pro)"
 msgstr ""
 
-#: inc/template-tags.php:877
+#: inc/template-tags.php:908
 msgctxt "Shapes"
 msgid "Triangle Asymmetrical (Pro)"
 msgstr ""
 
-#: inc/template-tags.php:882
+#: inc/template-tags.php:913
 msgctxt "Shapes"
 msgid "Tilt Opacity (Pro)"
 msgstr ""
 
-#: inc/template-tags.php:887
+#: inc/template-tags.php:918
 msgctxt "Shapes"
 msgid "Fan Opacity (Pro)"
 msgstr ""
 
-#: inc/template-tags.php:892
+#: inc/template-tags.php:923
 msgctxt "Shapes"
 msgid "Curve (Pro)"
 msgstr ""
 
-#: inc/template-tags.php:897
+#: inc/template-tags.php:928
 msgctxt "Shapes"
 msgid "Curve Asymmetrical (Pro)"
 msgstr ""
 
-#: inc/template-tags.php:902
+#: inc/template-tags.php:933
 msgctxt "Shapes"
 msgid "Waves (Pro)"
 msgstr ""
 
-#: inc/template-tags.php:907
+#: inc/template-tags.php:938
 msgctxt "Shapes"
 msgid "Waves Brush (Pro)"
 msgstr ""
 
-#: inc/template-tags.php:912
+#: inc/template-tags.php:943
 msgctxt "Shapes"
 msgid "Waves Pattern (Pro)"
 msgstr ""
 
-#: inc/template-tags.php:917
+#: inc/template-tags.php:948
 msgctxt "Shapes"
 msgid "Arrow (Pro)"
 msgstr ""
 
-#: inc/template-tags.php:922
+#: inc/template-tags.php:953
 msgctxt "Shapes"
 msgid "Split (Pro)"
 msgstr ""
 
-#: inc/template-tags.php:927
+#: inc/template-tags.php:958
 msgctxt "Shapes"
 msgid "Book (Pro)"
 msgstr ""
@@ -2640,10 +2655,6 @@ msgstr ""
 
 #: inc/traits/trait-article-controls.php:235
 msgid "Image Height"
-msgstr ""
-
-#: inc/traits/trait-button-controls.php:89
-msgid "Mini Height"
 msgstr ""
 
 #: inc/traits/trait-button-controls.php:138
@@ -2790,6 +2801,11 @@ msgstr ""
 msgid "Excerpt"
 msgstr ""
 
+#: inc/traits/trait-post-structure.php:113
+#: inc/traits/trait-post-structure.php:471
+msgid "Read More"
+msgstr ""
+
 #: inc/traits/trait-post-structure.php:156
 msgid "Badge"
 msgstr ""
@@ -2798,7 +2814,7 @@ msgstr ""
 #: inc/traits/trait-post-structure.php:291
 #: inc/traits/trait-post-structure.php:371
 #: inc/traits/trait-post-structure.php:449
-#: inc/traits/trait-post-structure.php:608
+#: inc/traits/trait-post-structure.php:614
 msgid "More options in our %sPro Version%s"
 msgstr ""
 
@@ -2850,31 +2866,31 @@ msgstr ""
 msgid "More Text"
 msgstr ""
 
-#: inc/traits/trait-post-structure.php:507
+#: inc/traits/trait-post-structure.php:513
 msgid "Byline"
 msgstr ""
 
-#: inc/traits/trait-post-structure.php:516
+#: inc/traits/trait-post-structure.php:522
 msgid "Published Date"
 msgstr ""
 
-#: inc/traits/trait-post-structure.php:536
+#: inc/traits/trait-post-structure.php:542
 msgid "Comments"
 msgstr ""
 
-#: inc/traits/trait-post-structure.php:545
+#: inc/traits/trait-post-structure.php:551
 msgid "Views"
 msgstr ""
 
-#: inc/traits/trait-post-structure.php:561
+#: inc/traits/trait-post-structure.php:567
 msgid "Meta Typography"
 msgstr ""
 
-#: inc/traits/trait-post-structure.php:566
+#: inc/traits/trait-post-structure.php:572
 msgid "Meta Color"
 msgstr ""
 
-#: inc/traits/trait-post-structure.php:577
+#: inc/traits/trait-post-structure.php:583
 msgid "Items Style"
 msgstr ""
 

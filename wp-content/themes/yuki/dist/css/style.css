@@ -1498,6 +1498,9 @@ select {
 div:not(.is-style-outline) > .wp-block-button__link,
 .wp-block-button.is-style-outline .wp-block-button__link,
 .yuki-form [type=submit],
+.yuki-article-content [type=submit],
+.yuki-raw-html [type=submit],
+.yuki-widget [type=submit],
 .yuki-button {
   display: inline-flex;
   cursor: pointer;
@@ -1531,6 +1534,9 @@ div:not(.is-style-outline) > .wp-block-button__link,
 div:not(.is-style-outline) > .wp-block-button__link:disabled,
 .wp-block-button.is-style-outline .wp-block-button__link:disabled,
 .yuki-form [type=submit]:disabled,
+.yuki-article-content [type=submit]:disabled,
+.yuki-raw-html [type=submit]:disabled,
+.yuki-widget [type=submit]:disabled,
 .yuki-button:disabled {
   cursor: not-allowed;
   opacity: 0.65;
@@ -1552,6 +1558,9 @@ div:not(.is-style-outline) > .wp-block-button__link:disabled,
 div:not(.is-style-outline) > .wp-block-button__link:not(:disabled):hover,
 .wp-block-button.is-style-outline .wp-block-button__link:not(:disabled):hover,
 .yuki-form [type=submit]:not(:disabled):hover,
+.yuki-article-content [type=submit]:not(:disabled):hover,
+.yuki-raw-html [type=submit]:not(:disabled):hover,
+.yuki-widget [type=submit]:not(:disabled):hover,
 .yuki-button:not(:disabled):hover {
   color: var(--yuki-button-text-hover-color);
   background-color: var(--yuki-button-hover-color);
@@ -2283,6 +2292,20 @@ nav.woocommerce-pagination .yuki-pagination-finish,
   margin-bottom: 2em;
 }
 
+.woocommerce form,
+.yuki-article-content,
+.yuki-widget,
+.yuki-raw-html,
+.yuki-form {
+  --yuki-form-border-top: 1px solid var(--yuki-form-border-color);
+  --yuki-form-border-right: 1px solid var(--yuki-form-border-color);
+  --yuki-form-border-bottom: 1px solid var(--yuki-form-border-color);
+  --yuki-form-border-left: 1px solid var(--yuki-form-border-color);
+  --yuki-form-checkbox-border-top: 1px solid var(--yuki-form-border-color);
+  --yuki-form-checkbox-border-right: 1px solid var(--yuki-form-border-color);
+  --yuki-form-checkbox-border-bottom: 1px solid var(--yuki-form-border-color);
+  --yuki-form-checkbox-border-left: 1px solid var(--yuki-form-border-color);
+}
 .woocommerce form textarea,
 .woocommerce form select,
 .woocommerce form .select2-selection--single,
@@ -2293,6 +2316,36 @@ nav.woocommerce-pagination .yuki-pagination-finish,
 .woocommerce form [type=number],
 .woocommerce form [type=search],
 .woocommerce form [type=text],
+.yuki-article-content textarea,
+.yuki-article-content select,
+.yuki-article-content .select2-selection--single,
+.yuki-article-content [type=url],
+.yuki-article-content [type=email],
+.yuki-article-content [type=tel],
+.yuki-article-content [type=password],
+.yuki-article-content [type=number],
+.yuki-article-content [type=search],
+.yuki-article-content [type=text],
+.yuki-widget textarea,
+.yuki-widget select,
+.yuki-widget .select2-selection--single,
+.yuki-widget [type=url],
+.yuki-widget [type=email],
+.yuki-widget [type=tel],
+.yuki-widget [type=password],
+.yuki-widget [type=number],
+.yuki-widget [type=search],
+.yuki-widget [type=text],
+.yuki-raw-html textarea,
+.yuki-raw-html select,
+.yuki-raw-html .select2-selection--single,
+.yuki-raw-html [type=url],
+.yuki-raw-html [type=email],
+.yuki-raw-html [type=tel],
+.yuki-raw-html [type=password],
+.yuki-raw-html [type=number],
+.yuki-raw-html [type=search],
+.yuki-raw-html [type=text],
 .yuki-form textarea,
 .yuki-form select,
 .yuki-form .select2-selection--single,
@@ -2306,10 +2359,13 @@ nav.woocommerce-pagination .yuki-pagination-finish,
   display: block;
   width: 100%;
   transition: all ease 0.25s;
-  border-radius: 3px;
-  border: none;
-  border-bottom: 2px solid var(--yuki-form-border-color);
+  border-radius: 2px;
+  border-top: var(--yuki-form-border-top);
+  border-right: var(--yuki-form-border-right);
+  border-bottom: var(--yuki-form-border-bottom);
+  border-left: var(--yuki-form-border-left);
   background: var(--yuki-form-background-color);
+  padding: 0.3rem 0.75rem;
   color: var(--yuki-form-text-color, inherit);
   font-size: inherit;
 }
@@ -2323,6 +2379,36 @@ nav.woocommerce-pagination .yuki-pagination-finish,
 .woocommerce form [type=number]:focus,
 .woocommerce form [type=search]:focus,
 .woocommerce form [type=text]:focus,
+.yuki-article-content textarea:focus,
+.yuki-article-content select:focus,
+.yuki-article-content .select2-selection--single:focus,
+.yuki-article-content [type=url]:focus,
+.yuki-article-content [type=email]:focus,
+.yuki-article-content [type=tel]:focus,
+.yuki-article-content [type=password]:focus,
+.yuki-article-content [type=number]:focus,
+.yuki-article-content [type=search]:focus,
+.yuki-article-content [type=text]:focus,
+.yuki-widget textarea:focus,
+.yuki-widget select:focus,
+.yuki-widget .select2-selection--single:focus,
+.yuki-widget [type=url]:focus,
+.yuki-widget [type=email]:focus,
+.yuki-widget [type=tel]:focus,
+.yuki-widget [type=password]:focus,
+.yuki-widget [type=number]:focus,
+.yuki-widget [type=search]:focus,
+.yuki-widget [type=text]:focus,
+.yuki-raw-html textarea:focus,
+.yuki-raw-html select:focus,
+.yuki-raw-html .select2-selection--single:focus,
+.yuki-raw-html [type=url]:focus,
+.yuki-raw-html [type=email]:focus,
+.yuki-raw-html [type=tel]:focus,
+.yuki-raw-html [type=password]:focus,
+.yuki-raw-html [type=number]:focus,
+.yuki-raw-html [type=search]:focus,
+.yuki-raw-html [type=text]:focus,
 .yuki-form textarea:focus,
 .yuki-form select:focus,
 .yuki-form .select2-selection--single:focus,
@@ -2338,6 +2424,9 @@ nav.woocommerce-pagination .yuki-pagination-finish,
   border-color: var(--yuki-form-active-color);
 }
 .woocommerce form [type=checkbox],
+.yuki-article-content [type=checkbox],
+.yuki-widget [type=checkbox],
+.yuki-raw-html [type=checkbox],
 .yuki-form [type=checkbox] {
   border-radius: 3px;
   transition: all ease 0.25s;
@@ -2350,11 +2439,20 @@ nav.woocommerce-pagination .yuki-pagination-finish,
   background-color: var(--yuki-form-background-color);
 }
 .woocommerce form [type=checkbox]:focus, .woocommerce form [type=checkbox]:checked,
+.yuki-article-content [type=checkbox]:focus,
+.yuki-article-content [type=checkbox]:checked,
+.yuki-widget [type=checkbox]:focus,
+.yuki-widget [type=checkbox]:checked,
+.yuki-raw-html [type=checkbox]:focus,
+.yuki-raw-html [type=checkbox]:checked,
 .yuki-form [type=checkbox]:focus,
 .yuki-form [type=checkbox]:checked {
   --tw-ring-color: var(--yuki-form-active-color);
 }
 .woocommerce form [type=checkbox]:checked,
+.yuki-article-content [type=checkbox]:checked,
+.yuki-widget [type=checkbox]:checked,
+.yuki-raw-html [type=checkbox]:checked,
 .yuki-form [type=checkbox]:checked {
   background-color: var(--yuki-form-active-color);
 }
