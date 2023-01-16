@@ -23,7 +23,7 @@
 define( 'DB_NAME', 'akilimo_portal' );
 
 /** Database username */
-define( 'DB_USER', 'root' );
+define( 'DB_USER', 'akilimo' );
 
 /** Database password */
 define( 'DB_PASSWORD', 'andalite6' );
