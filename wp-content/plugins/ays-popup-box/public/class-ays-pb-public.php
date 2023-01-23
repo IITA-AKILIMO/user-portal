@@ -357,7 +357,7 @@ class Ays_Pb_Public {
             $ays_pb_border_radius = (!isset($popupbox["border_radius"])) ? "4" : $popupbox["border_radius"];
             $custom_class  = (isset($popupbox['custom_class']) && $popupbox['custom_class'] != "") ? $popupbox['custom_class'] : "";
             //popup box font-family
-            $ays_pb_font_family  = (isset($options['pb_font_family']) && $options['pb_font_family'] != '') ? $options['pb_font_family'] : '';
+            $ays_pb_font_family  = (isset($options['pb_font_family']) && $options['pb_font_family'] != '') ? $options['pb_font_family'] : 'inherit';
 
             $close_button_size = (isset($options['close_button_size']) && $options['close_button_size'] != '') ? abs($options['close_button_size']) : '1';
 
@@ -612,6 +612,10 @@ class Ays_Pb_Public {
             $ays_pb_overlay_color = Ays_Pb_Data::hex2rgba( $ays_pb_overlay_color, 0.5 );
 
         }
+
+        //Overlay Opacity 
+        $overlay_opacity = ($popupbox['onoffoverlay'] == 'On' && isset($popupbox['overlay_opacity'])) ? $popupbox['overlay_opacity'] : 0.5;
+
         //Disabel scroll on popup
         $options['disable_scroll_on_popup'] = ( isset( $options['disable_scroll_on_popup'] ) && $options['disable_scroll_on_popup'] != '' ) ? $options['disable_scroll_on_popup'] : 'off';
         $ays_pb_disable_scroll_on_popup = ( isset( $options['disable_scroll_on_popup'] ) && $options['disable_scroll_on_popup'] == 'on' ) ? true : false;
@@ -867,7 +871,7 @@ class Ays_Pb_Public {
                         .ays-pb-modal_".$id." .ays_pb_description > *, 
                         .ays-pb-modal_".$id." .ays_pb_timer,
                         .ays-pb-modal_".$id." .ays_content_box p,
-                        .ays-pb-modal_".$id." .ays-pb-dismiss-ad > a#ays_pb_dismiss_ad{
+                        .ays-pb-modal_".$id." .ays-pb-dismiss-ad > button#ays_pb_dismiss_ad{
                             color: ".$ays_pb_textcolor.";
                             font-family: ".$ays_pb_font_family.";
                         }
@@ -1184,14 +1188,14 @@ class Ays_Pb_Public {
                                                 $(document).find('.av_pop_modals_".$id."').css('display','block');
                                                 $(document).find('.ays-pb-modal_".$id."').addClass(ays_pb_effectIn_".$id.");
                                                 $(document).find('.ays-pb-modal_".$id."').css('display', 'block');
-                                                $(document).find('#ays-pb-screen-shade_".$id."').css({'opacity': '0.5'});
+                                                $(document).find('#ays-pb-screen-shade_".$id."').css({'opacity': '".$overlay_opacity."'});
                                                 $(document).find('.ays-pb-modal-check_".$id."').prop('checked', true);
                                             }, ays_pb_delayOpen_".$id.");
                                         }else{
                                             $(document).find('.av_pop_modals_".$id."').css('display','block');
                                             $(document).find('.ays-pb-modal_".$id."').addClass(ays_pb_effectIn_".$id.");
                                             $(document).find('.ays-pb-modal_".$id."').css('display', 'block');
-                                            $(document).find('#ays-pb-screen-shade_".$id."').css({'opacity': '0.5'});
+                                            $(document).find('#ays-pb-screen-shade_".$id."').css({'opacity': '".$overlay_opacity."'});
                                             $(document).find('.ays-pb-modal-check_".$id."').prop('checked', true);
                                         }
                                         if (".$close_button_delay." != 0 && '".$closeButton."' != 'on') {
@@ -1300,7 +1304,7 @@ class Ays_Pb_Public {
                                         $(document).find('.av_pop_modals_".$id."').css('display','block');
                                         $(document).find('.ays-pb-modal_".$id."').addClass(ays_pb_effectIn_".$id.");
                                         $(document).find('.ays-pb-modal_".$id."').css('display', 'block');
-                                        $(document).find('#ays-pb-screen-shade_".$id."').css({'opacity': '0.5'});
+                                        $(document).find('#ays-pb-screen-shade_".$id."').css({'opacity': '".$overlay_opacity."'});
                                         $(document).find('.ays-pb-modal-check_".$id."').attr('checked', 'checked');
 
                                         if('".$disable_scroll."'){
@@ -1318,7 +1322,7 @@ class Ays_Pb_Public {
                                         $(document).find('.av_pop_modals_".$id."').css('display','block');
                                         $(document).find('.ays-pb-modal_".$id."').addClass(ays_pb_effectIn_".$id.");
                                         $(document).find('.ays-pb-modal_".$id."').css('display', 'block');
-                                        $(document).find('#ays-pb-screen-shade_".$id."').css({'opacity': '0.5'});
+                                        $(document).find('#ays-pb-screen-shade_".$id."').css({'opacity': '".$overlay_opacity."'});
                                         $(document).find('.ays-pb-modal-check_".$id."').attr('checked', 'checked');
 
                                         if('".$disable_scroll."'){
@@ -1430,7 +1434,7 @@ class Ays_Pb_Public {
                                 $(document).find('.ays-pb-modal_".$id."').removeClass($(document).find('#ays_pb_modal_animate_out_".$id."').val());
                                 $(document).find('.ays-pb-modal_".$id."').addClass($(document).find('#ays_pb_modal_animate_in_".$id."').val());
                                 $(document).find('.ays-pb-modal_".$id."').css('display', 'block');
-                                $(document).find('#ays-pb-screen-shade_".$id."').css({'opacity': '0.5', 'display': 'block'});
+                                $(document).find('#ays-pb-screen-shade_".$id."').css({'opacity': '".$overlay_opacity."', 'display': 'block'});
                                 $(document).find('.ays-pb-modal-check_".$id."').prop('checked', true);
                                 $(document).find('.ays-pb-modal-check_".$id."').attr('checked', true);
                                 // $(document).find('#ays-pb-modal-checkbox_".$id."').trigger('click');

@@ -252,10 +252,12 @@ function brave_form_goBack(formID, totalSteps){
    //Update ProgressBar
    brave_form_progress(formID, goto, totalSteps);
 
-   if(goto === 0 ){   
-      formBackButton.classList.add('brave_form_stepBack--hide');
-   }else{
-      formBackButton.classList.remove('brave_form_stepBack--hide');
+   if(formBackButton){
+      if(goto === 0 ){   
+         formBackButton.classList.add('brave_form_stepBack--hide');
+      }else{
+         formBackButton.classList.remove('brave_form_stepBack--hide');
+      }
    }
 
    // //Go to Prev Step
@@ -549,6 +551,11 @@ function brave_submit_form(event, settings, supressErrors=false){
    
             var response = JSON.parse(sentData);
             console.log(status, response);
+
+            if(response.error &&  typeof response.error === 'string'){
+               return alert(response.error);
+            }
+
             localStorage.setItem('brave_popup_'+settings.popupID+'_formsubmitted', true);
    
             var braveFormSubmitEvent = new CustomEvent('brave_form_submitted', { detail: {popupId: parseInt(settings.popupID, 10), formId: settings.formID, formData: JSON.stringify(finalFieldsData)} });
@@ -1383,6 +1390,7 @@ function brave_open_popup(popupID, step=0){
    
    if(popupStepOpen !== 'false'){ return }
    if(!popupData){ return }
+   if(popupData && popupData.forceHide){ return console.log(popupID, 'Force Hidden'); }
 
    console.log('Opening ', popupID, step, popupStepOpen, stickyBar, noMobileContent, currentDevice);
    //Set Current Step
@@ -1489,7 +1497,7 @@ function brave_open_popup(popupID, step=0){
       }
 
       //Advanced Animation
-      if(advancedAnimation && hasAnimation && animationData){
+      if(advancedAnimation && hasAnimation && animationData && brave_animate_popup){
          selectedStep.classList.add('brave_popup__step_wrap--show');
          brave_animate_popup(animationData, popupID, step, 'load');
       }
@@ -1669,7 +1677,7 @@ function brave_close_animation(popupID, step, currentDevice){
             setTimeout(function() { selectedStepDevice.querySelector('.brave_popup__step__overlay').classList.remove('brave_popup__step__overlay--hide'); }, (exitAnimationDuration * 1000)+500);
          }
       }else if(advancedAnimation && hasCustomExitAnimation){
-         if(advancedAnimation && hasAnimation && animationData){
+         if(advancedAnimation && hasAnimation && animationData && brave_animate_popup){
             brave_animate_popup(animationData, popupID, step, 'exit');
          }
       }else{

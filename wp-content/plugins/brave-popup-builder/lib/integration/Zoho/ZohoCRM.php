@@ -66,7 +66,7 @@ if ( ! class_exists( 'BravePop_ZohoCRM' ) ) {
          if(count($customFields) > 0){
             foreach ($customFields as $key => $value) {
                $fieldKey = str_replace(' ', '_', $key);
-               $contact->$fieldKey = $value;
+               $contact->$fieldKey = !empty($value) && is_array($value) ?  implode(',', $value) : $value;
             }
          }
 

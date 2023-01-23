@@ -368,9 +368,9 @@ class Ays_Pb_Public_Templates {
         
 
         if($enable_hide_timer == 'on'){
-            $ays_pb_timer_desc = "<p class='ays_pb_timer ays_pb_timer_".$id."' style='visibility:hidden'>".__("This will close in ", $this->plugin_name)."<span data-seconds='$ays_pb_autoclose' data-ays-seconds='{$attr["autoclose"]}'>$ays_pb_autoclose</span>".__(" seconds", $this->plugin_name)."</p>";
+            $ays_pb_timer_desc = "<p class='ays_pb_timer ays_pb_timer_".$id."' style='visibility:hidden'>".__("This will close in ", "ays-popup-box")." <span data-seconds='$ays_pb_autoclose' data-ays-seconds='{$attr["autoclose"]}'>$ays_pb_autoclose<'/span>".__(" seconds", "ays-popup-box")."</p>";
         }else{
-            $ays_pb_timer_desc = "<p class='ays_pb_timer ays_pb_timer_".$id."'>".__("This will close in ", $this->plugin_name)."<span data-seconds='$ays_pb_autoclose' data-ays-seconds='{$attr["autoclose"]}'>$ays_pb_autoclose</span>".__(" seconds", $this->plugin_name)."</p>";
+            $ays_pb_timer_desc = "<p class='ays_pb_timer ays_pb_timer_".$id."'>".__("This will close in ", "ays-popup-box")." <span data-seconds='$ays_pb_autoclose' data-ays-seconds='{$attr["autoclose"]}'>$ays_pb_autoclose</span>".__(" seconds", "ays-popup-box")."</p>";
         }
 
         // Social Media links
@@ -490,7 +490,7 @@ class Ays_Pb_Public_Templates {
         if( $enable_dismiss ){
             $show_dismiss = '';
         }
-        $enable_dismiss_text = (isset($options->enable_dismiss_text) && $options->enable_dismiss_text != "") ? esc_html(stripslashes($options->enable_dismiss_text)) : __("Dismiss ad", $this->plugin_name);
+        $enable_dismiss_text = (isset($options->enable_dismiss_text) && $options->enable_dismiss_text != "") ? esc_html(stripslashes($options->enable_dismiss_text)) : __("Dismiss ad", "ays-popup-box");
         
         //Close button color
         $close_button_color = (isset($options->close_button_color) && $options->close_button_color != "") ? esc_attr( stripslashes( $options->close_button_color ) ) : $ays_pb_textcolor;
@@ -518,9 +518,9 @@ class Ays_Pb_Public_Templates {
                     ."</div>
                     {$ays_social_links}
                     <div class='ays-pb-dismiss-ad {$show_dismiss}' data-dismiss='' data-id='{$id}'>
-                        <a id='ays_pb_dismiss_ad'>
+                        <button id='ays_pb_dismiss_ad'>
                             ".$enable_dismiss_text."
-                        </a>
+                        </button>
                     </div>
                     $ays_pb_timer_desc
                     <label for='ays-pb-modal-checkbox_".$id."' class='ays-pb-modal-close ".$closeButton." ays-pb-modal-close_".$id." ays-pb-close-button-delay ays_pb_pause_sound_".$id."' style='color: $close_button_color !important; font-family:$ays_pb_font_family;{$close_button_position};transform:scale({$close_btn_size})'>". $ays_pb_close_button_text ."</label>
@@ -738,9 +738,9 @@ class Ays_Pb_Public_Templates {
         $enable_hide_timer  = (isset($options->enable_hide_timer) && $options->enable_hide_timer == 'on') ? 'on' : 'off';
     
         if($enable_hide_timer == 'on'){
-            $ays_pb_timer_desc = "<p class='ays_pb_timer ays_pb_timer_".$id."' style='visibility:hidden'>".__("This will close in ", $this->plugin_name)."<span data-seconds='$ays_pb_autoclose' data-ays-seconds='{$attr["autoclose"]}'>$ays_pb_autoclose</span>".__(" seconds", $this->plugin_name)."</p>";
+            $ays_pb_timer_desc = "<p class='ays_pb_timer ays_pb_timer_".$id."' style='visibility:hidden'>".__("This will close in ", "ays-popup-box")." <span data-seconds='$ays_pb_autoclose' data-ays-seconds='{$attr["autoclose"]}'>$ays_pb_autoclose</span>".__(" seconds", "ays-popup-box")."</p>";
         }else{
-            $ays_pb_timer_desc = "<p class='ays_pb_timer ays_pb_timer_".$id."'>".__("This will close in ", $this->plugin_name)."<span data-seconds='$ays_pb_autoclose' data-ays-seconds='{$attr["autoclose"]}'>$ays_pb_autoclose</span>".__(" seconds", $this->plugin_name)."</p>";
+            $ays_pb_timer_desc = "<p class='ays_pb_timer ays_pb_timer_".$id."'>".__("This will close in ", "ays-popup-box")." <span data-seconds='$ays_pb_autoclose' data-ays-seconds='{$attr["autoclose"]}'> $ays_pb_autoclose</span>".__(" seconds", "ays-popup-box")."</p>";
         }
 
         // Social Media links
@@ -860,7 +860,7 @@ class Ays_Pb_Public_Templates {
         if( $enable_dismiss ){
             $show_dismiss = '';
         }
-        $enable_dismiss_text = (isset($options->enable_dismiss_text) && $options->enable_dismiss_text != "") ? esc_html(stripslashes($options->enable_dismiss_text)) : __("Dismiss ad", $this->plugin_name);
+        $enable_dismiss_text = (isset($options->enable_dismiss_text) && $options->enable_dismiss_text != "") ? esc_html(stripslashes($options->enable_dismiss_text)) : __("Dismiss ad", "ays-popup-box");
 
         //Disabel scroll on popup
         $options->disable_scroll_on_popup = ( isset( $options->disable_scroll_on_popup ) && $options->disable_scroll_on_popup != '' ) ? $options->disable_scroll_on_popup : 'off';
@@ -896,9 +896,9 @@ class Ays_Pb_Public_Templates {
                          </div>  
                          {$ays_social_links}  
                          <div class='ays-pb-dismiss-ad {$show_dismiss}' data-dismiss='' data-id='{$id}'>
-                            <a id='ays_pb_dismiss_ad'>
+                            <button id='ays_pb_dismiss_ad'>
                                 ".$enable_dismiss_text."
-                            </a>
+                            </button>
                         </div>            
                          $ays_pb_timer_desc
                     </div>
@@ -1126,9 +1126,9 @@ class Ays_Pb_Public_Templates {
         $enable_hide_timer  = (isset($options->enable_hide_timer) && $options->enable_hide_timer == 'on') ? 'on' : 'off';
     
         if($enable_hide_timer == 'on'){
-            $ays_pb_timer_desc = "<p class='ays_pb_timer ays_pb_timer_".$id."' style='visibility:hidden'>".__("This will close in ", $this->plugin_name)."<span data-seconds='$ays_pb_autoclose' data-ays-seconds='{$attr["autoclose"]}'>$ays_pb_autoclose</span>".__(" seconds", $this->plugin_name)."</p>";
+            $ays_pb_timer_desc = "<p class='ays_pb_timer ays_pb_timer_".$id."' style='visibility:hidden'>".__("This will close in ", "ays-popup-box")." <span data-seconds='$ays_pb_autoclose' data-ays-seconds='{$attr["autoclose"]}'>$ays_pb_autoclose</span>".__(" seconds", "ays-popup-box")."</p>";
         }else{
-            $ays_pb_timer_desc = "<p class='ays_pb_timer ays_pb_timer_".$id."'>".__("This will close in ", $this->plugin_name)."<span data-seconds='$ays_pb_autoclose' data-ays-seconds='{$attr["autoclose"]}'>$ays_pb_autoclose</span>".__(" seconds", $this->plugin_name)."</p>";
+            $ays_pb_timer_desc = "<p class='ays_pb_timer ays_pb_timer_".$id."'>".__("This will close in ", "ays-popup-box")." <span data-seconds='$ays_pb_autoclose' data-ays-seconds='{$attr["autoclose"]}'>$ays_pb_autoclose</span>".__(" seconds", "ays-popup-box")."</p>";
         }
 
         // Social Media links
@@ -1252,7 +1252,7 @@ class Ays_Pb_Public_Templates {
         if( $enable_dismiss ){
             $show_dismiss = '';
         }
-        $enable_dismiss_text = (isset($options->enable_dismiss_text) && $options->enable_dismiss_text != "") ? esc_html(stripslashes($options->enable_dismiss_text)) : __("Dismiss ad", $this->plugin_name);
+        $enable_dismiss_text = (isset($options->enable_dismiss_text) && $options->enable_dismiss_text != "") ? esc_html(stripslashes($options->enable_dismiss_text)) : __("Dismiss ad", "ays-popup-box");
 
         //Disabel scroll on popup
         $options->disable_scroll_on_popup = ( isset( $options->disable_scroll_on_popup ) && $options->disable_scroll_on_popup != '' ) ? $options->disable_scroll_on_popup : 'off';
@@ -1294,9 +1294,9 @@ class Ays_Pb_Public_Templates {
                              </div>             
                              {$ays_social_links} 
                             <div class='ays-pb-dismiss-ad {$show_dismiss}' data-dismiss='' data-id='{$id}'>
-                                <a id='ays_pb_dismiss_ad'>
+                                <button id='ays_pb_dismiss_ad'>
                                     ".$enable_dismiss_text."
-                                </a>
+                                </button>
                             </div>           
                              $ays_pb_timer_desc
                         </main>
@@ -1328,6 +1328,7 @@ class Ays_Pb_Public_Templates {
                                     prompt.window.removeClass('ays_cmd_window--minimized');
                                     prompt.window.toggleClass('ays_cmd_window--maximized');
                                     prompt.focus();
+                                    $(document).find('.ays_cmd_window,.ays_window').css('bottom', 0);
                                 },
                                 close: function() {
                                     prompt.window.addClass('ays_cmd_window--destroyed');
@@ -1548,9 +1549,9 @@ class Ays_Pb_Public_Templates {
         $enable_hide_timer  = (isset($options->enable_hide_timer) && $options->enable_hide_timer == 'on') ? 'on' : 'off';
     
         if($enable_hide_timer == 'on'){
-            $ays_pb_timer_desc = "<p class='ays_pb_timer ays_pb_timer_".$id."' style='visibility:hidden'>".__("This will close in ", $this->plugin_name)."<span data-seconds='$ays_pb_autoclose' data-ays-seconds='{$attr["autoclose"]}'>$ays_pb_autoclose</span>".__(" seconds", $this->plugin_name)."</p>";
+            $ays_pb_timer_desc = "<p class='ays_pb_timer ays_pb_timer_".$id."' style='visibility:hidden'>".__("This will close in ", "ays-popup-box")." <span data-seconds='$ays_pb_autoclose' data-ays-seconds='{$attr["autoclose"]}'>$ays_pb_autoclose</span>".__(" seconds", "ays-popup-box")."</p>";
         }else{
-            $ays_pb_timer_desc = "<p class='ays_pb_timer ays_pb_timer_".$id."'>".__("This will close in ", $this->plugin_name)."<span data-seconds='$ays_pb_autoclose' data-ays-seconds='{$attr["autoclose"]}'>$ays_pb_autoclose</span>".__(" seconds", $this->plugin_name)."</p>";
+            $ays_pb_timer_desc = "<p class='ays_pb_timer ays_pb_timer_".$id."'>".__("This will close in ", "ays-popup-box")." <span data-seconds='$ays_pb_autoclose' data-ays-seconds='{$attr["autoclose"]}'>$ays_pb_autoclose</span>".__(" seconds", "ays-popup-box")."</p>";
         }
 
         // Social Media links
@@ -1672,7 +1673,7 @@ class Ays_Pb_Public_Templates {
             $show_dismiss = '';
         }
 
-        $enable_dismiss_text = (isset($options->enable_dismiss_text) && $options->enable_dismiss_text != "") ? esc_html(stripslashes($options->enable_dismiss_text)) : __("Dismiss ad", $this->plugin_name);
+        $enable_dismiss_text = (isset($options->enable_dismiss_text) && $options->enable_dismiss_text != "") ? esc_html(stripslashes($options->enable_dismiss_text)) : __("Dismiss ad", "ays-popup-box");
 
         //Disabel scroll on popup
         $options->disable_scroll_on_popup = ( isset( $options->disable_scroll_on_popup ) && $options->disable_scroll_on_popup != '' ) ? $options->disable_scroll_on_popup : 'off';
@@ -1697,11 +1698,11 @@ class Ays_Pb_Public_Templates {
                       <div class='ays_ubuntu_tools'>
                         <ul>
                             <li>".__("File")."</li>
-                            <li>".__("Edit", $this->plugin_name)."</li>
-                            <li>".__("Go", $this->plugin_name)."</li>
-                            <li>".__("Bookmarks", $this->plugin_name)."</li>
-                            <li>".__("Tools", $this->plugin_name)."</li>
-                            <li>".__("Help", $this->plugin_name)."</li>
+                            <li>".__("Edit", "ays-popup-box")."</li>
+                            <li>".__("Go", "ays-popup-box")."</li>
+                            <li>".__("Bookmarks", "ays-popup-box")."</li>
+                            <li>".__("Tools", "ays-popup-box")."</li>
+                            <li>".__("Help", "ays-popup-box")."</li>
                         </ul>
                       </div>
                       $ays_pb_sound_mute
@@ -1714,9 +1715,9 @@ class Ays_Pb_Public_Templates {
                             ."</div>
                             {$ays_social_links}
                             <div class='ays-pb-dismiss-ad {$show_dismiss}' data-dismiss='' data-id='{$id}'>
-                                <a id='ays_pb_dismiss_ad'>
+                                <button id='ays_pb_dismiss_ad'>
                                     ".$enable_dismiss_text."
-                                </a>
+                                </button>
                             </div>
                       </div>
                       <div class='ays_ubuntu_folder-info ays_pb_timer_".$id."'>
@@ -1739,6 +1740,7 @@ class Ays_Pb_Public_Templates {
                                 maximize: function() {
                                     prompt.window.removeClass('ays_ubuntu_window--minimized');
                                     prompt.window.toggleClass('ays_ubuntu_window--maximized');
+                                    $(document).find('.ays_ubuntu_window').css('bottom', 0);
                                 }
                             };
                             $(document).ready(prompt.init);
@@ -1950,9 +1952,9 @@ class Ays_Pb_Public_Templates {
         $enable_hide_timer  = (isset($options->enable_hide_timer) && $options->enable_hide_timer == 'on') ? 'on' : 'off';
     
         if($enable_hide_timer == 'on'){
-            $ays_pb_timer_desc = "<p class='ays_pb_timer ays_pb_timer_".$id."' style='visibility:hidden'>".__("This will close in ", $this->plugin_name)."<span data-seconds='$ays_pb_autoclose' data-ays-seconds='{$attr["autoclose"]}'>$ays_pb_autoclose</span>".__(" seconds", $this->plugin_name)."</p>";
+            $ays_pb_timer_desc = "<p class='ays_pb_timer ays_pb_timer_".$id."' style='visibility:hidden'>".__("This will close in ", "ays-popup-box")." <span data-seconds='$ays_pb_autoclose' data-ays-seconds='{$attr["autoclose"]}'>$ays_pb_autoclose</span>".__(" seconds", "ays-popup-box")."</p>";
         }else{
-            $ays_pb_timer_desc = "<p class='ays_pb_timer ays_pb_timer_".$id."'>".__("This will close in ", $this->plugin_name)."<span data-seconds='$ays_pb_autoclose' data-ays-seconds='{$attr["autoclose"]}'>$ays_pb_autoclose</span>".__(" seconds", $this->plugin_name)."</p>";
+            $ays_pb_timer_desc = "<p class='ays_pb_timer ays_pb_timer_".$id."'>".__("This will close in ", "ays-popup-box")." <span data-seconds='$ays_pb_autoclose' data-ays-seconds='{$attr["autoclose"]}'>$ays_pb_autoclose</span>".__(" seconds", "ays-popup-box")."</p>";
         }
 
         // Social Media links
@@ -2071,7 +2073,7 @@ class Ays_Pb_Public_Templates {
             $show_dismiss = '';
         }
 
-        $enable_dismiss_text = (isset($options->enable_dismiss_text) && $options->enable_dismiss_text != "") ? esc_html(stripslashes($options->enable_dismiss_text)) : __("Dismiss ad", $this->plugin_name);
+        $enable_dismiss_text = (isset($options->enable_dismiss_text) && $options->enable_dismiss_text != "") ? esc_html(stripslashes($options->enable_dismiss_text)) : __("Dismiss ad", "ays-popup-box");
 
         $x_close_button = '<svg xmlns="https://www.w3.org/2000/svg" height="24px" viewBox="0 0 32 32" width="24px" fill="#ffffff" alt="Pop-up Close"><path d="M0 0h24v24H0z" fill="none"/><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>';
 
@@ -2106,9 +2108,9 @@ class Ays_Pb_Public_Templates {
                                 ."</div>
                                 {$ays_social_links}
                                 <div class='ays-pb-dismiss-ad {$show_dismiss}' data-dismiss='' data-id='{$id}'>
-                                    <a id='ays_pb_dismiss_ad'>
+                                    <button id='ays_pb_dismiss_ad'>
                                         ".$enable_dismiss_text."
-                                    </a>
+                                    </button>
                                 </div>
                                 $ays_pb_timer_desc
                             </div>
@@ -2129,6 +2131,7 @@ class Ays_Pb_Public_Templates {
                                 maximize: function() {
                                     prompt.window.removeClass('ays_winxp_window--minimized');
                                     prompt.window.toggleClass('ays_winxp_window--maximized');
+                                    $(document).find('.ays_winxp_window').css('bottom', 0);
                                 }
                             };
                             $(document).ready(prompt.init);
@@ -2346,9 +2349,9 @@ class Ays_Pb_Public_Templates {
         $enable_hide_timer  = (isset($options->enable_hide_timer) && $options->enable_hide_timer == 'on') ? 'on' : 'off';
     
         if($enable_hide_timer == 'on'){
-            $ays_pb_timer_desc = "<p class='ays_pb_timer ays_pb_timer_".$id."' style='visibility:hidden'>".__("This will close in ", $this->plugin_name)."<span data-seconds='$ays_pb_autoclose' data-ays-seconds='{$attr["autoclose"]}'>$ays_pb_autoclose</span>".__(" seconds", $this->plugin_name)."</p>";
+            $ays_pb_timer_desc = "<p class='ays_pb_timer ays_pb_timer_".$id."' style='visibility:hidden'>".__("This will close in ", "ays-popup-box")." <span data-seconds='$ays_pb_autoclose' data-ays-seconds='{$attr["autoclose"]}'>$ays_pb_autoclose</span>".__(" seconds", "ays-popup-box")."</p>";
         }else{
-            $ays_pb_timer_desc = "<p class='ays_pb_timer ays_pb_timer_".$id."'>".__("This will close in ", $this->plugin_name)."<span data-seconds='$ays_pb_autoclose' data-ays-seconds='{$attr["autoclose"]}'>$ays_pb_autoclose</span>".__(" seconds", $this->plugin_name)."</p>";
+            $ays_pb_timer_desc = "<p class='ays_pb_timer ays_pb_timer_".$id."'>".__("This will close in ", "ays-popup-box")." <span data-seconds='$ays_pb_autoclose' data-ays-seconds='{$attr["autoclose"]}'>$ays_pb_autoclose</span>".__(" seconds", "ays-popup-box")."</p>";
         }
 
         // Social Media links
@@ -2468,7 +2471,7 @@ class Ays_Pb_Public_Templates {
             $show_dismiss = '';
         }
 
-        $enable_dismiss_text = (isset($options->enable_dismiss_text) && $options->enable_dismiss_text != "") ? esc_html(stripslashes($options->enable_dismiss_text)) : __("Dismiss ad", $this->plugin_name);
+        $enable_dismiss_text = (isset($options->enable_dismiss_text) && $options->enable_dismiss_text != "") ? esc_html(stripslashes($options->enable_dismiss_text)) : __("Dismiss ad", "ays-popup-box");
 
         //Disabel scroll on popup
         $options->disable_scroll_on_popup = ( isset( $options->disable_scroll_on_popup ) && $options->disable_scroll_on_popup != '' ) ? $options->disable_scroll_on_popup : 'off';
@@ -2499,9 +2502,9 @@ class Ays_Pb_Public_Templates {
                                     ."</div>
                                     {$ays_social_links}
                                     <div class='ays-pb-dismiss-ad {$show_dismiss}' data-dismiss='' data-id='{$id}'>
-                                        <a id='ays_pb_dismiss_ad'>
+                                        <button id='ays_pb_dismiss_ad'>
                                             ".$enable_dismiss_text."
-                                        </a>
+                                        </button>
                                     </div>
                                     $ays_pb_timer_desc
                                 </div>
@@ -2768,9 +2771,9 @@ class Ays_Pb_Public_Templates {
         $enable_hide_timer  = (isset($options->enable_hide_timer) && $options->enable_hide_timer == 'on') ? 'on' : 'off';
     
         if($enable_hide_timer == 'on'){
-            $ays_pb_timer_desc = "<p class='ays_pb_timer ays_pb_timer_".$id."' style='visibility:hidden'>".__("This will close in ", $this->plugin_name)."<span data-seconds='$ays_pb_autoclose' data-ays-seconds='{$attr["autoclose"]}'>$ays_pb_autoclose</span>".__(" seconds", $this->plugin_name)."</p>";
+            $ays_pb_timer_desc = "<p class='ays_pb_timer ays_pb_timer_".$id."' style='visibility:hidden'>".__("This will close in ", "ays-popup-box")." <span data-seconds='$ays_pb_autoclose' data-ays-seconds='{$attr["autoclose"]}'>$ays_pb_autoclose</span>".__(" seconds", "ays-popup-box")."</p>";
         }else{
-            $ays_pb_timer_desc = "<p class='ays_pb_timer ays_pb_timer_".$id."'>".__("This will close in ", $this->plugin_name)."<span data-seconds='$ays_pb_autoclose' data-ays-seconds='{$attr["autoclose"]}'>$ays_pb_autoclose</span>".__(" seconds", $this->plugin_name)."</p>";
+            $ays_pb_timer_desc = "<p class='ays_pb_timer ays_pb_timer_".$id."'>".__("This will close in ", "ays-popup-box")." <span data-seconds='$ays_pb_autoclose' data-ays-seconds='{$attr["autoclose"]}'>$ays_pb_autoclose</span>".__(" seconds", "ays-popup-box")."</p>";
         }
 
         // Social Media links
@@ -2890,7 +2893,7 @@ class Ays_Pb_Public_Templates {
             $show_dismiss = '';
         }
 
-        $enable_dismiss_text = (isset($options->enable_dismiss_text) && $options->enable_dismiss_text != "") ? esc_html(stripslashes($options->enable_dismiss_text)) : __("Dismiss ad", $this->plugin_name);
+        $enable_dismiss_text = (isset($options->enable_dismiss_text) && $options->enable_dismiss_text != "") ? esc_html(stripslashes($options->enable_dismiss_text)) : __("Dismiss ad", "ays-popup-box");
         
         //Close button color
         $close_button_color = (isset($options->close_button_color) && $options->close_button_color != "") ? esc_attr( stripslashes( $options->close_button_color ) ) : $ays_pb_textcolor;
@@ -2922,9 +2925,9 @@ class Ays_Pb_Public_Templates {
                                         ."</div>
                                         {$ays_social_links}
                                         <div class='ays-pb-dismiss-ad {$show_dismiss}' data-dismiss='' data-id='{$id}'>
-                                            <a id='ays_pb_dismiss_ad'>
+                                            <button id='ays_pb_dismiss_ad'>
                                                 ".$enable_dismiss_text."
-                                            </a>
+                                            </button>
                                         </div>
                                         $ays_pb_timer_desc
                                     </div>
@@ -3196,9 +3199,9 @@ class Ays_Pb_Public_Templates {
         $enable_hide_timer  = (isset($options->enable_hide_timer) && $options->enable_hide_timer == 'on') ? 'on' : 'off';
     
         if($enable_hide_timer == 'on'){
-            $ays_pb_timer_desc = "<p class='ays_pb_timer ays_pb_timer_".$id."' style='visibility:hidden'>".__("This will close in ", $this->plugin_name)."<span data-seconds='$ays_pb_autoclose' data-ays-seconds='{$attr["autoclose"]}'>$ays_pb_autoclose</span>".__(" seconds", $this->plugin_name)."</p>";
+            $ays_pb_timer_desc = "<p class='ays_pb_timer ays_pb_timer_".$id."' style='visibility:hidden'>".__("This will close in ", "ays-popup-box")." <span data-seconds='$ays_pb_autoclose' data-ays-seconds='{$attr["autoclose"]}'>$ays_pb_autoclose</span>".__(" seconds", "ays-popup-box")."</p>";
         }else{
-            $ays_pb_timer_desc = "<p class='ays_pb_timer ays_pb_timer_".$id."' style='bottom:". (-30 - $ays_pb_bordersize) ."px'>".__("This will close in ", $this->plugin_name)."<span data-seconds='$ays_pb_autoclose' data-ays-seconds='{$attr["autoclose"]}'>$ays_pb_autoclose</span>".__(" seconds", $this->plugin_name)."</p>";
+            $ays_pb_timer_desc = "<p class='ays_pb_timer ays_pb_timer_".$id."' style='bottom:". (-30 - $ays_pb_bordersize) ."px'>".__("This will close in ", "ays-popup-box")." <span data-seconds='$ays_pb_autoclose' data-ays-seconds='{$attr["autoclose"]}'>$ays_pb_autoclose</span>".__(" seconds", "ays-popup-box")."</p>";
         }
 
         // Social Media links
@@ -3318,7 +3321,7 @@ class Ays_Pb_Public_Templates {
             $show_dismiss = '';
         }
 
-        $enable_dismiss_text = (isset($options->enable_dismiss_text) && $options->enable_dismiss_text != "") ? esc_html(stripslashes($options->enable_dismiss_text)) : __("Dismiss ad", $this->plugin_name);
+        $enable_dismiss_text = (isset($options->enable_dismiss_text) && $options->enable_dismiss_text != "") ? esc_html(stripslashes($options->enable_dismiss_text)) : __("Dismiss ad", "ays-popup-box");
 
         //Disabel scroll on popup
         $options->disable_scroll_on_popup = ( isset( $options->disable_scroll_on_popup ) && $options->disable_scroll_on_popup != '' ) ? $options->disable_scroll_on_popup : 'off';
@@ -3347,9 +3350,9 @@ class Ays_Pb_Public_Templates {
                                         ."</div>
                                         {$ays_social_links}
                                         <div class='ays-pb-dismiss-ad {$show_dismiss}' data-dismiss='' data-id='{$id}'>
-                                            <a id='ays_pb_dismiss_ad'>
+                                            <button id='ays_pb_dismiss_ad'>
                                                 ".$enable_dismiss_text."
-                                            </a>
+                                            </button>
                                         </div>
                                         $ays_pb_timer_desc
                                     </div>
@@ -3599,9 +3602,9 @@ class Ays_Pb_Public_Templates {
         $enable_hide_timer  = (isset($options->enable_hide_timer) && $options->enable_hide_timer == 'on') ? 'on' : 'off';
     
         if($enable_hide_timer == 'on'){
-            $ays_pb_timer_desc = "<p class='ays_pb_timer ays_pb_timer_".$id."' style='visibility:hidden'>".__("This will close in ", $this->plugin_name)."<span data-seconds='$ays_pb_autoclose' data-ays-seconds='{$attr["autoclose"]}'>$ays_pb_autoclose</span>".__(" seconds", $this->plugin_name)."</p>";
+            $ays_pb_timer_desc = "<p class='ays_pb_timer ays_pb_timer_".$id."' style='visibility:hidden'>".__("This will close in ", "ays-popup-box")." <span data-seconds='$ays_pb_autoclose' data-ays-seconds='{$attr["autoclose"]}'>$ays_pb_autoclose</span>".__(" seconds", "ays-popup-box")."</p>";
         }else{
-            $ays_pb_timer_desc = "<p class='ays_pb_timer ays_pb_timer_".$id."'>".__("This will close in ", $this->plugin_name)."<span data-seconds='$ays_pb_autoclose' data-ays-seconds='{$attr["autoclose"]}'>$ays_pb_autoclose</span>".__(" seconds", $this->plugin_name)."</p>";
+            $ays_pb_timer_desc = "<p class='ays_pb_timer ays_pb_timer_".$id."'>".__("This will close in ", "ays-popup-box")." <span data-seconds='$ays_pb_autoclose' data-ays-seconds='{$attr["autoclose"]}'>$ays_pb_autoclose</span>".__(" seconds", "ays-popup-box")."</p>";
         }
 
         // Social Media links
@@ -3730,7 +3733,7 @@ class Ays_Pb_Public_Templates {
             $show_dismiss = '';
         }
 
-        $enable_dismiss_text = (isset($options->enable_dismiss_text) && $options->enable_dismiss_text != "") ? esc_html(stripslashes($options->enable_dismiss_text)) : __("Dismiss ad", $this->plugin_name);
+        $enable_dismiss_text = (isset($options->enable_dismiss_text) && $options->enable_dismiss_text != "") ? esc_html(stripslashes($options->enable_dismiss_text)) : __("Dismiss ad", "ays-popup-box");
         
         //Close button color
         $close_button_color = (isset($options->close_button_color) && $options->close_button_color != "") ? esc_attr( stripslashes( $options->close_button_color ) ) : $ays_pb_textcolor;
@@ -3767,9 +3770,9 @@ class Ays_Pb_Public_Templates {
                                         ."</div>
                                         {$ays_social_links}
                                         <div class='ays-pb-dismiss-ad {$show_dismiss}' data-dismiss='' data-id='{$id}'>
-                                            <a id='ays_pb_dismiss_ad'>
+                                            <button id='ays_pb_dismiss_ad'>
                                                 ".$enable_dismiss_text."
-                                            </a>
+                                            </button>
                                         </div>
                                         $ays_pb_timer_desc
                                         </div>
@@ -4047,9 +4050,9 @@ class Ays_Pb_Public_Templates {
         $enable_hide_timer  = (isset($options->enable_hide_timer) && $options->enable_hide_timer == 'on') ? 'on' : 'off';
     
         if($enable_hide_timer == 'on'){
-            $ays_pb_timer_desc = "<p class='ays_pb_timer ays_pb_timer_".$id."' style='visibility:hidden'>".__("This will close in ", $this->plugin_name)."<span data-seconds='$ays_pb_autoclose' data-ays-seconds='{$attr["autoclose"]}'>$ays_pb_autoclose</span>".__(" seconds", $this->plugin_name)."</p>";
+            $ays_pb_timer_desc = "<p class='ays_pb_timer ays_pb_timer_".$id."' style='visibility:hidden'>".__("This will close in ", "ays-popup-box")." <span data-seconds='$ays_pb_autoclose' data-ays-seconds='{$attr["autoclose"]}'>$ays_pb_autoclose</span>".__(" seconds", "ays-popup-box")."</p>";
         }else{
-            $ays_pb_timer_desc = "<p class='ays_pb_timer ays_pb_timer_".$id."' style='bottom:". (-30 - $ays_pb_bordersize) ."px'>".__("This will close in ", $this->plugin_name)."<span data-seconds='$ays_pb_autoclose' data-ays-seconds='{$attr["autoclose"]}'>$ays_pb_autoclose</span>".__(" seconds", $this->plugin_name)."</p>";
+            $ays_pb_timer_desc = "<p class='ays_pb_timer ays_pb_timer_".$id."' style='bottom:". (-30 - $ays_pb_bordersize) ."px'>".__("This will close in ", "ays-popup-box")." <span data-seconds='$ays_pb_autoclose' data-ays-seconds='{$attr["autoclose"]}'>$ays_pb_autoclose</span>".__(" seconds", "ays-popup-box")."</p>";
         }
 
         // Social Media links
@@ -4169,7 +4172,7 @@ class Ays_Pb_Public_Templates {
             $show_dismiss = '';
         }
 
-        $enable_dismiss_text = (isset($options->enable_dismiss_text) && $options->enable_dismiss_text != "") ? esc_html(stripslashes($options->enable_dismiss_text)) : __("Dismiss ad", $this->plugin_name);
+        $enable_dismiss_text = (isset($options->enable_dismiss_text) && $options->enable_dismiss_text != "") ? esc_html(stripslashes($options->enable_dismiss_text)) : __("Dismiss ad", "ays-popup-box");
 
         //Disabel scroll on popup
         $options->disable_scroll_on_popup = ( isset( $options->disable_scroll_on_popup ) && $options->disable_scroll_on_popup != '' ) ? $options->disable_scroll_on_popup : 'off';
@@ -4198,9 +4201,9 @@ class Ays_Pb_Public_Templates {
                                         ."</div>
                                         {$ays_social_links}
                                         <div class='ays-pb-dismiss-ad {$show_dismiss}' data-dismiss='' data-id='{$id}'>
-                                            <a id='ays_pb_dismiss_ad'>
+                                            <button id='ays_pb_dismiss_ad'>
                                                 ".$enable_dismiss_text."
-                                            </a>
+                                            </button>
                                         </div>
                                         $ays_pb_timer_desc
                                     </div>
@@ -4467,9 +4470,9 @@ class Ays_Pb_Public_Templates {
 
     
         if($enable_hide_timer == 'on'){
-            $ays_pb_timer_desc = "<p class='ays_pb_timer ays_pb_timer_".$id."' style='visibility:hidden'>".__("This will close in ", $this->plugin_name)."<span data-seconds='$ays_pb_autoclose' data-ays-seconds='{$attr["autoclose"]}'>$ays_pb_autoclose</span>".__(" seconds", $this->plugin_name)."</p>";
+            $ays_pb_timer_desc = "<p class='ays_pb_timer ays_pb_timer_".$id."' style='visibility:hidden'>".__("This will close in ", "ays-popup-box")." <span data-seconds='$ays_pb_autoclose' data-ays-seconds='{$attr["autoclose"]}'>$ays_pb_autoclose</span>".__(" seconds", "ays-popup-box")."</p>";
         }else{
-            $ays_pb_timer_desc = "<p class='ays_pb_timer ays_pb_timer_".$id."' style=' position: absolute; right: 0; left: 0; margin: auto; bottom:". ($ays_pb_bordersize - 50) ."px'>".__("This will close in ", $this->plugin_name)."<span data-seconds='$ays_pb_autoclose' data-ays-seconds='{$attr["autoclose"]}'>$ays_pb_autoclose</span>".__(" seconds", $this->plugin_name)."</p>";
+            $ays_pb_timer_desc = "<p class='ays_pb_timer ays_pb_timer_".$id."' style=' position: absolute; right: 0; left: 0; margin: auto; bottom:". ($ays_pb_bordersize - 50) ."px'>".__("This will close in ", "ays-popup-box")." <span data-seconds='$ays_pb_autoclose' data-ays-seconds='{$attr["autoclose"]}'>$ays_pb_autoclose</span>".__(" seconds", "ays-popup-box")."</p>";
         }
 
         // Social Media links
@@ -4596,7 +4599,7 @@ class Ays_Pb_Public_Templates {
             $show_dismiss = '';
         } 
                
-        $enable_dismiss_text = (isset($options->enable_dismiss_text) && $options->enable_dismiss_text != "") ? esc_html(stripslashes($options->enable_dismiss_text)) : __("Dismiss ad", $this->plugin_name);
+        $enable_dismiss_text = (isset($options->enable_dismiss_text) && $options->enable_dismiss_text != "") ? esc_html(stripslashes($options->enable_dismiss_text)) : __("Dismiss ad", "ays-popup-box");
 
         $ubuntu_view .= "   <div class='ays_video_window ays-pb-modal_".$id." ".$custom_class." ".$ays_pb_animate_in_open."' {$ays_pb_flag} style='width: {$pb_width}; height: {$pb_height}; background-color: $ays_pb_bgcolor; color: $ays_pb_textcolor !important;font-family:{$ays_pb_font_family}; border: {$ays_pb_bordersize}px $border_style $ays_pb_bordercolor; border-radius: {$ays_pb_border_radius}px; {$box_shadow}; ' data-name='modern_video'>
                                  <header class='ays_video_head'>

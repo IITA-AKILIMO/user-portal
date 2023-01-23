@@ -69,7 +69,7 @@ if ( ! class_exists( 'BravePop_SendinBlue' ) ) {
          //Add Custom Field Values
          if(count($customFields) > 0){
             foreach ($customFields as $key => $value) {
-               $attributes[trim($key)] = $value;
+               $attributes[trim($key)] = !empty($value) && is_array($value) ?  implode(',', $value) : $value;
             }
          }
 

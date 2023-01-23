@@ -61,7 +61,7 @@ if ( ! class_exists( 'BravePop_Moosend' ) ) {
          if(count($customFields) > 0){
             $cFields = array();
             foreach ($customFields as $key => $value) {
-               $cFields[] = trim($key).'='.$value;
+               $cFields[] = trim($key).'='.(!empty($value) && is_array($value) ?  implode(',', $value) : $value);
             }
             $contact['CustomFields'] = $cFields;
          }

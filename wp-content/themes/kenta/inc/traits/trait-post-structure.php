@@ -54,6 +54,9 @@ if ( ! trait_exists( 'Kenta_Post_Structure' ) ) {
 				'thumbnail'         => [],
 				'read-more'         => [],
 				'divider'           => [],
+				'excerpt'           => [
+					'length' => 20
+				],
 			] );
 
 			$selective_refresh = $defaults['selective-refresh'];
@@ -77,7 +80,7 @@ if ( ! trait_exists( 'Kenta_Post_Structure' ) ) {
 				$layer->addLayer( 'thumbnail', __( 'Thumbnail', 'kenta' ), $this->getThumbnailControls( $layer_id, array_merge( $layer_defaults, $defaults['thumbnail'] ) ) );
 			}
 			if ( ! in_array( 'excerpt', $exclude ) ) {
-				$layer->addLayer( 'excerpt', __( 'Excerpt', 'kenta' ), $this->getExcerptControls( $layer_id, $layer_defaults ) );
+				$layer->addLayer( 'excerpt', __( 'Excerpt', 'kenta' ), $this->getExcerptControls( $layer_id, array_merge( $layer_defaults, $defaults['excerpt'] ) ) );
 			}
 			if ( ! in_array( 'read-more', $exclude ) ) {
 				$layer->addLayer( 'read-more', __( 'Read More', 'kenta' ), $this->getReadMoreControls( $layer_id, array_merge( $layer_defaults, $defaults['read-more'] ) ) );
@@ -171,6 +174,7 @@ if ( ! trait_exists( 'Kenta_Post_Structure' ) ) {
 			$defaults = wp_parse_args( $defaults, [
 				'full-width'    => 'yes',
 				'fallback'      => 'yes',
+				'height'        => '180px',
 				'border-radius' => [
 					'top'    => '0px',
 					'right'  => '0px',
@@ -191,7 +195,7 @@ if ( ! trait_exists( 'Kenta_Post_Structure' ) ) {
 			$controls = [
 				( new Select( 'kenta_' . $id . '_thumbnail_size' ) )
 					->setLabel( __( 'Image Size', 'kenta' ) )
-					->setDefaultValue( 'medium' )
+					->setDefaultValue( 'large' )
 					->selectiveRefresh( ...$defaults['selective-refresh'] )
 					->setChoices( kenta_image_size_options( false ) )
 				,
@@ -202,7 +206,7 @@ if ( ! trait_exists( 'Kenta_Post_Structure' ) ) {
 						[ 'unit' => 'px', 'min' => 100, 'max' => 1000 ],
 						[ 'unit' => '%', 'min' => 10, 'max' => 100 ],
 					] )
-					->setDefaultValue( '180px' )
+					->setDefaultValue( $defaults['height'] )
 				,
 				( new Filters( 'kenta_' . $id . '_thumbnail_filter' ) )
 					->setLabel( __( 'Css Filter', 'kenta' ) )
@@ -253,7 +257,7 @@ if ( ! trait_exists( 'Kenta_Post_Structure' ) ) {
 							->setMin( 10 )
 							->setMax( 300 )
 							->setDefaultUnit( false )
-							->setDefaultValue( 20 )
+							->setDefaultValue( $defaults['length'] )
 						,
 						( new Separator() ),
 						( new Text( 'kenta_' . $id . '_excerpt_more_text' ) )

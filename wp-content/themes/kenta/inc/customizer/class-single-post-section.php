@@ -5,12 +5,22 @@
  * @package Kenta
  */
 
+use LottaFramework\Customizer\Controls\Background;
+use LottaFramework\Customizer\Controls\Border;
+use LottaFramework\Customizer\Controls\BoxShadow;
+use LottaFramework\Customizer\Controls\CallToAction;
 use LottaFramework\Customizer\Controls\ColorPicker;
+use LottaFramework\Customizer\Controls\Condition;
 use LottaFramework\Customizer\Controls\Icons;
 use LottaFramework\Customizer\Controls\ImageRadio;
+use LottaFramework\Customizer\Controls\Radio;
 use LottaFramework\Customizer\Controls\Section;
 use LottaFramework\Customizer\Controls\Separator;
+use LottaFramework\Customizer\Controls\Slider;
 use LottaFramework\Customizer\Controls\Spacing;
+use LottaFramework\Customizer\Controls\Tabs;
+use LottaFramework\Customizer\Controls\Text;
+use LottaFramework\Customizer\Controls\Toggle;
 use LottaFramework\Customizer\Section as CustomizerSection;
 use LottaFramework\Facades\AsyncCss;
 
@@ -67,6 +77,11 @@ if ( ! class_exists( 'Kenta_Single_Post_Section' ) ) {
 								],
 							] )
 						,
+						( new CallToAction() )
+							->setLabel( __( 'Customize Sidebar', 'kenta' ) )
+							->displayAsButton()
+							->expandCustomize( 'kenta_global:kenta_global_sidebar_section' )
+						,
 					] )
 				,
 
@@ -78,7 +93,7 @@ if ( ! class_exists( 'Kenta_Single_Post_Section' ) ) {
 						'selective-refresh' => [
 							'.kenta-post-header.kenta-article-header',
 							function () {
-								kenta_show_article_header( 'kenta_single_post' );
+								kenta_show_article_header( 'kenta_single_post', 'post', true, false );
 							},
 							[ 'container_inclusive' => true ]
 						],
@@ -114,10 +129,16 @@ if ( ! class_exists( 'Kenta_Single_Post_Section' ) ) {
 						'icons-box-spacing'   => [
 							'top'    => '48px',
 							'right'  => '0px',
-							'bottom' => '24px',
+							'bottom' => '48px',
 							'left'   => '0px',
 						],
 					) ) )
+				,
+
+				( new Section( 'kenta_post_author_bio' ) )
+					->setLabel( __( 'Author Bio', 'kenta' ) )
+					->enableSwitch()
+					->setControls( $this->getAuthorBioControls() )
 				,
 
 				( new Section( 'kenta_post_navigation' ) )
@@ -128,6 +149,125 @@ if ( ! class_exists( 'Kenta_Single_Post_Section' ) ) {
 			];
 
 			return apply_filters( 'kenta_single_post_section_controls', $controls );
+		}
+
+		/**
+		 * @return array
+		 */
+		protected function getAuthorBioControls() {
+			$content_controls = apply_filters( 'kenta_filter_author_bio_content_controls', [
+				( new Toggle( 'kenta_post_author_bio_avatar' ) )
+					->setLabel( __( 'Show Avatar', 'kenta' ) )
+					->openByDefault()
+				,
+				( new Condition() )
+					->setCondition( [ 'kenta_post_author_bio_avatar' => 'yes' ] )
+					->setControls( [
+						( new Toggle( 'kenta_post_author_bio_avatar_link' ) )
+							->setLabel( __( 'Link Avatar To Author Page', 'kenta' ) )
+							->openByDefault()
+						,
+						( new Slider( 'kenta_post_author_bio_avatar_size' ) )
+							->setLabel( __( 'Avatar Size', 'kenta' ) )
+							->setMin( 20 )
+							->setMax( 200 )
+							->setDefaultValue( 80 )
+							->setDefaultUnit( false )
+						,
+						( new Slider( 'kenta_post_author_bio_avatar_radius' ) )
+							->setLabel( __( 'Avatar Radius', 'kenta' ) )
+							->setMin( 0 )
+							->setMax( 200 )
+							->setDefaultValue( '200px' )
+							->setDefaultUnit( 'px' )
+						,
+					] )
+				,
+				( new Separator() ),
+				( new Text( 'kenta_post_author_bio_name_prefix' ) )
+					->setLabel( __( 'Author Name Prefix', 'kenta' ) )
+					->setDefaultValue( __( 'Hi, I’m', 'kenta' ) )
+				,
+				( new Separator() ),
+				( new Toggle( 'kenta_post_author_bio_all_articles_link' ) )
+					->setLabel( __( 'Show All Articles Link', 'kenta' ) )
+					->openByDefault()
+				,
+				( new Condition() )
+					->setCondition( [ 'kenta_post_author_bio_all_articles_link' => 'yes' ] )
+					->setControls( [
+						( new Text( 'kenta_post_author_bio_all_articles_text' ) )
+							->setLabel( __( 'All Articles Text', 'kenta' ) )
+							->setDefaultValue( __( 'All My Articles', 'kenta' ) )
+					] )
+				,
+				( new Separator() ),
+				( new Radio( 'kenta_post_author_bio_alignment' ) )
+					->setLabel( __( 'Alignment', 'kenta' ) )
+					->asyncCss( '.kenta-about-author-bio-box', [ 'text-align' => 'value' ] )
+					->buttonsGroupView()
+					->setDefaultValue( 'center' )
+					->setChoices( [
+						'left'   => __( 'Left', 'kenta' ),
+						'center' => __( 'Center', 'kenta' ),
+						'right'  => __( 'Right', 'kenta' ),
+					] )
+				,
+			] );
+			$style_controls   = apply_filters( 'kenta_filter_author_bio_style_controls', [
+				( new Border( 'kenta_post_author_bio_border' ) )
+					->setLabel( __( 'Border', 'kenta' ) )
+					->displayInline()
+					->asyncCss( '.kenta-about-author-bio-box', AsyncCss::border() )
+					->setDefaultBorder( 1, 'solid', 'var(--kenta-base-300)' )
+				,
+				( new BoxShadow( 'kenta_post_author_bio_shadow' ) )
+					->setLabel( __( 'Shadow', 'kenta' ) )
+					->asyncCss( '.kenta-about-author-bio-box', AsyncCss::shadow() )
+					->setDefaultShadow(
+						'rgba(44, 62, 80, 0.1)',
+						'0px', '0px',
+						'10px', '0px', false
+					)
+				,
+				( new Background( 'kenta_post_author_bio_background' ) )
+					->setLabel( __( 'Background', 'kenta' ) )
+					->asyncCss( '.kenta-about-author-bio-box', AsyncCss::background() )
+					->setDefaultValue( [
+						'type'  => 'color',
+						'color' => 'var(--kenta-base-200)',
+					] )
+				,
+				( new Spacing( 'kenta_post_author_bio_padding' ) )
+					->setLabel( __( 'Padding', 'kenta' ) )
+					->asyncCss( '.kenta-about-author-bio-box', AsyncCss::dimensions( 'padding' ) )
+					->setDefaultValue( [
+						'top'    => '48px',
+						'bottom' => '48px',
+						'left'   => '48px',
+						'right'  => '48px',
+						'linked' => true,
+					] )
+				,
+				( new Spacing( 'kenta_post_author_bio_margin' ) )
+					->setLabel( __( 'Spacing', 'kenta' ) )
+					->asyncCss( '.kenta-about-author-bio-box', AsyncCss::dimensions() )
+					->setDisabled( [ 'left', 'right' ] )
+					->setDefaultValue( [
+						'top'    => '48px',
+						'bottom' => '48px',
+						'linked' => true,
+					] )
+				,
+			] );
+
+			return [
+				( new Tabs() )
+					->setActiveTab( 'content' )
+					->addTab( 'content', __( 'Content', 'kenta' ), $content_controls )
+					->addTab( 'style', __( 'Style', 'kenta' ), $style_controls )
+				,
+			];
 		}
 
 		/**
@@ -164,12 +304,12 @@ if ( ! class_exists( 'Kenta_Single_Post_Section' ) ) {
 				,
 				( new Separator() ),
 				( new Spacing( 'kenta_' . $type . '_navigation_padding' ) )
-					->setLabel( __( 'Padding', 'kenta' ) )
-					->asyncCss( '.kenta-post-navigation', AsyncCss::dimensions( 'padding' ) )
+					->setLabel( __( 'Spacing', 'kenta' ) )
+					->asyncCss( '.kenta-post-navigation', AsyncCss::dimensions() )
 					->setDisabled( [ 'left', 'right' ] )
 					->setSpacing( [
-						'top'    => '24px',
-						'bottom' => '24px',
+						'top'    => '48px',
+						'bottom' => '48px',
 						'linked' => true
 					] )
 				,

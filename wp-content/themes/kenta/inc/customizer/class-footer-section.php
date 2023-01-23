@@ -23,6 +23,11 @@ if ( ! class_exists( 'Kenta_Footer_Section' ) ) {
 		 */
 		public function getControls() {
 			$controls = [
+				kenta_docs_control(
+					__( '%sLearn how to use footer builder%s', 'kenta' ),
+					'https://kentatheme.com/docs/kenta-theme/header-footer-builder/',
+					'kenta_footer_builder_doc'
+				),
 				Kenta_Footer_Builder::instance()->builder()->setPreviewLocation( $this->id ),
 
 				( new Section( 'kenta_footer_colors_override' ) )

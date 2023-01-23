@@ -97,6 +97,14 @@ class WXRImporter extends \WP_Importer {
 		$this->backfill_attachment_urls();
 		$this->remap_featured_images();
 
+		// imported hook
+		do_action( 'kcmp/content_imported', [
+			'processed_posts'      => $this->processed_posts,
+			'processed_terms'      => $this->processed_terms,
+			'processed_menu_items' => $this->processed_menu_items,
+			'processed_authors'    => $this->processed_authors,
+		] );
+
 		$this->import_end();
 	}
 

@@ -5,7 +5,7 @@
  *
  * @package Kenta Blocks
  */
-$attributes = array(
+$attributes = array_merge( array(
     'blockID'    => array(
     'type' => 'string',
 ),
@@ -60,7 +60,7 @@ $attributes = array(
     'hover'   => \KentaBlocks\Css::INITIAL_VALUE,
 ),
 ),
-);
+), kenta_blocks_advanced_attrs() );
 $metadata = array(
     'title'      => __( 'Icon (KB)', 'kenta-blocks' ),
     'keywords'   => array(
@@ -83,7 +83,7 @@ return array(
     ), kenta_blocks_css()->colors( kenta_blocks_block_attr( 'iconColor', $attrs, $metadata ), array(
         'initial' => '--kb-icon-initial-color',
         'hover'   => '--kb-icon-hover-color',
-    ) ) );
+    ) ), kenta_blocks_advanced_css( $attrs, $metadata ) );
     return $css;
 },
 );

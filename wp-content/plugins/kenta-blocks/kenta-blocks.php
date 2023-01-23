@@ -5,7 +5,7 @@
  * Plugin URI: https://kentatheme.com/blocks/
  * Description: The Swiss Army knife of Gutenberg page builders. Use Section / Column blocks to create any site layout. We also have unlimited colors, backgrounds, typography and more. All blocks are responsive. Always display perfectly and fully customize, whether desktop or mobile.
  * Author: WP Moose
- * Version: 1.1.1
+ * Version: 1.2.2
  * Requires at least: 5.6
  * Requires PHP: 7.2
  * License: GPLv3
@@ -38,10 +38,14 @@ if ( function_exists( 'kb_fs' ) ) {
                     'public_key'     => 'pk_79663eeb2916a8f1f4e96f8fdb41f',
                     'is_premium'     => false,
                     'premium_suffix' => 'Premium',
+                    'anonymous_mode' => true,
                     'has_addons'     => false,
                     'has_paid_plans' => true,
                     'menu'           => array(
-                    'slug' => 'kenta-blocks',
+                    'slug'    => 'kenta-blocks',
+                    'pricing' => false,
+                    'contact' => true,
+                    'support' => true,
                 ),
                     'is_live'        => true,
                 ) );
@@ -61,7 +65,7 @@ if ( function_exists( 'kb_fs' ) ) {
      *
      * @since 0.0.1
      */
-    define( 'KENTA_BLOCKS_VERSION', '1.1.1' );
+    define( 'KENTA_BLOCKS_VERSION', '1.2.2' );
     define( 'KENTA_BLOCKS_PLUGIN_FILE', __FILE__ );
     define( 'KENTA_BLOCKS_PLUGIN_PATH', trailingslashit( plugin_dir_path( KENTA_BLOCKS_PLUGIN_FILE ) ) );
     define( 'KENTA_BLOCKS_PLUGIN_URL', trailingslashit( plugins_url( '/', KENTA_BLOCKS_PLUGIN_FILE ) ) );
@@ -76,10 +80,6 @@ if ( function_exists( 'kb_fs' ) ) {
     if ( !defined( 'KENTA_BLOCKS_LIBRARY_API_CACHE_SECONDS' ) ) {
         define( 'KENTA_BLOCKS_LIBRARY_API_CACHE_SECONDS', DAY_IN_SECONDS );
     }
-    // Using pricing page v2
-    kb_fs()->add_filter( 'freemius_pricing_js_path', function () {
-        return KENTA_BLOCKS_PLUGIN_PATH . 'freemius-pricing/freemius-pricing.js';
-    } );
     /**
      * Including composer autoloader globally.
      *
@@ -94,4 +94,10 @@ if ( function_exists( 'kb_fs' ) ) {
     add_action( 'plugins_loaded', function () {
         \KentaBlocks\Bootstrap::instance();
     } );
+    /**
+     * Regenerate all assets files when plugin activation
+     *
+     * @since 1.2.1
+     */
+    register_activation_hook( __FILE__, 'kenta_blocks_regenerate_assets' );
 }

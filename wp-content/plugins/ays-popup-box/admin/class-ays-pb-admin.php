@@ -262,22 +262,22 @@ class Ays_Pb_Admin {
 				'title'   => __( 'General Information:
                     '),
 				'content' =>
-					'<h2>' . __( 'Popup Information', $this->plugin_name) . '</h2>' .
+					'<h2>' . __( 'Popup Information', "ays-popup-box") . '</h2>' .
 					'<p>' .
-						__( 'The WordPress Popup plugin will help you to create engaging popups with fully customizable and responsive designs. Attract your audience and convert them into email subscribers or paying customers.  Construct advertising offers, generate more leads by creating option forms and subscription popups.',  $this->plugin_name ).'</p>'
+						__( 'The WordPress Popup plugin will help you to create engaging popups with fully customizable and responsive designs. Attract your audience and convert them into email subscribers or paying customers.  Construct advertising offers, generate more leads by creating option forms and subscription popups.',  "ays-popup-box" ).'</p>'
 			)
 		);
 
 		$screen->set_help_sidebar(
-			'<p><strong>' . __( 'For more information:', $this->plugin_name) . '</strong></p>' .
+			'<p><strong>' . __( 'For more information:', "ays-popup-box") . '</strong></p>' .
 			'<p>
-                <a href=" https://www.youtube.com/watch?v=YSf6-icT2Ro&list=PL18_gEiPDg8Ocrbwn1SUjs2XaSZlgHpWj" target="_blank">' . __( 'Youtube video tutorials', $this->plugin_name ) . '</a>
+                <a href=" https://www.youtube.com/watch?v=YSf6-icT2Ro&list=PL18_gEiPDg8Ocrbwn1SUjs2XaSZlgHpWj" target="_blank">' . __( 'Youtube video tutorials', "ays-popup-box" ) . '</a>
             </p>' .
 			'<p>
-                <a href="https://ays-pro.com/wordpress-popup-box-plugin-user-manual" target="_blank">' . __( 'Documentation: ', $this->plugin_name ) . '</a>
+                <a href="https://ays-pro.com/wordpress-popup-box-plugin-user-manual" target="_blank">' . __( 'Documentation: ', "ays-popup-box" ) . '</a>
             </p>' .
 			'<p>
-                <a href="https://ays-pro.com/wordpress/popup-box?src=45" target="_blank">' . __( 'Popup Box plugin Premium version:', $this->plugin_name ) . '</a>
+                <a href="https://ays-pro.com/wordpress/popup-box?src=45" target="_blank">' . __( 'Popup Box plugin Premium version:', "ays-popup-box" ) . '</a>
             </p>'
 		);
 	}
@@ -286,8 +286,8 @@ class Ays_Pb_Admin {
 
         $hook_categories = add_submenu_page(
             $this->plugin_name,
-            __('Categories', $this->plugin_name),
-            __('Categories', $this->plugin_name),
+            __('Categories', "ays-popup-box"),
+            __('Categories', "ays-popup-box"),
             'manage_options',
             $this->plugin_name . '-categories',
             array($this, 'display_plugin_categories_page')
@@ -300,8 +300,8 @@ class Ays_Pb_Admin {
     public function add_plugin_pro_features_submenu(){
         $hook_pro_features = add_submenu_page(
             $this->plugin_name,
-            __('PRO Features', $this->plugin_name),
-            __('PRO Features', $this->plugin_name),
+            __('PRO Features', "ays-popup-box"),
+            __('PRO Features', "ays-popup-box"),
             'manage_options',
             $this->plugin_name . '-pro-features',
             array($this, 'pb_display_plugin_pro_features_page')
@@ -311,7 +311,7 @@ class Ays_Pb_Admin {
     }
 
     public function add_plugin_reports_submenu(){
-        $results_text = __('Analytics', $this->plugin_name);
+        $results_text = __('Analytics', "ays-popup-box");
         $hook_reports = add_submenu_page(
             $this->plugin_name,
             $results_text,
@@ -327,8 +327,8 @@ class Ays_Pb_Admin {
     public function add_plugin_custom_fields_submenu(){
         $hook_popup_attributes = add_submenu_page(
             $this->plugin_name,
-            __('Custom Fields', $this->plugin_name),
-            __('Custom Fields', $this->plugin_name),
+            __('Custom Fields', "ays-popup-box"),
+            __('Custom Fields', "ays-popup-box"),
             'manage_options',
             $this->plugin_name . '-attributes',
             array($this, 'display_plugin_attributes_page')
@@ -339,7 +339,7 @@ class Ays_Pb_Admin {
     }
 
     public function add_plugin_export_import_submenu(){
-        $results_text = __('Export/Import', $this->plugin_name);
+        $results_text = __('Export/Import', "ays-popup-box");
         $hook_export_import = add_submenu_page(
             $this->plugin_name,
             $results_text,
@@ -353,7 +353,7 @@ class Ays_Pb_Admin {
     }
 
     public function add_plugin_subscribes_submenu(){
-        $results_text = __('Submissions', $this->plugin_name);
+        $results_text = __('Submissions', "ays-popup-box");
         $hook_subscribes = add_submenu_page(
             $this->plugin_name,
             $results_text,
@@ -369,8 +369,8 @@ class Ays_Pb_Admin {
 
     public function add_plugin_settings_submenu(){
         $hook_settings = add_submenu_page( $this->plugin_name,
-            __('General Settings', $this->plugin_name),
-            __('General Settings', $this->plugin_name),
+            __('General Settings', "ays-popup-box"),
+            __('General Settings', "ays-popup-box"),
             'manage_options',
             $this->plugin_name . '-settings',
             array($this, 'display_plugin_settings_page') 
@@ -381,8 +381,8 @@ class Ays_Pb_Admin {
 
     public function add_plugin_how_to_use_submenu(){
         $hook_how_to_use = add_submenu_page( $this->plugin_name,
-            __('How to use', $this->plugin_name),
-            __('How to use', $this->plugin_name),
+            __('How to use', "ays-popup-box"),
+            __('How to use', "ays-popup-box"),
             'manage_options',
             $this->plugin_name . '-how-to-use',
             array($this, 'display_plugin_how_to_use_page') 
@@ -393,8 +393,8 @@ class Ays_Pb_Admin {
 
     public function add_plugin_featured_plugins_submenu(){
         $hook_featured_plugins = add_submenu_page( $this->plugin_name,
-            __('Our Products', $this->plugin_name),
-            __('Our Products', $this->plugin_name),
+            __('Our Products', "ays-popup-box"),
+            __('Our Products', "ays-popup-box"),
             'manage_options',
             $this->plugin_name . '-featured-plugins',
             array($this, 'display_plugin_featured_plugins_page') 
@@ -437,9 +437,9 @@ class Ays_Pb_Admin {
         *  Documentation : https://codex.wordpress.org/Plugin_API/Filter_Reference/plugin_action_links_(plugin_file_name)
         */
         $settings_link = array(
-            '<a href="' . admin_url( 'options-general.php?page=' . $this->plugin_name ) . '">' . __('Settings', $this->plugin_name) . '</a>',
-            '<a href="https://ays-demo.com/popup-box-plugin-free-demo/" target="_blank">' . __('Demo', $this->plugin_name) . '</a>',
-            '<a href="https://ays-pro.com/wordpress/popup-box?src=44" target="_blank" style="color:red; font-weight: bold;">' . __('Buy Now', $this->plugin_name) . '</a>',
+            '<a href="' . admin_url( 'options-general.php?page=' . $this->plugin_name ) . '">' . __('Settings', "ays-popup-box") . '</a>',
+            '<a href="https://ays-demo.com/popup-box-plugin-free-demo/" target="_blank">' . __('Demo', "ays-popup-box") . '</a>',
+            '<a href="https://ays-pro.com/wordpress/popup-box?src=44" target="_blank" style="color:red; font-weight: bold;">' . __('Buy Now', "ays-popup-box") . '</a>',
         );
         return array_merge(  $settings_link, $links );
 
@@ -448,7 +448,7 @@ class Ays_Pb_Admin {
     public function add_plugin_row_meta($meta, $file) {
 
         if ($file == AYS_PB_BASENAME) {
-            $meta[] = '<a href="https://wordpress.org/support/plugin/ays-popup-box/" target="_blank">' . esc_html__( 'Free Support', $this->plugin_name ) . '</a>';
+            $meta[] = '<a href="https://wordpress.org/support/plugin/ays-popup-box/" target="_blank">' . esc_html__( 'Free Support', "ays-popup-box" ) . '</a>';
         }
 
         return $meta;
@@ -537,7 +537,7 @@ class Ays_Pb_Admin {
 	public function screen_option_popupbox() {
 		$option = 'per_page';
 		$args   = array(
-			'label'   => __('PopupBox', $this->plugin_name),
+			'label'   => __('PopupBox', "ays-popup-box"),
 			'default' => 20,
 			'option'  => 'popupboxes_per_page'
 		);
@@ -550,7 +550,7 @@ class Ays_Pb_Admin {
     public function screen_option_categories() {
         $option = 'per_page';
         $args   = array(
-            'label'   => __('Categories', $this->plugin_name),
+            'label'   => __('Categories', "ays-popup-box"),
             'default' => 20,
             'option'  => 'popup_categories_per_page'
         );
@@ -744,7 +744,7 @@ class Ays_Pb_Admin {
                 ?>
                 <p style="font-size:13px;text-align:center;font-style:italic;">
                     <span style="margin-left:0px;margin-right:10px;" class="ays_heart_beat"><i class="ays_fa ays_fa_heart animated"></i></span>
-                    <span><?php echo __( "If you love our plugin, please do big favor and rate us on", $this->plugin_name); ?></span> 
+                    <span><?php echo __( "If you love our plugin, please do big favor and rate us on", "ays-popup-box"); ?></span> 
                     <a target="_blank" href='https://wordpress.org/support/plugin/ays-popup-box/reviews/?rate=5#new-post'>WordPress.org</a>
                     <span class="ays_heart_beat"><i class="ays_fa ays_fa_heart animated"></i></span>
                 </p>

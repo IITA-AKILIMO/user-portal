@@ -4,7 +4,7 @@ Author: WP Moose
 Requires at least: WordPress 5.4+
 Tested up to: WordPress 6.1
 Requires PHP: 7.2
-Stable tag: 1.0.10
+Stable tag: 1.1.8
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Tags: blog, portfolio, e-commerce, grid-layout, one-column, two-columns, three-columns, four-columns, left-sidebar, right-sidebar, block-styles, custom-background, custom-colors, custom-header, custom-logo, custom-menu, editor-style, featured-image-header, featured-images, footer-widgets, full-width-template, rtl-language-support, sticky-post, threaded-comments, theme-options, translation-ready, wide-blocks
@@ -47,6 +47,63 @@ GPL v2 - src/lotta-framework/LICENSE
 Credits - src/lotta-framework/README.md
 
 == Changelog ==
+
+= 1.1.8 =
+
+* Add: Related posts section for single-post
+* Ref: Change default archive feature image size
+* Fix: Archive header color options error
+
+= 1.1.7 =
+
+* Add: Author bio for single-post
+* Add: Content max width option for single post & page
+* Add: Dynamic customizer cache switch
+
+= 1.1.6 =
+
+* Add: Breadcrumbs element in header & footer
+* Add: Action to manually update the customizer cache
+
+= 1.1.5 =
+
+* Fix: Customizer cache key error for child theme
+
+= 1.1.4 =
+
+* Fix: Card style preview error
+* Ref: Cache part of dynamic CSS
+
+= 1.1.3 =
+
+* Add: Mega menu support
+* Add: Contact Form 7 & Mailchimp plugin support
+* Ref: Form element style
+
+= 1.1.2 =
+
+* Ref: User experience improvement
+* Ref: Admin dashboard optimize
+
+= 1.1.1 =
+
+* Add: Scroll reveal effect
+* Add: Preloader extension
+* Add: Customize documentation
+* Ref: Css style update
+* Fix: Transparent header style for html & socials element
+* Fix: Editor button style error
+
+= 1.1.0 =
+
+* Ref: Update admin page
+
+= 1.0.11 =
+
+* Add: Article content style preset
+* Add: Archive header overlay
+* Ref: Update theme hooks
+* Fix: Article sidebar layout error
 
 = 1.0.10 =
 

@@ -1,7 +1,7 @@
-=== Kenta Gutenberg Blocks – Responsive Blocks and block templates library for Gutenberg Editor, Website Builder, Page Builder with Section, Column, Heading, Buttons, Images and more ===
+=== Kenta Gutenberg Blocks – Responsive Blocks and block templates library for Gutenberg Editor ===
 Contributors: ibllex
 Tags: gutenberg, gutenberg blocks, block editor, blocks, block, editor, page builder
-Stable tag: 1.1.1
+Stable tag: 1.2.2
 Requires at least: 5.6
 Tested up to: 6.1
 Requires PHP: 7.2
@@ -16,17 +16,19 @@ Kenta Blocks has a set of responsive blocks with powerful options and pre-design
 
 ### The Awesome Gutenberg blocks we have
 
-* **Section** You can add various columns and nested sections. In addition, you can insert blocks in each section to create various unique layouts. You can also set the background, shadows, etc. for each section and column.
-* **Buttons** Redirect users to your important pages or websites.
-* **Icon** Use 2000+ FontAwesome icons in your website. Catch the visitor's eye.
-* **Cover** Core/cover block enhancements, fully customizable backgrounds, shadows, overlay styles and shape divider, and it's useful for create amazing Big Hero.
-* **Spacer** Add space between blocks to make your design more appealing and cleaner
-* **Heading** Create a customizable title for each section with various markups from H1 to H6, You can also use 1000+ Google fonts.
-* **Paragraph** Create a customizable paragraph width 1000+ Google fonts and multiple setting options.
-* **Image** Core/image block enhancements, You can set shadows, borders, border radius and css filters for images.
-* **Group** Core/group block enhancements, You can set padding, margin, shadows, background, borders and border radius for group.
-* **Row** Core/row block enhancements, You can set padding, margin, shadows, background, borders and border radius for row.
-* **Stack** Core/stsack block enhancements, You can set padding, margin, shadows, background, borders and border radius for stack.
+* [**Section**](https://kentatheme.com/docs/kenta-blocks/blocks-guide/section-block-kb/) You can add various columns and nested sections. In addition, you can insert blocks in each section to create various unique layouts. You can also set the background, shadows, etc. for each section and column.
+* [**Buttons**](https://kentatheme.com/docs/kenta-blocks/blocks-guide/buttons-block-kb/) Redirect users to your important pages or websites.
+* [**Icon**](https://kentatheme.com/docs/kenta-blocks/blocks-guide/icon-block-kb/) Use 2000+ FontAwesome icons in your website. Catch the visitor's eye.
+* [**Cover**](https://kentatheme.com/docs/kenta-blocks/blocks-guide/cover-block-kb/) Core/cover block enhancements, fully customizable backgrounds, shadows, overlay styles and shape divider, and it's useful for create amazing Big Hero.
+* [**Spacer**](https://kentatheme.com/docs/kenta-blocks/blocks-guide/spacer-block-kb/) Add space between blocks to make your design more appealing and cleaner
+* [**Heading**](https://kentatheme.com/docs/kenta-blocks/blocks-guide/heading-block-kb/) Create a customizable title for each section with various markups from H1 to H6, You can also use 1000+ Google fonts.
+* [**Paragraph**](https://kentatheme.com/docs/kenta-blocks/blocks-guide/paragraph-block-kb/) Create a customizable paragraph width 1000+ Google fonts and multiple setting options.
+* [**Image**](https://kentatheme.com/docs/kenta-blocks/blocks-guide/image-block-kb/) Core/image block enhancements, You can set shadows, borders, border radius and css filters for images.
+* [**Separator**](https://kentatheme.com/docs/kenta-blocks/blocks-guide/separator-block-kb/) Core/separator block enhancements, You can set shadows, style, radius, width, height and color for separator.
+* [**Group**](https://kentatheme.com/docs/kenta-blocks/blocks-guide/group-block-kb/) Core/group block enhancements, You can set padding, margin, shadows, background, borders and border radius for group.
+* [**Row**](https://kentatheme.com/docs/kenta-blocks/blocks-guide/row-block-kb/) Core/row block enhancements, You can set padding, margin, shadows, background, borders and border radius for row.
+* [**Stack**](https://kentatheme.com/docs/kenta-blocks/blocks-guide/stack-block-kb/) Core/stack block enhancements, You can set padding, margin, shadows, background, borders and border radius for stack.
+* [**Slides**](https://kentatheme.com/docs/kenta-blocks/blocks-guide/slides-block-kb/) Display a carousel with any blocks in the slides, also known as sliders, slick, slideshow.
 
 == Frequently Asked Questions ==
 
@@ -43,6 +45,55 @@ No! You can create amazing websites without touching a single line of code.
 Absolutely Yes! Kenta Blocks has been created using the Gutenberg editor. So, it does not go well with classic editor or other page builder plugins.
 
 == Changelog ==
+
+= 1.2.2 =
+
+* Fix: Css generate error
+* Fix: Nested stack or row block style errors
+* Fix: Dynamic script cache error
+* Fix: Slides block slides gap saving error
+
+= 1.2.1 =
+
+* Add: Align-items property for row block
+* Ref: Update the block editor style and the front-end look closer
+* Add: Support save dynamic styles/scripts to a file (Premium)
+
+= 1.2.0 =
+
+* Add: New slides block
+* Ref: Row block is free now
+* Ref: Stack block is free now
+* Ref: Group block is free now
+* Fix: Pattern library compatibility check
+* Fix: Kenta gutenberg templates library ui color theme
+
+= 1.1.6 =
+
+* Ref: Admin dashboard
+
+= 1.1.5 =
+
+* Add: Block documentation
+* Ref: Add useful links in settings page
+
+= 1.1.4 =
+
+* Ref: Update admin screen
+* Fix: Security updates
+
+= 1.1.3 =
+
+* Add: Transform options (Premium Beta)
+* Add: Advanced attributes for icon block
+* Fix: Paragraph & heading block editor style error
+
+= 1.1.2 =
+
+* Add: Add separator block
+* Add: Order attribute in column block
+* Ref: Update modal style
+* Fix: Paragraph block editor style error
 
 = 1.1.1 =
 

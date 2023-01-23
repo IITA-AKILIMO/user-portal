@@ -1,15 +1,9 @@
 <?php
 /**
- * Must required before plugin run
+ * Must be required before plugin run
  *
  * @package Kenta Companion
  */
-
-if ( ! function_exists( 'kcmp_custom_pricing_js_path' ) ) {
-	function kcmp_custom_pricing_js_path() {
-		return KCMP_PLUGIN_PATH . 'freemius-pricing/freemius-pricing.js';
-	}
-}
 
 if ( ! function_exists( 'kcmp_kenta_need_upgrade_notice' ) ) {
 	function kcmp_kenta_need_upgrade_notice() {
@@ -50,6 +44,9 @@ if ( ! function_exists( 'kcmp_enqueue_admin_scripts' ) ) {
 		);
 
 		$localize = [
+			'general' => [
+				'premium_kb' => function_exists( 'kcmp_is_premium_kb_installed' ) && kcmp_is_premium_kb_installed(),
+			],
 			'starter' => [
 				'plan' => kenta_fs()->can_use_premium_code() ? 'premium' : 'free',
 				'api'  => kcmp( 'demos' )->api( kcmp_current_template() . '/' ),

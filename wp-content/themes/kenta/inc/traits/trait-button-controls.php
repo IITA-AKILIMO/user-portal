@@ -152,7 +152,7 @@ if ( ! trait_exists( 'Kenta_Button_Controls' ) ) {
 
 			$controls = [
 				( new Slider( $id . 'min_height' ) )
-					->setLabel( __( 'Mini Height', 'kenta' ) )
+					->setLabel( __( 'Min Height', 'kenta' ) )
 					->asyncCss( $selector, [ '--kenta-button-height' => 'value' ] )
 					->enableResponsive()
 					->setMin( 30 )

@@ -72,7 +72,7 @@ if ( ! class_exists( 'BravePop_ConvertKit' ) ) {
          if(count($customFields) > 0){
             $fieldValues = array();
             foreach ($customFields as $key => $value) {
-               $fieldValues[$key] = $value;
+               $fieldValues[$key] = !empty($value) && is_array($value) ?  implode(',', $value) : $value;
             }
             $contact['fields'] = $fieldValues;
          }

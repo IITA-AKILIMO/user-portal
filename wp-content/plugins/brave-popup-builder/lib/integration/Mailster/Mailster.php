@@ -61,7 +61,7 @@ if ( ! class_exists( 'BravePop_Mailster' ) ) {
          if(count($customFields) > 0){
             foreach ($customFields as $key => $value) {
                if(!empty($value)){
-                  $contact[$key] = $value;
+                  $contact[$key] = !empty($value) && is_array($value) ?  implode(',', $value) : $value;
                }
             }
          }

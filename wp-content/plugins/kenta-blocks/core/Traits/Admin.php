@@ -20,8 +20,20 @@ trait Admin {
 			'manage_options',
 			'kenta-blocks',
 			array( $this, 'show_admin_menu' ),
-			KENTA_BLOCKS_PLUGIN_URL . 'assets/images/kenta-blocks-logo.svg'
+			KENTA_BLOCKS_PLUGIN_URL . 'assets/images/kenta-blocks-logo.svg',
+			'58.7'
 		);
+
+		if ( ! kb_fs()->is_registered() ) {
+			add_submenu_page(
+				'kenta-blocks',
+				__( 'Opt In', 'kenta-blocks' ),
+				__( 'Opt In', 'kenta-blocks' ),
+				'manage_options',
+				'kenta-blocks-optin',
+				[ kb_fs(), '_connect_page_render' ]
+			);
+		}
 	}
 
 	/**

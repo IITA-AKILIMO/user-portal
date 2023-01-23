@@ -37,7 +37,7 @@
             </p>
 		<?php elseif ( is_search() ) : ?>
             <!-- For Search Result -->
-            <p class="mb-gutter text-accent">
+            <p class="mb-gutter text-accent leading-normal">
 				<?php esc_html_e( 'Sorry, but nothing matched your search terms. Please try again with some different keywords.', 'kenta' ); ?>
             </p>
             <div class="kenta-max-w-content mx-auto kenta-no-result-search-form kenta-form">

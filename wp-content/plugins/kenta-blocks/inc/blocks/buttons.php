@@ -52,7 +52,7 @@ return array(
         'flex-direction'   => $attrs['direction'] ?? null,
         'justify-content'  => kenta_blocks_block_attr( 'justify', $attrs, $metadata ),
         'align-items'      => kenta_blocks_block_attr( 'alignItems', $attrs, $metadata ),
-        'flex-wrap'        => ( ($attrs['wrap'] ?? 'yes') == 'yes' ? 'wrap' : 'no-wrap' ),
+        'flex-wrap'        => ( ($attrs['wrap'] ?? 'yes') == 'yes' ? 'wrap' : 'nowrap' ),
         '--kb-buttons-gap' => $attrs['gap'] ?? null,
     ), kenta_blocks_advanced_css( $attrs, $metadata ) );
     return $css;

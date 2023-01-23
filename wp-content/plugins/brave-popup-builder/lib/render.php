@@ -21,8 +21,10 @@ function bravepop_render_popup() {
    }
 
    $filtered_popups = bravepop_get_current_page_popups();
-   do_action( 'bravepop_before_render', array($filtered_popups) );
+   $filtered_popups = apply_filters("bravepop_rendarable_campaigns", $filtered_popups);
 
+   do_action( 'bravepop_before_render', array($filtered_popups) );
+   
    //error_log(json_encode($filtered_popups));
    if($filtered_popups && count($filtered_popups) > 0){
       foreach($filtered_popups as $key=>$value) {
@@ -229,7 +231,7 @@ function bravepop_get_current_page_popups(){
          }elseif($placementType === 'custom' ){
             $current_page_link = (isset($_SERVER['HTTPS']) ? 'https' : 'http').'://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
             //error_log( json_encode($current_page_link));
-            if($current_page_link && $placement->urls && count($placement->urls) > 0){
+            if($current_page_link && isset($placement->urls) && count($placement->urls) > 0){
                foreach($placement->urls as $key=>$urlItem) {
                   if(isset($urlItem->link) && ($current_page_link === $urlItem->link)){
                      $fit_popups[] = $popupData;
@@ -343,7 +345,9 @@ function bravepop_get_current_pageInfo(){
 
    } elseif ( $wp_query->is_archive ) {
       $currentPageType = 'archive';
-      $currentSingleType = $wp_query->query['post_type'];
+      if(isset($wp_query->query['post_type'])){
+         $currentSingleType = $wp_query->query['post_type'];
+      }
    } elseif ( $wp_query->is_search ) {
        $currentPageType = 'search';
    } elseif ( $wp_query->is_404 ) {
@@ -360,6 +364,13 @@ function bravepop_get_current_pageInfo(){
    //If Page ID returns zero, collect id from the queried object.
    if($currentSingleType === 'page' && isset($wp_query->queried_object->ID)){
       $currentSingleID = $wp_query->queried_object->ID;
+   }
+
+   //Handle the pages that are set to Posts Page from Settings > Reading
+   if(!empty($wp_query->is_home) && !empty($wp_query->is_posts_page) && !empty($wp_query->queried_object_id)){
+      $currentPageType = 'single';
+      $currentSingleID = $wp_query->queried_object_id;
+      $currentSingleType = 'page';
    }
 
    $pageInfo->type = $currentPageType;

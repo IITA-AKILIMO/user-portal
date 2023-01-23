@@ -206,8 +206,12 @@ add_action( 'after_setup_theme', 'kenta_setup' );
  */
 function kenta_widgets_init() {
 	$sidebar_class = 'kenta-widget clearfix %2$s';
-	$title_class   = 'widget-title mb-half-gutter heading-content';
-	$tag           = CZ::get( 'kenta_global_sidebar_title-tag' ) ?? 'h2';
+	if ( CZ::checked( 'kenta_global_sidebar_scroll-reveal' ) ) {
+		$sidebar_class = 'kenta-scroll-reveal-widget ' . $sidebar_class;
+	}
+
+	$title_class = 'widget-title mb-half-gutter heading-content';
+	$tag         = CZ::get( 'kenta_global_sidebar_title-tag' ) ?? 'h2';
 
 	register_sidebar(
 		array(
@@ -379,7 +383,7 @@ function kenta_enqueue_admin_scripts() {
 	$suffix = defined( 'WP_DEBUG' ) && WP_DEBUG ? '' : '.min';
 
 	kenta_enqueue_global_vars();
-	kenta_enqueue_global_vars(':root', 'admin');
+	kenta_enqueue_global_vars( ':root', 'admin' );
 	kenta_enqueue_admin_dynamic_css();
 
 	Fonts::enqueue_scripts( 'kenta_fonts', KENTA_VERSION );
@@ -401,6 +405,11 @@ function kenta_enqueue_admin_scripts() {
 
 	wp_enqueue_script( 'kenta-admin-script' );
 	wp_enqueue_style( 'kenta-admin-style' );
+
+	// Admin script
+	wp_localize_script( 'kenta-admin-script', 'KentaAdmin', [
+		'install_cmp_url' => esc_url( add_query_arg( array( 'action' => 'kenta_install_companion' ), admin_url( 'admin.php' ) ) ),
+	] );
 }
 
 add_action( 'admin_enqueue_scripts', 'kenta_enqueue_admin_scripts', 9999 );
@@ -436,6 +445,13 @@ function kenta_enqueue_customizer_scripts() {
 		'kenta-customizer-style',
 		get_template_directory_uri() . '/dist/css/customizer' . $suffix . '.css',
 		array(),
+		KENTA_VERSION
+	);
+
+	wp_enqueue_script(
+		'kenta-customizer-script',
+		get_template_directory_uri() . '/dist/js/customizer' . $suffix . '.js',
+		array( 'lotta-customizer-script', 'customize-controls', 'jquery' ),
 		KENTA_VERSION
 	);
 }

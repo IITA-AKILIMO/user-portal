@@ -169,7 +169,14 @@ if ( ! class_exists( 'Kenta_Socials_Extension' ) ) {
 				$repeater->setLimit( 4, kenta_upsell_info( __( 'Add more social networks in %sPro Version%s', 'kenta' ) ) );
 			}
 
-			return [ $repeater ];
+			return [
+				$repeater,
+				kenta_docs_control(
+					__( '%sRead Documentation%s', 'kenta' ),
+					'https://kentatheme.com/docs/kenta-theme/general/social-networks/',
+					'kenta_social_networks_doc'
+				),
+			];
 		}
 	}
 }

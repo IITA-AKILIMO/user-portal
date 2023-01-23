@@ -9,12 +9,12 @@
 
 if ( ! defined( 'KENTA_VERSION' ) ) {
 	// Replace the version number of the theme on each release.
-	define( 'KENTA_VERSION', '1.0.10' );
+	define( 'KENTA_VERSION', '1.1.8' );
 }
 
 if ( ! defined( 'MIN_KENTA_CMP_VERSION' ) ) {
 	// Minimal Kenta Companion plugin compatible
-	define( 'MIN_KENTA_CMP_VERSION', '1.0.5' );
+	define( 'MIN_KENTA_CMP_VERSION', '1.1.5' );
 }
 
 if ( ! defined( 'KENTA_WOOCOMMERCE_ACTIVE' ) ) {
@@ -69,6 +69,11 @@ require get_template_directory() . '/inc/template-tags.php';
 require get_template_directory() . '/inc/template-functions.php';
 
 /**
+ * Php traits
+ */
+require get_template_directory() . '/inc/traits.php';
+
+/**
  * Theme extensions
  */
 require get_template_directory() . '/inc/extensions.php';
@@ -96,7 +101,12 @@ kenta_app( 'CZ' )->storeAs( 'option' );
 
 // add global dynamic css partial
 kenta_app( 'CZ' )->addPartial( 'kenta-global-selective-css', '#kenta-global-selective-css', function () {
-	echo kenta_dynamic_css();
+	echo kenta_dynamic_css() . kenta_no_cache_dynamic_css();
+} );
+
+// add preloader customize partial
+kenta_app( 'CZ' )->addPartial( 'kenta-preloader-selective-css', '#kenta-preloader-selective-css', function () {
+	echo kenta_preloader_css();
 } );
 
 // add WooCommerce css partial
@@ -115,12 +125,14 @@ kenta_app( 'CZ' )->addPartial( 'kenta-transparent-selective-css', '#kenta-transp
 kenta_app( 'CZ' )->addPartial( 'kenta-header-selective-css', '#kenta-header-selective-css', function () {
 	Kenta_Header_Builder::instance()->builder()->do( 'enqueue_frontend_scripts' );
 	echo \LottaFramework\Facades\Css::parse( apply_filters( 'kenta_filter_dynamic_css', [] ) );
+	echo \LottaFramework\Facades\Css::parse( apply_filters( 'kenta_filter_no_cache_dynamic_css', [] ) );
 } );
 
 // add footer customize partial
 kenta_app( 'CZ' )->addPartial( 'kenta-footer-selective-css', '#kenta-footer-selective-css', function () {
 	Kenta_Footer_Builder::instance()->builder()->do( 'enqueue_frontend_scripts' );
 	echo \LottaFramework\Facades\Css::parse( apply_filters( 'kenta_filter_dynamic_css', [] ) );
+	echo \LottaFramework\Facades\Css::parse( apply_filters( 'kenta_filter_no_cache_dynamic_css', [] ) );
 } );
 
 /**

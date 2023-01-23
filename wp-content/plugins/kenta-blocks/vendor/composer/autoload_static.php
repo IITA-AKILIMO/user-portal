@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitd7ca60bf99a0bc2c48b8e2a0603d3c1b
+class ComposerStaticInit009bff3ea05ddcdfe5c7a9945f8807db
 {
     public static $files = array (
         '841cc3d5192f1a988c73777dfad9b6cd' => __DIR__ . '/../..' . '/inc/helpers.php',
@@ -12,6 +12,10 @@ class ComposerStaticInitd7ca60bf99a0bc2c48b8e2a0603d3c1b
     );
 
     public static $prefixLengthsPsr4 = array (
+        'W' => 
+        array (
+            'Wpmoose\\WpDismissibleNotice\\' => 28,
+        ),
         'K' => 
         array (
             'KentaBlocks\\' => 12,
@@ -19,6 +23,10 @@ class ComposerStaticInitd7ca60bf99a0bc2c48b8e2a0603d3c1b
     );
 
     public static $prefixDirsPsr4 = array (
+        'Wpmoose\\WpDismissibleNotice\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/wpmoose/wp-dismissible-notice/src',
+        ),
         'KentaBlocks\\' => 
         array (
             0 => __DIR__ . '/../..' . '/core',
@@ -32,9 +40,9 @@ class ComposerStaticInitd7ca60bf99a0bc2c48b8e2a0603d3c1b
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitd7ca60bf99a0bc2c48b8e2a0603d3c1b::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitd7ca60bf99a0bc2c48b8e2a0603d3c1b::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInitd7ca60bf99a0bc2c48b8e2a0603d3c1b::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit009bff3ea05ddcdfe5c7a9945f8807db::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit009bff3ea05ddcdfe5c7a9945f8807db::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit009bff3ea05ddcdfe5c7a9945f8807db::$classMap;
 
         }, null, ClassLoader::class);
     }

@@ -74,7 +74,7 @@ return array(
     $isBoxed = kenta_blocks_block_attr( 'boxedContainer', $attrs, $metadata ) === 'yes';
     $containerStyle = array_merge( array(
         'align-items' => $attrs['alignItems'] ?? null,
-        'flex-wrap'   => ( ($attrs['wrap'] ?? 'yes') == 'yes' ? 'wrap' : 'no-wrap' ),
+        'flex-wrap'   => ( ($attrs['wrap'] ?? 'yes') == 'yes' ? 'wrap' : 'nowrap' ),
     ), kenta_blocks_css()->dimensions( kenta_blocks_block_attr( 'padding', $attrs, $metadata ), 'padding' ) );
     if ( $isBoxed ) {
         $css[".kb-section-{$id} .kb-section-container"] = array_merge( $containerStyle, array(

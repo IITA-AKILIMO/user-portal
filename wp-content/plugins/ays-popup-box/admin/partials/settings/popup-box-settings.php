@@ -59,12 +59,12 @@ $categories_title_length = (isset($options['categories_title_length']) && intval
             <input type="hidden" name="ays_pb_tab" value="<?php echo $ays_pb_tab; ?>">
             <div class="ays-pb-heading-box">
                 <div class="ays-pb-wordpress-user-manual-box">
-                        <a href="https://ays-pro.com/wordpress-popup-box-plugin-user-manual" target="_blank"><?php echo __("View Documentation", $this->plugin_name); ?></a>
+                        <a href="https://ays-pro.com/wordpress-popup-box-plugin-user-manual" target="_blank"><?php echo __("View Documentation", "ays-popup-box"); ?></a>
                 </div>
             </div>
             <h1 class="wp-heading-inline">
                 <?php
-                echo __('Settings', $this->plugin_name);
+                echo __('Settings', "ays-popup-box");
                 ?>
             </h1>
             <?php
@@ -78,35 +78,35 @@ $categories_title_length = (isset($options['categories_title_length']) && intval
                     <div class="nav-tab-wrapper" style="position:sticky; top:35px;">
                         <a href="#tab1" data-tab="tab1"
                            class="nav-tab <?php echo ($ays_pb_tab == 'tab1') ? 'nav-tab-active' : ''; ?>">
-                            <?php echo __("General", $this->plugin_name); ?>
+                            <?php echo __("General", "ays-popup-box"); ?>
                         </a>
                         <a href="#tab2" data-tab="tab2" class="nav-tab <?php echo ($ays_pb_tab == 'tab2') ? 'nav-tab-active' : ''; ?>">
-                            <?php echo __("Integrations", $this->plugin_name);?>
+                            <?php echo __("Integrations", "ays-popup-box");?>
                         </a>
                         <a href="#tab3" data-tab="tab3"
                            class="nav-tab <?php echo ($ays_pb_tab == 'tab3') ? 'nav-tab-active' : ''; ?>">
-                            <?php echo __("Shortcodes", $this->plugin_name); ?>
+                            <?php echo __("Shortcodes", "ays-popup-box"); ?>
                         </a>
                         <a href="#tab4" data-tab="tab4" class="nav-tab <?php echo ($ays_pb_tab == 'tab4') ? 'nav-tab-active' : ''; ?>">
-                            <?php echo __("Message variables", $this->plugin_name);?>
+                            <?php echo __("Message variables", "ays-popup-box");?>
                         </a>
                     </div>
                 </div>
                 <div class="ays-pb-tabs-wrapper">
                     <div id="tab1" class="ays-pb-tab-content <?php echo ($ays_pb_tab == 'tab1') ? 'ays-pb-tab-content-active' : ''; ?>">
-                        <p class="ays-pb-subtitle"><?php echo __('General Settings', $this->plugin_name) ?></p>
+                        <p class="ays-pb-subtitle"><?php echo __('General Settings', "ays-popup-box") ?></p>
                         <hr/>
                         <div class="" style="padding:15px;">
                             <fieldset>
                                 <legend>
                                     <strong style="font-size:30px;"><i class="ays_fa ays_fa_question_circle"></i></strong>
-                                    <h5><?php echo __('Default popup parameters',$this->plugin_name)?></h5>
+                                    <h5><?php echo __('Default popup parameters',"ays-popup-box")?></h5>
                                 </legend>
                                 <div class="form-group row">
                                     <div class="col-sm-4">
                                         <label for="ays_pb_wp_editor_height">
-                                            <?php echo __( "WP Editor height", $this->plugin_name ); ?>
-                                            <a class="ays_help" data-toggle="tooltip" title="<?php echo __('Give the default height value to the WP Editor. It will apply to all WP Editors within the plugin on the dashboard.',$this->plugin_name); ?>">
+                                            <?php echo __( "WP Editor height", "ays-popup-box" ); ?>
+                                            <a class="ays_help" data-toggle="tooltip" title="<?php echo __('Give the default height value to the WP Editor. It will apply to all WP Editors within the plugin on the dashboard.',"ays-popup-box"); ?>">
                                                 <i class="ays_fa ays_fa-info-circle"></i>
                                             </a>
                                         </label>
@@ -120,13 +120,13 @@ $categories_title_length = (isset($options['categories_title_length']) && intval
                             <fieldset>
                                 <legend>
                                     <strong style="font-size:30px;"><i class="ays_fa ays_fa_text"></i></strong>
-                                    <h5><?php echo __('Excerpt words count in list tables',$this->plugin_name)?></h5>
+                                    <h5><?php echo __('Excerpt words count in list tables',"ays-popup-box")?></h5>
                                 </legend>
                                 <div class="form-group row">
                                     <div class="col-sm-4">
                                         <label for="ays_popup_title_length">
-                                            <?php echo __( "Popup list table", $this->plugin_name ); ?>
-                                            <a class="ays_help" data-toggle="tooltip" title="<?php echo __('Determine the length of the Popups to be shown in the Popup List Table by putting your preferred count of words in the following field. (E.g., if you put 10,  you will see the first 10 words of each Popup Title on the Popups page of your dashboard).', $this->plugin_name); ?>">
+                                            <?php echo __( "Popup list table", "ays-popup-box" ); ?>
+                                            <a class="ays_help" data-toggle="tooltip" title="<?php echo __('Determine the length of the Popups to be shown in the Popup List Table by putting your preferred count of words in the following field. (E.g., if you put 10,  you will see the first 10 words of each Popup Title on the Popups page of your dashboard).', "ays-popup-box"); ?>">
                                                 <i class="ays_fa ays_fa-info-circle"></i>
                                             </a>
                                         </label>
@@ -139,8 +139,8 @@ $categories_title_length = (isset($options['categories_title_length']) && intval
                                 <div class="form-group row">
                                     <div class="col-sm-4">
                                         <label for="ays_categories_title_length">
-                                            <?php echo __( "Popup categories list table", $this->plugin_name ); ?>
-                                            <a class="ays_help" data-toggle="tooltip" title="<?php echo __('Determine the length of the results to be shown in the Popup categories List Table by putting your preferred count of words in the following field. (For example: if you put 10,  you will see the first 10 words of each result in the Popup categories page of your dashboard).', $this->plugin_name); ?>">
+                                            <?php echo __( "Popup categories list table", "ays-popup-box" ); ?>
+                                            <a class="ays_help" data-toggle="tooltip" title="<?php echo __('Determine the length of the results to be shown in the Popup categories List Table by putting your preferred count of words in the following field. (For example: if you put 10,  you will see the first 10 words of each result in the Popup categories page of your dashboard).', "ays-popup-box"); ?>">
                                                 <i class="ays_fa ays_fa-info-circle"></i>
                                             </a>
                                         </label>
@@ -154,14 +154,14 @@ $categories_title_length = (isset($options['categories_title_length']) && intval
                             <fieldset>
                                 <legend>
                                     <strong style="font-size:30px;"><i class="ays_fa ays_fa-music"></i></strong>
-                                    <h5><?php echo __('Popup sound',$this->plugin_name)?></h5>
+                                    <h5><?php echo __('Popup sound',"ays-popup-box")?></h5>
                                 </legend>
                                 <div class="form-group row">
                                     <div class="col-sm-4">
                                         <label for="">
                                             <span>
-                                                <?php echo  __('Opening and closing sounds',$this->plugin_name) ?>
-                                                <a class="ays_help" data-toggle="tooltip" title="<?php echo __('Insert popup opening and closing sound by clicking on “Select sound”.', $this->plugin_name); ?>">
+                                                <?php echo  __('Opening and closing sounds',"ays-popup-box") ?>
+                                                <a class="ays_help" data-toggle="tooltip" title="<?php echo __('Insert popup opening and closing sound by clicking on “Select sound”.', "ays-popup-box"); ?>">
                                                     <i class="ays_fa ays_fa-info-circle"></i>
                                                 </a>
                                             </span>
@@ -171,10 +171,10 @@ $categories_title_length = (isset($options['categories_title_length']) && intval
                                         <div class="form-group row">
                                             <div class="col-sm-12">
                                                 <label for="ays_pb_opening_sound">
-                                                    <?php echo __( "Opening sound", $this->plugin_name ); ?>
+                                                    <?php echo __( "Opening sound", "ays-popup-box" ); ?>
                                                 </label>
                                                 <div class="ays-bg-music-container">
-                                                    <a class="add-pb-bg-music" href="javascript:void(0);"><?php echo __("Select sound", $this->plugin_name); ?></a>
+                                                    <a class="add-pb-bg-music" href="javascript:void(0);"><?php echo __("Select sound", "ays-popup-box"); ?></a>
                                                     <audio controls src="<?php echo $ays_pb_sound; ?>" class="ays-bg-opening-music-audio"></audio>
                                                     <input type="hidden" name="ays_pb_sound" class="ays_pb_bg_music ays_pb_bg_music_opening_input" value="<?php echo $ays_pb_sound; ?>" id="ays_pb_opening_sound">
                                                     <i class="ays_fa ays_fa_times ays_pb_sound_close_btn ays_pb_sound_opening_btn" style="<?php echo ($ays_pb_sound == '') ? 'display:none' : 'display:block'; ?>"></i>
@@ -186,10 +186,10 @@ $categories_title_length = (isset($options['categories_title_length']) && intval
                                         <div class="form-group row">
                                             <div class="col-sm-12">
                                                 <label for="ays_pb_closing_sound">
-                                                    <?php echo __( "Closing sound", $this->plugin_name ); ?>
+                                                    <?php echo __( "Closing sound", "ays-popup-box" ); ?>
                                                 </label>
                                                 <div class="ays-bg-music-container">
-                                                    <a class="add-pb-bg-music" href="javascript:void(0);"><?php echo __("Select sound", $this->plugin_name); ?></a>
+                                                    <a class="add-pb-bg-music" href="javascript:void(0);"><?php echo __("Select sound", "ays-popup-box"); ?></a>
                                                     <audio controls src="<?php echo $ays_pb_close_sound; ?>" class="ays-bg-closing-music-audio"></audio>
                                                     <input type="hidden" name="ays_pb_close_sound" class="ays_pb_bg_music ays_pb_bg_music_closing_input" value="<?php echo $ays_pb_close_sound; ?>" id="ays_pb_closing_sound">
                                                     <i class="ays_fa ays_fa_times ays_pb_sound_close_btn ays_pb_sound_closing_btn"  style="<?php echo ($ays_pb_close_sound == '') ? 'display:none' : 'display:block'; ?>" ></i>
@@ -205,20 +205,20 @@ $categories_title_length = (isset($options['categories_title_length']) && intval
                                  <div class="pro_features">
                                                 <div>
                                                     <p>
-                                                        <?php echo __("This feature is available only in ", $this->plugin_name); ?>
-                                                        <a href="https://ays-pro.com/wordpress/popup-box?src=30" target="_blank" title="PRO feature"><?php echo __("PRO version!!!", $this->plugin_name); ?></a>
+                                                        <?php echo __("This feature is available only in ", "ays-popup-box"); ?>
+                                                        <a href="https://ays-pro.com/wordpress/popup-box?src=30" target="_blank" title="PRO feature"><?php echo __("PRO version!!!", "ays-popup-box"); ?></a>
                                                     </p>
                                                 </div>
                                         </div>
                                 <legend>
                                     <strong style="font-size:30px;"><i class="ays_fa ays_fa_globe"></i></strong>
-                                    <h5><?php echo __('Who will have permission to Popup menu',$this->plugin_name)?></h5>
+                                    <h5><?php echo __('Who will have permission to Popup menu',"ays-popup-box")?></h5>
                                 </legend>
                                 <div class="form-group row">
                                     <div class="col-sm-4">
                                         <label for="ays_user_roles">
-                                            <?php echo __( "Select user role", $this->plugin_name ); ?>
-                                            <a class="ays_help ays-pb-help-pro" data-toggle="tooltip" title="<?php echo __('Select user roles allowed to see the plugin on their WP dashboard and make changes in the plugins settings.',$this->plugin_name)?>">
+                                            <?php echo __( "Select user role", "ays-popup-box" ); ?>
+                                            <a class="ays_help ays-pb-help-pro" data-toggle="tooltip" title="<?php echo __('Select user roles allowed to see the plugin on their WP dashboard and make changes in the plugins settings.',"ays-popup-box")?>">
                                                 <i class="ays_fa ays_fa-info-circle"></i>
                                             </a>
                                         </label>
@@ -230,38 +230,38 @@ $categories_title_length = (isset($options['categories_title_length']) && intval
                                     </div>
                                 </div>
                                 <blockquote>
-                                    <?php echo __( "Ability to manage Popup Box plugin only for selected user roles.", $this->plugin_name ); ?>
+                                    <?php echo __( "Ability to manage Popup Box plugin only for selected user roles.", "ays-popup-box" ); ?>
                                 </blockquote>
                             </fieldset>
                         </div>
                     </div>
                     <div id="tab2" class="ays-pb-tab-content <?php echo ($ays_pb_tab == 'tab2') ? 'ays-pb-tab-content-active' : ''; ?>">
                         <p class="ays-subtitle">
-                            <?php echo __('Integrations',$this->plugin_name);?>
+                            <?php echo __('Integrations',"ays-popup-box");?>
                         </p>
                         <blockquote class="ays-pb-integration-tab-note">
-                            <p><?php echo __('The Integrations tab works only with Contact Form, Subscription and Send File after subscription types',$this->plugin_name);?>
+                            <p><?php echo __('The Integrations tab works only with Contact Form, Subscription and Send File after subscription types',"ays-popup-box");?>
                         </blockquote>
                         <?php
                             do_action( 'ays_pb_settings_page_integrations' );
                         ?>
                     </div>
                     <div id="tab3" class="ays-pb-tab-content <?php echo ($ays_pb_tab == 'tab3') ? 'ays-pb-tab-content-active' : ''; ?>">
-                        <p class="ays-pb-subtitle"><?php echo __('Shortcodes', $this->plugin_name) ?></p>
+                        <p class="ays-pb-subtitle"><?php echo __('Shortcodes', "ays-popup-box") ?></p>
                         <hr/>
                         <div class="" style="padding:15px;">
                             <fieldset>
                                 <legend>
                                     <strong style="font-size:30px;"><i class="ays_fas ays_fa-users"></i></strong>
-                                    <h5><?php echo __('User Information',$this->plugin_name)?></h5>
+                                    <h5><?php echo __('User Information',"ays-popup-box")?></h5>
                                 </legend>
                                 <div class="form-group row" style="padding:0px;margin:0;">
                                     <div class="col-sm-12" style="padding:20px;">
                                         <div class="form-group row">
                                             <div class="col-sm-4">
                                                 <label for="ays_pb_user_first_name">
-                                                    <?php echo __( "User first name", $this->plugin_name ); ?>
-                                                    <a class="ays_help" data-toggle="tooltip" title="<?php echo esc_attr( __("Shows the logged-in user's First Name. If the user is not logged-in, the shortcode will be empty.",$this->plugin_name) ); ?>">
+                                                    <?php echo __( "User first name", "ays-popup-box" ); ?>
+                                                    <a class="ays_help" data-toggle="tooltip" title="<?php echo esc_attr( __("Shows the logged-in user's First Name. If the user is not logged-in, the shortcode will be empty.","ays-popup-box") ); ?>">
                                                         <i class="ays_fa ays_fa-info-circle"></i>
                                                     </a>
                                                 </label>
@@ -275,8 +275,8 @@ $categories_title_length = (isset($options['categories_title_length']) && intval
                                         <div class="form-group row">
                                             <div class="col-sm-4">
                                                 <label for="ays_pb_user_last_name">
-                                                    <?php echo __( "User last name", $this->plugin_name ); ?>
-                                                    <a class="ays_help" data-toggle="tooltip" title="<?php echo esc_attr( __("Shows the logged-in user's Last Name. If the user is not logged-in, the shortcode will be empty.",$this->plugin_name) ); ?>">
+                                                    <?php echo __( "User last name", "ays-popup-box" ); ?>
+                                                    <a class="ays_help" data-toggle="tooltip" title="<?php echo esc_attr( __("Shows the logged-in user's Last Name. If the user is not logged-in, the shortcode will be empty.","ays-popup-box") ); ?>">
                                                         <i class="ays_fa ays_fa-info-circle"></i>
                                                     </a>
                                                 </label>
@@ -291,8 +291,8 @@ $categories_title_length = (isset($options['categories_title_length']) && intval
                                         <div class="form-group row">
                                             <div class="col-sm-4">
                                                 <label for="ays_pb_user_display_name">
-                                                    <?php echo __( "User display name", $this->plugin_name ); ?>
-                                                    <a class="ays_help" data-toggle="tooltip" title="<?php echo esc_attr( __("Shows the logged-in user's Display name. If the user is not logged-in, the shortcode will be empty.",$this->plugin_name) ); ?>">
+                                                    <?php echo __( "User display name", "ays-popup-box" ); ?>
+                                                    <a class="ays_help" data-toggle="tooltip" title="<?php echo esc_attr( __("Shows the logged-in user's Display name. If the user is not logged-in, the shortcode will be empty.","ays-popup-box") ); ?>">
                                                         <i class="ays_fa ays_fa-info-circle"></i>
                                                     </a>
                                                 </label>
@@ -307,8 +307,8 @@ $categories_title_length = (isset($options['categories_title_length']) && intval
                                         <div class="form-group row">
                                             <div class="col-sm-4">
                                                 <label for="ays_pb_user_nickname">
-                                                    <?php echo __( "User nickname", $this->plugin_name ); ?>
-                                                    <a class="ays_help" data-toggle="tooltip" title="<?php echo esc_attr( __("Shows the logged-in user's nickname. If the user is not logged-in, the shortcode will be empty.",$this->plugin_name) ); ?>">
+                                                    <?php echo __( "User nickname", "ays-popup-box" ); ?>
+                                                    <a class="ays_help" data-toggle="tooltip" title="<?php echo esc_attr( __("Shows the logged-in user's nickname. If the user is not logged-in, the shortcode will be empty.","ays-popup-box") ); ?>">
                                                         <i class="ays_fa ays_fa-info-circle"></i>
                                                     </a>
                                                 </label>
@@ -323,8 +323,8 @@ $categories_title_length = (isset($options['categories_title_length']) && intval
                                         <div class="form-group row">
                                             <div class="col-sm-4">
                                                 <label for="ays_pb_user_email">
-                                                    <?php echo __( "User email", $this->plugin_name ); ?>
-                                                    <a class="ays_help" data-toggle="tooltip" title="<?php echo esc_attr( __("Shows the logged-in user's email. If the user is not logged-in, the shortcode will be empty.",$this->plugin_name) ); ?>">
+                                                    <?php echo __( "User email", "ays-popup-box" ); ?>
+                                                    <a class="ays_help" data-toggle="tooltip" title="<?php echo esc_attr( __("Shows the logged-in user's email. If the user is not logged-in, the shortcode will be empty.","ays-popup-box") ); ?>">
                                                         <i class="ays_fa ays_fa-info-circle"></i>
                                                     </a>
                                                 </label>
@@ -339,8 +339,8 @@ $categories_title_length = (isset($options['categories_title_length']) && intval
                                         <div class="form-group row">
                                             <div class="col-sm-4">
                                                 <label for="ays_pb_current_author">
-                                                    <?php echo __( "Show current popup author", $this->plugin_name ); ?>
-                                                    <a class="ays_help" data-toggle="tooltip" title="<?php echo esc_attr( __("It will show the current author of the particular popup.",$this->plugin_name) ); ?>">
+                                                    <?php echo __( "Show current popup author", "ays-popup-box" ); ?>
+                                                    <a class="ays_help" data-toggle="tooltip" title="<?php echo esc_attr( __("It will show the current author of the particular popup.","ays-popup-box") ); ?>">
                                                         <i class="ays_fa ays_fa-info-circle"></i>
                                                     </a>
                                                 </label>
@@ -354,8 +354,8 @@ $categories_title_length = (isset($options['categories_title_length']) && intval
                                         <div class="form-group row">
                                             <div class="col-sm-4">
                                                 <label for="ays_pb_category_description">
-                                                    <?php echo __( "Show user roles", $this->plugin_name ); ?>
-                                                    <a class="ays_help" data-toggle="tooltip" title="<?php echo esc_attr( __("Shows the logged-in user's role(s). If the user is not logged-in, the shortcode will be empty.",$this->plugin_name) ); ?>">
+                                                    <?php echo __( "Show user roles", "ays-popup-box" ); ?>
+                                                    <a class="ays_help" data-toggle="tooltip" title="<?php echo esc_attr( __("Shows the logged-in user's role(s). If the user is not logged-in, the shortcode will be empty.","ays-popup-box") ); ?>">
                                                     <i class="ays_fa ays_fa-info-circle"></i>
                                                     </a>
                                                 </label>
@@ -372,15 +372,15 @@ $categories_title_length = (isset($options['categories_title_length']) && intval
                         <fieldset>
                             <legend>
                                 <strong style="font-size:30px;">[ ]</strong>
-                                <h5><?php echo __('Popup categories',$this->plugin_name); ?></h5>
+                                <h5><?php echo __('Popup categories',"ays-popup-box"); ?></h5>
                             </legend>
                             <div class="form-group row" style="padding:0px;margin:0;">
                                 <div class="col-sm-12" style="padding:20px;">
                                     <div class="form-group row">
                                         <div class="col-sm-4">
                                             <label for="ays_pb_cat_title">
-                                                <?php echo __( "Shortcode", $this->plugin_name ); ?>
-                                                <a class="ays_help" data-toggle="tooltip" title="<?php echo __('You need to insert Your Popup Category ID in the shortcode. It will show the category title. If there is no popup category available/unavailable with that particular Popup Box Category ID, the shortcode will stay empty.',$this->plugin_name); ?>">
+                                                <?php echo __( "Shortcode", "ays-popup-box" ); ?>
+                                                <a class="ays_help" data-toggle="tooltip" title="<?php echo __('You need to insert Your Popup Category ID in the shortcode. It will show the category title. If there is no popup category available/unavailable with that particular Popup Box Category ID, the shortcode will stay empty.',"ays-popup-box"); ?>">
                                                 <i class="ays_fa ays_fa-info-circle"></i>
                                                 </a>
                                             </label>
@@ -397,8 +397,8 @@ $categories_title_length = (isset($options['categories_title_length']) && intval
                                     <div class="form-group row">
                                         <div class="col-sm-4">
                                             <label for="ays_pb_cat_description">
-                                                <?php echo __( "Shortcode", $this->plugin_name ); ?>
-                                                <a class="ays_help" data-toggle="tooltip" title="<?php echo __('You need to insert Your Popup Category ID in the shortcode. It will show the category description. If there is no popup category available/unavailable with that particular Popup Box Category ID, the shortcode will stay empty.',$this->plugin_name); ?>">
+                                                <?php echo __( "Shortcode", "ays-popup-box" ); ?>
+                                                <a class="ays_help" data-toggle="tooltip" title="<?php echo __('You need to insert Your Popup Category ID in the shortcode. It will show the category description. If there is no popup category available/unavailable with that particular Popup Box Category ID, the shortcode will stay empty.',"ays-popup-box"); ?>">
                                                     <i class="ays_fa ays_fa-info-circle"></i>
                                                 </a>
                                             </label>
@@ -415,15 +415,15 @@ $categories_title_length = (isset($options['categories_title_length']) && intval
                     </div>
                     <div id="tab4" class="ays-pb-tab-content <?php echo ($ays_pb_tab == 'tab4') ? 'ays-pb-tab-content-active' : ''; ?>">
                         <p class="ays-subtitle">
-                            <?php echo __('Message variables',$this->plugin_name)?>
-                            <a class="ays_help" data-toggle="tooltip" data-html="true" title="<p style='margin-bottom:3px;'><?php echo __( 'You can copy these variables and paste them in the following options from the popup settings', $this->plugin_name ); ?>:</p>
-                                <p style='padding-left:10px;margin:0;'>- <?php echo __( 'Custom Content', $this->plugin_name ); ?></p>
+                            <?php echo __('Message variables',"ays-popup-box")?>
+                            <a class="ays_help" data-toggle="tooltip" data-html="true" title="<p style='margin-bottom:3px;'><?php echo __( 'You can copy these variables and paste them in the following options from the popup settings', "ays-popup-box" ); ?>:</p>
+                                <p style='padding-left:10px;margin:0;'>- <?php echo __( 'Custom Content', "ays-popup-box" ); ?></p>
                                 <i class="ays_fa ays_fa_info_circle"></i>
                             </a>
                         </p>
                         <blockquote>
-                            <p><?php echo __( "You can copy these variables and paste them in the following options from the popup settings", $this->plugin_name ); ?>:</p>
-                            <p style="text-indent:10px;margin:0;">- <?php echo __( "Custom Content", $this->plugin_name ); ?></p>
+                            <p><?php echo __( "You can copy these variables and paste them in the following options from the popup settings", "ays-popup-box" ); ?>:</p>
+                            <p style="text-indent:10px;margin:0;">- <?php echo __( "Custom Content", "ays-popup-box" ); ?></p>
                         </blockquote>
                         <hr>
                         <div class="form-group row">
@@ -434,7 +434,7 @@ $categories_title_length = (isset($options['categories_title_length']) && intval
                                     </strong>
                                     <span> - </span>
                                     <span style="font-size:18px;">
-                                        <?php echo __( "The title of the popup", $this->plugin_name); ?>
+                                        <?php echo __( "The title of the popup", "ays-popup-box"); ?>
                                     </span>
                                 </p>
                                 <p class="vmessage">
@@ -443,7 +443,7 @@ $categories_title_length = (isset($options['categories_title_length']) && intval
                                     </strong>
                                     <span> - </span>
                                     <span style="font-size:18px;">
-                                        <?php echo __( "The user's display name that was filled in their WordPress site during registration.", $this->plugin_name); ?>
+                                        <?php echo __( "The user's display name that was filled in their WordPress site during registration.", "ays-popup-box"); ?>
                                     </span>
                                 </p>
                                 <p class="vmessage">
@@ -452,7 +452,7 @@ $categories_title_length = (isset($options['categories_title_length']) && intval
                                     </strong>
                                     <span> - </span>
                                     <span style="font-size:18px;">
-                                        <?php echo __( "The user's email that was filled in their WordPress site during registration.", $this->plugin_name); ?>
+                                        <?php echo __( "The user's email that was filled in their WordPress site during registration.", "ays-popup-box"); ?>
                                     </span>
                                 </p>
                                 <p class="vmessage">
@@ -461,7 +461,7 @@ $categories_title_length = (isset($options['categories_title_length']) && intval
                                     </strong>
                                     <span> - </span>
                                     <span style="font-size:18px;">
-                                        <?php echo __( "The user's first name that was filled in their WordPress site during registration.", $this->plugin_name); ?>
+                                        <?php echo __( "The user's first name that was filled in their WordPress site during registration.", "ays-popup-box"); ?>
                                     </span>
                                 </p>
                                 <p class="vmessage">
@@ -470,7 +470,7 @@ $categories_title_length = (isset($options['categories_title_length']) && intval
                                     </strong>
                                     <span> - </span>
                                     <span style="font-size:18px;">
-                                        <?php echo __( "The user's last name that was filled in their WordPress site during registration.", $this->plugin_name); ?>
+                                        <?php echo __( "The user's last name that was filled in their WordPress site during registration.", "ays-popup-box"); ?>
                                     </span>
                                 </p>
                                 <p class="vmessage">
@@ -479,7 +479,7 @@ $categories_title_length = (isset($options['categories_title_length']) && intval
                                     </strong>
                                     <span> - </span>
                                     <span style="font-size:18px;">
-                                        <?php echo __( "It will show the author of the current quiz.", $this->plugin_name); ?>
+                                        <?php echo __( "It will show the author of the current quiz.", "ays-popup-box"); ?>
                                     </span>
                                 </p>
                                 <p class="vmessage">
@@ -488,7 +488,7 @@ $categories_title_length = (isset($options['categories_title_length']) && intval
                                     </strong>
                                     <span> - </span>
                                     <span style="font-size:18px;">
-                                        <?php echo __( "The user's role(s) when logged-in. In case the user is not logged-in, the field will be empty.", $this->plugin_name); ?>
+                                        <?php echo __( "The user's role(s) when logged-in. In case the user is not logged-in, the field will be empty.", "ays-popup-box"); ?>
                                     </span>
                                 </p>
                                 <p class="vmessage">
@@ -497,7 +497,7 @@ $categories_title_length = (isset($options['categories_title_length']) && intval
                                     </strong>
                                     <span> - </span>
                                     <span style="font-size:18px;">
-                                        <?php echo __( "The creation date of the popup.", $this->plugin_name); ?>
+                                        <?php echo __( "The creation date of the popup.", "ays-popup-box"); ?>
                                     </span>
                                 </p>
                                 <p class="vmessage">
@@ -506,7 +506,7 @@ $categories_title_length = (isset($options['categories_title_length']) && intval
                                     </strong>
                                     <span> - </span>
                                     <span style="font-size:18px;">
-                                        <?php echo __( "The user's nickname that was filled in their WordPress profile.", $this->plugin_name); ?>
+                                        <?php echo __( "The user's nickname that was filled in their WordPress profile.", "ays-popup-box"); ?>
                                     </span>
                                 </p>
                             </div>
@@ -518,8 +518,14 @@ $categories_title_length = (isset($options['categories_title_length']) && intval
             <h1>
             <?php
             wp_nonce_field('settings_action', 'settings_action');
-            $other_attributes = array("id" => 'ays_submit_settings');
-            submit_button(__('Save changes', $this->plugin_name), 'primary ays-button', 'ays_submit', false, $other_attributes);
+            // $other_attributes = array("id" => 'ays_submit_settings');
+            $other_attributes = array(
+                'id' => 'ays_submit_settings',
+                'title' => 'Ctrl + s',
+                'data-toggle' => 'tooltip',
+                'data-delay'=> '{"show":"300"}'
+            );
+            submit_button(__('Save changes', "ays-popup-box"), 'primary ays-button', 'ays_submit', false, $other_attributes);
             echo $loader_iamge;
             ?>
             </h1>

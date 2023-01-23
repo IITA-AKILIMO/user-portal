@@ -207,7 +207,7 @@ if ( ! function_exists( 'kenta_do_install_plugins' ) ) {
 
 if ( ! function_exists( 'kenta_why_companion_link' ) ) {
 	function kenta_why_companion_link() {
-		return '<span>' . __('Access our starter sites and more extensions', 'kenta') . '</span>';
+		return '<span>' . __( 'Access our starter sites and more extensions', 'kenta' ) . '</span>';
 		// return '<a href="#" target="_blank">' . __( 'Why do I need a companion plugin?', 'kenta' ) . '</a>';
 	}
 }
@@ -264,5 +264,53 @@ if ( ! function_exists( 'kenta_upsell_info_control' ) ) {
 			->alignCenter()
 			->hideBackground()
 			->setInfo( kenta_upsell_info( $info ) );
+	}
+}
+
+if ( ! function_exists( 'kenta_docs_control' ) ) {
+	/**
+	 * @param $info
+	 * @param $url
+	 *
+	 * @return \LottaFramework\Customizer\Controls\Info
+	 */
+	function kenta_docs_control( $info, $url, $id = null ) {
+		return ( new \LottaFramework\Customizer\Controls\Info( $id ) )
+			->alignCenter()
+			->setInfo( sprintf(
+				$info, '<a target="_blank" href="' . esc_url( $url ) . '">', '</a>'
+			) );
+	}
+}
+
+if ( ! function_exists( 'kenta_theme_admin_url' ) ) {
+	/**
+	 * Get kenta theme admin page url
+	 *
+	 * @param $args
+	 *
+	 * @return string
+	 */
+	function kenta_theme_admin_url( $args ) {
+		return apply_filters( 'kenta_admin_page_url', add_query_arg( array_merge( $args, [
+			'page' => 'kenta-theme'
+		] ), admin_url( 'themes.php' ) ), $args );
+	}
+}
+
+if ( ! function_exists( 'kenta_install_cmp_redirect_url' ) ) {
+	/**
+	 * @param string $hash
+	 *
+	 * @return string
+	 */
+	function kenta_install_cmp_redirect_url( $hash = '' ) {
+		$switch       = apply_filters( 'kenta_welcome_demo_switch_after_importing', false );
+		$args['page'] = 'kenta-starter-sites';
+		if ( $switch ) {
+			$args['switch'] = true;
+		}
+
+		return add_query_arg( $args, admin_url( 'admin.php' ) ) . $hash;
 	}
 }

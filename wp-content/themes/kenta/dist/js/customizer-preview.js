@@ -78,6 +78,48 @@
                 throw new TypeError("Cannot call a class as a function");
             }
         }
+        var Menu = _createClass((function Menu($) {
+            _classCallCheck(this, Menu);
+            var $menuItem = $(".sf-menu .menu-item");
+            $menuItem.on("mouseover", (function() {
+                $(this).addClass("sfHover");
+            }));
+            $menuItem.on("mouseleave", (function() {
+                var $this = $(this);
+                setTimeout((function() {
+                    $this.removeClass("sfHover");
+                }), 300);
+            }));
+        }));
+        const __WEBPACK_DEFAULT_EXPORT__ = Menu;
+    }, (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+        "use strict";
+        __webpack_require__.r(__webpack_exports__);
+        __webpack_require__.d(__webpack_exports__, {
+            default: () => __WEBPACK_DEFAULT_EXPORT__
+        });
+        function _defineProperties(target, props) {
+            for (var i = 0; i < props.length; i++) {
+                var descriptor = props[i];
+                descriptor.enumerable = descriptor.enumerable || false;
+                descriptor.configurable = true;
+                if ("value" in descriptor) descriptor.writable = true;
+                Object.defineProperty(target, descriptor.key, descriptor);
+            }
+        }
+        function _createClass(Constructor, protoProps, staticProps) {
+            if (protoProps) _defineProperties(Constructor.prototype, protoProps);
+            if (staticProps) _defineProperties(Constructor, staticProps);
+            Object.defineProperty(Constructor, "prototype", {
+                writable: false
+            });
+            return Constructor;
+        }
+        function _classCallCheck(instance, Constructor) {
+            if (!(instance instanceof Constructor)) {
+                throw new TypeError("Cannot call a class as a function");
+            }
+        }
         var Toggle = _createClass((function Toggle($) {
             _classCallCheck(this, Toggle);
             var _this = this;
@@ -341,18 +383,35 @@
         var _modules_focusable__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(1);
         var _modules_focusable__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_modules_focusable__WEBPACK_IMPORTED_MODULE_0__);
         var _modules_collapsable_menu__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(2);
-        var _modules_toggle__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(3);
-        var _modules_focus_redirect__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(4);
-        var _modules_popup__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(5);
-        var _modules_to_top__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(6);
+        var _modules_menu__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(3);
+        var _modules_toggle__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(4);
+        var _modules_focus_redirect__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(5);
+        var _modules_popup__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(6);
+        var _modules_to_top__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(7);
         if (wp.customize && wp.customize.selectiveRefresh) {
             wp.customize.selectiveRefresh.bind("partial-content-rendered", (function() {
                 "use strict";
+                if (window.ScrollReveal) ScrollReveal().sync();
                 new _modules_collapsable_menu__WEBPACK_IMPORTED_MODULE_1__["default"](jQuery);
-                new _modules_toggle__WEBPACK_IMPORTED_MODULE_2__["default"](jQuery);
-                new _modules_focus_redirect__WEBPACK_IMPORTED_MODULE_3__["default"](jQuery);
-                new _modules_popup__WEBPACK_IMPORTED_MODULE_4__["default"](jQuery);
-                new _modules_to_top__WEBPACK_IMPORTED_MODULE_5__["default"](jQuery);
+                new _modules_menu__WEBPACK_IMPORTED_MODULE_2__["default"](jQuery);
+                new _modules_toggle__WEBPACK_IMPORTED_MODULE_3__["default"](jQuery);
+                new _modules_focus_redirect__WEBPACK_IMPORTED_MODULE_4__["default"](jQuery);
+                new _modules_popup__WEBPACK_IMPORTED_MODULE_5__["default"](jQuery);
+                new _modules_to_top__WEBPACK_IMPORTED_MODULE_6__["default"](jQuery);
+            }));
+            wp.customize.bind("preview-ready", (function() {
+                wp.customize.preview.bind("lotta-panel-open", (function(id) {
+                    if (id === "kenta_global_preloader") {
+                        jQuery(".kenta-preloader-wrap > div").fadeIn(150);
+                        jQuery(".kenta-preloader-wrap").fadeIn(375);
+                    }
+                }));
+                wp.customize.preview.bind("lotta-panel-close", (function(id) {
+                    if (id === "kenta_global_preloader") {
+                        jQuery(".kenta-preloader-wrap > div").fadeOut(150);
+                        jQuery(".kenta-preloader-wrap").fadeOut(375);
+                    }
+                }));
             }));
         }
     })();

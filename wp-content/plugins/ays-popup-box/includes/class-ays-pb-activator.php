@@ -1,6 +1,6 @@
 <?php
 global $ays_pb_db_version;
-$ays_pb_db_version = '1.5.6';
+$ays_pb_db_version = '1.5.7';
 /**
  * Fired during plugin activation
  *
@@ -75,6 +75,7 @@ class Ays_Pb_Activator {
                       `modal_content` VARCHAR(20) NOT NULL,
                       `view_type` VARCHAR(20) NOT NULL,
                       `onoffoverlay` VARCHAR(20) DEFAULT 'On',
+                      `overlay_opacity` VARCHAR(20) NOT NULL,
                       `show_popup_title` VARCHAR(20) DEFAULT 'On',
                       `show_popup_desc` VARCHAR(20) DEFAULT 'On',
                       `close_button` VARCHAR(20) DEFAULT 'off',
@@ -197,7 +198,7 @@ class Ays_Pb_Activator {
 
         if($ays_pb_infos == 0){
 
-            $query = "INSERT INTO ".$table." (title, description, category_id, autoclose, cookie, width, height, bgcolor, textcolor, bordersize, bordercolor, border_radius, custom_html, onoffswitch, show_only_for_author, show_all, delay, scroll_top, animate_in, animate_out, action_button_type, modal_content, view_type, onoffoverlay, show_popup_title,  show_popup_desc, close_button, header_bgcolor, bg_image, log_user, guest, active_date_check, activeInterval, deactiveInterval, pb_position, pb_margin) VALUES ('Demo Title', 'Demo Description', '1' , '20', '0', '400', '500', '#ffffff', '#000000', '1', '#ffffff', '4', 'My first Popup', 'On', 'on', 'all', '0', '0', 'fadeIn', 'fadeOutUpBig', 'pageLoaded', 'custom_html', 'default', 'On', 'On', 'On','off', '#ffffff', '', 'On', 'On', 'off', '', '','center-center', '0')";
+            $query = "INSERT INTO ".$table." (title, description, category_id, autoclose, cookie, width, height, bgcolor, textcolor, bordersize, bordercolor, border_radius, custom_html, onoffswitch, show_only_for_author, show_all, delay, scroll_top, animate_in, animate_out, action_button_type, modal_content, view_type, onoffoverlay, overlay_opacity, show_popup_title,  show_popup_desc, close_button, header_bgcolor, bg_image, log_user, guest, active_date_check, activeInterval, deactiveInterval, pb_position, pb_margin) VALUES ('Demo Title', 'Demo Description', '1' , '20', '0', '400', '500', '#ffffff', '#000000', '1', '#ffffff', '4', 'My first Popup', 'On', 'on', 'all', '0', '0', 'fadeIn', 'fadeOutUpBig', 'pageLoaded', 'custom_html', 'default', 'On', '0.5', 'On', 'On','off', '#ffffff', '', 'On', 'On', 'off', '', '','center-center', '0')";
             $wpdb->query( $query );
         }
   }

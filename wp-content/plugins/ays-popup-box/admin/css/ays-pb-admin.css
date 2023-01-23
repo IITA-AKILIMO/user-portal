@@ -2126,6 +2126,22 @@ textarea.ays-textarea {
 input.ays-pb-text-input.ays-pb-text-input-short{
     width: 225px;
 }
+
+#ays_pb_font_size_for_pc.ays-pb-text-input.ays-pb-text-input-short, 
+#ays_pb_font_size_for_mobile.ays-pb-text-input.ays-pb-text-input-short {
+ width: 200px;
+}
+
+#ays_title_font_size.ays-text-input-max-width-100, 
+#ays_title_letter_spacing.ays-text-input-max-width-100,
+#ays_title_line_height.ays-text-input-max-width-100 {
+ width: 11em;
+}
+
+.ays-text-input-max-width-100 {
+    min-width: 11em !important;
+}
+
 textarea.ays-textarea{
     height: 200px;
     margin-top: 5px;
@@ -2323,6 +2339,12 @@ div.ays-notice-banner.ays-pb-notice .navigation-bar li a:after {
 .ays-notice-banner.ays-pb-notice li ul.ddmenu li {
     padding-left: 20px;
 }
+@media screen and (max-width: 1350px){
+    .ays_pb_pro_feature>div {
+        flex-direction: column;
+    }
+}
+
 
 @media screen and (min-width: 1080px){
     .ays-notice-banner.ays-pb-notice .modile-ddmenu-lg {
@@ -2942,6 +2964,75 @@ a.ays_pb_plus_schedule:hover {
     display: flex;
     flex-wrap: wrap;
     width: 100%;
+}
+
+/* Popup Subtitle styles */
+
+.ays-pb-subtitle-main-box {
+    position: relative;
+    min-height: 27px;
+    word-break: break-word;
+}
+
+.ays-pb-open-popups-list{
+    cursor: pointer;
+}
+
+.ays-pb-message-vars-each-data-label{
+    display: block;
+    margin: 0;
+}
+
+.ays-pb-popups-data {
+    position: absolute;
+    top: 27px;
+    max-height: 350px;
+    overflow: auto scroll;
+    z-index: 99999;
+    background-color: #ffff;
+    border-radius: 3px;
+    width: 250px;
+    display: none;
+    box-shadow: 0 0px 0px 0.5px #00000087;
+}
+
+.ays-pb-popups-data::-webkit-scrollbar {
+    width: 0.2em;
+}
+
+.ays-pb-popups-data::-webkit-scrollbar-track{
+    box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+}
+
+.ays-pb-popups-data::-webkit-scrollbar-thumb{
+    background-color: darkgrey;
+    outline: 1px solid slategrey;
+    border-radius: 5px;
+}
+
+.ays-pb-popups-data .ays-pb-popups-each-data{
+    border-bottom: 1px solid #80808059;
+    cursor: pointer;
+}
+
+.ays-pb-popups-data .ays-pb-popups-each-data a{
+    display: inline-block;
+    width: 100%;
+    height: 100%;
+    padding: 8px 0 8px 8px;
+    text-decoration: none;
+}
+
+.ays-pb-popups-data .ays-pb-popups-each-data a:hover{
+    color: #0056b3;
+ }
+ 
+
+.ays-pb-subtitle-main-box .ays-pb-popups-data .ays-pb-go-to-popups{
+    color: unset;
+    border: 0;
+    outline: unset;
+    box-shadow: unset;
 }
 
 /* Redisgned style */
@@ -3565,7 +3656,7 @@ div#wpbody div#wpbody-content div.wrap div.ays-pb-our-products-heading.ays-pb-ou
     right: 0;
     bottom: 0;
     margin: auto;
-    max-width: 84%;
+    max-width: 55%;
     max-height: 48%;
     background: #c0c0c0;
     font-family: monospace, arial, sans-serif;
@@ -4081,6 +4172,11 @@ label.ays-pb-label-style {
 
         .ays-pb-template-content {
             margin: 10px 0;
+        }
+    }
+    @media screen and (max-width: 1246px){    
+        .ays-pb-template-themes-view-more-border {
+           display: none;
         }
     }
 /* Template preview redesign end*/
@@ -4603,6 +4699,11 @@ div.ays-pb-top-menu-wrapper div.ays-pb-top-menu div.ays-pb-top-tab-wrapper {
     font-weight: 900;
 }
 
+.ays_fa_angle_down:before {
+    content: "\f107";
+    font-weight: 900;
+}
+
 .ays-pb-attr-title,
 .ays-pb-attr-youtube-video{
     display: flex;
@@ -4727,7 +4828,8 @@ div.ays-pb-top-menu-wrapper div.ays-pb-top-menu div.ays-pb-top-tab-wrapper {
     margin: 80px 0;
 }
 
-div.ays-pb-create-pb-video-box > div.ays-pb-create-pb-youtube-video > a.ays-pb-add-new-button-video{
+div.ays-pb-create-pb-video-box > div.ays-pb-create-pb-youtube-video > a.ays-pb-add-new-button-video,
+div.ays-pb-create-pb-video-box > div.ays-pb-create-pb-youtube-video-button-box > a.ays-pb-add-new-button-video{
     background-color: #2A8EB6 !important;
     color: #fff !important;
     border-color: #2A8EB6 !important;
@@ -4748,7 +4850,7 @@ div.ays-pb-create-pb-video-box > div.ays-pb-create-pb-youtube-video > a.ays-pb-a
 .ays-pb-width-content{
     display: flex;
 }
-.ays-pb-width-content div:first-child{
+.ays-pb-width-content > div:first-child{
     margin-right: 20px;
 }
 

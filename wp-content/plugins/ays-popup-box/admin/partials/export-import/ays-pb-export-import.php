@@ -3,12 +3,12 @@
 <div class="wrap">
     <h1 class="wp-heading-inline">
         <?php
-        echo __(esc_html(get_admin_page_title()),$this->plugin_name);
+        echo __(esc_html(get_admin_page_title()),"ays-popup-box");
         ?>
     </h1>
     <div class="nav-tab-wrapper">
-        <a href="#tab1" data-tab="tab1" class="nav-tab nav-tab-active"><?php echo __('Export',$this->plugin_name); ?></a>
-        <a href="#tab2" data-tab="tab2" class="nav-tab"><?php echo __("Import", $this->plugin_name); ?></a>
+        <a href="#tab1" data-tab="tab1" class="nav-tab nav-tab-active"><?php echo __('Export',"ays-popup-box"); ?></a>
+        <a href="#tab2" data-tab="tab2" class="nav-tab"><?php echo __("Import", "ays-popup-box"); ?></a>
     </div>
     
     <div id="tab1" class="ays-pb-tab-content ays-pb-tab-content-active" style="margin-top:15px">
@@ -16,19 +16,19 @@
             <div class="pro_features">
                 <div>
                     <p>
-                        <?php echo __("This feature is available only in ", $this->plugin_name); ?>
-                        <a href="https://ays-pro.com/wordpress/popup-box?src=28" target="_blank" title="PRO feature"><?php echo __("PRO version!!!", $this->plugin_name); ?></a>
+                        <?php echo __("This feature is available only in ", "ays-popup-box"); ?>
+                        <a href="https://ays-pro.com/wordpress/popup-box?src=28" target="_blank" title="PRO feature"><?php echo __("PRO version!!!", "ays-popup-box"); ?></a>
                     </p>
                 </div>
             </div>
-            <h1 class="ays-subtitle"><?php echo __('Export popups',$this->plugin_name)?></h1><hr>
+            <h1 class="ays-subtitle"><?php echo __('Export popups',"ays-popup-box")?></h1><hr>
             <div id="export" style="padding-bottom: 10px;">
                 <form action="post" id="ays-export-form">
                     <div class="form-group row">
                         <div class="col-sm-3">
                             <label for="ays_pb_export_import">
-                                <?php echo __('Select popups', $this->plugin_name); ?>
-                                <a class="ays_help ays-pb-help-pro" data-toggle="tooltip" title="<?php echo __('Specify the popup boxes which must be exported. If you want to export all popup boxes just leave blank.',$this->plugin_name)?>">
+                                <?php echo __('Select popups', "ays-popup-box"); ?>
+                                <a class="ays_help ays-pb-help-pro" data-toggle="tooltip" title="<?php echo __('Specify the popup boxes which must be exported. If you want to export all popup boxes just leave blank.',"ays-popup-box")?>">
                                     <i class="ays_fa ays_fa-info-circle"></i>
                                 </a>
                             </label>
@@ -40,7 +40,7 @@
                         </div>    
                     </div><hr>   
                     <button type="button" class="button ays_export_pb" id="ays_export_popup_box" name="ays_pb_export_to_json">
-                        <?php echo __("Export to JSON", $this->plugin_name); ?>
+                        <?php echo __("Export to JSON", "ays-popup-box"); ?>
                     </button>
                     <a download="" id="downloadFile" hidden href=""></a>
                 </form>

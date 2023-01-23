@@ -1,0 +1,27 @@
+# dependencies
+/node_modules
+/vendor/
+/.pnp
+.pnp.js
+dist
+.wp-env.json
+php.ini
+
+# misc
+._*
+.DS_Store
+Thumbs.db
+project.json
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+build-errors.log*
+
+# build files
+/mix-manifest.json
+
+# Editor
+.vscode
+.idea
+
+!.gitkeep

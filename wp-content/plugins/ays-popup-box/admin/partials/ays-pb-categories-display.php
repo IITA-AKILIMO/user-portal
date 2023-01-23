@@ -10,13 +10,13 @@
 <div class="wrap">
     <div class="ays-pb-heading-box">
         <div class="ays-pb-wordpress-user-manual-box">
-                <a href="https://ays-pro.com/wordpress-popup-box-plugin-user-manual" target="_blank"><?php echo __("View Documentation", $this->plugin_name); ?></a>
+                <a href="https://ays-pro.com/wordpress-popup-box-plugin-user-manual" target="_blank"><?php echo __("View Documentation", "ays-popup-box"); ?></a>
         </div>
     </div>  
     <h1 class="wp-heading-inline">
         <?php
-        echo __(esc_html(get_admin_page_title()),$this->plugin_name);
-        echo sprintf( '<a href="?page=%s&action=%s" class="page-title-action">' . __('Add New', $this->plugin_name) . '</a>', esc_attr( $_REQUEST['page'] ), 'add');
+        echo __(esc_html(get_admin_page_title()),"ays-popup-box");
+        echo sprintf( '<a href="?page=%s&action=%s" class="page-title-action">' . __('Add New', "ays-popup-box") . '</a>', esc_attr( $_REQUEST['page'] ), 'add');
         ?>
     </h1>
 
@@ -30,7 +30,7 @@
                     <form method="post">
                         <?php
                             $this->popup_categories_obj->prepare_items();
-                            $this->popup_categories_obj->search_box('Search', $this->plugin_name);
+                            $this->popup_categories_obj->search_box('Search', "ays-popup-box");
                             $this->popup_categories_obj->display();
                         ?>
                     </form>

@@ -94,9 +94,6 @@ if ( ! class_exists( 'Kenta_Placeholders' ) ) {
 					( new Placeholder( 'kenta_search_archive_header_prefix' ) )
 						->setDefaultValue( __( 'Search Results for: ', 'kenta' ) )
 					,
-					( new Placeholder( 'kenta_archive_title_color' ) )
-						->addColor( 'initial', 'var(--kenta-base-color)' )
-					,
 					( new Placeholder( 'kenta_archive_title_typography' ) )
 						->setDefaultValue( [
 							'family'        => 'inherit',
@@ -109,9 +106,6 @@ if ( ! class_exists( 'Kenta_Placeholders' ) ) {
 							'lineHeight'    => '2',
 							'textTransform' => 'capitalize',
 						] )
-					,
-					( new Placeholder( 'kenta_archive_description_color' ) )
-						->addColor( 'initial', 'var(--kenta-base-200)' )
 					,
 					( new Placeholder( 'kenta_archive_description_typography' ) )
 						->setDefaultValue( [
@@ -310,6 +304,34 @@ if ( ! class_exists( 'Kenta_Placeholders' ) ) {
 			add_filter( 'kenta_copyright_element_controls', function ( $controls ) {
 				return array_merge( $controls, [
 					kenta_upsell_info_control( __( "Customize your copyright text in %sPro Version%s", 'kenta' ) )
+				] );
+			}, 10, 3 );
+
+			add_filter( 'kenta_breadcrumbs_element_content_controls', function ( $controls ) {
+				return array_merge( $controls, [
+					kenta_upsell_info_control( __( "More breadcrumb options in %sPro Version%s", 'kenta' ) )
+				] );
+			}, 10, 3 );
+
+			add_filter( 'kenta_breadcrumbs_element_style_controls', function ( $controls, $slug ) {
+				$id = $slug . '_';
+
+				return array_merge( $controls, [
+					( new Placeholder( $id . 'typography' ) )
+						->setDefaultValue( [
+							'family'        => 'inherit',
+							'fontSize'      => '0.8rem',
+							'variant'       => '400',
+							'lineHeight'    => '1.5',
+							'textTransform' => 'capitalize',
+						] )
+					,
+					( new Placeholder( $id . 'text_color' ) )
+						->addColor( 'text', 'var(--kenta-accent-color)' )
+						->addColor( 'initial', 'var(--kenta-accent-active)' )
+						->addColor( 'hover', 'var(--kenta-primary-color)' )
+					,
+					kenta_upsell_info_control( __( "More breadcrumb style options in %sPro Version%s", 'kenta' ) )
 				] );
 			}, 10, 3 );
 

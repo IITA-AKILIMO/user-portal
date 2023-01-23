@@ -14,7 +14,8 @@ $layout          = CZ::get( 'kenta_archive_layout' );
 $card_attrs = [
 	'id'               => 'post-' . get_the_ID(),
 	'class'            => Utils::clsx(
-		get_post_class( [ 'card overflow-hidden h-full' ] )
+		get_post_class( [ 'card overflow-hidden h-full' ] ),
+		[ 'kenta-scroll-reveal' => CZ::checked( 'kenta_card_scroll_reveal' ) ]
 	),
 	'data-card-layout' => $layout,
 ];

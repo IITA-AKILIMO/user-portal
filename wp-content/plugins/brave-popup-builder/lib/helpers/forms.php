@@ -112,6 +112,8 @@ function bravepop_form_submission(){
 
    //error_log(json_encode($fieldSettings));
 
+   $fieldSettings = apply_filters( 'bravepop_form_element_field_data', $fieldSettings );
+
    //Validatation: Check if Required Fields are empty or not.
    foreach ((array)$fieldSettings as $key => $field) {
       $ignoreRequired = isset($field->conditions) && is_array($field->conditions) && count($field->conditions) > 0 && !empty($field->required) ? bravepop_form_ignore_required($fieldSettings, $field) : false;
@@ -364,7 +366,8 @@ function bravepop_form_submission(){
    if($actionSettings && isset($actionSettings->webhook) && isset($actionSettings->webhook->enable)  && isset($actionSettings->webhook->url) && $actionSettings->webhook->enable === true && $actionSettings->webhook->url){
       //error_log('PUSH to WebHook');
       $webhook = new BravePop_Webhook();
-      $webhook->post($actionSettings->webhook->url, $actionSettings->webhook->type, $actionSettings->webhook->content, $fieldSettings, $current_user, $visitor_country, $visitor_ip);
+      $contentType = isset($actionSettings->webhook->content) ? $actionSettings->webhook->content : '';
+      $webhook->post($actionSettings->webhook->url, $actionSettings->webhook->type, $contentType, $fieldSettings, $current_user, $visitor_country, $visitor_ip);
       $completed_actions['webhook'] = $actionSettings->webhook->type;
    }
 

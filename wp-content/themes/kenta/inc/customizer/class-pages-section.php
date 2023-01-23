@@ -5,6 +5,7 @@
  * @package Kenta
  */
 
+use LottaFramework\Customizer\Controls\CallToAction;
 use LottaFramework\Customizer\Controls\ImageRadio;
 use LottaFramework\Customizer\Controls\Section;
 use LottaFramework\Customizer\Section as CustomizerSection;
@@ -60,6 +61,11 @@ if ( ! class_exists( 'Kenta_Pages_Section' ) ) {
 								],
 							] )
 						,
+						( new CallToAction() )
+							->setLabel( __( 'Customize Sidebar', 'kenta' ) )
+							->displayAsButton()
+							->expandCustomize( 'kenta_global:kenta_global_sidebar_section' )
+						,
 					] )
 				,
 
@@ -71,7 +77,7 @@ if ( ! class_exists( 'Kenta_Pages_Section' ) ) {
 						'selective-refresh' => [
 							'.kenta-page-header.kenta-article-header',
 							function () {
-								kenta_show_article_header( 'kenta_pages' );
+								kenta_show_article_header( 'kenta_pages', 'page', true, false );
 							},
 							[ 'container_inclusive' => true ]
 						],

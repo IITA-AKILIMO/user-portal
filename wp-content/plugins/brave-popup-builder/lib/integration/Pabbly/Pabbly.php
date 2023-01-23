@@ -68,7 +68,7 @@ if ( ! class_exists( 'BravePop_Pabbly' ) ) {
          //Add Custom Field Values
          if(count($customFields) > 0){
             foreach ($customFields as $key => $value) {
-               $contact[$key] = $value;
+               $contact[$key] = !empty($value) && is_array($value) ?  implode(',', $value) : $value;
             }
          }
 

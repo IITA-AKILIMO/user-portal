@@ -18,7 +18,8 @@ use LottaFramework\Facades\CZ;
     <link rel="profile" href="http://gmpg.org/xfn/11">
 	<?php wp_head(); ?>
 </head>
-<body <?php body_class(); ?>>
+<body <?php body_class(); ?>
+        data-kenta-scroll-reveal="<?php echo esc_attr( wp_json_encode( kenta_scroll_reveal_args() ) ); ?>">
 <?php wp_body_open(); ?>
 <a class="skip-link screen-reader-text" href="#content">
 	<?php esc_html_e( 'Skip to content', 'kenta' ); ?>

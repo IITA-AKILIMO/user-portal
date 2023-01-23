@@ -564,6 +564,14 @@
 .kenta-plugin-list li:nth-child(odd) {
   background-color: #f1f5f9;
 }
+.kenta-plugin-list li span {
+  padding: 0 6px;
+  font-size: 0.8rem;
+  font-weight: normal;
+}
+.kenta-plugin-list li span a {
+  padding: 0 6px;
+}
 
 .kenta-import-options {
   list-style: none;

@@ -2,8 +2,8 @@
 Contributors: getbrave
 Tags: popup, wordpress popup, popups, woocommerce popup, lead generation, lead capture, modal, optin
 Requires at least: 5.2
-Tested up to: 6.0.1
-Stable tag: 0.5.9
+Tested up to: 6.1.1
+Stable tag: 0.6.0
 Requires PHP: 5.6.20
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -118,6 +118,16 @@ The PRO version lets you create unlimited steps that you can link to each other 
 
 
 == Changelog ==
+= 0.6.0 - 14 Jan 2023. =
+* Fixed: Form Scrollbar was not showing up. 
+* Fixed: Fatal Error in Author pages.
+* Fixed: Multi Select form fields data were not sent over ESPs as custom data properly.
+* Fixed: Hubspot Integration was not working. 
+* Fixed: Creating New Campaign with Presets caused a infinite loop.
+* Fixed: When a Popup's abtest children were removed, it couldn't be removed. 
+* Fixed: When Campaign is set to show on page that was set as Posts Page from Settings > Reading, it didnt work.
+
+
 = 0.5.9 - 20 Sep 2022. =
 * Added: Hubspot Migration from API to Private Apps. Please Reintegrate Hubspot from Brave Integration page following the latest documentation.
 * Added: Mobile Layout: Option to Auto Sync Element Settings from the Desktop Layout on Save. Please Check the Responsive Documentation.

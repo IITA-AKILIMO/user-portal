@@ -108,6 +108,13 @@ function bravepopup_prepare_CF_data($popData) {
    return $popupData;
 }
 
+function bravepopup_rocket_exclude_inline_js( $inline_js ) {
+   $inline_js[] = 'bravepop_front_js';
+   $inline_js[] = 'bravepop_front_js-js-extra';
+   return $inline_js;
+}
+add_filter( 'rocket_excluded_inline_js_content', 'bravepopup_rocket_exclude_inline_js' );
+
 include __DIR__ . '/login.php';
 include __DIR__ . '/notifications.php';
 include __DIR__ . '/stats.php';

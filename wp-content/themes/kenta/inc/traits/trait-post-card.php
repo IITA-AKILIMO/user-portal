@@ -9,6 +9,7 @@ use LottaFramework\Customizer\Controls\ImageRadio;
 use LottaFramework\Customizer\Controls\Select;
 use LottaFramework\Customizer\Controls\Separator;
 use LottaFramework\Customizer\Controls\Slider;
+use LottaFramework\Customizer\Controls\Toggle;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -30,6 +31,7 @@ if ( ! trait_exists( 'Kenta_Post_Card' ) ) {
 		protected function getCardContentControls( $prefix = '', $defaults = [] ) {
 			$defaults = wp_parse_args( $defaults, [
 				'selector'          => '.card',
+				'scroll-reveal'     => 'yes',
 				'content-spacing'   => '24px',
 				'thumbnail-spacing' => '0px',
 				'text'              => 'left',
@@ -38,6 +40,10 @@ if ( ! trait_exists( 'Kenta_Post_Card' ) ) {
 			] );
 
 			return [
+				( new Toggle( $prefix . 'card_scroll_reveal' ) )
+					->setLabel( __( 'Enable Scroll Reveal', 'kenta' ) )
+					->setDefaultValue( $defaults['scroll-reveal'] )
+				,
 				( new Slider( $prefix . 'card_content_spacing' ) )
 					->setLabel( __( 'Content Spacing', 'kenta' ) )
 					->asyncCss( $defaults['selector'], [ '--card-content-spacing' => 'value' ] )
@@ -86,7 +92,7 @@ if ( ! trait_exists( 'Kenta_Post_Card' ) ) {
 
 			return [
 				( new Select( $prefix . 'card_style_preset' ) )
-					->setLabel( __( 'Card Style Preset', 'kenta' ) )
+					->setLabel( __( 'Card Style', 'kenta' ) )
 					->setDefaultValue( $defaults['preset'] )
 					->bindSelectiveRefresh( $defaults['selective'] )
 					->setChoices( kenta_card_style_preset_options() )

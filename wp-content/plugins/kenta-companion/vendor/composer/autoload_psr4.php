@@ -6,6 +6,7 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
+    'Wpmoose\\WpDismissibleNotice\\' => array($vendorDir . '/wpmoose/wp-dismissible-notice/src'),
     'Psr\\SimpleCache\\' => array($vendorDir . '/psr/simple-cache/src'),
     'Psr\\Container\\' => array($vendorDir . '/psr/container/src'),
     'ProteusThemes\\WPContentImporter2\\' => array($vendorDir . '/proteusthemes/wp-content-importer-v2/src'),

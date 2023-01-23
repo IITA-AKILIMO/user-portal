@@ -11,11 +11,11 @@ $popup_category = array(
 );
 switch( $action ) {
     case 'add':
-        $heading = __('Add new category', $this->plugin_name);
+        $heading = __('Add new category', "ays-popup-box");
         $loader_iamge = "<span class='display_none'><img src=".AYS_PB_ADMIN_URL."/images/loaders/loading.gif></span>";
         break;
     case 'edit':
-        $heading = __('Edit category', $this->plugin_name);
+        $heading = __('Edit category', "ays-popup-box");
         $loader_iamge = "<span class='display_none'><img src=".AYS_PB_ADMIN_URL."/images/loaders/loading.gif></span>";
         $popup_category = $this->popup_categories_obj->get_popup_category( $id );
         break;
@@ -61,7 +61,7 @@ if ( isset( $id ) && !is_null( $id ) ) {
     <div class="container-fluid">
         <div class="ays-pb-heading-box">
             <div class="ays-pb-wordpress-user-manual-box">
-                    <a href="https://ays-pro.com/wordpress-popup-box-plugin-user-manual" target="_blank"><?php echo __("View Documentation", $this->plugin_name); ?></a>
+                    <a href="https://ays-pro.com/wordpress-popup-box-plugin-user-manual" target="_blank"><?php echo __("View Documentation", "ays-popup-box"); ?></a>
             </div>
         </div>
         <h1><?php echo $heading; ?></h1>
@@ -71,8 +71,8 @@ if ( isset( $id ) && !is_null( $id ) ) {
             <div class="form-group row">
                 <div class="col-sm-2">
                     <label for='ays-title'>
-                        <?php echo __('Category name', $this->plugin_name); ?>
-                        <a class="ays_help" data-toggle="tooltip" title="<?php echo __('Define the category name.',$this->plugin_name)?>">
+                        <?php echo __('Category name', "ays-popup-box"); ?>
+                        <a class="ays_help" data-toggle="tooltip" title="<?php echo __('Define the category name.',"ays-popup-box")?>">
                             <i class="ays_fa ays_fa-info-circle"></i>
                         </a>
                     </label>
@@ -85,8 +85,8 @@ if ( isset( $id ) && !is_null( $id ) ) {
             <hr/>
             <div class='ays-field'>
                 <label for='ays-description'>
-                    <?php echo __('Description', $this->plugin_name); ?>
-                    <a class="ays_help" data-toggle="tooltip" title="<?php echo __('Write category description if necessary.',$this->plugin_name)?>">
+                    <?php echo __('Description', "ays-popup-box"); ?>
+                    <a class="ays_help" data-toggle="tooltip" title="<?php echo __('Write category description if necessary.',"ays-popup-box")?>">
                         <i class="ays_fa ays_fa-info-circle"></i>
                     </a>
                 </label>
@@ -102,16 +102,16 @@ if ( isset( $id ) && !is_null( $id ) ) {
                 <div class="pro_features">
                     <div>
                         <p>
-                            <?php echo __("This feature is available only in ", $this->plugin_name); ?>
-                            <a href="https://ays-pro.com/wordpress/popup-box?src=23" target="_blank" title="PRO feature"><?php echo __("PRO version!!!", $this->plugin_name); ?></a>
+                            <?php echo __("This feature is available only in ", "ays-popup-box"); ?>
+                            <a href="https://ays-pro.com/wordpress/popup-box?src=23" target="_blank" title="PRO feature"><?php echo __("PRO version!!!", "ays-popup-box"); ?></a>
                         </p>
                     </div>
                 </div>
                 <div class="form-group row ays_toggle_parent" style="padding:10px;">
                     <div class="col-sm-3">
                         <label for="ays_show_random_posts_category">
-                            <?php echo __('Show random popup by category', $this->plugin_name)?>
-                            <a class="ays_help ays-pb-help-pro" data-toggle="tooltip" title="<?php echo __('If this option is enabled a random popup will be displayed from the selected category based on the chosen post.',$this->plugin_name); ?>">
+                            <?php echo __('Show random popup by category', "ays-popup-box")?>
+                            <a class="ays_help ays-pb-help-pro" data-toggle="tooltip" title="<?php echo __('If this option is enabled a random popup will be displayed from the selected category based on the chosen post.',"ays-popup-box"); ?>">
                                 <i class="ays_fa ays_fa-info-circle"></i>
                             </a>
                         </label>
@@ -122,22 +122,22 @@ if ( isset( $id ) && !is_null( $id ) ) {
                     <div class="col-sm-8 ays_toggle_target ays_divider_left">
                         <div class="form-group row">                        
                             <div class="col-sm-12">
-                                <label class="ays-pb-label-style" for="<?php echo $this->plugin_name; ?>-show_all_yes"><?php echo __("All pages", $this->plugin_name); ?>
+                                <label class="ays-pb-label-style" for="<?php echo $this->plugin_name; ?>-show_all_yes"><?php echo __("All pages", "ays-popup-box"); ?>
                                     <input type="radio" id="<?php echo $this->plugin_name; ?>-show_all_yes" checked> 
                                 </label>
-                                <label class="ays-pb-label-style" for="<?php echo $this->plugin_name; ?>-show_all_except"><?php echo __("Except", $this->plugin_name); ?>
+                                <label class="ays-pb-label-style" for="<?php echo $this->plugin_name; ?>-show_all_except"><?php echo __("Except", "ays-popup-box"); ?>
                                     <input type="radio" id="<?php echo $this->plugin_name; ?>-show_all_except"  class="" name="<?php echo $this->plugin_name; ?>[show_all]" value="except">
                                 </label>
-                                <label class="ays-pb-label-style" for="<?php echo $this->plugin_name; ?>-show_all_selected"><?php echo __("Include", $this->plugin_name); ?>
+                                <label class="ays-pb-label-style" for="<?php echo $this->plugin_name; ?>-show_all_selected"><?php echo __("Include", "ays-popup-box"); ?>
                                     <input type="radio" id="<?php echo $this->plugin_name; ?>-show_all_selected"  class="" name="<?php echo $this->plugin_name; ?>[show_all]" value="selected">
                                 </label>
                                 <a class="ays_help ays-pb-help-pro" style="font-size:15px;" data-toggle="tooltip" data-html="true"
                                     title="<?php
-                                        echo __('Choose the method of calculation.',$this->plugin_name) .
+                                        echo __('Choose the method of calculation.',"ays-popup-box") .
                                         "<ul style='list-style-type: circle;padding-left: 20px;'>".
-                                            "<li>". __('All pages - The popup will display on all pages.',$this->plugin_name) ."</li>".
-                                            "<li>". __('Except - Choose the post/page and post/page types excluding the popup.',$this->plugin_name) ."</li>".
-                                            "<li>". __('Include - Choose the post/page and post/page types including the popup.',$this->plugin_name) ."</li>".
+                                            "<li>". __('All pages - The popup will display on all pages.',"ays-popup-box") ."</li>".
+                                            "<li>". __('Except - Choose the post/page and post/page types excluding the popup.',"ays-popup-box") ."</li>".
+                                            "<li>". __('Include - Choose the post/page and post/page types including the popup.',"ays-popup-box") ."</li>".
                                         "</ul>";
                                     ?>">
                                     <i class="ays_fa ays_fa-info-circle"></i>
@@ -151,8 +151,8 @@ if ( isset( $id ) && !is_null( $id ) ) {
             <div class="form-group row">
                 <div class="col-sm-2">
                     <label>
-                        <?php echo __('Category status', $this->plugin_name); ?>
-                        <a class="ays_help" data-toggle="tooltip" title="<?php echo __('Select whether or not to display the new category in the settings.',$this->plugin_name)?>">
+                        <?php echo __('Category status', "ays-popup-box"); ?>
+                        <a class="ays_help" data-toggle="tooltip" title="<?php echo __('Select whether or not to display the new category in the settings.',"ays-popup-box")?>">
                             <i class="ays_fa ays_fa-info-circle"></i>
                         </a>
                     </label>
@@ -161,11 +161,11 @@ if ( isset( $id ) && !is_null( $id ) ) {
                 <div class="col-sm-3">
                     <div class="form-check form-check-inline">
                         <input type="radio" id="ays-publish" name="ays_publish" value="1" <?php echo ( $published_category == '' ) ? "checked" : ""; ?> <?php echo ( $published_category == '1') ? 'checked' : ''; ?> />
-                        <label class="form-check-label" for="ays-publish"> <?php echo __('Published', $this->plugin_name); ?> </label>
+                        <label class="form-check-label" for="ays-publish"> <?php echo __('Published', "ays-popup-box"); ?> </label>
                     </div>
                     <div class="form-check form-check-inline">
                         <input type="radio" id="ays-unpublish" name="ays_publish" value="0" <?php echo ( $published_category  == '0' ) ? 'checked' : ''; ?> />
-                        <label class="form-check-label" for="ays-unpublish"> <?php echo __('Unpublished', $this->plugin_name); ?> </label>
+                        <label class="form-check-label" for="ays-unpublish"> <?php echo __('Unpublished', "ays-popup-box"); ?> </label>
                     </div>
                 </div>
             </div>
@@ -176,9 +176,15 @@ if ( isset( $id ) && !is_null( $id ) ) {
                 <?php
                     wp_nonce_field('popup_category_action', 'popup_category_action');
                     $other_attributes = array( 'id' => 'ays-cat-button-apply' );
-                    $other_attributes_save = array( 'id' => 'ays-cat-button-apply' );
-                    submit_button( __( 'Save and close', $this->plugin_name ), 'primary', 'ays_submit', false, $other_attributes );
-                    submit_button( __( 'Save', $this->plugin_name), '', 'ays_apply', false, $other_attributes_save);
+                    // $other_attributes_save = array( 'id' => 'ays-cat-button-apply' );
+                    $other_attributes_save = array(
+                        'id' => 'ays-cat-button-apply',
+                        'title' => 'Ctrl + s',
+                        'data-toggle' => 'tooltip',
+                        'data-delay'=> '{"show":"300"}'
+                    );
+                    submit_button( __( 'Save and close', "ays-popup-box" ), 'primary', 'ays_submit', false, $other_attributes );
+                    submit_button( __( 'Save', "ays-popup-box"), '', 'ays_apply', false, $other_attributes_save);
                     echo $loader_iamge;
                 ?>
                 </div>
@@ -187,20 +193,20 @@ if ( isset( $id ) && !is_null( $id ) ) {
                     if ( $prev_pb_cat_id != "" && !is_null( $prev_pb_cat_id ) ) {
                         $other_attributes = array(
                             'id' => 'ays-pb-category-prev-button',
-                            'data-message' => __( 'Are you sure you want to go to the previous popup category page?', $this->plugin_name),
+                            'data-message' => __( 'Are you sure you want to go to the previous popup category page?', "ays-popup-box"),
                             'href' => sprintf( '?page=%s&action=%s&popup_category=%d', esc_attr( $_REQUEST['page'] ), 'edit', absint( $prev_pb_cat_id ) )
                         );
-                        submit_button(__('Previous Popup Category', $this->plugin_name), 'button button-primary ays_default_btn ays-pb-next-prev-button-class ays-button', 'ays_pb_category_prev_button', false, $other_attributes);
+                        submit_button(__('Previous Popup Category', "ays-popup-box"), 'button button-primary ays_default_btn ays-pb-next-prev-button-class ays-button', 'ays_pb_category_prev_button', false, $other_attributes);
                     }
                 ?>
                 <?php
                     if ( $next_pb_cat_id != "" && !is_null( $next_pb_cat_id ) ) {
                         $other_attributes = array(
                             'id' => 'ays-pb-category-next-button',
-                            'data-message' => __( 'Are you sure you want to go to the next popup category page?', $this->plugin_name),
+                            'data-message' => __( 'Are you sure you want to go to the next popup category page?', "ays-popup-box"),
                             'href' => sprintf( '?page=%s&action=%s&popup_category=%d', esc_attr( $_REQUEST['page'] ), 'edit', absint( $next_pb_cat_id ) )
                         );
-                        submit_button(__('Next Popup Category', $this->plugin_name), 'button button-primary ays_default_btn ays-pb-next-prev-button-class ays-button', 'ays_pb_category_next_button', false, $other_attributes);
+                        submit_button(__('Next Popup Category', "ays-popup-box"), 'button button-primary ays_default_btn ays-pb-next-prev-button-class ays-button', 'ays_pb_category_next_button', false, $other_attributes);
                     }
                 ?>
                 </div>

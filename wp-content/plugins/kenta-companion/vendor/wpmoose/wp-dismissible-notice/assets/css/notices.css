@@ -1,0 +1,50 @@
+.wpmoose-notice {
+    position: relative;
+    display: block !important;
+}
+
+.wpmoose-notice.notice-success {
+    color: green;
+}
+
+.wpmoose-notice.notice-error {
+    color: red;
+}
+
+.wpmoose-notice.has-title {
+    margin-bottom: 30px !important;
+}
+
+.wpmoose-notice-body {
+    margin: 0.5em 0;
+    padding: 2px;
+}
+
+.wpmoose-notice-title {
+    background: rgba(0, 0, 0, .3);
+    color: #fff;
+    padding: 2px 10px;
+    position: absolute;
+    top: 100%;
+    bottom: auto;
+    right: auto;
+    -moz-border-radius: 0 0 3px 3px;
+    -webkit-border-radius: 0 0 3px 3px;
+    border-radius: 0 0 3px 3px;
+    left: 10px;
+    font-size: 12px;
+    font-weight: bold;
+    cursor: auto;
+}
+
+.wpmoose-notice-close {
+    cursor: pointer;
+    color: #aaa;
+    font-size: 0.75em;
+    float: right;
+}
+
+.wpmoose-notice-close > * {
+    margin-top: 7px;
+    display: inline-block;
+}

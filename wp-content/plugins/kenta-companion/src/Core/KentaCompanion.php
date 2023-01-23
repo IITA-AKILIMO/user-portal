@@ -14,15 +14,50 @@ class KentaCompanion extends Container {
 	public function __construct() {
 		self::setInstance( $this );
 
+		// register modules
 		add_action( 'kcmp/after_bootstrap', [ $this, 'after_boostrap' ] );
 
+		// admin init
 		add_action( 'rest_api_init', [ Route::class, 'api_v1' ] );
-
 		add_action( 'admin_menu', [ $this, 'admin_menu' ] );
-
 		add_action( 'kcmp/show_admin_setup_page', [ $this, 'show_about_kenta_theme_page' ] );
-
+		add_filter( 'kenta_admin_page_url', [ $this, 'admin_page_url' ], 10, 2 );
+		add_filter( 'kenta_admin_page_tabs', [ $this, 'admin_tabs' ] );
 		add_filter( 'kenta_admin_page_customizer_items', [ $this, 'admin_page_customizer_items' ] );
+
+		// dynamic css
+		add_action( 'kenta_dynamic_css_cached', [ $this, 'update_cached_css_version' ] );
+		add_filter( 'kenta_should_dynamic_css_re_cached', [ $this, 'should_dynamic_css_re_cached' ] );
+
+		// starter sites
+		add_action( 'kcmp/template_imported', [ $this, 'update_imported_template' ], 10, 2 );
+
+		// opt-in notice
+		add_action( 'current_screen', [ $this, 'remove_optin_notice' ] );
+		if ( ! kenta_fs()->is_registered() ) {
+			kcmp_notices()->add_notice(
+				sprintf(
+					__( 'We made a few tweaks to the Kenta Companion, %s', 'kenta-companion' ),
+					sprintf( '<b><a href="%s">%s</a></b>',
+						add_query_arg( [ 'page' => 'kenta-companion-optin' ], admin_url( 'admin.php' ) ),
+						__( 'Opt in to make Kenta Companion better!', 'kenta-companion' )
+					)
+				),
+				'connect_account',
+				'Kenta Companion'
+			);
+		}
+	}
+
+	/**
+	 * Remove opt-in notice in opt-in screen
+	 */
+	public function remove_optin_notice() {
+		$screen = get_current_screen();
+		if ( 'kenta-blocks_page_kenta-blocks-optin' === $screen->id ||
+		     'kenta_page_kenta-companion-optin' === $screen->id ) {
+			kcmp_notices()->remove_notice( 'connect_account' );
+		}
 	}
 
 	/**
@@ -56,6 +91,9 @@ class KentaCompanion extends Container {
 			->register( 'copyright', [
 				'class' => \KentaCompanion\Extensions\Copyright::class,
 			] )
+			->register( 'breadcrumbs', [
+				'class' => \KentaCompanion\Extensions\Breadcrumbs::class,
+			] )
 			->register( 'widgets', [
 				'class' => \KentaCompanion\Extensions\Widgets::class,
 			] )
@@ -80,6 +118,9 @@ class KentaCompanion extends Container {
 			->register( 'lightbox', [
 				'class' => \KentaCompanion\Extensions\Lightbox::class,
 			] )
+			->register( 'scroll-reveal', [
+				'class' => \KentaCompanion\Extensions\ScrollReveal::class,
+			] )
 			->bootstrap();
 	}
 
@@ -89,6 +130,7 @@ class KentaCompanion extends Container {
 	public function admin_menu() {
 		$setup   = kcmp_plugin_setup_page();
 		$starter = kcmp_plugin_starter_page();
+		$optin   = kcmp_plugin_optin_page();
 
 		add_menu_page(
 			$setup['page_title'],
@@ -110,22 +152,48 @@ class KentaCompanion extends Container {
 				[ $this, 'show_starter_sites_page' ]
 			);
 		}
+
+		if ( ! kenta_fs()->is_registered() ) {
+			add_submenu_page(
+				$optin['parent_slug'],
+				$optin['page_title'],
+				$optin['menu_title'],
+				$optin['capability'],
+				$optin['menu_slug'],
+				[ kenta_fs(), '_connect_page_render' ]
+			);
+		}
+	}
+
+	public function admin_tabs( $tabs ) {
+		return array_merge( $tabs, [
+			'starter-sites' => [
+				'label' => __( 'Starter Sites', 'kenta-companion' ),
+				'url'   => add_query_arg( [ 'page' => 'kenta-starter-sites' ], admin_url( 'admin.php' ) ),
+			],
+			'opt-in'        => [
+				'label' => __( 'Opt In', 'kenta-companion' ),
+				'url'   => add_query_arg( [ 'page' => 'kenta-companion-optin' ], admin_url( 'admin.php' ) ),
+				'skip'  => kenta_fs()->is_registered(),
+			],
+			'contact-us'    => [
+				'label' => __( 'Contact Us', 'kenta-companion' ),
+				'url'   => add_query_arg( [ 'page' => 'kenta-companion-contact' ], admin_url( 'admin.php' ) ),
+			],
+		] );
+	}
+
+	public function admin_page_url( $url, $args ) {
+
+		return add_query_arg( array_merge( $args, [
+			'page' => 'kenta-companion'
+		] ), admin_url( 'admin.php' ) );
 	}
 
 	public function admin_page_customizer_items( $items ) {
 		return array_merge( $items, [
 			[
-				'label'    => __( 'Social Settings', 'kenta' ),
-				'icon'     => '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M26.656 21.344c-1.824 0-3.456 0.928-4.416 2.368l-11.904-5.952c0.192-0.544 0.32-1.152 0.32-1.76s-0.128-1.216-0.32-1.76l11.904-5.952c0.96 1.44 2.592 2.368 4.416 2.368 2.944 0 5.344-2.368 5.344-5.312s-2.4-5.344-5.344-5.344-5.312 2.4-5.312 5.344c0 0.608 0.128 1.184 0.32 1.76l-11.904 5.92c-0.96-1.408-2.592-2.368-4.416-2.368-2.944 0-5.344 2.4-5.344 5.344s2.4 5.344 5.344 5.344c1.824 0 3.456-0.96 4.416-2.4l11.904 5.952c-0.192 0.576-0.32 1.152-0.32 1.76 0 2.944 2.368 5.344 5.312 5.344s5.344-2.4 5.344-5.344-2.4-5.312-5.344-5.312zM26.656 1.344c2.208 0 4 1.792 4 4s-1.792 4-4 4c-1.536 0-2.88-0.928-3.552-2.208 0-0.032 0-0.032 0-0.032s0 0 0 0c-0.256-0.544-0.448-1.12-0.448-1.76 0-2.208 1.792-4 4-4zM5.344 20c-2.208 0-4-1.792-4-4s1.792-4 4-4c1.536 0 2.88 0.896 3.552 2.208 0 0 0 0 0 0s0 0 0 0c0.288 0.544 0.448 1.152 0.448 1.792s-0.16 1.216-0.448 1.76c0 0 0 0 0 0.032 0 0 0 0 0 0-0.672 1.312-2.016 2.208-3.552 2.208zM26.656 30.656c-2.208 0-4-1.792-4-4 0-0.64 0.192-1.216 0.448-1.76 0 0 0 0 0 0s0 0 0-0.032c0.672-1.28 2.016-2.208 3.552-2.208 2.208 0 4 1.792 4 4s-1.792 4-4 4z"></path></svg>',
-				'location' => 'kenta_global:kenta_global_socials',
-			],
-			[
-				'label'    => __( 'Scroll Top Settings', 'kenta' ),
-				'icon'     => '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M15.36 6.688c0.352-0.352 0.928-0.352 1.28 0l4.416 4.416c0.576 0.544 0.16 1.472-0.608 1.472h-2.72v16.288c-0.096 0.992-0.832 1.792-1.728 1.792h-0.16c-0.896-0.096-1.568-0.96-1.568-1.984v-16.096h-2.72c-0.768 0-1.184-0.928-0.608-1.472l4.416-4.416zM29.344 0.928c0.96 0 1.728 0.768 1.728 1.728s-0.768 1.728-1.728 1.728h-26.688c-0.96 0-1.728-0.768-1.728-1.728s0.768-1.728 1.728-1.728h26.688z"></path></svg>',
-				'location' => 'kenta_global:kenta_global_scroll_top',
-			],
-			[
-				'label'    => __( 'Cookies Consent Settings', 'kenta' ),
+				'label'    => __( 'Cookies Consent Settings', 'kenta-companion' ),
 				'icon'     => '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M257.5 27.6c-.8-5.4-4.9-9.8-10.3-10.6c-22.1-3.1-44.6 .9-64.4 11.4l-74 39.5C89.1 78.4 73.2 94.9 63.4 115L26.7 190.6c-9.8 20.1-13 42.9-9.1 64.9l14.5 82.8c3.9 22.1 14.6 42.3 30.7 57.9l60.3 58.4c16.1 15.6 36.6 25.6 58.7 28.7l83 11.7c22.1 3.1 44.6-.9 64.4-11.4l74-39.5c19.7-10.5 35.6-27 45.4-47.2l36.7-75.5c9.8-20.1 13-42.9 9.1-64.9c-.9-5.3-5.3-9.3-10.6-10.1c-51.5-8.2-92.8-47.1-104.5-97.4c-1.8-7.6-8-13.4-15.7-14.6c-54.6-8.7-97.7-52-106.2-106.8zM208 208c-17.7 0-32-14.3-32-32s14.3-32 32-32s32 14.3 32 32s-14.3 32-32 32zm0 128c0 17.7-14.3 32-32 32s-32-14.3-32-32s14.3-32 32-32s32 14.3 32 32zm160 0c-17.7 0-32-14.3-32-32s14.3-32 32-32s32 14.3 32 32s-14.3 32-32 32z"/></svg>',
 				'location' => 'kenta_global:kenta_global_cookies_consent',
 			],
@@ -152,5 +220,43 @@ class KentaCompanion extends Container {
 	 */
 	public function show_starter_sites_page() {
 		kcmp_get_template_part( 'starter-sites' );
+	}
+
+	/**
+	 * Save current template in database
+	 *
+	 * @param $slug
+	 * @param $types
+	 */
+	public function update_imported_template( $slug, $types = [] ) {
+		update_option( 'kenta_active_template', $slug );
+	}
+
+	/**
+	 * Update cached css version
+	 */
+	public function update_cached_css_version() {
+		update_option( 'kcmp_dynamic_css_cached_version', esc_html( KCMP_VERSION ) );
+	}
+
+	/**
+	 * Check if dynamic css should be re cached
+	 *
+	 * If the companion plugin version changed, bust the cache.
+	 *
+	 * @param $bool
+	 *
+	 * @return mixed
+	 *
+	 * @since 1.1.4
+	 */
+	public function should_dynamic_css_re_cached( $bool ) {
+
+		$cached_version = get_option( 'kcmp_dynamic_css_cached_version', '' );
+		if ( KCMP_VERSION !== $cached_version ) {
+			return true;
+		}
+
+		return $bool;
 	}
 }

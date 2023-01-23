@@ -309,6 +309,11 @@ if ( ! class_exists( 'Kenta_Menu_Element' ) ) {
 						'initial' => 'var(--kenta-base-color)',
 						'active'  => 'var(--kenta-base-color)',
 					],
+					$this->getSlug( 'dropdown_divider' )          => [
+						'width' => 1,
+						'style' => 'solid',
+						'color' => 'var(--kenta-base-300)'
+					],
 					$this->getSlug( 'dropdown_shadow' )           => $shadow,
 				],
 				'ghost-dark' => [
@@ -337,6 +342,11 @@ if ( ! class_exists( 'Kenta_Menu_Element' ) ) {
 					$this->getSlug( 'dropdown_background_color' ) => [
 						'initial' => 'var(--kenta-base-color)',
 						'active'  => 'var(--kenta-primary-color)',
+					],
+					$this->getSlug( 'dropdown_divider' )          => [
+						'width' => 1,
+						'style' => 'solid',
+						'color' => 'var(--kenta-base-300)'
 					],
 					$this->getSlug( 'dropdown_shadow' )           => $shadow,
 				],

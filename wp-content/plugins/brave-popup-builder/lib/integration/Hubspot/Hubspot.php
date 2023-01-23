@@ -7,7 +7,7 @@ if ( ! class_exists( 'BravePop_Hubspot' ) ) {
          $braveSettings = get_option('_bravepopup_settings');
          $integrations = $braveSettings && isset($braveSettings['integrations']) ? $braveSettings['integrations'] : array() ;
          $this->api_key = isset($integrations['hubspot']->api)  ? $integrations['hubspot']->api  : '';
-         $this->isAccessToken = strpos($apiKey, "pat-") !== false ? true : false;
+         $this->isAccessToken = strpos($this->api_key, "pat-") !== false ? true : false;
       }
 
 
@@ -76,7 +76,7 @@ if ( ! class_exists( 'BravePop_Hubspot' ) ) {
          //Add Custom Field Values
          if(count($customFields) > 0){
             foreach ($customFields as $key => $value) {
-               $contact[] = array( "property"=> $key,  "value"=> $value );
+               $contact[] = array( "property"=> $key,  "value"=> !empty($value) && is_array($value) ?  implode(',', $value) : $value );
             }
          }
 

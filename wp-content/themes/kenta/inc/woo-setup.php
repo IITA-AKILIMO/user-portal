@@ -153,7 +153,7 @@ if ( ! function_exists( 'kenta_woo_dynamic_css' ) ) {
 		return $css;
 	}
 }
-add_filter( 'kenta_filter_dynamic_css', 'kenta_woo_dynamic_css' );
+add_filter( 'kenta_filter_no_cache_dynamic_css', 'kenta_woo_dynamic_css' );
 
 if ( ! function_exists( 'kenta_woo_before_content' ) ) {
 	/**
@@ -240,7 +240,12 @@ if ( ! function_exists( 'kenta_woo_loop_item_wrapper' ) ) {
 	 * Wrap WooCommerce loop product item start
 	 */
 	function kenta_woo_loop_item_wrapper() {
-		?><div class="kenta-product-wrapper"><?php
+		$classnames = Utils::clsx( [
+			'kenta-product-wrapper' => true,
+			'kenta-scroll-reveal'   => CZ::checked( 'kenta_store_card_scroll_reveal' )
+		] )
+
+		?><div class="<?php echo esc_attr( $classnames ) ?>"><?php
 	}
 }
 

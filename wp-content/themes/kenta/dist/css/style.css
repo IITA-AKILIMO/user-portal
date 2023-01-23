@@ -1166,6 +1166,7 @@ select {
 .kenta-builder-column-desktop-dir-row > [data-builder-element],
 .kenta-builder-column-tablet-dir-row > [data-builder-element],
 .kenta-builder-column-mobile-dir-row > [data-builder-element] {
+  flex-shrink: 0;
   margin-right: var(--kenta-builder-elements-gap, 12px);
 }
 .kenta-builder-column-desktop-dir-row > [data-builder-element]:last-child,
@@ -1183,6 +1184,15 @@ select {
 .kenta-builder-column-tablet-dir-column > [data-builder-element]:last-child,
 .kenta-builder-column-mobile-dir-column > [data-builder-element]:last-child {
   margin-bottom: 0;
+}
+
+.kenta-footer-row,
+.kenta-header-row {
+  position: relative;
+}
+.kenta-footer-row .container,
+.kenta-header-row .container {
+  position: relative;
 }
 
 /**
@@ -1207,6 +1217,50 @@ select {
   border-right-color: transparent;
   position: absolute;
   right: 0.65em;
+}
+
+.kenta-breadcrumbs-element {
+  color: var(--breadcrumb-link-initial);
+  fill: var(--breadcrumb-link-initial);
+}
+.kenta-breadcrumbs-element svg {
+  display: inline-block;
+}
+.kenta-breadcrumbs-element .breadcrumb-link > svg {
+  width: auto;
+  height: 80%;
+}
+.kenta-breadcrumbs-element .breadcrumb-sep svg {
+  display: inline-block;
+  position: relative;
+  top: -0.15em;
+  vertical-align: middle;
+  width: 0.7em;
+  height: 0.7em;
+}
+.kenta-breadcrumbs-element .breadcrumb-link {
+  color: var(--breadcrumb-link-initial);
+  transition: color, fill 0.25s ease-in;
+}
+.kenta-breadcrumbs-element .breadcrumb-link, .kenta-breadcrumbs-element .breadcrumb-link svg {
+  fill: var(--breadcrumb-link-initial);
+}
+.kenta-breadcrumbs-element .breadcrumb-link svg {
+  display: inline-block;
+  position: relative;
+  top: -0.2em;
+  vertical-align: middle;
+  width: 1.25em;
+  height: 1.25em;
+}
+.kenta-breadcrumbs-element .breadcrumb-link:hover {
+  color: var(--breadcrumb-link-hover);
+}
+.kenta-breadcrumbs-element .breadcrumb-link:hover, .kenta-breadcrumbs-element .breadcrumb-link:hover svg {
+  fill: var(--breadcrumb-link-hover);
+}
+.kenta-breadcrumbs-element .breadcrumb-item {
+  color: var(--breadcrumb-text);
 }
 
 .kenta-site-branding .site-logo {
@@ -1257,6 +1311,7 @@ select {
 
 .kenta-menu-wrap {
   display: flex;
+  flex-shrink: initial !important;
   align-items: center;
 }
 
@@ -1303,13 +1358,13 @@ select {
 .kenta-menu > li > a svg {
   fill: var(--menu-text-initial-color);
 }
-.kenta-menu > li:hover > a {
+.kenta-menu > li.sfHover > a, .kenta-menu > li:hover > a {
   color: var(--menu-text-hover-color);
   background-color: var(--menu-background-hover-color);
   border-top: var(--menu-items-border-top-active);
   border-bottom: var(--menu-items-border-bottom-active);
 }
-.kenta-menu > li:hover > a svg {
+.kenta-menu > li.sfHover > a svg, .kenta-menu > li:hover > a svg {
   fill: var(--menu-text-hover-color);
 }
 .kenta-menu > li[class*=current-menu-] > a {
@@ -1334,6 +1389,7 @@ select {
 }
 .kenta-menu > li ul a {
   width: 100%;
+  white-space: normal;
   transition: all ease 0.25s;
   padding: var(--dropdown-item-padding);
   display: flex;
@@ -1369,6 +1425,84 @@ select {
   fill: var(--dropdown-text-active-color);
 }
 
+.kenta-menu .kenta-mega-menu {
+  position: unset !important;
+}
+.kenta-menu .kenta-mega-menu > ul {
+  width: 100%;
+}
+@media (min-width: 576px) {
+  .kenta-menu .kenta-mega-menu > ul {
+    max-width: 576px;
+  }
+}
+@media (min-width: 768px) {
+  .kenta-menu .kenta-mega-menu > ul {
+    max-width: 768px;
+  }
+}
+@media (min-width: 1024px) {
+  .kenta-menu .kenta-mega-menu > ul {
+    max-width: 1024px;
+  }
+}
+@media (min-width: 1140px) {
+  .kenta-menu .kenta-mega-menu > ul {
+    max-width: 1140px;
+  }
+}
+@media (min-width: 1024px) {
+  .kenta-menu .kenta-mega-menu > ul {
+    max-width: 1140px;
+  }
+}
+.kenta-footer-row .kenta-menu .kenta-mega-menu > ul, 
+.kenta-header-row .kenta-menu .kenta-mega-menu > ul {
+  position: relative;
+}
+.kenta-archive-header .kenta-menu .kenta-mega-menu > ul {
+  position: relative;
+  z-index: 1;
+}
+.kenta-menu .kenta-mega-menu > ul {
+  width: 100%;
+  left: 50% !important;
+  right: unset !important;
+  transform: translateX(-50%);
+  position: absolute !important;
+  padding: 24px 12px;
+  display: flex !important;
+}
+.kenta-menu .kenta-mega-menu > ul ul {
+  position: relative;
+  left: initial !important;
+  visibility: visible;
+  opacity: 1;
+  margin-top: 0;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
+.kenta-menu .kenta-mega-menu > ul .kenta-mega-col {
+  width: 100%;
+  border-top: none;
+  padding: 0 12px;
+}
+.kenta-menu .kenta-mega-menu > ul .kenta-mega-col:not(:last-child) {
+  border-right: var(--dropdown-divider);
+}
+.kenta-menu .kenta-mega-menu > ul .kenta-mega-col > a {
+  display: none;
+}
+.kenta-menu .kenta-mega-menu > ul .kenta-mega-heading {
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.kenta-html-element {
+  width: 100%;
+}
+
 .kenta-raw-html a {
   transition: all ease 0.25s;
   color: var(--kenta-link-initial-color);
@@ -1389,10 +1523,11 @@ select {
 }
 .kenta-no-result-search-form .search-submit {
   position: absolute;
-  right: 24px;
-  top: 50%;
-  margin-top: -9px;
+  right: 0;
+  top: 0;
   font-size: 18px;
+  max-width: 100%;
+  max-height: 100%;
 }
 
 .woocommerce .kenta-search-modal-form .search-input,
@@ -1615,6 +1750,7 @@ select {
   visibility: visible;
   opacity: 1;
   margin-top: 0;
+  pointer-events: auto;
 }
 .sf-menu ul {
   transition: all ease 0.25s;
@@ -1623,6 +1759,7 @@ select {
   top: 0;
   opacity: 0;
   visibility: hidden;
+  pointer-events: none;
   z-index: 50;
 }
 .sf-menu > li > ul {
@@ -1704,11 +1841,13 @@ select {
 .woocommerce button.button.alt,
 .woocommerce input.button,
 .woocommerce input.button.alt,
+.widget_search [type=submit],
 .wp-block-search__button,
 .wc-block-product-search__button,
 div:not(.is-style-outline) > .wp-block-button__link,
 .wp-block-button.is-style-outline .wp-block-button__link,
 .kenta-form [type=submit],
+.kenta-raw-html [type=submit],
 .kenta-article-content button,
 .kenta-article-content [type=submit],
 .kenta-button {
@@ -1741,11 +1880,13 @@ div:not(.is-style-outline) > .wp-block-button__link,
 .woocommerce button.button.alt:disabled,
 .woocommerce input.button:disabled,
 .woocommerce input.button.alt:disabled,
+.widget_search [type=submit]:disabled,
 .wp-block-search__button:disabled,
 .wc-block-product-search__button:disabled,
 div:not(.is-style-outline) > .wp-block-button__link:disabled,
 .wp-block-button.is-style-outline .wp-block-button__link:disabled,
 .kenta-form [type=submit]:disabled,
+.kenta-raw-html [type=submit]:disabled,
 .kenta-article-content button:disabled,
 .kenta-article-content [type=submit]:disabled,
 .kenta-button:disabled {
@@ -1766,11 +1907,13 @@ div:not(.is-style-outline) > .wp-block-button__link:disabled,
 .woocommerce button.button.alt:not(:disabled):hover,
 .woocommerce input.button:not(:disabled):hover,
 .woocommerce input.button.alt:not(:disabled):hover,
+.widget_search [type=submit]:not(:disabled):hover,
 .wp-block-search__button:not(:disabled):hover,
 .wc-block-product-search__button:not(:disabled):hover,
 div:not(.is-style-outline) > .wp-block-button__link:not(:disabled):hover,
 .wp-block-button.is-style-outline .wp-block-button__link:not(:disabled):hover,
 .kenta-form [type=submit]:not(:disabled):hover,
+.kenta-raw-html [type=submit]:not(:disabled):hover,
 .kenta-article-content button:not(:disabled):hover,
 .kenta-article-content [type=submit]:not(:disabled):hover,
 .kenta-button:not(:disabled):hover {
@@ -1793,11 +1936,13 @@ div:not(.is-style-outline) > .wp-block-button__link:not(:disabled):hover,
 .woocommerce button.button.alt.kenta-button-right,
 .woocommerce input.button.kenta-button-right,
 .woocommerce input.button.alt.kenta-button-right,
+.widget_search [type=submit].kenta-button-right,
 .wp-block-search__button.kenta-button-right,
 .wc-block-product-search__button.kenta-button-right,
 div:not(.is-style-outline) > .wp-block-button__link.kenta-button-right,
 .wp-block-button.is-style-outline .wp-block-button__link.kenta-button-right,
 .kenta-form [type=submit].kenta-button-right,
+.kenta-raw-html [type=submit].kenta-button-right,
 .kenta-article-content button.kenta-button-right,
 .kenta-article-content [type=submit].kenta-button-right,
 .kenta-button.kenta-button-right {
@@ -1830,6 +1975,8 @@ div:not(.is-style-outline) > .wp-block-button__link.kenta-button-right,
 .woocommerce input.button.kenta-button-right svg,
 .woocommerce input.button.alt.kenta-button-right i,
 .woocommerce input.button.alt.kenta-button-right svg,
+.widget_search [type=submit].kenta-button-right i,
+.widget_search [type=submit].kenta-button-right svg,
 .wp-block-search__button.kenta-button-right i,
 .wp-block-search__button.kenta-button-right svg,
 .wc-block-product-search__button.kenta-button-right i,
@@ -1840,6 +1987,8 @@ div:not(.is-style-outline) > .wp-block-button__link.kenta-button-right svg,
 .wp-block-button.is-style-outline .wp-block-button__link.kenta-button-right svg,
 .kenta-form [type=submit].kenta-button-right i,
 .kenta-form [type=submit].kenta-button-right svg,
+.kenta-raw-html [type=submit].kenta-button-right i,
+.kenta-raw-html [type=submit].kenta-button-right svg,
 .kenta-article-content button.kenta-button-right i,
 .kenta-article-content button.kenta-button-right svg,
 .kenta-article-content [type=submit].kenta-button-right i,
@@ -1875,6 +2024,8 @@ div:not(.is-style-outline) > .wp-block-button__link.kenta-button-right svg,
 .woocommerce input.button.kenta-button-left svg,
 .woocommerce input.button.alt.kenta-button-left i,
 .woocommerce input.button.alt.kenta-button-left svg,
+.widget_search [type=submit].kenta-button-left i,
+.widget_search [type=submit].kenta-button-left svg,
 .wp-block-search__button.kenta-button-left i,
 .wp-block-search__button.kenta-button-left svg,
 .wc-block-product-search__button.kenta-button-left i,
@@ -1885,6 +2036,8 @@ div:not(.is-style-outline) > .wp-block-button__link.kenta-button-left svg,
 .wp-block-button.is-style-outline .wp-block-button__link.kenta-button-left svg,
 .kenta-form [type=submit].kenta-button-left i,
 .kenta-form [type=submit].kenta-button-left svg,
+.kenta-raw-html [type=submit].kenta-button-left i,
+.kenta-raw-html [type=submit].kenta-button-left svg,
 .kenta-article-content button.kenta-button-left i,
 .kenta-article-content button.kenta-button-left svg,
 .kenta-article-content [type=submit].kenta-button-left i,
@@ -1902,6 +2055,10 @@ div:not(.is-style-outline) > .wp-block-button__link.kenta-button-left svg,
   color: var(--kenta-button-initial-color);
   border-color: var(--kenta-button-initial-color);
   background-color: transparent;
+}
+
+.components-button.is-primary {
+  background: var(--wp-admin-theme-color) !important;
 }
 
 .kenta-icon-button {
@@ -1945,8 +2102,26 @@ div:not(.is-style-outline) > .wp-block-button__link.kenta-button-left svg,
   --kenta-icon-button-radius: 9999px;
 }
 
+.kenta-archive-header {
+  position: relative;
+}
+.kenta-archive-header .container {
+  position: relative;
+  z-index: 1;
+}
+.kenta-archive-header.kenta-archive-header-has-overlay::after {
+  content: "";
+  display: block;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+}
+
 .woocommerce .kenta-products,
-.card-list {
+.card-list,
+.kenta-related-posts-list {
   margin: 0 calc(-1 * var(--card-gap) / 2);
   display: flex;
   flex-wrap: wrap;
@@ -2097,6 +2272,30 @@ div:not(.is-style-outline) > .wp-block-button__link.kenta-button-left svg,
   color: var(--kenta-meta-link-hover-color);
 }
 
+.kenta-about-author-bio-box .kenta-author-bio-avatar-link {
+  display: inline-block;
+}
+.kenta-about-author-bio-box .kenta-author-bio-avatar {
+  margin: 0;
+  border-radius: var(--kenta-author-bio-avatar-radius, 0);
+}
+.kenta-about-author-bio-box .kenta-author-bio-all-articles {
+  font-size: 0.85rem;
+}
+.kenta-about-author-bio-box .kenta-author-bio-name {
+  margin-top: 1.5rem;
+  margin-bottom: 1rem;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+.kenta-related-posts-wrap .heading-content {
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
 .kenta-post-navigation .nav-links {
   display: flex;
   color: var(--kenta-navigation-initial-color);
@@ -2136,6 +2335,7 @@ div:not(.is-style-outline) > .wp-block-button__link.kenta-button-left svg,
   flex-shrink: 0;
 }
 .kenta-post-navigation .nav-next {
+  text-align: end;
   justify-content: flex-end;
 }
 .kenta-post-navigation .nav-next a {
@@ -2143,6 +2343,19 @@ div:not(.is-style-outline) > .wp-block-button__link.kenta-button-left svg,
 }
 .kenta-post-navigation .nav-next a svg {
   left: 40%;
+}
+.kenta-post-navigation .item-label {
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+  opacity: 0.8;
+}
+.kenta-post-navigation .item-title {
+  display: block;
+  margin-top: 5px;
+  font-size: 14px;
+  font-weight: 700;
+  word-break: break-word;
 }
 
 .woocommerce-pagination,
@@ -2301,10 +2514,6 @@ nav.woocommerce-pagination > .page-numbers > li:last-child {
   --tw-prose-body: var(--kenta-content-base-color);
   color: var(--kenta-content-base-color);
 }
-.prose-kenta label, .prose-kenta input[type=password] {
-  display: inline-block;
-  width: auto;
-}
 .prose-kenta figure img {
   margin-top: 0;
   margin-bottom: 0;
@@ -2395,6 +2604,9 @@ nav.woocommerce-pagination > .page-numbers > li:last-child {
 .prose-kenta table {
   border-width: 1px;
   border-color: var(--kenta-base-300);
+}
+.prose-kenta table td, .prose-kenta table th {
+  border: inherit;
 }
 .prose-kenta table tr > :not([hidden]) ~ :not([hidden]) {
   --tw-divide-x-reverse: 0;
@@ -2567,10 +2779,7 @@ nav.woocommerce-pagination > .page-numbers > li:last-child {
   margin: 0 !important;
 }
 
-.woocommerce form,
-.kenta-article-content,
-.kenta-widget,
-.kenta-form {
+.kenta-form-classic {
   --kenta-form-border-top: 1px solid var(--kenta-form-border-color);
   --kenta-form-border-right: 1px solid var(--kenta-form-border-color);
   --kenta-form-border-bottom: 1px solid var(--kenta-form-border-color);
@@ -2580,26 +2789,9 @@ nav.woocommerce-pagination > .page-numbers > li:last-child {
   --kenta-form-checkbox-border-bottom: 1px solid var(--kenta-form-border-color);
   --kenta-form-checkbox-border-left: 1px solid var(--kenta-form-border-color);
 }
-.woocommerce form textarea,
-.woocommerce form select,
-.woocommerce form .select2-selection--single,
-.woocommerce form [type=url],
-.woocommerce form [type=email],
-.woocommerce form [type=tel],
-.woocommerce form [type=password],
-.woocommerce form [type=number],
-.woocommerce form [type=search],
-.woocommerce form [type=text],
-.kenta-article-content textarea,
-.kenta-article-content select,
-.kenta-article-content .select2-selection--single,
-.kenta-article-content [type=url],
-.kenta-article-content [type=email],
-.kenta-article-content [type=tel],
-.kenta-article-content [type=password],
-.kenta-article-content [type=number],
-.kenta-article-content [type=search],
-.kenta-article-content [type=text],
+
+.kenta-article-content .kenta-form-control, .kenta-article-content textarea, .kenta-article-content select, .kenta-article-content .select2-selection--single, .kenta-article-content [type=url], .kenta-article-content [type=email], .kenta-article-content [type=tel], .kenta-article-content [type=password], .kenta-article-content [type=number], .kenta-article-content [type=search], .kenta-article-content [type=text],
+.kenta-widget .kenta-form-control,
 .kenta-widget textarea,
 .kenta-widget select,
 .kenta-widget .select2-selection--single,
@@ -2610,6 +2802,18 @@ nav.woocommerce-pagination > .page-numbers > li:last-child {
 .kenta-widget [type=number],
 .kenta-widget [type=search],
 .kenta-widget [type=text],
+form .kenta-form-control,
+form textarea,
+form select,
+form .select2-selection--single,
+form [type=url],
+form [type=email],
+form [type=tel],
+form [type=password],
+form [type=number],
+form [type=search],
+form [type=text],
+.kenta-form .kenta-form-control,
 .kenta-form textarea,
 .kenta-form select,
 .kenta-form .select2-selection--single,
@@ -2622,37 +2826,20 @@ nav.woocommerce-pagination > .page-numbers > li:last-child {
 .kenta-form [type=text] {
   display: block;
   width: 100%;
+  height: var(--kenta-form-control-height, 45px);
   transition: all ease 0.25s;
-  border-radius: 2px;
+  border-radius: var(--kenta-form-control-radius, 2px);
   border-top: var(--kenta-form-border-top);
   border-right: var(--kenta-form-border-right);
   border-bottom: var(--kenta-form-border-bottom);
   border-left: var(--kenta-form-border-left);
   background: var(--kenta-form-background-color);
-  padding: 0.3rem 0.75rem;
+  padding: var(--kenta-form-control-paddding, 0.3em 0.75em);
   color: var(--kenta-form-text-color, inherit);
   font-size: inherit;
 }
-.woocommerce form textarea:focus,
-.woocommerce form select:focus,
-.woocommerce form .select2-selection--single:focus,
-.woocommerce form [type=url]:focus,
-.woocommerce form [type=email]:focus,
-.woocommerce form [type=tel]:focus,
-.woocommerce form [type=password]:focus,
-.woocommerce form [type=number]:focus,
-.woocommerce form [type=search]:focus,
-.woocommerce form [type=text]:focus,
-.kenta-article-content textarea:focus,
-.kenta-article-content select:focus,
-.kenta-article-content .select2-selection--single:focus,
-.kenta-article-content [type=url]:focus,
-.kenta-article-content [type=email]:focus,
-.kenta-article-content [type=tel]:focus,
-.kenta-article-content [type=password]:focus,
-.kenta-article-content [type=number]:focus,
-.kenta-article-content [type=search]:focus,
-.kenta-article-content [type=text]:focus,
+.kenta-article-content .kenta-form-control:focus, .kenta-article-content textarea:focus, .kenta-article-content select:focus, .kenta-article-content .select2-selection--single:focus, .kenta-article-content [type=url]:focus, .kenta-article-content [type=email]:focus, .kenta-article-content [type=tel]:focus, .kenta-article-content [type=password]:focus, .kenta-article-content [type=number]:focus, .kenta-article-content [type=search]:focus, .kenta-article-content [type=text]:focus,
+.kenta-widget .kenta-form-control:focus,
 .kenta-widget textarea:focus,
 .kenta-widget select:focus,
 .kenta-widget .select2-selection--single:focus,
@@ -2663,6 +2850,18 @@ nav.woocommerce-pagination > .page-numbers > li:last-child {
 .kenta-widget [type=number]:focus,
 .kenta-widget [type=search]:focus,
 .kenta-widget [type=text]:focus,
+form .kenta-form-control:focus,
+form textarea:focus,
+form select:focus,
+form .select2-selection--single:focus,
+form [type=url]:focus,
+form [type=email]:focus,
+form [type=tel]:focus,
+form [type=password]:focus,
+form [type=number]:focus,
+form [type=search]:focus,
+form [type=text]:focus,
+.kenta-form .kenta-form-control:focus,
 .kenta-form textarea:focus,
 .kenta-form select:focus,
 .kenta-form .select2-selection--single:focus,
@@ -2677,9 +2876,15 @@ nav.woocommerce-pagination > .page-numbers > li:last-child {
   box-shadow: none;
   border-color: var(--kenta-form-active-color);
 }
-.woocommerce form [type=checkbox],
+.kenta-article-content textarea,
+.kenta-widget textarea,
+form textarea,
+.kenta-form textarea {
+  height: auto;
+}
 .kenta-article-content [type=checkbox],
 .kenta-widget [type=checkbox],
+form [type=checkbox],
 .kenta-form [type=checkbox] {
   border-radius: 3px;
   transition: all ease 0.25s;
@@ -2693,20 +2898,90 @@ nav.woocommerce-pagination > .page-numbers > li:last-child {
   border-left: var(--kenta-form-checkbox-border-left);
   background-color: var(--kenta-form-background-color);
 }
-.woocommerce form [type=checkbox]:focus, .woocommerce form [type=checkbox]:checked,
-.kenta-article-content [type=checkbox]:focus,
-.kenta-article-content [type=checkbox]:checked,
+.kenta-article-content [type=checkbox]:focus, .kenta-article-content [type=checkbox]:checked,
 .kenta-widget [type=checkbox]:focus,
 .kenta-widget [type=checkbox]:checked,
+form [type=checkbox]:focus,
+form [type=checkbox]:checked,
 .kenta-form [type=checkbox]:focus,
 .kenta-form [type=checkbox]:checked {
   --tw-ring-color: var(--kenta-form-active-color);
 }
-.woocommerce form [type=checkbox]:checked,
 .kenta-article-content [type=checkbox]:checked,
 .kenta-widget [type=checkbox]:checked,
+form [type=checkbox]:checked,
 .kenta-form [type=checkbox]:checked {
   background-color: var(--kenta-form-active-color);
+}
+.kenta-article-content [type=submit],
+.kenta-widget [type=submit],
+form [type=submit],
+.kenta-form [type=submit] {
+  line-height: 1;
+}
+
+.kenta-input-group {
+  position: relative;
+  display: flex;
+  width: 100%;
+}
+.kenta-input-group [type=submit]:not(:last-child), .kenta-input-group .kenta-form-control:not(:last-child), .kenta-input-group textarea:not(:last-child), .kenta-input-group select:not(:last-child), .kenta-input-group .select2-selection--single:not(:last-child), .kenta-input-group [type=url]:not(:last-child), .kenta-input-group [type=email]:not(:last-child), .kenta-input-group [type=tel]:not(:last-child), .kenta-input-group [type=password]:not(:last-child), .kenta-input-group [type=number]:not(:last-child), .kenta-input-group [type=search]:not(:last-child), .kenta-input-group [type=text]:not(:last-child) {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.kenta-input-group [type=submit]:not(:first-child), .kenta-input-group .kenta-form-control:not(:first-child), .kenta-input-group textarea:not(:first-child), .kenta-input-group select:not(:first-child), .kenta-input-group .select2-selection--single:not(:first-child), .kenta-input-group [type=url]:not(:first-child), .kenta-input-group [type=email]:not(:first-child), .kenta-input-group [type=tel]:not(:first-child), .kenta-input-group [type=password]:not(:first-child), .kenta-input-group [type=number]:not(:first-child), .kenta-input-group [type=search]:not(:first-child), .kenta-input-group [type=text]:not(:first-child) {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.kenta-full-width-submit input[type=submit] {
+  justify-content: center;
+  width: 100%;
+}
+
+.kenta-inner-label {
+  position: relative;
+}
+.kenta-inner-label label {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  max-height: var(--kenta-form-control-height, 45px);
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  opacity: 0.85;
+  transition: all ease 0.25s;
+  z-index: 1;
+}
+.kenta-inner-label:focus-within label {
+  opacity: 0;
+  visibility: hidden;
+  transform: translate3d(20px, 0, 0);
+}
+
+.kenta-not-empty-field label {
+  opacity: 0;
+  visibility: hidden;
+  transform: translate3d(20px, 0, 0);
+}
+
+.mc4wp-response {
+  text-align: center;
+}
+
+.kenta-newsletter {
+  --kenta-form-control-paddding: 0.75em 2em;
+  --kenta-form-control-radius: 9999px;
+  --kenta-form-control-height: auto;
+}
+.kenta-newsletter .kenta-inner-label label {
+  padding: 0 2em;
+}
+.kenta-newsletter [type=submit] {
+  --kenta-button-padding: 8px 36px 8px 36px !important;
+  --kenta-button-radius: 9999px !important;
 }
 
 .kenta-comments-link, .kenta-comments-area .comment-respond .comment-reply-title small, .kenta-comments-area .comment-list .reply, .kenta-comments-area .comment-list .comment-meta .comment-metadata a, .kenta-comments-area .comment-list .comment-meta .comment-author .fn .url, .kenta-comments-area .comment-list .comment-body a {
@@ -2856,31 +3131,36 @@ nav.woocommerce-pagination > .page-numbers > li:last-child {
 .kenta-comments-area .comment-form .comment-form-email,
 .kenta-comments-area .comment-form .comment-form-url {
   position: relative;
-  display: flex;
-  align-items: center;
 }
-.kenta-comments-area .comment-form .comment-form-comment label,
-.kenta-comments-area .comment-form .comment-form-author label,
-.kenta-comments-area .comment-form .comment-form-email label,
+.kenta-comments-area .comment-form .comment-form-comment label, 
+.kenta-comments-area .comment-form .comment-form-author label, 
+.kenta-comments-area .comment-form .comment-form-email label, 
 .kenta-comments-area .comment-form .comment-form-url label {
   position: absolute;
   left: 0;
   top: 0;
   height: 100%;
-  max-height: 40px;
+  max-height: var(--kenta-form-control-height, 45px);
   display: flex;
   align-items: center;
   padding: 0 12px;
-  opacity: 1;
+  opacity: 0.85;
   transition: all ease 0.25s;
+  z-index: 1;
 }
-.kenta-comments-area .comment-form .comment-form-comment:focus-within label,
-.kenta-comments-area .comment-form .comment-form-author:focus-within label,
-.kenta-comments-area .comment-form .comment-form-email:focus-within label,
+.kenta-comments-area .comment-form .comment-form-comment:focus-within label, 
+.kenta-comments-area .comment-form .comment-form-author:focus-within label, 
+.kenta-comments-area .comment-form .comment-form-email:focus-within label, 
 .kenta-comments-area .comment-form .comment-form-url:focus-within label {
   opacity: 0;
   visibility: hidden;
   transform: translate3d(20px, 0, 0);
+}
+.kenta-newsletter .kenta-comments-area .comment-form .comment-form-comment label, .kenta-newsletter 
+.kenta-comments-area .comment-form .comment-form-author label, .kenta-newsletter 
+.kenta-comments-area .comment-form .comment-form-email label, .kenta-newsletter 
+.kenta-comments-area .comment-form .comment-form-url label {
+  padding: 0 2em;
 }
 
 .kenta-heading .heading-content {
@@ -2993,6 +3273,12 @@ nav.woocommerce-pagination > .page-numbers > li:last-child {
   border-color: var(--kenta-form-active-color, var(--kenta-primary-color));
 }
 
+.kenta-widget.widget_search label {
+  display: block;
+}
+.kenta-widget.widget_search button[type=submit] {
+  height: 100%;
+}
 .kenta-widget form.search-form {
   position: relative;
 }
@@ -3000,14 +3286,6 @@ nav.woocommerce-pagination > .page-numbers > li:last-child {
   position: absolute;
   top: 0;
   right: 0;
-  padding: initial;
-  width: var(--search-button-size, var(--form-field-height, 40px));
-  min-height: var(--search-button-size, var(--form-field-height, 40px));
-  border: none;
-  box-shadow: none;
-  border-radius: var(--search-button-border-radius, 0px);
-  background: var(--search-button-background);
-  transition: background 0.12s cubic-bezier(0.455, 0.03, 0.515, 0.955);
 }
 
 .widget_calendar table tr, .widget_calendar table thead, .wp-block-calendar table tr, .wp-block-calendar table thead {
@@ -3231,6 +3509,35 @@ body:not(.elementor-page) .gallery-item {
 [data-align=full] .wp-block-cover__inner-container,  [data-align=wide] .wp-block-cover__inner-container {
     max-width: 1140px;
   }
+}
+
+.kenta-footer-row .alignfull > .wp-block-group__inner-container, 
+.kenta-header-row .alignfull > .wp-block-group__inner-container, .kenta-footer-row  .alignwide > .wp-block-group__inner-container, 
+.kenta-header-row  .alignwide > .wp-block-group__inner-container, .kenta-footer-row 
+[data-align=full] .wp-block-group__inner-container, 
+.kenta-header-row 
+[data-align=full] .wp-block-group__inner-container, .kenta-footer-row  [data-align=wide] .wp-block-group__inner-container, 
+.kenta-header-row  [data-align=wide] .wp-block-group__inner-container, .kenta-footer-row 
+.alignfull > .wp-block-cover__inner-container, 
+.kenta-header-row 
+.alignfull > .wp-block-cover__inner-container, .kenta-footer-row  .alignwide > .wp-block-cover__inner-container, 
+.kenta-header-row  .alignwide > .wp-block-cover__inner-container, .kenta-footer-row 
+[data-align=full] .wp-block-cover__inner-container, 
+.kenta-header-row 
+[data-align=full] .wp-block-cover__inner-container, .kenta-footer-row  [data-align=wide] .wp-block-cover__inner-container, 
+.kenta-header-row  [data-align=wide] .wp-block-cover__inner-container {
+  position: relative;
+}
+
+.kenta-archive-header .alignfull > .wp-block-group__inner-container, .kenta-archive-header  .alignwide > .wp-block-group__inner-container, .kenta-archive-header 
+[data-align=full] .wp-block-group__inner-container, .kenta-archive-header  [data-align=wide] .wp-block-group__inner-container, .kenta-archive-header 
+.alignfull > .wp-block-cover__inner-container, .kenta-archive-header  .alignwide > .wp-block-cover__inner-container, .kenta-archive-header 
+[data-align=full] .wp-block-cover__inner-container, .kenta-archive-header  [data-align=wide] .wp-block-cover__inner-container {
+  position: relative;
+  z-index: 1;
+}
+
+@media (min-width: 1024px) {
   .container {
     max-width: 1140px;
   }
@@ -3367,6 +3674,14 @@ body:not(.elementor-page) .gallery-item {
 .mx-auto {
   margin-left: auto;
   margin-right: auto;
+}
+.mx-2 {
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
+}
+.my-gutter {
+  margin-top: 24px;
+  margin-bottom: 24px;
 }
 .mb-gutter {
   margin-bottom: 24px;
@@ -3524,6 +3839,10 @@ body:not(.elementor-page) .gallery-item {
   font-size: 1rem;
   line-height: 1.5rem;
 }
+.text-sm {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
 .text-3xl {
   font-size: 1.875rem;
   line-height: 2.25rem;
@@ -3542,6 +3861,9 @@ body:not(.elementor-page) .gallery-item {
 }
 .leading-none {
   line-height: 1;
+}
+.leading-normal {
+  line-height: 1.5;
 }
 .text-accent {
   color: var(--kenta-accent-color);

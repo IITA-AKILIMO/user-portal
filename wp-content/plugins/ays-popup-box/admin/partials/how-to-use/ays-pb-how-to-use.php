@@ -6,44 +6,44 @@
 <div class="wrap">  
      <div class="ays-pb-heart-beat-main-heading ays-pb-heart-beat-main-heading-container">
         <h1 class="ays-popup-box-wrapper ays_heart_beat">
-            <?php echo __(esc_html(get_admin_page_title()),$this->plugin_name); ?> <i class="ays_fa ays_fa_heart animated"></i>
+            <?php echo __(esc_html(get_admin_page_title()),"ays-popup-box"); ?> <i class="ays_fa ays_fa_heart animated"></i>
         </h1>
     </div>
     <div class="ays-pb-faq-main">
         <h2>
-            <?php echo __("How to create a simple popup in 4 steps with the", $this->plugin_name ) .
-            ' <strong>'. __("Popup Box", $this->plugin_name ) .'</strong> '.
-            __("plugin.", $this->plugin_name ); ?>
+            <?php echo __("How to create a simple popup in 4 steps with the", "ays-popup-box" ) .
+            ' <strong>'. __("Popup Box", "ays-popup-box" ) .'</strong> '.
+            __("plugin.", "ays-popup-box" ); ?>
             
         </h2>
         <fieldset>
             <div class="ays-pb-ol-container">
                 <ol>
                     <li>
-                        <?php echo __( "Go to the", $this->plugin_name ) . ' <a href="'. $pb_page_url .'" target="_blank">'. __( "Popups" , $this->plugin_name ) .'</a> ' .  __( "page and click on the ", $this->plugin_name ) . ' <a href="'. $add_new_url .'" target="_blank">'. __( "Add New" , $this->plugin_name ) .'</a> ' .  __( "button", $this->plugin_name ); ?>,
+                        <?php echo __( "Go to the", "ays-popup-box" ) . ' <a href="'. $pb_page_url .'" target="_blank">'. __( "Popups" , "ays-popup-box" ) .'</a> ' .  __( "page and click on the ", "ays-popup-box" ) . ' <a href="'. $add_new_url .'" target="_blank">'. __( "Add New" , "ays-popup-box" ) .'</a> ' .  __( "button", "ays-popup-box" ); ?>,
                     </li>
                     <li>
-                        <?php echo __( "Select the popup type.", $this->plugin_name ); ?>
+                        <?php echo __( "Select the popup type.", "ays-popup-box" ); ?>
                         <ul>
-                            <li><?php echo '<strong>' . __( "Shortcode", $this->plugin_name ) .'</strong> '; ?></li>
-                            <li><?php echo '<strong>' . __( "Custom Content", $this->plugin_name ) .'</strong> '; ?></li>
-                            <li><?php echo '<strong>' . __( "Video", $this->plugin_name ) .'</strong> '; ?></li>
+                            <li><?php echo '<strong>' . __( "Shortcode", "ays-popup-box" ) .'</strong> '; ?></li>
+                            <li><?php echo '<strong>' . __( "Custom Content", "ays-popup-box" ) .'</strong> '; ?></li>
+                            <li><?php echo '<strong>' . __( "Video", "ays-popup-box" ) .'</strong> '; ?></li>
                         </ul>
                     </li>
                     <li>
-                        <?php echo __( "Choose when to show the popup with the", $this->plugin_name ) . ' <strong>'. __( "Popup trigger" , $this->plugin_name ) .'</strong> ' .  __( "option.", $this->plugin_name ); ?> 
+                        <?php echo __( "Choose when to show the popup with the", "ays-popup-box" ) . ' <strong>'. __( "Popup trigger" , "ays-popup-box" ) .'</strong> ' .  __( "option.", "ays-popup-box" ); ?> 
                         <ul>
-                            <li><?php echo '<strong>' . __( "On page load:", $this->plugin_name ) .'</strong> '.  __( "Choose to show the popup as soon as the page is loaded.", $this->plugin_name ) ; ?></li>
-                            <li><?php echo '<strong>' . __( "On click:", $this->plugin_name ) .'</strong> '.  __( "Choose to show the popup as soon as the user clicks on the assigned CSS element(s). You can assign CSS elements with the", $this->plugin_name ) . ' <strong>'. __( "CSS selector(s) for trigger click" , $this->plugin_name ) .'</strong> ' .  __( "option.", $this->plugin_name ); ?></li>
+                            <li><?php echo '<strong>' . __( "On page load:", "ays-popup-box" ) .'</strong> '.  __( "Choose to show the popup as soon as the page is loaded.", "ays-popup-box" ) ; ?></li>
+                            <li><?php echo '<strong>' . __( "On click:", "ays-popup-box" ) .'</strong> '.  __( "Choose to show the popup as soon as the user clicks on the assigned CSS element(s). You can assign CSS elements with the", "ays-popup-box" ) . ' <strong>'. __( "CSS selector(s) for trigger click" , "ays-popup-box" ) .'</strong> ' .  __( "option.", "ays-popup-box" ); ?></li>
                         </ul>
                     </li>
                     <li>
-                         <?php echo __( "In the end, click on the", $this->plugin_name ) . ' <strong>'. __( "Save Changes" , $this->plugin_name ) .'</strong> ' .  __( "button.", $this->plugin_name ); ?> 
+                         <?php echo __( "In the end, click on the", "ays-popup-box" ) . ' <strong>'. __( "Save Changes" , "ays-popup-box" ) .'</strong> ' .  __( "button.", "ays-popup-box" ); ?> 
                     </li>
                 </ol>
             </div>
             <div class="ays-pb-p-container">
-                <p><?php echo __("That's it! Your popup is ready to be displayed!" , $this->plugin_name); ?></p>
+                <p><?php echo __("That's it! Your popup is ready to be displayed!" , "ays-popup-box"); ?></p>
             </div>
         </fieldset>
     </div>  
@@ -51,7 +51,7 @@
 
     <div class="ays-pb-community-wrap">
         <div class="ays-pb-community-title">
-            <h4><?php echo __( "Community", $this->plugin_name ); ?></h4>
+            <h4><?php echo __( "Community", "ays-popup-box" ); ?></h4>
         </div>
         <div class="ays-pb-community-container">
         <div class="ays-pb-community-item">

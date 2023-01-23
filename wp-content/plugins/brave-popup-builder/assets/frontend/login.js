@@ -11,6 +11,10 @@ function brave_switch_loginForm(elementID, formType){
    if(loginFrom && formType ==='login'){ loginFrom.classList.add('brave_wpLogin__formWrap--show'); }
    if(registerFrom && formType ==='register'){ registerFrom.classList.add('brave_wpLogin__formWrap--show'); }
    if(resetFrom && formType ==='resetpass'){ resetFrom.classList.add('brave_wpLogin__formWrap--show'); }
+
+   if(window.brave_apply_google_buttons){
+      brave_apply_google_buttons(elementID);
+   }
 }
 
 function brave_close_loginError(elementID){

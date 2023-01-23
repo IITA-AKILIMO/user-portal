@@ -36,8 +36,8 @@
                 hour    = minute * 60,
                 day     = hour * 24;
 
-            var countdownEndTime ="NOV 27, 2022 23:59:59",
-            // countdownEndTime = pb.pbBannerDate,
+            var countdownEndTime ="DEC 31, 2022 23:59:59",
+            // var countdownEndTime = pb.pbBannerDate,
             countDown = new Date(countdownEndTime).getTime(),
             x = setInterval(function() {
 

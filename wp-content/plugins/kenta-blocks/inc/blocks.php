@@ -41,6 +41,7 @@ require KENTA_BLOCKS_PLUGIN_PATH . 'inc/extensions/box.php';
 require KENTA_BLOCKS_PLUGIN_PATH . 'inc/extensions/container.php';
 require KENTA_BLOCKS_PLUGIN_PATH . 'inc/extensions/overlay.php';
 require KENTA_BLOCKS_PLUGIN_PATH . 'inc/extensions/shape.php';
+require KENTA_BLOCKS_PLUGIN_PATH . 'inc/extensions/transform.php';
 
 /**
  * All blocks config
@@ -58,7 +59,10 @@ return array(
 	'kenta-blocks/heading'     => require KENTA_BLOCKS_PLUGIN_PATH . 'inc/blocks/heading.php',
 	'kenta-blocks/paragraph'   => require KENTA_BLOCKS_PLUGIN_PATH . 'inc/blocks/paragraph.php',
 	'kenta-blocks/image'       => require KENTA_BLOCKS_PLUGIN_PATH . 'inc/blocks/image.php',
+	'kenta-blocks/separator'   => require KENTA_BLOCKS_PLUGIN_PATH . 'inc/blocks/separator.php',
 	'kenta-blocks/group'       => require KENTA_BLOCKS_PLUGIN_PATH . 'inc/blocks/group.php',
 	'kenta-blocks/row'         => require KENTA_BLOCKS_PLUGIN_PATH . 'inc/blocks/row.php',
 	'kenta-blocks/stack'       => require KENTA_BLOCKS_PLUGIN_PATH . 'inc/blocks/stack.php',
+	'kenta-blocks/slide-item'  => require KENTA_BLOCKS_PLUGIN_PATH . 'inc/blocks/slide-item.php',
+	'kenta-blocks/slides'      => require KENTA_BLOCKS_PLUGIN_PATH . 'inc/blocks/slides.php',
 );

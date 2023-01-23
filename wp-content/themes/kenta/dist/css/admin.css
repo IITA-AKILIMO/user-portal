@@ -40,21 +40,26 @@
   height: 16px;
   fill: var(--kenta-button-text-initial);
 }
-.kenta-admin-page .kenta-button:focus, .kenta-admin-page .kenta-button:hover,
-.kenta-icon-button:focus,
-.kenta-icon-button:hover,
-.kenta-button:focus,
-.kenta-button:hover {
+.kenta-admin-page .kenta-button:not(:disabled):focus, .kenta-admin-page .kenta-button:not(:disabled):hover,
+.kenta-icon-button:not(:disabled):focus,
+.kenta-icon-button:not(:disabled):hover,
+.kenta-button:not(:disabled):focus,
+.kenta-button:not(:disabled):hover {
   background: var(--kenta-button-background-hover);
   color: var(--kenta-button-text-hover);
   border: 1px solid var(--kenta-button-border-hover);
 }
-.kenta-admin-page .kenta-button:focus svg, .kenta-admin-page .kenta-button:hover svg,
-.kenta-icon-button:focus svg,
-.kenta-icon-button:hover svg,
-.kenta-button:focus svg,
-.kenta-button:hover svg {
+.kenta-admin-page .kenta-button:not(:disabled):focus svg, .kenta-admin-page .kenta-button:not(:disabled):hover svg,
+.kenta-icon-button:not(:disabled):focus svg,
+.kenta-icon-button:not(:disabled):hover svg,
+.kenta-button:not(:disabled):focus svg,
+.kenta-button:not(:disabled):hover svg {
   fill: var(--kenta-button-text-hover);
+}
+.kenta-admin-page .kenta-button:disabled,
+.kenta-icon-button:disabled,
+.kenta-button:disabled {
+  opacity: 0.75;
 }
 
 .kenta-icon-button {
@@ -90,22 +95,31 @@
   padding: 0;
   display: flex;
 }
-.kenta-theme-notice .kenta-theme-notice-logo,
-.kenta-theme-notice .kcmp-upgrade-message,
-.kenta-theme-notice .kenta-theme-welcome-message {
-  padding: 24px;
+.kenta-theme-notice, .kenta-theme-notice p {
+  font-size: 16px;
 }
-.kenta-theme-notice .kenta-theme-notice-logo h1,
-.kenta-theme-notice .kcmp-upgrade-message h1,
-.kenta-theme-notice .kenta-theme-welcome-message h1 {
-  padding: 0;
+.kenta-theme-notice .text-sm {
+  font-size: 12px;
 }
-.kenta-theme-notice .kenta-theme-notice-logo p,
-.kenta-theme-notice .kcmp-upgrade-message p,
-.kenta-theme-notice .kenta-theme-welcome-message p {
-  font-size: 1rem;
+.kenta-theme-notice h1, .kenta-theme-notice h2, .kenta-theme-notice h3 {
+  font-weight: bold;
+}
+.kenta-theme-notice h2, .kenta-theme-notice h3 {
+  margin-top: 0;
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+}
+.kenta-theme-notice .kenta-heading-icon {
+  line-height: 0;
+  margin-right: 6px;
+}
+.kenta-theme-notice .kenta-heading-icon svg {
+  width: 1em;
+  height: 1em;
 }
 .kenta-theme-notice .kenta-theme-notice-logo {
+  padding: 24px;
   background-color: #f2f8ff;
 }
 .kenta-theme-notice.notice-error {
@@ -114,20 +128,66 @@
 .kenta-theme-notice.notice-error .kenta-theme-notice-logo {
   background-color: #fbf3f3;
 }
-.kenta-theme-notice .action-buttons .kenta-button {
+.kenta-theme-notice .kcmp-upgrade-message,
+.kenta-theme-notice .kenta-theme-welcome-message {
+  padding: 24px;
+  position: relative;
+  width: 100%;
+}
+.kenta-theme-notice .kenta-notice-dismiss {
+  position: absolute;
+  right: 0;
+  bottom: 24px;
+  font-size: 12px;
+}
+.kenta-theme-notice .kenta-welcome-content {
+  display: flex;
+  gap: 24px;
+  width: 100%;
+  margin-top: 24px;
+}
+.kenta-theme-notice .kenta-welcome-content .kenta-demo-screenshot {
+  max-width: 280px;
+  box-shadow: 0 0 10px 1px #d3d3d3;
+  border: 1px solid #e2e8f0;
+}
+.kenta-theme-notice .kenta-welcome-content .kenta-welcome-section {
+  display: flex;
+  flex-direction: column;
+  max-width: 480px;
+}
+.kenta-theme-notice .kenta-welcome-content .kenta-welcome-section .kenta-flex-grow {
+  flex-grow: 1;
+}
+
+.kenta-starter-sites-placeholder .loader,
+.kenta-welcome-actions .loader {
+  width: 16px;
+  height: 16px;
+  margin-right: 6px;
+  border-radius: 50%;
   display: inline-block;
-  margin-right: 12px;
+  border-top: 3px solid currentColor;
+  border-right: 3px solid transparent;
+  box-sizing: border-box;
+  -webkit-animation: rotation 1s linear infinite;
+          animation: rotation 1s linear infinite;
 }
-.kenta-theme-notice .action-buttons .kenta-button:last-of-type {
-  margin-right: 0;
+@-webkit-keyframes rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
-.kenta-theme-notice h1 {
-  font-size: 1.5rem;
-  font-weight: bold;
-}
-.kenta-theme-notice p {
-  margin-bottom: 12px;
-  line-height: 1.5;
+@keyframes rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 .kenta-admin-page {
@@ -167,13 +227,42 @@
 }
 .kenta-admin-page .page-body {
   padding: 24px;
-  display: flex;
-  flex-wrap: wrap;
   margin-top: -48px;
   margin-bottom: 48px;
   background-color: #ffffff;
   border-radius: 4px;
   box-shadow: 0 0 3px 0 #e2e8f0;
+}
+.kenta-admin-page .page-body .page-tabs-container {
+  padding: 0 12px;
+  margin-bottom: 12px;
+}
+.kenta-admin-page .page-body .page-tabs {
+  list-style: none;
+  display: flex;
+  margin: 0;
+  padding: 0;
+  border-bottom: 3px solid #f1f5f9;
+}
+.kenta-admin-page .page-body .page-tabs li {
+  font-size: 18px;
+  font-weight: 500;
+  padding: 0;
+  margin: 0 0 -3px;
+  display: inline-block;
+}
+.kenta-admin-page .page-body .page-tabs a {
+  display: inline-block;
+  text-decoration: none;
+  padding: 12px 16px;
+  border-bottom: 3px solid transparent;
+}
+.kenta-admin-page .page-body .page-tabs a.active {
+  border-color: #0258c7;
+}
+.kenta-admin-page .page-body .page-main {
+  display: flex;
+  flex-wrap: wrap;
 }
 .kenta-admin-page .page-body .page-sidebar,
 .kenta-admin-page .page-body .page-content {
@@ -183,45 +272,6 @@
 .kenta-admin-page .page-body .page-sidebar {
   padding: 12px;
 }
-.kenta-admin-page .customizer-items {
-  display: flex;
-  flex-wrap: wrap;
-}
-.kenta-admin-page .customizer-items .customizer-item-wrap {
-  width: 50%;
-  flex-shrink: 0;
-  padding: 12px;
-}
-.kenta-admin-page .customizer-items .customizer-item-wrap .customizer-item {
-  border: 1px solid #e2e8f0;
-  border-radius: 2px;
-  padding: 24px;
-  display: flex;
-  flex-direction: column;
-  text-align: center;
-  align-items: center;
-  justify-content: center;
-  font-weight: 500;
-  text-decoration: none;
-  font-size: 15px;
-  height: 100%;
-}
-.kenta-admin-page .customizer-items .customizer-item-wrap .customizer-item:hover {
-  border-color: #0258c7;
-}
-.kenta-admin-page .customizer-items .customizer-item-wrap .customizer-item:hover svg {
-  fill: #0258c7;
-}
-.kenta-admin-page .customizer-items .customizer-item-wrap .customizer-item > * {
-  margin-bottom: 24px;
-}
-.kenta-admin-page .customizer-items .customizer-item-wrap .customizer-item > *:last-child {
-  margin-bottom: 0;
-}
-.kenta-admin-page .customizer-items .customizer-item-wrap .customizer-item .customizer-item-icon svg {
-  width: 36px;
-  height: 36px;
-}
 .kenta-admin-page .page-widgets {
   background: #f8fafc;
   border: 1px solid #e2e8f0;
@@ -229,6 +279,9 @@
 .kenta-admin-page .page-widgets .page-widget {
   padding: 24px;
   border-bottom: 1px solid #e2e8f0;
+}
+.kenta-admin-page .page-widgets .page-widget, .kenta-admin-page .page-widgets .page-widget p {
+  font-size: 15px;
 }
 .kenta-admin-page .page-widgets .page-widget:last-child {
   border-bottom: none;
@@ -280,7 +333,20 @@
 }
 .kenta-admin-page .page-footer {
   background-color: #f8fafc;
-  border-top: 1px solid #f1f5f9;
+  padding-bottom: 24px;
+}
+.kenta-admin-page .page-footer .container {
+  padding: 24px;
+  margin-bottom: 48px;
+  background: #ffffff;
+  box-shadow: 0 0 3px 0 #e2e8f0;
+  text-align: center;
+}
+.kenta-admin-page .page-footer .container p {
+  max-width: 1024px;
+  margin: 0 auto 24px;
+  font-size: 16px;
+  font-weight: 500;
 }
 .kenta-admin-page .upgrade-tips {
   padding: 48px 24px;
@@ -320,7 +386,58 @@
   .kenta-admin-page .container {
     max-width: 1280px;
   }
+}
+
+.kenta-admin-page .customizer-items {
+  display: flex;
+  flex-wrap: wrap;
+}
+.kenta-admin-page .customizer-items .customizer-item-wrap {
+  width: 50%;
+  flex-shrink: 0;
+  padding: 12px;
+}
+.kenta-admin-page .customizer-items .customizer-item-wrap .customizer-item {
+  border: 1px solid #e2e8f0;
+  border-radius: 2px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+  font-weight: 500;
+  text-decoration: none;
+  font-size: 15px;
+  height: 100%;
+}
+.kenta-admin-page .customizer-items .customizer-item-wrap .customizer-item:hover {
+  border-color: #0258c7;
+}
+.kenta-admin-page .customizer-items .customizer-item-wrap .customizer-item:hover svg {
+  fill: #0258c7;
+}
+.kenta-admin-page .customizer-items .customizer-item-wrap .customizer-item > * {
+  margin-bottom: 24px;
+}
+.kenta-admin-page .customizer-items .customizer-item-wrap .customizer-item > *:last-child {
+  margin-bottom: 0;
+}
+.kenta-admin-page .customizer-items .customizer-item-wrap .customizer-item .customizer-item-icon svg {
+  width: 36px;
+  height: 36px;
+}
+@media screen and (min-width: 1366px) {
   .kenta-admin-page .customizer-items .customizer-item-wrap {
     width: 25%;
   }
+}
+
+.kenta-admin-page .kenta-starter-sites-placeholder {
+  max-width: 720px;
+  margin: 0 auto;
+  text-align: center;
+}
+.kenta-admin-page .kenta-starter-sites-placeholder h3, .kenta-admin-page .kenta-starter-sites-placeholder p {
+  font-size: 24px;
 }

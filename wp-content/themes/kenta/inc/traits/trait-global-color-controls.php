@@ -33,6 +33,8 @@ if ( ! trait_exists( 'Kenta_Global_Color_Controls' ) ) {
 			] );
 
 			return [
+				kenta_docs_control( __( '%sRead Documentation%s', 'kenta' ), 'https://kentatheme.com/docs/kenta-theme/header-footer-builder/override-global-colors/' ),
+
 				( new ColorPicker( $id . 'primary_color' ) )
 					->setLabel( __( 'Primary Color', 'kenta' ) )
 					->enableAlpha()

@@ -39,11 +39,10 @@ if ( ! class_exists( 'Kenta_Content_Section' ) ) {
 				( new Section( 'kenta_content_buttons' ) )
 					->setLabel( __( 'Buttons', 'kenta' ) )
 					->setControls( $this->getButtonStyleControls( 'kenta_content_buttons_', [
+						'min-height'           => '42px',
 						'button-selector'      => [
 							'.kenta-article-content .wp-block-button',
-							'.kenta-article-content button',
-							'.kenta-article-content [type="submit"]',
-							'.kenta-comments-area [type="submit"]'
+							'.kenta-article-content button'
 						],
 						'button-css-selective' => 'kenta-global-selective-css',
 						'preset'               => 'solid',
@@ -161,6 +160,9 @@ if ( ! class_exists( 'Kenta_Content_Section' ) ) {
 			] );
 
 			$controls = [
+				kenta_docs_control(
+					__( '%sRead Documentation%s', 'kenta' ), 'https://kentatheme.com/docs/kenta-theme/general-theme-options/typography/'
+				),
 				( new Typography( 'kenta_site_global_typography' ) )
 					->setLabel( __( 'Global Typography', 'kenta' ) )
 					->setDescription( __( 'This option will affects the entire site', 'kenta' ) )
@@ -169,7 +171,7 @@ if ( ! class_exists( 'Kenta_Content_Section' ) ) {
 						'family'     => 'sans',
 						'fontSize'   => '16px',
 						'variant'    => '400',
-						'lineHeight' => '1',
+						'lineHeight' => '1.5',
 					] )
 				,
 				( new Separator() ),
@@ -194,6 +196,8 @@ if ( ! class_exists( 'Kenta_Content_Section' ) ) {
 		 * @return array
 		 */
 		protected function getFormControls() {
+			$selectors = '.kenta-form, form';
+
 			return [
 				( new Radio( 'kenta_content_form_style' ) )
 					->setLabel( __( 'Style', 'kenta' ) )
@@ -206,18 +210,18 @@ if ( ! class_exists( 'Kenta_Content_Section' ) ) {
 				,
 				( new Typography( 'kenta_content_form_typography' ) )
 					->setLabel( __( 'Typography', 'kenta' ) )
-					->asyncCss( '.woocommerce form, .kenta-form', AsyncCss::typography() )
+					->asyncCss( $selectors, AsyncCss::typography() )
 					->setDefaultValue( [
 						'family'     => 'inherit',
 						'fontSize'   => '0.85rem',
 						'variant'    => '400',
-						'lineHeight' => '1.5em'
+						'lineHeight' => '2'
 					] )
 				,
 				( new ColorPicker( 'kenta_content_form_color' ) )
 					->setLabel( __( 'Controls Color', 'kenta' ) )
 					->enableAlpha()
-					->asyncColors( '.woocommerce form, .kenta-form, .kenta-article-content', [
+					->asyncColors( $selectors, [
 						'background' => '--kenta-form-background-color',
 						'border'     => '--kenta-form-border-color',
 						'active'     => '--kenta-form-active-color',

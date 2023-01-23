@@ -6,6 +6,8 @@
  */
 
 use LottaFramework\Customizer\Controls\Background;
+use LottaFramework\Customizer\Controls\Border;
+use LottaFramework\Customizer\Controls\BoxShadow;
 use LottaFramework\Customizer\Controls\ColorPicker;
 use LottaFramework\Customizer\Controls\Condition;
 use LottaFramework\Customizer\Controls\Filters;
@@ -43,9 +45,13 @@ if ( ! trait_exists( 'Kenta_Article_Controls' ) ) {
 			$defaults = wp_parse_args( $defaults, [
 				'style'  => 'boxed',
 				'layout' => 'normal',
+				'preset' => 'ghost'
 			] );
 
-			return [
+			$article_type = $type === 'pages' ? 'page' : 'post';
+
+			$controls = [
+				kenta_docs_control( __( '%sLearn how it works%s', 'kenta' ), 'https://kentatheme.com/docs/kenta-theme/article-content-options/article-container/' ),
 				( new Radio( 'kenta_' . $type . '_container_style' ) )
 					->setLabel( __( 'Container Style', 'kenta' ) )
 					->setDefaultValue( $defaults['style'] )
@@ -75,6 +81,23 @@ if ( ! trait_exists( 'Kenta_Article_Controls' ) ) {
 						],
 					] )
 				,
+				( new Condition() )
+					->setCondition( [ 'kenta_' . $type . '_container_layout' => 'narrow' ] )
+					->setControls( [
+						( new Slider( 'kenta_' . $type . '_container_max_width' ) )
+							->setLabel( __( 'Content Max Width', 'kenta' ) )
+							->asyncCss( '.kenta-site-wrap', [
+								'--kenta-max-w-content' => 'value'
+							] )
+							->setUnits( [
+								[ 'unit' => 'px', 'min' => 500, 'max' => 1400 ],
+								[ 'unit' => '%', 'min' => 50, 'max' => 100 ],
+								[ 'unit' => 'ch', 'min' => 50, 'max' => 150 ],
+							] )
+							->setDefaultValue( '65ch' )
+					] )
+				,
+				( new Separator() ),
 				( new Background( 'kenta_' . $type . '_site_background' ) )
 					->setLabel( __( 'Site Background', 'kenta' ) )
 					->asyncCss( ".kenta-{$type} .kenta-site-wrap", AsyncCss::background() )
@@ -83,7 +106,17 @@ if ( ! trait_exists( 'Kenta_Article_Controls' ) ) {
 						'type'  => 'color',
 						'color' => Css::INITIAL_VALUE,
 					] )
+				,
+				( new Separator() ),
+				( new Select( 'kenta_' . $article_type . '_content_style_preset' ) )
+					->setLabel( __( 'Container Style Preset', 'kenta' ) )
+					->setDefaultValue( $defaults['preset'] )
+					->bindSelectiveRefresh( 'kenta-global-selective-css' )
+					->setChoices( kenta_card_style_preset_options() )
+				,
 			];
+
+			return apply_filters( "kenta_{$article_type}_container_controls", $controls, $article_type, $defaults );
 		}
 
 		/**
@@ -103,6 +136,7 @@ if ( ! trait_exists( 'Kenta_Article_Controls' ) ) {
 			] );
 
 			return [
+				kenta_docs_control( __( '%sLearn how it works%s', 'kenta' ), 'https://kentatheme.com/docs/kenta-theme/article-content-options/article-header/' ),
 				( new Layers( 'kenta_' . $type . '_header_elements' ) )
 					->setLabel( __( 'Header Elements', 'kenta' ) )
 					->selectiveRefresh( ...$defaults['selective-refresh'] )
@@ -179,6 +213,7 @@ if ( ! trait_exists( 'Kenta_Article_Controls' ) ) {
 			] );
 
 			return [
+				kenta_docs_control( __( '%sLearn how it works%s', 'kenta' ), 'https://kentatheme.com/docs/kenta-theme/article-content-options/article-header/' ),
 				( new ImageUploader( 'kenta_' . $type . '_featured_image_fallback' ) )
 					->setLabel( __( 'Image Fallback', 'kenta' ) )
 					->setDescription( __( 'If the current post does not have a featured image, then this image will be displayed.', 'kenta' ) )

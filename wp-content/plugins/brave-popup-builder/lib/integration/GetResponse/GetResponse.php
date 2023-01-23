@@ -77,7 +77,7 @@ if ( ! class_exists( 'BravePop_GetResponse' ) ) {
          if(count($customFields) > 0){
             $fieldValues = array();
             foreach ($customFields as $key => $value) {
-               $fieldValues[] = array('customFieldId'=> $key, 'value' => [$value]);
+               $fieldValues[] = array('customFieldId'=> $key, 'value' => [(!empty($value) && is_array($value) ?  implode(',', $value) : $value)]);
             }
             $contact['customFieldValues'] = $fieldValues;
          }

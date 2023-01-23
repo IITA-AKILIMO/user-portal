@@ -51,6 +51,7 @@ if ( ! class_exists( 'BravePop_Webhook' ) ) {
       
          $args = array(
             'method' => 'POST',
+            'timeout' => 10,
             'headers' => ($hooktype === 'integromat' || $hooktype === 'integrately'  || ($hooktype === 'custom' && $contentType === 'application/json' )) ? array(  'content-type' => 'application/json') : array(),
             'body' => json_encode($finalData),
             'data_format' => 'body',

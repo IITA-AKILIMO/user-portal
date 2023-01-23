@@ -1,7 +1,7 @@
 (() => {
     "use strict";
     var __webpack_modules__ = {
-        54: (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+        58: (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
             __webpack_require__.r(__webpack_exports__);
             __webpack_require__.d(__webpack_exports__, {
                 default: () => __WEBPACK_DEFAULT_EXPORT__
@@ -23,6 +23,39 @@
                 }
             };
             const __WEBPACK_DEFAULT_EXPORT__ = NoticeDismiss;
+        },
+        59: (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+            __webpack_require__.r(__webpack_exports__);
+            __webpack_require__.d(__webpack_exports__, {
+                default: () => __WEBPACK_DEFAULT_EXPORT__
+            });
+            var StarterSites = {
+                init: function init($) {
+                    $(".kenta-install-cmp-action").click((function(ev) {
+                        if (!window.KentaAdmin) {
+                            return;
+                        }
+                        ev.preventDefault();
+                        var $btn = $(this);
+                        var text = $btn.html();
+                        $(".kenta-install-cmp-action").attr("disabled", "disabled");
+                        $btn.html('<span class="loader"></span><span>Processing</span>');
+                        $.ajax({
+                            url: window.KentaAdmin.install_cmp_url,
+                            complete: function complete() {
+                                var redirect = $btn.attr("data-redirect");
+                                if (redirect) {
+                                    window.location.href = redirect;
+                                } else {
+                                    $btn.html(text);
+                                    $(".kenta-install-cmp-action").removeAttr("disabled");
+                                }
+                            }
+                        });
+                    }));
+                }
+            };
+            const __WEBPACK_DEFAULT_EXPORT__ = StarterSites;
         }
     };
     var __webpack_module_cache__ = {};
@@ -67,9 +100,11 @@
     var __webpack_exports__ = {};
     (() => {
         __webpack_require__.r(__webpack_exports__);
-        var _admin_dismiss_notices__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(54);
+        var _admin_dismiss_notices__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(58);
+        var _admin_starter_sites__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(59);
         jQuery((function($) {
             _admin_dismiss_notices__WEBPACK_IMPORTED_MODULE_0__["default"].init($);
+            _admin_starter_sites__WEBPACK_IMPORTED_MODULE_1__["default"].init($);
         }));
     })();
 })();

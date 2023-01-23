@@ -23,12 +23,24 @@ class Demos {
 	 */
 	public $frontend_error_messages = [];
 
+	/**
+	 * Active demo information
+	 *
+	 * @var null
+	 */
+	protected $active = null;
+
+	/**
+	 * Constructor
+	 */
 	public function __construct() {
 		$this->include_required_files();
 
 		// Update widget and customizer demo import settings data.
 		add_action( 'kcmp/template_imported', array( $this, 'update_nav_menu_items' ) );
 		add_filter( 'kcmp/customizer_import_settings', array( $this, 'update_customizer_data' ), 10, 3 );
+		// Update content links
+//		add_action( 'kcmp/content_imported', array( $this, 'update_content_links' ), 10, 1 );
 	}
 
 	/**
@@ -159,7 +171,12 @@ class Demos {
 		$template   = kcmp_current_template();
 		$downloader = new Downloader();
 
-		do_action( 'kcmp/template_before_import' );
+		$this->active = array(
+			'slug' => $slug,
+			'data' => $demo
+		);
+
+		do_action( 'kcmp/template_before_import', $slug, $types );
 
 		$this->set_demo_import_start_time();
 
@@ -191,7 +208,9 @@ class Demos {
 			do_action( 'kcmp/template_after_import_' . $type );
 		}
 
-		do_action( 'kcmp/template_imported' );
+		do_action( 'kcmp/template_imported', $slug, $types );
+
+		$this->active = null;
 
 		return $this->frontend_error_messages;
 	}
@@ -435,6 +454,62 @@ class Demos {
 		}
 
 		return $settings;
+	}
+
+	/**
+	 * Update content links
+	 *
+	 * @param $postdata
+	 * @param $post
+	 */
+	public function update_content_links( $data ) {
+		if ( ! $this->active ) {
+			return;
+		}
+
+		$demo_site = KCMP_DEMO_SITE_URL . $this->active['slug'];
+
+		foreach ( $data['processed_posts'] as $post_id ) {
+			$post = get_post( $post_id );
+			if ( ! $post ) {
+				continue;
+			}
+
+			$content = $post->post_content;
+
+			preg_match_all( '#\bhttps?://[^,\s()<>]+(?:\([\w\d]+\)|([^,[:punct:]\s]|/))#', $content, $match );
+
+			$urls = array_unique( $match[0] );
+
+			if ( empty( $urls ) ) {
+				continue;
+			}
+
+			$map_urls = array();
+
+			// find inner pages url
+			foreach ( $urls as $url ) {
+				if ( 0 === strpos( $url, $demo_site ) ) {
+					$page = get_page_by_path( str_replace( $demo_site, '', $url ) );
+					if ( $page ) {
+						$map_urls[ $url ] = get_page_link( $page );
+					}
+				}
+			}
+
+			// replace demo site url
+			foreach ( $map_urls as $old_url => $new_url ) {
+				$content = str_replace( $old_url, $new_url, $content );
+				$old_url = str_replace( '/', '/\\', $old_url );
+				$new_url = str_replace( '/', '/\\', $new_url );
+				$content = str_replace( $old_url, $new_url, $content );
+			}
+
+			wp_update_post( array(
+				'ID'           => $post->ID,
+				'post_content' => $content
+			) );
+		}
 	}
 
 	/**

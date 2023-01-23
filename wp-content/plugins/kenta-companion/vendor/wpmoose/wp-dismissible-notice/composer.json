@@ -1,0 +1,13 @@
+{
+  "name": "wpmoose/wp-dismissible-notice",
+  "license": "GPL-2.0-or-later",
+  "description": "Dismissible notice library for WordPress development",
+  "autoload": {
+    "psr-4": {
+      "Wpmoose\\WpDismissibleNotice\\": "src/"
+    }
+  },
+  "authors": [
+  ],
+  "require": {}
+}

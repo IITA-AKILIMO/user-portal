@@ -342,6 +342,7 @@ if ( ! class_exists( 'BravePop_Popup' ) ) {
                   forceStep: <?php print_r(json_encode($this->forceStep)); ?>,
                   hasDesktopEmbed: <?php print_r(json_encode($this->hasDesktopEmbed)); ?>,
                   hasMobileEmbed: <?php print_r(json_encode($this->hasMobileEmbed)); ?>,
+                  hasLoginElement: <?php print_r(json_encode($this->hasLoginElement)); ?>,
                   schedule:<?php $popup_schedule = get_post_meta( $this->popupID, 'popup_schedule', true ); print_r($popup_schedule ? $popup_schedule : '{}');?>,
                   parentID:<?php print_r($popup_parentID ? $popup_parentID : 'false');?>,
                   variants: <?php print_r(json_encode($allVariants)); ?>,
@@ -467,7 +468,7 @@ if ( ! class_exists( 'BravePop_Popup' ) ) {
          if(isset($stepSettings->overlay) && $stepSettings->overlay === false){}else{ $classes[] = 'has_overlay'; }
          if(isset($stepSettings->overlayClose) && $stepSettings->overlayClose === true){ $classes[] = 'has_overlay_close'; }
          if(isset($stepSettings->autoClose) && $stepSettings->autoClose === true){ $classes[] = 'has_autoClose'; }
-         if((isset($stepSettings->scrollbar) && $stepSettings->scrollbar === true)) {  $classes[] = 'brave_popup_show_scrollbar';  }
+         if((isset($stepSettings->scrollbar) && $stepSettings->scrollbar === true) && $layout !== 'float') {  $classes[] = 'brave_popup_show_scrollbar';  }
          
          //return json_encode($stepSettings);
          return implode(" ",$classes);

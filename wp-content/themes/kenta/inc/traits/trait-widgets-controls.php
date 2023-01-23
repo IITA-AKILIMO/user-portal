@@ -33,6 +33,7 @@ if ( ! trait_exists( 'Kenta_Widgets_Controls' ) ) {
 			$defaults = wp_parse_args( $defaults, [
 				'css-selective-refresh' => '',
 				'async-selector'        => '',
+				'scroll-reveal'         => 'yes',
 				'customize-location'    => 'sidebar-widgets-' . $this->getSlug(),
 				'sidebar-style'         => 'style-1',
 				'widgets-style'         => 'plain',
@@ -151,6 +152,10 @@ if ( ! trait_exists( 'Kenta_Widgets_Controls' ) ) {
 					->setMax( 100 )
 					->setDefaultValue( $defaults['widgets-spacing'] )
 					->setDefaultUnit( 'px' )
+				,
+				( new Toggle( $this->getSlug( 'scroll-reveal' ) ) )
+					->setLabel( __( 'Enable Scroll Reveal', 'kenta' ) )
+					->setDefaultValue( $defaults['scroll-reveal'] )
 				,
 			];
 

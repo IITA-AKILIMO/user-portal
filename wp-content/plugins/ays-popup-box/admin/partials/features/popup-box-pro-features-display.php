@@ -7,11 +7,11 @@
 <div class="wrap">
     <div class="ays-pb-heading-box">
         <div class="ays-pb-wordpress-user-manual-box">
-                <a href="https://ays-pro.com/wordpress-popup-box-plugin-user-manual" target="_blank"><?php echo __("View Documentation", $this->plugin_name); ?></a>
+                <a href="https://ays-pro.com/wordpress-popup-box-plugin-user-manual" target="_blank"><?php echo __("View Documentation", "ays-popup-box"); ?></a>
         </div>
     </div>
     <h1 class="wp-heading-inline">
-		<?php echo __( esc_html( get_admin_page_title() ), $this->plugin_name ); ?>
+		<?php echo __( esc_html( get_admin_page_title() ), "ays-popup-box" ); ?>
     </h1>
 
     <div class="ays-pb-features-wrap">
@@ -22,19 +22,19 @@
                     <th class="tl tl2" style="width: 350px;"></th>
                     <th class="product" style="background:#69C7F1; border-top-left-radius: 5px; border-left:0px;">
                             <span style="display: block">
-                                <?php echo __( 'Personal', $this->plugin_name ); ?></span>
+                                <?php echo __( 'Personal', "ays-popup-box" ); ?></span>
                         <img src="<?php echo AYS_PB_ADMIN_URL . '/images/avatars/personal_avatar.png'; ?>"
                              alt="Free" title="Free" width="100"/>
                     </th>
                     <th class="product" style="background:#69C7F1;">
                             <span style="display: block">
-                                <?php echo __( 'Business', $this->plugin_name ); ?></span>
+                                <?php echo __( 'Business', "ays-popup-box" ); ?></span>
                         <img src="<?php echo AYS_PB_ADMIN_URL . '/images/avatars/business_avatar.png'; ?>"
                              alt="Business" title="Business" width="100"/>
                     </th>
                     <th class="product" style="border-top-right-radius: 5px; border-right:0px; background:#69C7F1;">
                             <span style="display: block">
-                                <?php echo __( 'Developer', $this->plugin_name ); ?></span>
+                                <?php echo __( 'Developer', "ays-popup-box" ); ?></span>
                         <img src="<?php echo AYS_PB_ADMIN_URL . '/images/avatars/pro_avatar.png'; ?>"
                              alt="Developer"
                              title="Developer" width="100"/>
@@ -44,19 +44,19 @@
                     <th></th>
                     <th class="price-info">
                         <div class="price-now"><span>
-                                    <?php echo __( 'Free', $this->plugin_name ); ?></span></div>
+                                    <?php echo __( 'Free', "ays-popup-box" ); ?></span></div>
                     </th>
                     <th class="price-info">
-                        <div class="price-now"><span style="text-decoration: line-through; color: red;">$39</span>
-                        <div class="price-now"><span>$31</span>
-                        <!-- <div class="price-now"><span>$39</span></div> --> 
-                        <div class="price-now"><span style="color: red; font-size: 12px;">Until November 27</span>
+                        <!-- <div class="price-now"><span style="text-decoration: line-through; color: red;">$49</span> -->
+                        <!-- <div class="price-now"><span>$39</span> -->
+                        <div class="price-now"><span>$49</span></div> 
+                        <!-- <div class="price-now"><span style="color: red; font-size: 12px;">Until December 31</span> -->
                     </th>
                     <th class="price-info">
-                        <div class="price-now"><span style="text-decoration: line-through; color: red;">$99</span>
-                        <!-- <div class="price-now"><span>$99</span> -->
-                        <div class="price-now"><span>$79</span></div>
-                        <div class="price-now"><span style="color: red; font-size: 12px;">Until November 27</span>                                     
+                        <!-- <div class="price-now"><span style="text-decoration: line-through; color: red;">$129</span> -->
+                        <div class="price-now"><span>$129</span>
+                        <!-- <div class="price-now"><span>$79</span></div> -->
+                        <!-- <div class="price-now"><span style="color: red; font-size: 12px;">Until December 31</span>                                      -->
                     </th>
                 </tr>
                 </thead>
@@ -64,86 +64,72 @@
                 <tr>
                     <td></td>
                     <td colspan="4">
-						<?php echo __( 'Support for', $this->plugin_name ); ?>
+						<?php echo __( 'Support for', "ays-popup-box" ); ?>
                     </td>
                 </tr>
                 <tr class="compare-row">
                     <td>
-						<?php echo __( 'Support for', $this->plugin_name ); ?>
+						<?php echo __( 'Support for', "ays-popup-box" ); ?>
                     </td>
                     <td>
-						<?php echo __( '1 site', $this->plugin_name ); ?>
+						<?php echo __( '1 site', "ays-popup-box" ); ?>
                     </td>
                     <td>
-						<?php echo __( '5 sites', $this->plugin_name ); ?>
+						<?php echo __( '5 sites', "ays-popup-box" ); ?>
                     </td>
                     <td>
-						<?php echo __( 'Unlimited sites', $this->plugin_name ); ?>
+						<?php echo __( 'Unlimited sites', "ays-popup-box" ); ?>
                     </td>
                 </tr>
                 <tr>
                     <td> </td>
                     <td colspan="3">
-		                <?php echo __( 'Upgrade for', $this->plugin_name ); ?>
+		                <?php echo __( 'Upgrade for', "ays-popup-box" ); ?>
                     </td>
                 </tr>
                 <tr class="compare-row">
                     <td>
-		                <?php echo __( 'Upgrade for', $this->plugin_name ); ?>
+		                <?php echo __( 'Upgrade for', "ays-popup-box" ); ?>
                     </td>
                     <td>
-		                <?php echo __( '1 months', $this->plugin_name ); ?>
+		                <?php echo __( '1 months', "ays-popup-box" ); ?>
                     </td>
                     <td>
-		                <?php echo __( '12 months', $this->plugin_name ); ?>
+		                <?php echo __( '12 months', "ays-popup-box" ); ?>
                     </td>
                     <td>
-		                <?php echo __( 'Lifetime', $this->plugin_name ); ?>
+		                <?php echo __( 'Lifetime', "ays-popup-box" ); ?>
                     </td>
                 </tr>
                 <tr>
                     <td></td>
                     <td colspan="4">
-		                <?php echo __( 'Support for', $this->plugin_name ); ?>
+		                <?php echo __( 'Support for', "ays-popup-box" ); ?>
                     </td>
                 </tr>
                 <tr class="compare-row">
                     <td>
-		                <?php echo __( 'Support for', $this->plugin_name ); ?>
+		                <?php echo __( 'Support for', "ays-popup-box" ); ?>
                     </td>
                     <td>
-		                <?php echo __( '1 months', $this->plugin_name ); ?>
+		                <?php echo __( '1 months', "ays-popup-box" ); ?>
                     </td>
                     <td>
-		                <?php echo __( '12 months', $this->plugin_name ); ?>
+		                <?php echo __( '12 months', "ays-popup-box" ); ?>
                     </td>
                     <td>
-		                <?php echo __( 'Lifetime', $this->plugin_name ); ?>
+		                <?php echo __( 'Lifetime', "ays-popup-box" ); ?>
                     </td>
                 </tr>
                 <tr>
                     <td> </td>
                     <td colspan="3">
-						<?php echo __( 'Usage for lifetime', $this->plugin_name ); ?>
+						<?php echo __( 'Usage for lifetime', "ays-popup-box" ); ?>
                     </td>
                 </tr>
                 <tr>
                     <td>
-						<?php echo __( 'Usage for lifetimes', $this->plugin_name ); ?>
-                    </td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
-                </tr>
-                <tr>
-                    <td> </td>
-                    <td colspan="3">
-						<?php echo __( 'Session time option', $this->plugin_name ); ?>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-						<?php echo __( 'Session time option', $this->plugin_name ); ?>
+						<?php echo __( 'Usage for lifetimes', "ays-popup-box" ); ?>
                     </td>
                     <td><i class="ays_fa ays_fa-check"></i></td>
                     <td><i class="ays_fa ays_fa-check"></i></td>
@@ -152,12 +138,26 @@
                 <tr>
                     <td> </td>
                     <td colspan="3">
-		                <?php echo __( 'Responsive design', $this->plugin_name ); ?>
+						<?php echo __( 'Session time option', "ays-popup-box" ); ?>
                     </td>
                 </tr>
                 <tr>
                     <td>
-		                <?php echo __( 'Responsive design', $this->plugin_name ); ?>
+						<?php echo __( 'Session time option', "ays-popup-box" ); ?>
+                    </td>
+                    <td><i class="ays_fa ays_fa-check"></i></td>
+                    <td><i class="ays_fa ays_fa-check"></i></td>
+                    <td><i class="ays_fa ays_fa-check"></i></td>
+                </tr>
+                <tr>
+                    <td> </td>
+                    <td colspan="3">
+		                <?php echo __( 'Responsive design', "ays-popup-box" ); ?>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+		                <?php echo __( 'Responsive design', "ays-popup-box" ); ?>
                     </td>
                     <td><i class="ays_fa ays_fa-check"></i></td>
                     <td><i class="ays_fa ays_fa-check"></i></td>
@@ -166,12 +166,12 @@
                 <tr>
                     <td> </td>
                     <td colspan="3">
-						<?php echo __( 'Scroll from top', $this->plugin_name ); ?>
+						<?php echo __( 'Scroll from top', "ays-popup-box" ); ?>
                     </td>
                 </tr>
                 <tr class="compare-row">
                     <td>
-						<?php echo __( 'Scroll from top', $this->plugin_name ); ?>
+						<?php echo __( 'Scroll from top', "ays-popup-box" ); ?>
                     </td>
                     <td><span>–</span></td>
                     <td><i class="ays_fa ays_fa-check"></i></td>
@@ -180,12 +180,12 @@
                 <tr>
                     <td> </td>
                     <td colspan="3">
-		                <?php echo __( 'Styles', $this->plugin_name ); ?>
+		                <?php echo __( 'Styles', "ays-popup-box" ); ?>
                     </td>
                 </tr>
                 <tr class="compare-row">
                     <td>
-		                <?php echo __( 'Styles', $this->plugin_name ); ?>
+		                <?php echo __( 'Styles', "ays-popup-box" ); ?>
                     </td>
                     <td><span>–</span></td>
                     <td><i class="ays_fa ays_fa-check"></i></td>
@@ -194,12 +194,12 @@
                 <tr>
                     <td></td>
                     <td colspan="4">
-						<?php echo __( 'Display on pages', $this->plugin_name ); ?>
+						<?php echo __( 'Display on pages', "ays-popup-box" ); ?>
                     </td>
                 </tr>
                 <tr class="compare-row">
                     <td>
-						<?php echo __( 'Display on pages', $this->plugin_name ); ?>
+						<?php echo __( 'Display on pages', "ays-popup-box" ); ?>
                     </td>
                     <td><span>–</span></td>
                     <td><i class="ays_fa ays_fa-check"></i></td>
@@ -208,12 +208,12 @@
                 <tr>
                     <td></td>
                     <td colspan="4">
-						<?php echo __( 'Delay', $this->plugin_name ); ?>
+						<?php echo __( 'Delay', "ays-popup-box" ); ?>
                     </td>
                 </tr>
                 <tr class="compare-row">
                     <td>
-						<?php echo __( 'Delay', $this->plugin_name ); ?>
+						<?php echo __( 'Delay', "ays-popup-box" ); ?>
                     </td>
                     <td><span>–</span></td>
                     <td><i class="ays_fa ays_fa-check"></i></td>
@@ -222,12 +222,12 @@
                 <tr>
                     <td></td>
                     <td colspan="4">
-						<?php echo __( 'Open with click', $this->plugin_name ); ?>
+						<?php echo __( 'Open with click', "ays-popup-box" ); ?>
                     </td>
                 </tr>
                 <tr class="compare-row">
                     <td>
-						<?php echo __( 'Open with click', $this->plugin_name ); ?>
+						<?php echo __( 'Open with click', "ays-popup-box" ); ?>
                     </td>
                     <td><span>–</span></td>
                     <td><i class="ays_fa ays_fa-check"></i></td>
@@ -236,12 +236,12 @@
                 <tr>
                     <td></td>
                     <td colspan="4">
-						<?php echo __( 'Custom content', $this->plugin_name ); ?>
+						<?php echo __( 'Custom content', "ays-popup-box" ); ?>
                     </td>
                 </tr>
                 <tr class="compare-row">
                     <td>
-						<?php echo __( 'Custom content', $this->plugin_name ); ?>
+						<?php echo __( 'Custom content', "ays-popup-box" ); ?>
                     </td>
                     <td><span>–</span></td>
                     <td><i class="ays_fa ays_fa-check"></i></td>
@@ -250,12 +250,12 @@
                 <tr>
                     <td></td>
                     <td colspan="4">
-		                <?php echo __( 'Popup box position', $this->plugin_name ); ?>
+		                <?php echo __( 'Popup box position', "ays-popup-box" ); ?>
                     </td>
                 </tr>
                 <tr class="compare-row">
                     <td>
-		                <?php echo __( 'Popup box position', $this->plugin_name ); ?>
+		                <?php echo __( 'Popup box position', "ays-popup-box" ); ?>
                     </td>
                     <td><span>–</span></td>
                     <td><i class="ays_fa ays_fa-check"></i></td>
@@ -264,12 +264,12 @@
                 <tr>
                     <td></td>
                     <td colspan="4">
-                        <?php echo __( 'Multiple scheduling', $this->plugin_name ); ?>
+                        <?php echo __( 'Multiple scheduling', "ays-popup-box" ); ?>
                     </td>
                 </tr>
                 <tr class="compare-row">
                     <td>
-                        <?php echo __( 'Multiple scheduling', $this->plugin_name ); ?>
+                        <?php echo __( 'Multiple scheduling', "ays-popup-box" ); ?>
                     </td>
                     <td><span>–</span></td>
                     <td><i class="ays_fa ays_fa-check"></i></td>
@@ -278,181 +278,12 @@
                 <tr>
                     <td></td>
                     <td colspan="4">
-                        <?php echo __( 'PopupBox Reports', $this->plugin_name ); ?>
+                        <?php echo __( 'PopupBox Reports', "ays-popup-box" ); ?>
                     </td>
                 </tr>
                 <tr class="compare-row">
                     <td>
-                        <?php echo __( 'PopupBox Reports', $this->plugin_name ); ?>
-                    </td>
-                    <td><span>–</span></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
-                </tr>
-
-                <tr>
-                    <td></td>
-                    <td colspan="4">
-                        <?php echo __( 'Enable for selected user OS', $this->plugin_name ); ?>
-                    </td>
-                </tr>
-                <tr class="compare-row">
-                    <td>
-                        <?php echo __( 'Enable for selected user OS', $this->plugin_name ); ?>
-                    </td>
-                    <td><span>–</span></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td colspan="4">
-                        <?php echo __( 'Enable for selected browsers', $this->plugin_name ); ?>
-                    </td>
-                </tr>
-                <tr class="compare-row">
-                    <td>
-                        <?php echo __( 'Enable for selected browser', $this->plugin_name ); ?>
-                    </td>
-                    <td><span>–</span></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td colspan="4">
-                        <?php echo __( 'Limitation count', $this->plugin_name ); ?>
-                    </td>
-                </tr>
-                <tr class="compare-row">
-                    <td>
-                        <?php echo __( 'Limitation count', $this->plugin_name ); ?>
-                    </td>
-                    <td><span>–</span></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td colspan="4">
-                        <?php echo __( 'Export/Import', $this->plugin_name ); ?>
-                    </td>
-                </tr>
-                <tr class="compare-row">
-                    <td>
-                        <?php echo __( 'Export/Import', $this->plugin_name ); ?>
-                    </td>
-                    <td><span>–</span></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td colspan="4">
-                        <?php echo __( 'Close by scrolling down', $this->plugin_name ); ?>
-                    </td>
-                </tr>
-                <tr class="compare-row">
-                    <td>
-                        <?php echo __( 'Close by scrolling down', $this->plugin_name ); ?>
-                    </td>
-                    <td><span>–</span></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td colspan="4">
-                        <?php echo __( 'Close by classname', $this->plugin_name ); ?>
-                    </td>
-                </tr>
-                <tr class="compare-row">
-                    <td>
-                        <?php echo __( 'Close by classname', $this->plugin_name ); ?>
-                    </td>
-                    <td><span>–</span></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td colspan="4">
-                        <?php echo __( 'Actions while clicking on the popup', $this->plugin_name ); ?>
-                    </td>
-                </tr>
-                <tr class="compare-row">
-                    <td>
-                        <?php echo __( 'Actions while clicking on the popup', $this->plugin_name ); ?>
-                    </td>
-                    <td><span>–</span></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td colspan="4">
-                        <?php echo __( 'Title style', $this->plugin_name ); ?>
-                    </td>
-                </tr>
-                <tr class="compare-row">
-                    <td>
-                        <?php echo __( 'Title style', $this->plugin_name ); ?>
-                    </td>
-                    <td><span>–</span></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td colspan="4">
-                        <?php echo __( 'Video theme', $this->plugin_name ); ?>
-                    </td>
-                </tr>
-                <tr class="compare-row">
-                    <td>
-                        <?php echo __( 'Video theme', $this->plugin_name ); ?>
-                    </td>
-                    <td><span>–</span></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td colspan="4">
-                        <?php echo __( 'Peachy theme', $this->plugin_name ); ?>
-                    </td>
-                </tr>
-                <tr class="compare-row">
-                    <td>
-                        <?php echo __( 'Peachy theme', $this->plugin_name ); ?>
-                    </td>
-                    <td><span>–</span></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td colspan="4">
-                        <?php echo __( 'Yellowish theme', $this->plugin_name ); ?>
-                    </td>
-                </tr>
-                <tr class="compare-row">
-                    <td>
-                        <?php echo __( 'Yellowish theme', $this->plugin_name ); ?>
-                    </td>
-                    <td><span>–</span></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td colspan="4">
-                        <?php echo __( 'Coral theme', $this->plugin_name ); ?>
-                    </td>
-                </tr>
-                <tr class="compare-row">
-                    <td>
-                        <?php echo __( 'Coral theme', $this->plugin_name ); ?>
+                        <?php echo __( 'PopupBox Reports', "ays-popup-box" ); ?>
                     </td>
                     <td><span>–</span></td>
                     <td><i class="ays_fa ays_fa-check"></i></td>
@@ -462,12 +293,166 @@
                 <tr>
                     <td></td>
                     <td colspan="4">
-                        <?php echo __( 'User role permission', $this->plugin_name ); ?>
+                        <?php echo __( 'Enable for selected user OS', "ays-popup-box" ); ?>
                     </td>
                 </tr>
                 <tr class="compare-row">
                     <td>
-                        <?php echo __( 'User role permission', $this->plugin_name ); ?>
+                        <?php echo __( 'Enable for selected user OS', "ays-popup-box" ); ?>
+                    </td>
+                    <td><span>–</span></td>
+                    <td><i class="ays_fa ays_fa-check"></i></td>
+                    <td><i class="ays_fa ays_fa-check"></i></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td colspan="4">
+                        <?php echo __( 'Enable for selected browsers', "ays-popup-box" ); ?>
+                    </td>
+                </tr>
+                <tr class="compare-row">
+                    <td>
+                        <?php echo __( 'Enable for selected browser', "ays-popup-box" ); ?>
+                    </td>
+                    <td><span>–</span></td>
+                    <td><i class="ays_fa ays_fa-check"></i></td>
+                    <td><i class="ays_fa ays_fa-check"></i></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td colspan="4">
+                        <?php echo __( 'Limitation count', "ays-popup-box" ); ?>
+                    </td>
+                </tr>
+                <tr class="compare-row">
+                    <td>
+                        <?php echo __( 'Limitation count', "ays-popup-box" ); ?>
+                    </td>
+                    <td><span>–</span></td>
+                    <td><i class="ays_fa ays_fa-check"></i></td>
+                    <td><i class="ays_fa ays_fa-check"></i></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td colspan="4">
+                        <?php echo __( 'Export/Import', "ays-popup-box" ); ?>
+                    </td>
+                </tr>
+                <tr class="compare-row">
+                    <td>
+                        <?php echo __( 'Export/Import', "ays-popup-box" ); ?>
+                    </td>
+                    <td><span>–</span></td>
+                    <td><i class="ays_fa ays_fa-check"></i></td>
+                    <td><i class="ays_fa ays_fa-check"></i></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td colspan="4">
+                        <?php echo __( 'Close by scrolling down', "ays-popup-box" ); ?>
+                    </td>
+                </tr>
+                <tr class="compare-row">
+                    <td>
+                        <?php echo __( 'Close by scrolling down', "ays-popup-box" ); ?>
+                    </td>
+                    <td><span>–</span></td>
+                    <td><i class="ays_fa ays_fa-check"></i></td>
+                    <td><i class="ays_fa ays_fa-check"></i></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td colspan="4">
+                        <?php echo __( 'Close by classname', "ays-popup-box" ); ?>
+                    </td>
+                </tr>
+                <tr class="compare-row">
+                    <td>
+                        <?php echo __( 'Close by classname', "ays-popup-box" ); ?>
+                    </td>
+                    <td><span>–</span></td>
+                    <td><i class="ays_fa ays_fa-check"></i></td>
+                    <td><i class="ays_fa ays_fa-check"></i></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td colspan="4">
+                        <?php echo __( 'Actions while clicking on the popup', "ays-popup-box" ); ?>
+                    </td>
+                </tr>
+                <tr class="compare-row">
+                    <td>
+                        <?php echo __( 'Actions while clicking on the popup', "ays-popup-box" ); ?>
+                    </td>
+                    <td><span>–</span></td>
+                    <td><i class="ays_fa ays_fa-check"></i></td>
+                    <td><i class="ays_fa ays_fa-check"></i></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td colspan="4">
+                        <?php echo __( 'Title style', "ays-popup-box" ); ?>
+                    </td>
+                </tr>
+                <tr class="compare-row">
+                    <td>
+                        <?php echo __( 'Title style', "ays-popup-box" ); ?>
+                    </td>
+                    <td><span>–</span></td>
+                    <td><i class="ays_fa ays_fa-check"></i></td>
+                    <td><i class="ays_fa ays_fa-check"></i></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td colspan="4">
+                        <?php echo __( 'Video theme', "ays-popup-box" ); ?>
+                    </td>
+                </tr>
+                <tr class="compare-row">
+                    <td>
+                        <?php echo __( 'Video theme', "ays-popup-box" ); ?>
+                    </td>
+                    <td><span>–</span></td>
+                    <td><i class="ays_fa ays_fa-check"></i></td>
+                    <td><i class="ays_fa ays_fa-check"></i></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td colspan="4">
+                        <?php echo __( 'Peachy theme', "ays-popup-box" ); ?>
+                    </td>
+                </tr>
+                <tr class="compare-row">
+                    <td>
+                        <?php echo __( 'Peachy theme', "ays-popup-box" ); ?>
+                    </td>
+                    <td><span>–</span></td>
+                    <td><i class="ays_fa ays_fa-check"></i></td>
+                    <td><i class="ays_fa ays_fa-check"></i></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td colspan="4">
+                        <?php echo __( 'Yellowish theme', "ays-popup-box" ); ?>
+                    </td>
+                </tr>
+                <tr class="compare-row">
+                    <td>
+                        <?php echo __( 'Yellowish theme', "ays-popup-box" ); ?>
+                    </td>
+                    <td><span>–</span></td>
+                    <td><i class="ays_fa ays_fa-check"></i></td>
+                    <td><i class="ays_fa ays_fa-check"></i></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td colspan="4">
+                        <?php echo __( 'Coral theme', "ays-popup-box" ); ?>
+                    </td>
+                </tr>
+                <tr class="compare-row">
+                    <td>
+                        <?php echo __( 'Coral theme', "ays-popup-box" ); ?>
                     </td>
                     <td><span>–</span></td>
                     <td><i class="ays_fa ays_fa-check"></i></td>
@@ -477,110 +462,12 @@
                 <tr>
                     <td></td>
                     <td colspan="4">
-                        <?php echo __( 'Limit by country', $this->plugin_name ); ?>
+                        <?php echo __( 'User role permission', "ays-popup-box" ); ?>
                     </td>
                 </tr>
                 <tr class="compare-row">
                     <td>
-                        <?php echo __( 'Limit by country', $this->plugin_name ); ?>
-                    </td>
-                    <td><span>–</span></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td colspan="4">
-                        <?php echo __( 'MailChimp integration', $this->plugin_name ); ?>
-                    </td>
-                </tr>
-                <tr class="compare-row">
-                    <td>
-                        <?php echo __( 'MailChimp integration', $this->plugin_name ); ?>
-                    </td>
-                    <td><span>–</span></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td colspan="4">
-                        <?php echo __( 'Campaign Monitor integration', $this->plugin_name ); ?>
-                    </td>
-                </tr>
-                <tr class="compare-row">
-                    <td>
-                        <?php echo __( 'Campaign Monitor integration', $this->plugin_name ); ?>
-                    </td>
-                    <td><span>–</span></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td colspan="4">
-                        <?php echo __( 'ActiveCampaign integration', $this->plugin_name ); ?>
-                    </td>
-                </tr>
-                <tr class="compare-row">
-                    <td>
-                        <?php echo __( 'ActiveCampaign integration', $this->plugin_name ); ?>
-                    </td>
-                    <td><span>–</span></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td colspan="4">
-                        <?php echo __( 'GetResponse integration', $this->plugin_name ); ?>
-                    </td>
-                </tr>
-                <tr class="compare-row">
-                    <td>
-                        <?php echo __( 'GetResponse integration', $this->plugin_name ); ?>
-                    </td>
-                    <td><span>–</span></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td colspan="4">
-                        <?php echo __( 'ConvertKit integration', $this->plugin_name ); ?>
-                    </td>
-                </tr>
-                <tr class="compare-row">
-                    <td>
-                        <?php echo __( 'ConvertKit integration', $this->plugin_name ); ?>
-                    </td>
-                    <td><span>–</span></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td colspan="4">
-                        <?php echo __( 'Sendinblue integration', $this->plugin_name ); ?>
-                    </td>
-                </tr>
-                <tr class="compare-row">
-                    <td>
-                        <?php echo __( 'Sendinblue integration', $this->plugin_name ); ?>
-                    </td>
-                    <td><span>–</span></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td colspan="4">
-                        <?php echo __( 'MailerLite integration', $this->plugin_name ); ?>
-                    </td>
-                </tr>
-                <tr class="compare-row">
-                    <td>
-                        <?php echo __( 'MailerLite integration', $this->plugin_name ); ?>
+                        <?php echo __( 'User role permission', "ays-popup-box" ); ?>
                     </td>
                     <td><span>–</span></td>
                     <td><i class="ays_fa ays_fa-check"></i></td>
@@ -590,12 +477,110 @@
                 <tr>
                     <td></td>
                     <td colspan="4">
-                        <?php echo __( 'Yes or No popup', $this->plugin_name ); ?>
+                        <?php echo __( 'Limit by country', "ays-popup-box" ); ?>
                     </td>
                 </tr>
                 <tr class="compare-row">
                     <td>
-                        <?php echo __( 'Yes or No popup', $this->plugin_name ); ?>
+                        <?php echo __( 'Limit by country', "ays-popup-box" ); ?>
+                    </td>
+                    <td><span>–</span></td>
+                    <td><i class="ays_fa ays_fa-check"></i></td>
+                    <td><i class="ays_fa ays_fa-check"></i></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td colspan="4">
+                        <?php echo __( 'MailChimp integration', "ays-popup-box" ); ?>
+                    </td>
+                </tr>
+                <tr class="compare-row">
+                    <td>
+                        <?php echo __( 'MailChimp integration', "ays-popup-box" ); ?>
+                    </td>
+                    <td><span>–</span></td>
+                    <td><i class="ays_fa ays_fa-check"></i></td>
+                    <td><i class="ays_fa ays_fa-check"></i></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td colspan="4">
+                        <?php echo __( 'Campaign Monitor integration', "ays-popup-box" ); ?>
+                    </td>
+                </tr>
+                <tr class="compare-row">
+                    <td>
+                        <?php echo __( 'Campaign Monitor integration', "ays-popup-box" ); ?>
+                    </td>
+                    <td><span>–</span></td>
+                    <td><i class="ays_fa ays_fa-check"></i></td>
+                    <td><i class="ays_fa ays_fa-check"></i></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td colspan="4">
+                        <?php echo __( 'ActiveCampaign integration', "ays-popup-box" ); ?>
+                    </td>
+                </tr>
+                <tr class="compare-row">
+                    <td>
+                        <?php echo __( 'ActiveCampaign integration', "ays-popup-box" ); ?>
+                    </td>
+                    <td><span>–</span></td>
+                    <td><i class="ays_fa ays_fa-check"></i></td>
+                    <td><i class="ays_fa ays_fa-check"></i></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td colspan="4">
+                        <?php echo __( 'GetResponse integration', "ays-popup-box" ); ?>
+                    </td>
+                </tr>
+                <tr class="compare-row">
+                    <td>
+                        <?php echo __( 'GetResponse integration', "ays-popup-box" ); ?>
+                    </td>
+                    <td><span>–</span></td>
+                    <td><i class="ays_fa ays_fa-check"></i></td>
+                    <td><i class="ays_fa ays_fa-check"></i></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td colspan="4">
+                        <?php echo __( 'ConvertKit integration', "ays-popup-box" ); ?>
+                    </td>
+                </tr>
+                <tr class="compare-row">
+                    <td>
+                        <?php echo __( 'ConvertKit integration', "ays-popup-box" ); ?>
+                    </td>
+                    <td><span>–</span></td>
+                    <td><i class="ays_fa ays_fa-check"></i></td>
+                    <td><i class="ays_fa ays_fa-check"></i></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td colspan="4">
+                        <?php echo __( 'Sendinblue integration', "ays-popup-box" ); ?>
+                    </td>
+                </tr>
+                <tr class="compare-row">
+                    <td>
+                        <?php echo __( 'Sendinblue integration', "ays-popup-box" ); ?>
+                    </td>
+                    <td><span>–</span></td>
+                    <td><i class="ays_fa ays_fa-check"></i></td>
+                    <td><i class="ays_fa ays_fa-check"></i></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td colspan="4">
+                        <?php echo __( 'MailerLite integration', "ays-popup-box" ); ?>
+                    </td>
+                </tr>
+                <tr class="compare-row">
+                    <td>
+                        <?php echo __( 'MailerLite integration', "ays-popup-box" ); ?>
                     </td>
                     <td><span>–</span></td>
                     <td><i class="ays_fa ays_fa-check"></i></td>
@@ -605,12 +590,12 @@
                 <tr>
                     <td></td>
                     <td colspan="4">
-                        <?php echo __( 'Video popup', $this->plugin_name ); ?>
+                        <?php echo __( 'Yes or No popup', "ays-popup-box" ); ?>
                     </td>
                 </tr>
                 <tr class="compare-row">
                     <td>
-                        <?php echo __( 'Video popup', $this->plugin_name ); ?>
+                        <?php echo __( 'Yes or No popup', "ays-popup-box" ); ?>
                     </td>
                     <td><span>–</span></td>
                     <td><i class="ays_fa ays_fa-check"></i></td>
@@ -620,12 +605,12 @@
                 <tr>
                     <td></td>
                     <td colspan="4">
-                        <?php echo __( 'Iframe popup', $this->plugin_name ); ?>
+                        <?php echo __( 'Video popup', "ays-popup-box" ); ?>
                     </td>
                 </tr>
                 <tr class="compare-row">
                     <td>
-                        <?php echo __( 'Iframe popup', $this->plugin_name ); ?>
+                        <?php echo __( 'Video popup', "ays-popup-box" ); ?>
                     </td>
                     <td><span>–</span></td>
                     <td><i class="ays_fa ays_fa-check"></i></td>
@@ -635,12 +620,12 @@
                 <tr>
                     <td></td>
                     <td colspan="4">
-                        <?php echo __( 'Subscription popup', $this->plugin_name ); ?>
+                        <?php echo __( 'Iframe popup', "ays-popup-box" ); ?>
                     </td>
                 </tr>
                 <tr class="compare-row">
                     <td>
-                        <?php echo __( 'Subscription popup', $this->plugin_name ); ?>
+                        <?php echo __( 'Iframe popup', "ays-popup-box" ); ?>
                     </td>
                     <td><span>–</span></td>
                     <td><i class="ays_fa ays_fa-check"></i></td>
@@ -650,12 +635,12 @@
                 <tr>
                     <td></td>
                     <td colspan="4">
-                        <?php echo __( 'Contact form popup', $this->plugin_name ); ?>
+                        <?php echo __( 'Subscription popup', "ays-popup-box" ); ?>
                     </td>
                 </tr>
                 <tr class="compare-row">
                     <td>
-                        <?php echo __( 'Contact form popup', $this->plugin_name ); ?>
+                        <?php echo __( 'Subscription popup', "ays-popup-box" ); ?>
                     </td>
                     <td><span>–</span></td>
                     <td><i class="ays_fa ays_fa-check"></i></td>
@@ -665,12 +650,27 @@
                 <tr>
                     <td></td>
                     <td colspan="4">
-                        <?php echo __( 'Send file after subscription popup', $this->plugin_name ); ?>
+                        <?php echo __( 'Contact form popup', "ays-popup-box" ); ?>
                     </td>
                 </tr>
                 <tr class="compare-row">
                     <td>
-                        <?php echo __( 'Send file after subscription popup', $this->plugin_name ); ?>
+                        <?php echo __( 'Contact form popup', "ays-popup-box" ); ?>
+                    </td>
+                    <td><span>–</span></td>
+                    <td><i class="ays_fa ays_fa-check"></i></td>
+                    <td><i class="ays_fa ays_fa-check"></i></td>
+                </tr>
+
+                <tr>
+                    <td></td>
+                    <td colspan="4">
+                        <?php echo __( 'Send file after subscription popup', "ays-popup-box" ); ?>
+                    </td>
+                </tr>
+                <tr class="compare-row">
+                    <td>
+                        <?php echo __( 'Send file after subscription popup', "ays-popup-box" ); ?>
                     </td>
                     <td><span>–</span></td>
                     <td><i class="ays_fa ays_fa-check"></i></td>
@@ -679,12 +679,12 @@
                 <tr>
                     <td></td>
                     <td colspan="4">
-                        <?php echo __( 'Coupon popup', $this->plugin_name ); ?>
+                        <?php echo __( 'Coupon popup', "ays-popup-box" ); ?>
                     </td>
                 </tr>
                 <tr class="compare-row">
                     <td>
-                        <?php echo __( 'Coupon popup', $this->plugin_name ); ?>
+                        <?php echo __( 'Coupon popup', "ays-popup-box" ); ?>
                     </td>
                     <td><span>–</span></td>
                     <td><i class="ays_fa ays_fa-check"></i></td>
@@ -693,12 +693,12 @@
                 <tr>
                     <td></td>
                     <td colspan="4">
-                        <?php echo __( 'Countdown popup', $this->plugin_name ); ?>
+                        <?php echo __( 'Countdown popup', "ays-popup-box" ); ?>
                     </td>
                 </tr>
                 <tr class="compare-row">
                     <td>
-                        <?php echo __( 'Countdown popup', $this->plugin_name ); ?>
+                        <?php echo __( 'Countdown popup', "ays-popup-box" ); ?>
                     </td>
                     <td><span>–</span></td>
                     <td><i class="ays_fa ays_fa-check"></i></td>
@@ -707,12 +707,12 @@
                 <tr>
                     <td></td>
                     <td colspan="4">
-                        <?php echo __( 'Cookie popup', $this->plugin_name ); ?>
+                        <?php echo __( 'Cookie popup', "ays-popup-box" ); ?>
                     </td>
                 </tr>
                 <tr class="compare-row">
                     <td>
-                        <?php echo __( 'Cookie popup', $this->plugin_name ); ?>
+                        <?php echo __( 'Cookie popup', "ays-popup-box" ); ?>
                     </td>
                     <td><span>–</span></td>
                     <td><i class="ays_fa ays_fa-check"></i></td>
@@ -721,12 +721,12 @@
                 <tr>
                     <td></td>
                     <td colspan="4">
-                        <?php echo __( 'Exit Intent Popup', $this->plugin_name ); ?>
+                        <?php echo __( 'Exit Intent Popup', "ays-popup-box" ); ?>
                     </td>
                 </tr>
                 <tr class="compare-row">
                     <td>
-                        <?php echo __( 'Exit Intent Popup', $this->plugin_name ); ?>
+                        <?php echo __( 'Exit Intent Popup', "ays-popup-box" ); ?>
                     </td>
                     <td><span>–</span></td>
                     <td><i class="ays_fa ays_fa-check"></i></td>
@@ -735,12 +735,12 @@
                 <tr>
                     <td></td>
                     <td colspan="4">
-                        <?php echo __( 'On Hover Trigger', $this->plugin_name ); ?>
+                        <?php echo __( 'On Hover Trigger', "ays-popup-box" ); ?>
                     </td>
                 </tr>
                 <tr class="compare-row">
                     <td>
-                        <?php echo __( 'On Hover Trigger', $this->plugin_name ); ?>
+                        <?php echo __( 'On Hover Trigger', "ays-popup-box" ); ?>
                     </td>
                     <td><span>–</span></td>
                     <td><i class="ays_fa ays_fa-check"></i></td>
@@ -749,12 +749,12 @@
                 <tr>
                     <td></td>
                     <td colspan="4">
-                        <?php echo __( 'Inactivity Trigger', $this->plugin_name ); ?>
+                        <?php echo __( 'Inactivity Trigger', "ays-popup-box" ); ?>
                     </td>
                 </tr>
                 <tr class="compare-row">
                     <td>
-                        <?php echo __( 'Inactivity Trigger', $this->plugin_name ); ?>
+                        <?php echo __( 'Inactivity Trigger', "ays-popup-box" ); ?>
                     </td>
                     <td><span>–</span></td>
                     <td><i class="ays_fa ays_fa-check"></i></td>
@@ -763,12 +763,12 @@
                 <tr>
                     <td></td>
                     <td colspan="4">
-                        <?php echo __( 'After visiting X pages Trigger', $this->plugin_name ); ?>
+                        <?php echo __( 'After visiting X pages Trigger', "ays-popup-box" ); ?>
                     </td>
                 </tr>
                 <tr class="compare-row">
                     <td>
-                        <?php echo __( 'After visiting X pages Trigger', $this->plugin_name ); ?>
+                        <?php echo __( 'After visiting X pages Trigger', "ays-popup-box" ); ?>
                     </td>
                     <td><span>–</span></td>
                     <td><i class="ays_fa ays_fa-check"></i></td>
@@ -777,12 +777,12 @@
                 <tr>
                     <td></td>
                     <td colspan="4">
-                        <?php echo __( 'Scrolling to Element Trigger', $this->plugin_name ); ?>
+                        <?php echo __( 'Scrolling to Element Trigger', "ays-popup-box" ); ?>
                     </td>
                 </tr>
                 <tr class="compare-row">
                     <td>
-                        <?php echo __( 'Scrolling to Element Trigger', $this->plugin_name ); ?>
+                        <?php echo __( 'Scrolling to Element Trigger', "ays-popup-box" ); ?>
                     </td>
                     <td><span>–</span></td>
                     <td><i class="ays_fa ays_fa-check"></i></td>
@@ -795,12 +795,12 @@
                 <tr>
                     <td></td>
                     <td><a href="https://wordpress.org/plugins/ays-popup-box/" class="price-buy">
-							<?php echo __( 'Download', $this->plugin_name ); ?><span class="hide-mobile"></span></a>
+							<?php echo __( 'Download', "ays-popup-box" ); ?><span class="hide-mobile"></span></a>
                     </td>
                     <td><a href="https://ays-pro.com/wordpress/popup-box" class="price-buy">
-							<?php echo __( 'Buy now', $this->plugin_name ); ?><span class="hide-mobile"></span></a></td>
+							<?php echo __( 'Buy now', "ays-popup-box" ); ?><span class="hide-mobile"></span></a></td>
                     <td><a href="https://ays-pro.com/wordpress/popup-box" class="price-buy">
-							<?php echo __( 'Buy now', $this->plugin_name ); ?><span class="hide-mobile"></span></a></td>
+							<?php echo __( 'Buy now', "ays-popup-box" ); ?><span class="hide-mobile"></span></a></td>
                 </tr>
                 </tbody>
             </table>

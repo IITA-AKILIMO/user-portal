@@ -9,16 +9,6 @@ use LottaFramework\Customizer\CallToActionSection;
 use LottaFramework\Facades\Css;
 use LottaFramework\Facades\CZ;
 
-// customizer traits
-require get_template_directory() . '/inc/traits/trait-button-controls.php';
-require get_template_directory() . '/inc/traits/trait-post-structure.php';
-require get_template_directory() . '/inc/traits/trait-post-card.php';
-require get_template_directory() . '/inc/traits/trait-article-controls.php';
-require get_template_directory() . '/inc/traits/trait-icon-button-controls.php';
-require get_template_directory() . '/inc/traits/trait-widgets-controls.php';
-require get_template_directory() . '/inc/traits/trait-global-color-controls.php';
-require get_template_directory() . '/inc/traits/trait-socials-controls.php';
-
 // customizer elements
 require get_template_directory() . '/inc/elements/class-button-element.php';
 require get_template_directory() . '/inc/elements/class-logo-element.php';
@@ -30,6 +20,7 @@ require get_template_directory() . '/inc/elements/class-search-element.php';
 require get_template_directory() . '/inc/elements/class-cart-element.php';
 require get_template_directory() . '/inc/elements/class-widgets-element.php';
 require get_template_directory() . '/inc/elements/class-socials-element.php';
+require get_template_directory() . '/inc/elements/class-breadcrumbs-element.php';
 
 // customizer builder
 require get_template_directory() . '/inc/builder/class-builder-column.php';
@@ -102,17 +93,36 @@ function kenta_customize_register( $wp_customize ) {
 				),
 				'desc'     => kenta_why_companion_link()
 			) ) );
-		} else if ( ! KENTA_CMP_PRO_ACTIVE ) {
-			$wp_customize->add_section( new CallToActionSection( $wp_customize, 'kenta_upgrade', array(
+		} else {
+			if ( ! KENTA_CMP_PRO_ACTIVE ) {
+				$wp_customize->add_section( new CallToActionSection( $wp_customize, 'kenta_upgrade', array(
+					'priority' => 0,
+					'title'    => __( 'Upgrade To Pro', 'kenta' ),
+					'link'     => array(
+						'url'    => kenta_upsell_url(),
+						'target' => '_blank',
+					)
+				) ) );
+			}
+
+			$wp_customize->add_section( new CallToActionSection( $wp_customize, 'kenta_visit_starter_sites', array(
 				'priority' => 0,
-				'title'    => __( 'Upgrade To Pro', 'kenta' ),
+				'title'    => __( 'Visit Starter Sites', 'kenta' ),
 				'link'     => array(
-					'url'    => kenta_upsell_url(),
+					'url'    => add_query_arg( [ 'page' => 'kenta-starter-sites' ], admin_url( 'admin.php' ) ),
 					'target' => '_blank',
-				),
-				'desc'     => kenta_pro_features_link()
+				)
 			) ) );
 		}
+
+		$wp_customize->add_section( new CallToActionSection( $wp_customize, 'kenta_update_dynamic_css_cache', array(
+			'priority' => 99999,
+			'title'    => __( 'Update Customizer Cache', 'kenta' ),
+			'desc'     => __( 'If the final style is not the same as the preview, please try to update the cache', 'kenta' ),
+			'link'     => array(
+				'url' => esc_url( add_query_arg( array( 'action' => 'kenta_update_dynamic_css_cache' ), admin_url( 'admin.php' ) ) ),
+			)
+		) ) );
 	}
 
 	CZ::addSection( $wp_customize, new Kenta_Header_Section( 'kenta_header', __( 'Header Builder', 'kenta' ) ) );

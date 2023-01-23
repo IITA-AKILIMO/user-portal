@@ -136,7 +136,7 @@ final class Css {
 					$value = $value['desktop'] ?? '';
 				}
 
-				if ( '' === $value || null === $value || self::INITIAL_VALUE === $value ) {
+				if ( '' === $value || null === $value || self::INITIAL_VALUE === $value || is_array( $value ) ) {
 					continue;
 				}
 

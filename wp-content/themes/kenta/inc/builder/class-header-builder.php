@@ -59,6 +59,8 @@ if ( ! class_exists( 'Kenta_Header_Builder' ) ) {
 				) )
 				// Trigger
 				->addElement( new Kenta_Trigger_Element( 'trigger', 'kenta_header_el_trigger', __( 'Trigger', 'kenta' ) ) )
+				// Breadcrumbs
+				->addElement( new Kenta_Breadcrumbs_Element( 'breadcrumbs', 'kenta_header_el_breadcrumbs', __( 'Breadcrumbs', 'kenta' ) ) )
 				->addElement( new Kenta_Socials_Element( 'socials', 'kenta_header_el_socials', __( 'Socials', 'kenta' ) ) );
 
 			// WooCommerce Elements
@@ -68,80 +70,175 @@ if ( ! class_exists( 'Kenta_Header_Builder' ) ) {
 
 			// add rows
 			$this->_builder
-				->addRow(
-					( new Kenta_Modal_Row( 'modal', __( 'Modal Area', 'kenta' ) ) )
-						->isOffCanvas()
-						->addDesktopColumn( [ 'collapsable-menu' ], [
-							'direction' => 'column',
-						] )
-						->addMobileColumn( [ 'collapsable-menu' ], [
-							'direction'    => 'column',
-							'elements-gap' => '24px',
-						] )
-				)
-				->addRow(
-					( new Kenta_Header_Row( 'top_bar', __( 'Top Bar', 'kenta' ), [
-						'min_height' => '40px',
-						'background' => [
-							'type'  => 'color',
-							'color' => 'var(--kenta-base-color)'
-						],
-					] ) )
-						->setMaxColumns( 3 )
-						->addDesktopColumn( [], [
-							'width' => '50%'
-						] )
-						->addDesktopColumn( [], [
-							'width' => '50%'
-						] )
-						->addMobileColumn( [], [
-							'width' => '50%'
-						] )
-						->addMobileColumn( [], [
-							'width' => '50%'
-						] )
-				)
-				->addRow( ( new Kenta_Header_Row( 'primary_navbar', __( 'Primary Navbar', 'kenta' ), [
-					'min_height' => '80px',
-					'background' => [
-						'type'  => 'color',
-						'color' => 'var(--kenta-base-color)'
-					],
-				] ) )
-					->setMaxColumns( 3 )
-					->addDesktopColumn( [ 'logo' ], [
-						'width' => '30%',
-					] )
-					->addDesktopColumn( [ 'menu-1', 'search' ], [
-						'width'           => '70%',
-						'justify-content' => 'flex-end',
-					] )
-					->addMobileColumn( [ 'logo' ], [
-						'width' => '70%',
-					] )
-					->addMobileColumn( [ 'search', 'trigger' ], [
-						'width'           => '30%',
-						'justify-content' => 'flex-end',
-					] )
-				)
-				->addRow(
-					( new Kenta_Header_Row( 'bottom_row', __( 'Bottom Row', 'kenta' ) ) )
-						->setMaxColumns( 3 )
-						->addDesktopColumn( [], [
-							'width' => '50%'
-						] )
-						->addDesktopColumn( [], [
-							'width' => '50%'
-						] )
-						->addMobileColumn( [], [
-							'width' => '50%'
-						] )
-						->addMobileColumn( [], [
-							'width' => '50%'
-						] )
-				);
+				->addRow( $this->getModalRow() )
+				->addRow( $this->getTopBarRow() )
+				->addRow( $this->getPrimaryRow() )
+				->addRow( $this->getBottomRow() );
 
 			do_action( 'kenta_header_builder_initialized', $this->_builder );
+		}
+
+		protected function getModalRow() {
+			$data = apply_filters( 'kenta_modal_row_default_value', [
+				'desktop' => [
+					[
+						'elements' => [ 'collapsable-menu' ],
+						'settings' => [ 'direction' => 'column', ],
+					]
+				],
+				'mobile'  => [
+					[
+						'elements' => [ 'collapsable-menu' ],
+						'settings' => [
+							'direction'    => 'column',
+							'elements-gap' => '24px',
+						],
+					]
+				],
+			] );
+
+			$row = ( new Kenta_Modal_Row( 'modal', __( 'Modal Area', 'kenta' ) ) )->isOffCanvas();
+
+			foreach ( $data['desktop'] as $column ) {
+				$row->addDesktopColumn( $column['elements'], $column['settings'] );
+			}
+
+			foreach ( $data['mobile'] as $column ) {
+				$row->addMobileColumn( $column['elements'], $column['settings'] );
+			}
+
+			return $row;
+		}
+
+		protected function getTopBarRow() {
+
+			$data = apply_filters( 'kenta_header_top_row_default_value', [
+				'desktop' => [
+					[
+						'elements' => [],
+						'settings' => [ 'width' => '50%' ]
+					],
+					[
+						'elements' => [],
+						'settings' => [ 'width' => '50%' ]
+					],
+				],
+				'mobile'  => [
+					[
+						'elements' => [],
+						'settings' => [ 'width' => '50%' ]
+					],
+					[
+						'elements' => [],
+						'settings' => [ 'width' => '50%' ]
+					],
+				],
+			] );
+
+			$row = ( new Kenta_Header_Row( 'top_bar', __( 'Top Bar', 'kenta' ), [
+				'min_height' => '40px',
+				'background' => [
+					'type'  => 'color',
+					'color' => 'var(--kenta-base-color)'
+				],
+			] ) );
+
+			$row->setMaxColumns( apply_filters( 'kenta_header_top_row_max_columns', 3 ) );
+
+			foreach ( $data['desktop'] as $column ) {
+				$row->addDesktopColumn( $column['elements'], $column['settings'] );
+			}
+
+			foreach ( $data['mobile'] as $column ) {
+				$row->addMobileColumn( $column['elements'], $column['settings'] );
+			}
+
+			return $row;
+		}
+
+		protected function getPrimaryRow() {
+			$data = apply_filters( 'kenta_header_primary_row_default_value', [
+				'desktop' => [
+					[
+						'elements' => [ 'logo' ],
+						'settings' => [ 'width' => '30%' ]
+					],
+					[
+						'elements' => [ 'menu-1', 'search' ],
+						'settings' => [ 'width' => '70%', 'justify-content' => 'flex-end' ]
+					],
+				],
+				'mobile'  => [
+					[
+						'elements' => [ 'logo' ],
+						'settings' => [ 'width' => '70%', ]
+					],
+					[
+						'elements' => [ 'search', 'trigger' ],
+						'settings' => [ 'width' => '30%', 'justify-content' => 'flex-end' ]
+					],
+				],
+			] );
+
+			$row = ( new Kenta_Header_Row( 'primary_navbar', __( 'Primary Navbar', 'kenta' ), [
+				'min_height' => '80px',
+				'background' => [
+					'type'  => 'color',
+					'color' => 'var(--kenta-base-color)'
+				],
+			] ) );
+
+			$row->setMaxColumns( apply_filters( 'kenta_header_primary_row_max_columns', 3 ) );
+
+			foreach ( $data['desktop'] as $column ) {
+				$row->addDesktopColumn( $column['elements'], $column['settings'] );
+			}
+
+			foreach ( $data['mobile'] as $column ) {
+				$row->addMobileColumn( $column['elements'], $column['settings'] );
+			}
+
+			return $row;
+		}
+
+		protected function getBottomRow() {
+
+			$data = apply_filters( 'kenta_header_bottom_row_default_value', [
+				'desktop' => [
+					[
+						'elements' => [],
+						'settings' => [ 'width' => '50%' ]
+					],
+					[
+						'elements' => [],
+						'settings' => [ 'width' => '50%' ]
+					],
+				],
+				'mobile'  => [
+					[
+						'elements' => [],
+						'settings' => [ 'width' => '50%', ]
+					],
+					[
+						'elements' => [],
+						'settings' => [ 'width' => '50%' ]
+					],
+				],
+			] );
+
+			$row = ( new Kenta_Header_Row( 'bottom_row', __( 'Bottom Row', 'kenta' ) ) );
+
+			$row->setMaxColumns( apply_filters( 'kenta_header_bottom_row_max_columns', 3 ) );
+
+			foreach ( $data['desktop'] as $column ) {
+				$row->addDesktopColumn( $column['elements'], $column['settings'] );
+			}
+
+			foreach ( $data['mobile'] as $column ) {
+				$row->addMobileColumn( $column['elements'], $column['settings'] );
+			}
+
+			return $row;
 		}
 
 		/**

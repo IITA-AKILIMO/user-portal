@@ -34,6 +34,11 @@ if ( ! class_exists( 'Kenta_Header_Section' ) ) {
 		 */
 		public function getControls() {
 			$controls = [
+				kenta_docs_control(
+					__( '%sLearn how to use header builder%s', 'kenta' ),
+					'https://kentatheme.com/docs/kenta-theme/header-footer-builder/',
+					'kenta_header_builder_doc'
+				),
 				Kenta_Header_Builder::instance()->builder()->setPreviewLocation( $this->id ),
 
 				( new Section( 'kenta_header_colors_override' ) )
@@ -53,6 +58,7 @@ if ( ! class_exists( 'Kenta_Header_Section' ) ) {
 
 		protected function transparentHeaderControls() {
 			return [
+				kenta_docs_control( __( '%sRead Documentation%s', 'kenta' ), 'https://kentatheme.com/docs/kenta-theme/header-footer-builder/transparent-header/' ),
 				( new Tabs() )
 					->setActiveTab( 'general' )
 					->addTab( 'general', __( 'General', 'kenta' ), [
@@ -113,6 +119,14 @@ if ( ! class_exists( 'Kenta_Header_Section' ) ) {
 							->bindSelectiveRefresh( 'kenta-transparent-selective-css' )
 							->addColor( 'initial', __( 'Initial', 'kenta' ), Css::INITIAL_VALUE )
 							->addColor( 'hover', __( 'Hover', 'kenta' ), Css::INITIAL_VALUE )
+						,
+						( new Separator() ),
+						( new ColorPicker( 'kenta_trans_header_raw_text_color' ) )
+							->setLabel( __( 'Raw Text Colors', 'kenta' ) )
+							->bindSelectiveRefresh( 'kenta-transparent-selective-css' )
+							->addColor( 'text', __( 'Text', 'kenta' ), Css::INITIAL_VALUE )
+							->addColor( 'initial', __( 'Link Initial', 'kenta' ), Css::INITIAL_VALUE )
+							->addColor( 'hover', __( 'Link Hover', 'kenta' ), Css::INITIAL_VALUE )
 						,
 						( new Separator() ),
 						( new ColorPicker( 'kenta_trans_header_menu_color' ) )

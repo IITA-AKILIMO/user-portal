@@ -1,5 +1,5 @@
 (() => {
-    var __webpack_modules__ = [ , , , , , , , , , , , , , module => {
+    var __webpack_modules__ = [ , , , , , , , , , , , , , , , , , module => {
         "use strict";
         module.exports = window.wp.plugins;
     }, (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
@@ -8,17 +8,17 @@
         __webpack_require__.d(__webpack_exports__, {
             default: () => __WEBPACK_DEFAULT_EXPORT__
         });
-        var html_react_parser__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(15);
-        var _wordpress_edit_post__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(34);
+        var html_react_parser__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(19);
+        var _wordpress_edit_post__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(38);
         var _wordpress_edit_post__WEBPACK_IMPORTED_MODULE_1___default = __webpack_require__.n(_wordpress_edit_post__WEBPACK_IMPORTED_MODULE_1__);
-        var _wordpress_compose__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(35);
+        var _wordpress_compose__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(39);
         var _wordpress_compose__WEBPACK_IMPORTED_MODULE_2___default = __webpack_require__.n(_wordpress_compose__WEBPACK_IMPORTED_MODULE_2__);
-        var _wordpress_components__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(36);
+        var _wordpress_components__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(40);
         var _wordpress_components__WEBPACK_IMPORTED_MODULE_3___default = __webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__);
-        var _wordpress_data__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(37);
+        var _wordpress_data__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(41);
         var _wordpress_data__WEBPACK_IMPORTED_MODULE_4___default = __webpack_require__.n(_wordpress_data__WEBPACK_IMPORTED_MODULE_4__);
-        var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(38);
-        var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(50);
+        var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(42);
+        var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(54);
         function ownKeys(object, enumerableOnly) {
             var keys = Object.keys(object);
             if (Object.getOwnPropertySymbols) {
@@ -206,6 +206,18 @@
                                     props.setMetaFieldValue(value, "disable-content-area-spacing");
                                 }
                             }) ]
+                        }), (0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxs)("div", {
+                            style: {
+                                textAlign: "center",
+                                padding: "16px"
+                            },
+                            children: [ (0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)("p", {
+                                children: (0, _wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__.__)("You can override the global customize settings for individual pages or posts here.", "kenta")
+                            }), (0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)("a", {
+                                href: "https://kentatheme.com/docs/kenta-theme/general/editor-sidebar-settings/",
+                                target: "_blank",
+                                children: (0, _wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__.__)("Learn More")
+                            }) ]
                         }) ]
                     })
                 }) ]
@@ -238,16 +250,16 @@
             domToReact: () => domToReact,
             htmlToDOM: () => htmlToDOM
         });
-        var _index_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(16);
+        var _index_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(20);
         var domToReact = _index_js__WEBPACK_IMPORTED_MODULE_0__.domToReact;
         var htmlToDOM = _index_js__WEBPACK_IMPORTED_MODULE_0__.htmlToDOM;
         var attributesToProps = _index_js__WEBPACK_IMPORTED_MODULE_0__.attributesToProps;
         var Element = _index_js__WEBPACK_IMPORTED_MODULE_0__.Element;
         const __WEBPACK_DEFAULT_EXPORT__ = _index_js__WEBPACK_IMPORTED_MODULE_0__;
     }, (module, __unused_webpack_exports, __webpack_require__) => {
-        var domToReact = __webpack_require__(17);
-        var attributesToProps = __webpack_require__(19);
-        var htmlToDOM = __webpack_require__(27);
+        var domToReact = __webpack_require__(21);
+        var attributesToProps = __webpack_require__(23);
+        var htmlToDOM = __webpack_require__(31);
         htmlToDOM = typeof htmlToDOM.default === "function" ? htmlToDOM.default : htmlToDOM;
         var domParserOptions = {
             lowerCaseAttributeNames: false
@@ -265,13 +277,13 @@
         HTMLReactParser.domToReact = domToReact;
         HTMLReactParser.htmlToDOM = htmlToDOM;
         HTMLReactParser.attributesToProps = attributesToProps;
-        HTMLReactParser.Element = __webpack_require__(30).Element;
+        HTMLReactParser.Element = __webpack_require__(34).Element;
         module.exports = HTMLReactParser;
         module.exports["default"] = HTMLReactParser;
     }, (module, __unused_webpack_exports, __webpack_require__) => {
-        var React = __webpack_require__(18);
-        var attributesToProps = __webpack_require__(19);
-        var utilities = __webpack_require__(22);
+        var React = __webpack_require__(22);
+        var attributesToProps = __webpack_require__(23);
+        var utilities = __webpack_require__(26);
         var setStyleProp = utilities.setStyleProp;
         var canTextBeChildOfNode = utilities.canTextBeChildOfNode;
         function domToReact(nodes, options) {
@@ -356,8 +368,8 @@
         "use strict";
         module.exports = React;
     }, (module, __unused_webpack_exports, __webpack_require__) => {
-        var reactProperty = __webpack_require__(20);
-        var utilities = __webpack_require__(22);
+        var reactProperty = __webpack_require__(24);
+        var utilities = __webpack_require__(26);
         module.exports = function attributesToProps(attributes) {
             attributes = attributes || {};
             var valueOnlyInputs = {
@@ -533,7 +545,7 @@
         [ "src", "href", "action", "formAction" ].forEach((function(attributeName) {
             properties[attributeName] = new PropertyInfoRecord(attributeName, STRING, false, attributeName.toLowerCase(), null, true, true);
         }));
-        var _require = __webpack_require__(21), CAMELCASE = _require.CAMELCASE, SAME = _require.SAME, possibleStandardNamesOptimized = _require.possibleStandardNames;
+        var _require = __webpack_require__(25), CAMELCASE = _require.CAMELCASE, SAME = _require.SAME, possibleStandardNamesOptimized = _require.possibleStandardNames;
         var ATTRIBUTE_NAME_START_CHAR = ":A-Z_a-z\\u00C0-\\u00D6\\u00D8-\\u00F6\\u00F8-\\u02FF\\u0370-\\u037D\\u037F-\\u1FFF\\u200C-\\u200D\\u2070-\\u218F\\u2C00-\\u2FEF\\u3001-\\uD7FF\\uF900-\\uFDCF\\uFDF0-\\uFFFD";
         var ATTRIBUTE_NAME_CHAR = ATTRIBUTE_NAME_START_CHAR + "\\-.0-9\\u00B7\\u0300-\\u036F\\u203F-\\u2040";
         var isCustomAttribute = RegExp.prototype.test.bind(new RegExp("^(data|aria)-[" + ATTRIBUTE_NAME_CHAR + "]*$"));
@@ -1049,8 +1061,8 @@
             zoomAndPan: 1
         };
     }, (module, __unused_webpack_exports, __webpack_require__) => {
-        var React = __webpack_require__(18);
-        var styleToJS = __webpack_require__(23)["default"];
+        var React = __webpack_require__(22);
+        var styleToJS = __webpack_require__(27)["default"];
         function invertObject(obj, override) {
             if (!obj || typeof obj !== "object") {
                 throw new TypeError("First argument must be an object");
@@ -1128,8 +1140,8 @@
             };
         };
         exports.__esModule = true;
-        var style_to_object_1 = __importDefault(__webpack_require__(24));
-        var utilities_1 = __webpack_require__(26);
+        var style_to_object_1 = __importDefault(__webpack_require__(28));
+        var utilities_1 = __webpack_require__(30);
         function StyleToJS(style, options) {
             var output = {};
             if (!style || typeof style !== "string") {
@@ -1144,7 +1156,7 @@
         }
         exports["default"] = StyleToJS;
     }, (module, __unused_webpack_exports, __webpack_require__) => {
-        var parse = __webpack_require__(25);
+        var parse = __webpack_require__(29);
         function StyleToObject(style, iterator) {
             var output = null;
             if (!style || typeof style !== "string") {
@@ -1342,8 +1354,8 @@
         };
         exports.camelCase = camelCase;
     }, (module, __unused_webpack_exports, __webpack_require__) => {
-        var domparser = __webpack_require__(28);
-        var formatDOM = __webpack_require__(29).formatDOM;
+        var domparser = __webpack_require__(32);
+        var formatDOM = __webpack_require__(33).formatDOM;
         var DIRECTIVE_REGEX = /<(![a-zA-Z\s]+)>/;
         function HTMLDOMParser(html) {
             if (typeof html !== "string") {
@@ -1449,8 +1461,8 @@
         }
         module.exports = domparser;
     }, (__unused_webpack_module, exports, __webpack_require__) => {
-        var domhandler = __webpack_require__(30);
-        var constants = __webpack_require__(33);
+        var domhandler = __webpack_require__(34);
+        var constants = __webpack_require__(37);
         var CASE_SENSITIVE_TAG_NAMES = constants.CASE_SENSITIVE_TAG_NAMES;
         var Comment = domhandler.Comment;
         var Element = domhandler.Element;
@@ -1552,9 +1564,9 @@
             value: true
         });
         exports.DomHandler = void 0;
-        var domelementtype_1 = __webpack_require__(31);
-        var node_js_1 = __webpack_require__(32);
-        __exportStar(__webpack_require__(32), exports);
+        var domelementtype_1 = __webpack_require__(35);
+        var node_js_1 = __webpack_require__(36);
+        __exportStar(__webpack_require__(36), exports);
         var defaultOpts = {
             withStartIndices: false,
             withEndIndices: false,
@@ -1748,7 +1760,7 @@
             value: true
         });
         exports.cloneNode = exports.hasChildren = exports.isDocument = exports.isDirective = exports.isComment = exports.isText = exports.isCDATA = exports.isTag = exports.Element = exports.Document = exports.CDATA = exports.NodeWithChildren = exports.ProcessingInstruction = exports.Comment = exports.Text = exports.DataNode = exports.Node = void 0;
-        var domelementtype_1 = __webpack_require__(31);
+        var domelementtype_1 = __webpack_require__(35);
         var Node = function() {
             function Node() {
                 this.parent = null;
@@ -2119,18 +2131,18 @@
             sprintf: () => _sprintf__WEBPACK_IMPORTED_MODULE_0__.sprintf,
             subscribe: () => _default_i18n__WEBPACK_IMPORTED_MODULE_2__.subscribe
         });
-        var _sprintf__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(39);
-        var _create_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(42);
-        var _default_i18n__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(48);
+        var _sprintf__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(43);
+        var _create_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(46);
+        var _default_i18n__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(52);
     }, (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
         "use strict";
         __webpack_require__.r(__webpack_exports__);
         __webpack_require__.d(__webpack_exports__, {
             sprintf: () => sprintf
         });
-        var memize__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(40);
+        var memize__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(44);
         var memize__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(memize__WEBPACK_IMPORTED_MODULE_0__);
-        var sprintf_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(41);
+        var sprintf_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(45);
         var sprintf_js__WEBPACK_IMPORTED_MODULE_1___default = __webpack_require__.n(sprintf_js__WEBPACK_IMPORTED_MODULE_1__);
         const logErrorOnce = memize__WEBPACK_IMPORTED_MODULE_0___default()(console.error);
         function sprintf(format) {
@@ -2429,7 +2441,7 @@
         __webpack_require__.d(__webpack_exports__, {
             createI18n: () => createI18n
         });
-        var tannin__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(43);
+        var tannin__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(47);
         const DEFAULT_LOCALE_DATA = {
             "": {
                 plural_forms(n) {
@@ -2579,7 +2591,7 @@
         __webpack_require__.d(__webpack_exports__, {
             default: () => Tannin
         });
-        var _tannin_plural_forms__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(44);
+        var _tannin_plural_forms__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(48);
         var DEFAULT_OPTIONS = {
             contextDelimiter: "",
             onMissingKey: null
@@ -2642,7 +2654,7 @@
         __webpack_require__.d(__webpack_exports__, {
             default: () => pluralForms
         });
-        var _tannin_compile__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(45);
+        var _tannin_compile__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(49);
         function pluralForms(expression) {
             var evaluate = (0, _tannin_compile__WEBPACK_IMPORTED_MODULE_0__["default"])(expression);
             return function(n) {
@@ -2657,8 +2669,8 @@
         __webpack_require__.d(__webpack_exports__, {
             default: () => compile
         });
-        var _tannin_postfix__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(46);
-        var _tannin_evaluate__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(47);
+        var _tannin_postfix__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(50);
+        var _tannin_evaluate__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(51);
         function compile(expression) {
             var terms = (0, _tannin_postfix__WEBPACK_IMPORTED_MODULE_0__["default"])(expression);
             return function(variables) {
@@ -2825,8 +2837,8 @@
             setLocaleData: () => setLocaleData,
             subscribe: () => subscribe
         });
-        var _create_i18n__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(42);
-        var _wordpress_hooks__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(49);
+        var _create_i18n__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(46);
+        var _wordpress_hooks__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(53);
         var _wordpress_hooks__WEBPACK_IMPORTED_MODULE_1___default = __webpack_require__.n(_wordpress_hooks__WEBPACK_IMPORTED_MODULE_1__);
         const i18n = (0, _create_i18n__WEBPACK_IMPORTED_MODULE_0__.createI18n)(undefined, undefined, _wordpress_hooks__WEBPACK_IMPORTED_MODULE_1__.defaultHooks);
         const __WEBPACK_DEFAULT_EXPORT__ = i18n;
@@ -2846,7 +2858,7 @@
     }, (module, __unused_webpack_exports, __webpack_require__) => {
         "use strict";
         if (false) {} else {
-            module.exports = __webpack_require__(51);
+            module.exports = __webpack_require__(55);
         }
     }, (__unused_webpack_module, exports, __webpack_require__) => {
         "use strict";
@@ -2860,8 +2872,8 @@
  */        if (true) {
             (function() {
                 "use strict";
-                var React = __webpack_require__(18);
-                var _assign = __webpack_require__(52);
+                var React = __webpack_require__(22);
+                var _assign = __webpack_require__(56);
                 var REACT_ELEMENT_TYPE = 60103;
                 var REACT_PORTAL_TYPE = 60106;
                 exports.Fragment = 60107;
@@ -3829,9 +3841,9 @@ object-assign
     (() => {
         "use strict";
         __webpack_require__.r(__webpack_exports__);
-        var _wordpress_plugins__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(13);
+        var _wordpress_plugins__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(17);
         var _wordpress_plugins__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_wordpress_plugins__WEBPACK_IMPORTED_MODULE_0__);
-        var _admin_settings__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(14);
+        var _admin_settings__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(18);
         (function(wp) {
             (0, _wordpress_plugins__WEBPACK_IMPORTED_MODULE_0__.registerPlugin)("kenta-theme-settings", {
                 render: _admin_settings__WEBPACK_IMPORTED_MODULE_1__["default"]

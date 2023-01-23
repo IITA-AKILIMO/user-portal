@@ -106,6 +106,9 @@
     /*overflow: hidden;*/
     height: 79%;
     position: relative;
+    background: unset;
+    box-shadow: unset;
+    border: unset;  
 }
 
 .ays_cmd_window.ays_cmd_window--maximized,
@@ -143,6 +146,8 @@
     position: sticky;
     top: 0;
     z-index: 12;
+    box-shadow: unset;
+    border-bottom: 0;
 }
 
 .ays_cmd_window-controls {
@@ -151,6 +156,9 @@
     justify-content: flex-end;
     align-items: center;
     width: 20%;
+    background-image: unset;
+    padding: 0;
+    box-shadow: unset;
 }
 
 .ays_cmd_window-header .ays_cmd_window_title {
@@ -195,6 +203,7 @@
     /* font-weight: 100; */
     line-height: 22px;
     font-family: sans-serif !important;
+    min-width: 100%;
 }
 
 .ays_cmd_control-item.ays_cmd_control-close:hover {
@@ -296,6 +305,11 @@ ul.ays_cmd_window-controls-ul {
 ul.ays_cmd_window-controls-ul li:not(:last-child) {
     margin-right: 7px;
     padding-bottom: 5px;
+}
+
+ul.ays_cmd_window-controls-ul li{
+    margin: 0;
+    min-width: 0;
 }
 
 .ays_cmd_window .ays_cmd_window-content>p {
@@ -580,6 +594,9 @@ div[class*='ays-pb-modal_'].ays_win98_window {
     z-index: 2;
     width: 100%;
     padding: 2px;
+    height: auto;
+    box-shadow: unset;
+    border: none;
 }
 
 .ays_win98_window .ays_win98_header {
@@ -627,6 +644,9 @@ div[class*='ays-pb-modal_'].ays_win98_window {
     display: block;
     width: 100%;
     height: 100%;
+    margin: 0;
+    min-width: 100%;
+    color: #000;
 }
 
 .ays_win98_window .ays_win98_header .ays_win98_btn-close:active {
@@ -1178,6 +1198,7 @@ div[class*='ays-pb-modal_'].ays_template_window {
 
 .ays_template_window header.ays_template_head {
     height: 12%;
+    border: none;
 }
 .ays_template_window .ays_bg_image_box {
     width: 35%;
@@ -1186,6 +1207,9 @@ div[class*='ays-pb-modal_'].ays_template_window {
 .ays_template_window footer.ays_template_footer {
     display: flex;
     height: 88%;
+    padding: 0;
+    background: unset;
+    box-shadow: unset;
 }
 
 .ays_template_window .ays_template_main {
@@ -1457,6 +1481,7 @@ div[class*='ays-pb-modal_'].ays_template_window {
     bottom: 0;
     cursor: pointer;
     pointer-events: auto;
+    margin: 0;
 }
 
 .ays_window .ays_topBar {
@@ -1507,6 +1532,7 @@ div[class*='ays-pb-modal_'].ays_template_window {
     position: relative;
     display: inline-block;
     margin-bottom: 0;
+    min-width: 30%;
 }
 
 .ays_window .ays_topBar .ays_hide {
@@ -1983,11 +2009,11 @@ div.ays-pb-modals div.ays-pb-social-buttons-heading{
     max-width: 100%;
 }
 
-.ays-pb-dismiss-ad > a#ays_pb_dismiss_ad{
+.ays-pb-dismiss-ad > button#ays_pb_dismiss_ad{
     cursor: pointer;
     font-size: 12px;
 }
-.ays-pb-dismiss-ad > a#ays_pb_dismiss_ad:hover{
+.ays-pb-dismiss-ad > button#ays_pb_dismiss_ad:hover{
     text-decoration: underline;
 }
 
@@ -1997,4 +2023,10 @@ div.ays-pb-modals div.ays-pb-social-buttons-heading{
 
 .ays_pb_display_none {
     display: none;
+}
+
+div.ays_template_window header.ays_template_head  div.ays_template_header label{
+    min-width: auto;
+    margin: 0;
+    color: #000;
 }

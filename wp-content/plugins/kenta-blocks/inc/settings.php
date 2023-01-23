@@ -45,5 +45,9 @@ return array(
 	'kb_editor_responsive_preview' => array(
 		'sanitize' => 'kenta_blocks_sanitize_checkbox',
 		'default'  => 'no'
+	),
+	'kb_assets_enqueue_mode'       => array(
+		'sanitize' => 'sanitize_text_field',
+		'default'  => 'file'
 	)
 );

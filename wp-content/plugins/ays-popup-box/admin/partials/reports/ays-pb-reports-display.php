@@ -4,12 +4,12 @@
 <div class="wrap ays_results_table">
     <h1 class="wp-heading-inline">
         <?php
-        echo __(esc_html(get_admin_page_title()),$this->plugin_name);
+        echo __(esc_html(get_admin_page_title()),"ays-popup-box");
         ?>
     </h1>
     <div class="nav-tab-wrapper">
-        <a href="#tab1" class="nav-tab nav-tab-active"><?php echo __('Reports',$this->plugin_name)?></a>
-        <a href="#tab2" class="nav-tab"><?php echo __('Statistics',$this->plugin_name)?></a>
+        <a href="#tab1" class="nav-tab nav-tab-active"><?php echo __('Reports',"ays-popup-box")?></a>
+        <a href="#tab2" class="nav-tab"><?php echo __('Statistics',"ays-popup-box")?></a>
     </div>
     <style>
         .column-unread,
@@ -38,8 +38,8 @@
             <div class="pro_features">
                 <div>
                     <p>
-                        <?php echo __("This feature is available only in ", $this->plugin_name); ?>
-                        <a href="https://ays-pro.com/wordpress/popup-box?src=25" target="_blank" title="PRO feature"><?php echo __("PRO version!!!", $this->plugin_name); ?></a>
+                        <?php echo __("This feature is available only in ", "ays-popup-box"); ?>
+                        <a href="https://ays-pro.com/wordpress/popup-box?src=25" target="_blank" title="PRO feature"><?php echo __("PRO version!!!", "ays-popup-box"); ?></a>
                     </p>
                 </div>
             </div>
@@ -51,8 +51,8 @@
             <div class="pro_features">
                 <div>
                     <p>
-                        <?php echo __("This feature is available only in ", $this->plugin_name); ?>
-                        <a href="https://ays-pro.com/wordpress/popup-box?src=26" target="_blank" title="PRO feature"><?php echo __("PRO version!!!", $this->plugin_name); ?></a>
+                        <?php echo __("This feature is available only in ", "ays-popup-box"); ?>
+                        <a href="https://ays-pro.com/wordpress/popup-box?src=26" target="_blank" title="PRO feature"><?php echo __("PRO version!!!", "ays-popup-box"); ?></a>
                     </p>
                 </div>
             </div>

@@ -57,8 +57,9 @@ class Route {
 	 * @return @return \WP_Error|\WP_HTTP_Response|\WP_REST_Response
 	 */
 	public static function import( $request ) {
-		$slug = $request->get_param( 'slug' );
-		$type = $request->get_param( 'type' );
+		$slug   = $request->get_param( 'slug' );
+		$type   = $request->get_param( 'type' );
+		$switch = $request->get_param( 'switch' );
 
 		// site_settings
 		if ( ! in_array( $type, [ 'content', 'customizer', 'widgets', 'site_settings' ] ) ) {
@@ -67,7 +68,9 @@ class Route {
 			);
 		}
 
-		switch_theme( kcmp_current_template() );
+		if ( $switch ) {
+			switch_theme( kcmp_current_template() );
+		}
 
 		return rest_ensure_response(
 			self::handle_wp_error( kcmp( 'demos' )->import( $slug, [ $type ] ) )

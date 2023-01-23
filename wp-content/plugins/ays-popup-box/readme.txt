@@ -1,10 +1,10 @@
 ﻿=== Popup box ===
 Contributors: ays-pro
 Donate link: https://ays-pro.com/wordpress/popup-box
-Tags: popup maker, popup box, responsive popup, popup forms, wordpress popup plugin
+Tags: popup, popups, exit popup, pop up, wordpress popup, marketing, lead generation, modal, modal popup
 Requires at least: 4.0
 Tested up to: 6.1.1
-Stable tag: 3.2.8
+Stable tag: 3.3.9
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -257,6 +257,43 @@ Simply and effortlessly! Either you are switching from the free to pro, or the l
 This is not even a question! Surely, you can customize the best popups the way you wish. Choose one of our premade themes, change the background color, image, text, and everything that you can think of. Can’t find anything of your taste? You are free to add your **custom CSS code** to get your preferred design.
 
 == Changelog ==
+
+= 3.3.9 =
+* Fixed: Popup duplication issue
+* Fixed: Some issues on front page
+
+= 3.3.8 =
+* Fixed: Translation issue
+
+= 3.3.7 =
+* Added: Status filter on the popups list table
+* Fixed: Some style issues on the admin dashboard
+
+= 3.3.6 =
+* Added: Tooltip for Save buttons on the admin dashboard
+* Added: Redirect to another popups after clicking on them functionality on the popups page
+
+= 3.3.5 =
+* Added: Opacity suboption for Enable Overlay option
+
+= 3.3.4 =
+* Fixed: CSS style issue on the admin page
+
+= 3.3.3 =
+* Added: Reset styles option
+
+= 3.3.2 =
+* Added: Template column on popup list table
+
+= 3.3.1 =
+* Fixed: Sale template style conflict with Seos Music theme
+
+= 3.3.0 =
+* Added: Inherit suboption for Font family option
+* Fixed: Popup position and Windows XP Theme Resize conflict
+
+= 3.2.9 =
+* Fixed: CSS style issue on the admin dashboard
 
 = 3.2.8 =
 * Fixed: CSS style issue on the admin page

@@ -109,7 +109,7 @@ if ( ! class_exists( 'BravePop_Element_Form' ) ) {
             if($socialEnabled['google'] && $googleClientID){
                $vars['google_client_id'] = $googleClientID;
                $vars['errors']['google'] = __('Sorry, Could not Connect to your Google Account.','bravepop');
-               wp_enqueue_script('bravepop_google_login_js', 'https://apis.google.com/js/api:client.js');
+               wp_enqueue_script('bravepop_google_login_js', 'https://accounts.google.com/gsi/client');
             }
             if($socialEnabled['linkedin'] && $linkedInClientID){
                $vars['linkedin_client_id'] = $linkedInClientID;
@@ -408,6 +408,7 @@ if ( ! class_exists( 'BravePop_Element_Form' ) ) {
          if(isset($field->defaultType) && $field->defaultType === 'ip' && $userIP ){ $defaultValue = 'value="'.$userIP.'"';  }
          if(isset($field->defaultType) && $field->defaultType === 'user_email' && !empty($this->currentUser['email']) ){ $defaultValue = 'value="'.$this->currentUser['email'].'"';  }
          if(isset($field->defaultType) && $field->defaultType === 'user_name' && !empty($this->currentUser['name']) ){ $defaultValue = 'value="'.$this->currentUser['name'].'"';  }
+         if(isset($field->defaultType) && $field->defaultType === 'language' ){ $defaultValue = 'value="'.substr( get_bloginfo ( 'language' ), 0, 2 ).'"';  }
 
          $fieldHTML = '<div id="brave_form_field'.$field->id.'" class="brave_form_field brave_form_field--hidden">';
             $fieldHTML .= '<input type="hidden"  name="'.esc_attr($field->id).'" '.($defaultValue).' />';
@@ -900,8 +901,8 @@ if ( ! class_exists( 'BravePop_Element_Form' ) ) {
                         'linkedin' => '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" width="20" height="20"><path d="M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3zM135.4 416H69V202.2h66.5V416zm-33.2-243c-21.3 0-38.5-17.3-38.5-38.5S80.9 96 102.2 96c21.2 0 38.5 17.3 38.5 38.5 0 21.3-17.2 38.5-38.5 38.5zm282.1 243h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2 0 79.7 44.3 79.7 101.9V416z" fill="#fff"/></svg>',
                         'email' => '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20"><path d="M20.572 5.083l-7.896 7.037a1 1 0 0 1-1.331 0L3.416 5.087A2 2 0 0 1 4 5h16a2 2 0 0 1 .572.083zm1.356 1.385c.047.17.072.348.072.532v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V7a2 2 0 0 1 .072-.534l7.942 7.148a3 3 0 0 0 3.992 0l7.922-7.146z" fill="#fff"/><rect x="0" y="0" width="24" height="24" fill="transparent" /></svg>'
                      );
-
-                     $socHTML .= '<a id="bravepopform_socialOptin_button-'.$this->data->id.'" class="bravepopform_socialOptin_button bravepopform_socialOptin_button--'.$item->type.'" onclick="bavepop_social_optin(\''.$item->type.'\', \''.$this->data->id.'\')" data-id="'.$this->data->id.'" ><span>'.$icons[$item->type].'</span> '.(isset($item->label) ? $item->label : '').'</a>';
+                     $onMouseOver = $item->type === 'google' ? 'onmouseover="window.loginButtonElementID=\'bravepopform_socialOptin_button-'.$this->data->id.'-'.$item->type.'\'"' : '';
+                     $socHTML .= '<a id="bravepopform_socialOptin_button-'.$this->data->id.'-'.$item->type.'" class="bravepopform_socialOptin_button bravepopform_socialOptin_button--'.$item->type.'" onclick="bavepop_social_optin(\''.$item->type.'\', \''.$this->data->id.'\')" data-id="'.$this->data->id.'" data-action="optin" data-popupid="'.$this->popupID.'" '.$onMouseOver.'><span>'.$icons[$item->type].'</span> '.(isset($item->label) ? $item->label : '').'</a>';
                   }  
                }
                if($this->consentField && isset($this->consentField->id)){
@@ -952,13 +953,14 @@ if ( ! class_exists( 'BravePop_Element_Form' ) ) {
          $cookiesToCheck = function_exists('bravepop_newsletter_cookie_conditions') && !empty($this->formData->settings->action->newsletter->advancedSettings->conditional) && isset($this->formData->settings->action->newsletter->advancedSettings->conditions) ? bravepop_newsletter_cookie_conditions($this->formData->settings->action->newsletter->advancedSettings->conditions) : '' ;
          $customClass = !empty($this->data->classes) ? ' '. str_replace(',',' ',$this->data->classes) : ''; 
          $hasConditionClass = is_array($this->conditionedFields)  && count($this->conditionedFields) > 0 ? ' brave_element__form_inner--hasConditions' : '';
+         $hasSteps = $this->totalSteps > 0 ? 'brave_element__form_inner--hasSteps ' : '';
 
          return '<div id="brave_element-'.$this->data->id.'" class="brave_element brave_element--form '.$customClass.'">
                   <div class="brave_element__wrap">
                      <div class="brave_element__styler">
                         <div class="brave_element__inner">
                            '.($this->social_optin && $this->social_settings ? $this->renderSocialOptins():'').'
-                           <div class="brave_element__form_inner '.($this->social_optin && $this->social_settings ? 'brave_element__form_inner--hide':'').$hasConditionClass.'">
+                           <div class="brave_element__form_inner '.$hasSteps.($this->social_optin && $this->social_settings ? 'brave_element__form_inner--hide':'').$hasConditionClass.'">
                            '.$this->renderProgressbar().'
                               <form id="brave_form_'.$this->data->id.'" class="brave_form_form '.$underlineClass.' '.$hasDateClass.' '.$inlineClass.' '.$nolabelClass.'" method="post" data-cookies="'.$cookiesToCheck.'" onsubmit="brave_submit_form(event, brave_popup_formData[\''.$this->data->id.'\'] )">
                                  <div class="brave_form_overlay"></div>'

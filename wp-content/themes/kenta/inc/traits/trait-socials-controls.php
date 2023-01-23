@@ -18,7 +18,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-
 if ( ! trait_exists( 'Kenta_Socials_Controls' ) ) {
 	/**
 	 * Socials controls

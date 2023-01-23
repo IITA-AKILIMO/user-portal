@@ -98,7 +98,7 @@ if ( ! class_exists( 'BravePop_FluentCRM' ) ) {
          if(count($customFields) > 0){
             foreach ($customFields as $key => $value) {
                if(!empty($value)){
-                  $contact['custom_values'][$key] = $value;
+                  $contact['custom_values'][$key] = !empty($value) && is_array($value) ?  implode(',', $value) : $value;
                }
             }
          }

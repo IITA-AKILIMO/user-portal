@@ -138,11 +138,11 @@ class Ays_PopupBox_Settings_Actions {
             return;
 
         if ( 'saved' == $status )
-            $updated_message = esc_html( __( 'Changes saved.', $this->plugin_name ) );
+            $updated_message = esc_html( __( 'Changes saved.', "ays-popup-box" ) );
         elseif ( 'updated' == $status )
-            $updated_message = esc_html( __( 'PopupBox attribute .', $this->plugin_name ) );
+            $updated_message = esc_html( __( 'PopupBox attribute .', "ays-popup-box" ) );
         elseif ( 'deleted' == $status )
-            $updated_message = esc_html( __( 'PopupBox attribute deleted.', $this->plugin_name ) );
+            $updated_message = esc_html( __( 'PopupBox attribute deleted.', "ays-popup-box" ) );
 
         if ( empty( $updated_message ) )
             return;

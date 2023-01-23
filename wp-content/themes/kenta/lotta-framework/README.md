@@ -2,6 +2,10 @@
 
 ## Changelog
 
+### v2.0.6
+
+* Fix: Editor control update error
+
 ### v2.0.5
 
 * Add: WPML & Polylang translate utils

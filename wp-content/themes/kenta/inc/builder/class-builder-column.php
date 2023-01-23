@@ -10,6 +10,7 @@ use LottaFramework\Customizer\Controls\Radio;
 use LottaFramework\Customizer\Controls\Separator;
 use LottaFramework\Customizer\Controls\Slider;
 use LottaFramework\Customizer\Controls\Spacing;
+use LottaFramework\Customizer\Controls\Toggle;
 use LottaFramework\Customizer\PageBuilder\Container;
 use LottaFramework\Facades\Css;
 use LottaFramework\Utils;
@@ -75,7 +76,9 @@ if ( ! class_exists( 'Kenta_Builder_Column' ) ) {
 				'kenta-builder-column-tablet-dir-' . $dir['tablet'] ?? 'row',
 				'kenta-builder-column-mobile-dir-' . $dir['mobile'] ?? 'row',
 				$id
-			], $data['css'] ?? []
+			],
+				[ 'kenta-scroll-reveal' => $this->checked( 'scroll-reveal', $settings ) ],
+				$data['css'] ?? []
 			) );
 
 			if ( is_customize_preview() ) {
@@ -96,6 +99,7 @@ if ( ! class_exists( 'Kenta_Builder_Column' ) ) {
 		public function getControls() {
 			$defaults = wp_parse_args( $this->getDefaultSettings(), [
 				'width'           => '100%',
+				'scroll-reveal'   => 'no',
 				'elements-gap'    => '12px',
 				'direction'       => 'row',
 				'justify-content' => 'flex-start',
@@ -129,6 +133,11 @@ if ( ! class_exists( 'Kenta_Builder_Column' ) ) {
 					->setMax( 100 )
 					->setDefaultUnit( 'px' )
 					->setDefaultValue( $defaults['elements-gap'] )
+				,
+				( new Separator() ),
+				( new Toggle( 'scroll-reveal' ) )
+					->setLabel( __( 'Enable Scroll Reveal', 'kenta' ) )
+					->setDefaultValue( $defaults['scroll-reveal'] )
 				,
 				( new Separator() )
 			];

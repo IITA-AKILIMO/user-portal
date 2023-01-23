@@ -210,6 +210,41 @@
                 "source": "https://github.com/php-fig/simple-cache/tree/master"
             },
             "install-path": "../psr/simple-cache"
+        },
+        {
+            "name": "wpmoose/wp-dismissible-notice",
+            "version": "dev-main",
+            "version_normalized": "dev-main",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/wpmoose/wp-dismissible-notice.git",
+                "reference": "7f541fc1f45c59ea9894acb9acfe716beb3c09ad"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/wpmoose/wp-dismissible-notice/zipball/7f541fc1f45c59ea9894acb9acfe716beb3c09ad",
+                "reference": "7f541fc1f45c59ea9894acb9acfe716beb3c09ad",
+                "shasum": ""
+            },
+            "time": "2022-12-15T07:24:43+00:00",
+            "default-branch": true,
+            "type": "library",
+            "installation-source": "dist",
+            "autoload": {
+                "psr-4": {
+                    "Wpmoose\\WpDismissibleNotice\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "description": "Dismissible notice library for WordPress development",
+            "support": {
+                "issues": "https://github.com/wpmoose/wp-dismissible-notice/issues",
+                "source": "https://github.com/wpmoose/wp-dismissible-notice/tree/main"
+            },
+            "install-path": "../wpmoose/wp-dismissible-notice"
         }
     ],
     "dev": true,

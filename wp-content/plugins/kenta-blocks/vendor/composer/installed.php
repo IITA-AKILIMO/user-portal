@@ -1,9 +1,9 @@
 <?php return array(
     'root' => array(
         'name' => 'ibllex/kenta-blocks',
-        'pretty_version' => 'dev-next',
-        'version' => 'dev-next',
-        'reference' => '2c6661d969084835cd1da6bf4c9a70d73176691e',
+        'pretty_version' => 'v1.2.2',
+        'version' => '1.2.2.0',
+        'reference' => '8db628c8b149a61f44ef7ec9738eef5820d9e281',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -11,12 +11,23 @@
     ),
     'versions' => array(
         'ibllex/kenta-blocks' => array(
-            'pretty_version' => 'dev-next',
-            'version' => 'dev-next',
-            'reference' => '2c6661d969084835cd1da6bf4c9a70d73176691e',
+            'pretty_version' => 'v1.2.2',
+            'version' => '1.2.2.0',
+            'reference' => '8db628c8b149a61f44ef7ec9738eef5820d9e281',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'wpmoose/wp-dismissible-notice' => array(
+            'pretty_version' => 'dev-main',
+            'version' => 'dev-main',
+            'reference' => '7f541fc1f45c59ea9894acb9acfe716beb3c09ad',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../wpmoose/wp-dismissible-notice',
+            'aliases' => array(
+                0 => '9999999-dev',
+            ),
             'dev_requirement' => false,
         ),
         'wptt/webfont-loader' => array(

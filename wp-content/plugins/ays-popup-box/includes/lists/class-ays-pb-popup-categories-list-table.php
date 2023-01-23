@@ -8,8 +8,8 @@ class Popup_Categories_List_Table extends WP_List_Table{
         $this->plugin_name = $plugin_name;
         $this->title_length = Ays_Pb_Admin::get_listtables_title_length('categories');
         parent::__construct( array(
-            'singular' => __( 'Category', $this->plugin_name ), //singular name of the listed records
-            'plural'   => __( 'Categories', $this->plugin_name ), //plural name of the listed records
+            'singular' => __( 'Category', "ays-popup-box" ), //singular name of the listed records
+            'plural'   => __( 'Categories', "ays-popup-box" ), //plural name of the listed records
             'ajax'     => false //does this table support ajax?
         ) );
         add_action( 'admin_notices', array( $this, 'popup_category_notices' ) );
@@ -40,9 +40,9 @@ class Popup_Categories_List_Table extends WP_List_Table{
             $selected_all = " style='font-weight:bold;' ";
         }
         $status_links = array(
-            "all" => "<a ".$selected_all." href='?page=".esc_attr( $_REQUEST['page'] )."'>". __( 'All', $this->plugin_name )." (".$all_count.")</a>",
-            "published" => "<a ".$selected_1." href='?page=".esc_attr( $_REQUEST['page'] )."&fstatus=1'>". __( 'Published', $this->plugin_name )." (".$published_count.")</a>",
-            "unpublished"   => "<a ".$selected_0." href='?page=".esc_attr( $_REQUEST['page'] )."&fstatus=0'>". __( 'Unpublished', $this->plugin_name )." (".$unpublished_count.")</a>"
+            "all" => "<a ".$selected_all." href='?page=".esc_attr( $_REQUEST['page'] )."'>". __( 'All', "ays-popup-box" )." (".$all_count.")</a>",
+            "published" => "<a ".$selected_1." href='?page=".esc_attr( $_REQUEST['page'] )."&fstatus=1'>". __( 'Published', "ays-popup-box" )." (".$published_count.")</a>",
+            "unpublished"   => "<a ".$selected_0." href='?page=".esc_attr( $_REQUEST['page'] )."&fstatus=0'>". __( 'Unpublished', "ays-popup-box" )." (".$unpublished_count.")</a>"
         );
         return $status_links;
     }
@@ -290,7 +290,7 @@ class Popup_Categories_List_Table extends WP_List_Table{
 
     /** Text displayed when no customer data is available */
     public function no_items() {
-        echo __( 'There are no popup categories yet.', $this->plugin_name );
+        echo __( 'There are no popup categories yet.', "ays-popup-box" );
     }
 
 
@@ -353,11 +353,11 @@ class Popup_Categories_List_Table extends WP_List_Table{
         $title = sprintf( '<a href="?page=%s&action=%s&popup_category=%d" title="%s"><strong>%s</strong></a>', esc_attr( $_REQUEST['page'] ), 'edit', absint( $item['id'] ), esc_attr($item['title']) ,$restitle );
 
         $actions = array(
-            'edit' => sprintf( '<a href="?page=%s&action=%s&popup_category=%d">'. __('Edit', $this->plugin_name) .'</a>', esc_attr( $_REQUEST['page'] ), 'edit', absint( $item['id'] ) ),
+            'edit' => sprintf( '<a href="?page=%s&action=%s&popup_category=%d">'. __('Edit', "ays-popup-box") .'</a>', esc_attr( $_REQUEST['page'] ), 'edit', absint( $item['id'] ) ),
         );
         
         if(intval($item['id']) !== 1){
-            $actions['delete'] = sprintf( '<a class="ays_confirm_del"  href="?page=%s&action=%s&popup_category=%s&_wpnonce=%s">'. __('Delete', $this->plugin_name) .'</a>', esc_attr( $_REQUEST['page'] ), 'delete', absint( $item['id'] ), $delete_nonce );
+            $actions['delete'] = sprintf( '<a class="ays_confirm_del"  href="?page=%s&action=%s&popup_category=%s&_wpnonce=%s">'. __('Delete', "ays-popup-box") .'</a>', esc_attr( $_REQUEST['page'] ), 'delete', absint( $item['id'] ), $delete_nonce );
         }
 
         return $title . $this->row_actions( $actions );
@@ -405,11 +405,11 @@ class Popup_Categories_List_Table extends WP_List_Table{
     function get_columns() {
         $columns = array(
             'cb'            => '<input type="checkbox" />',
-            'title'         => __( 'Title', $this->plugin_name ),
-            'description'   => __( 'Description', $this->plugin_name ),
-            'items_count'   => __( 'Popups Count', $this->plugin_name ),
-            'published'     => __( 'Status', $this->plugin_name ),
-            'id'            => __( 'ID', $this->plugin_name ),
+            'title'         => __( 'Title', "ays-popup-box" ),
+            'description'   => __( 'Description', "ays-popup-box" ),
+            'items_count'   => __( 'Popups Count', "ays-popup-box" ),
+            'published'     => __( 'Status', "ays-popup-box" ),
+            'id'            => __( 'ID', "ays-popup-box" ),
         );
 
         return $columns;
@@ -437,9 +437,9 @@ class Popup_Categories_List_Table extends WP_List_Table{
      */
     public function get_bulk_actions() {
         $actions = array(
-            'bulk-delete' => __('Delete', $this->plugin_name),
-            'bulk-published' => __('Publish', $this->plugin_name),
-            'bulk-unpublished' => __('Unpublish', $this->plugin_name),
+            'bulk-delete' => __('Delete', "ays-popup-box"),
+            'bulk-published' => __('Publish', "ays-popup-box"),
+            'bulk-unpublished' => __('Unpublish', "ays-popup-box"),
         );
 
         return $actions;
@@ -552,15 +552,15 @@ class Popup_Categories_List_Table extends WP_List_Table{
             return;
 
         if ( 'created' == $status )
-            $updated_message = esc_html( __( 'Popup category created.', $this->plugin_name ) );
+            $updated_message = esc_html( __( 'Popup category created.', "ays-popup-box" ) );
         elseif ( 'updated' == $status )
-            $updated_message = esc_html( __( 'Popup category saved.', $this->plugin_name ) );
+            $updated_message = esc_html( __( 'Popup category saved.', "ays-popup-box" ) );
         elseif ( 'deleted' == $status )
-            $updated_message = esc_html( __( 'Popup category deleted.', $this->plugin_name ) );
+            $updated_message = esc_html( __( 'Popup category deleted.', "ays-popup-box" ) );
          elseif ( 'published' == $status )
-            $updated_message = esc_html( __( 'Popup category(s) published.', $this->plugin_name ) );
+            $updated_message = esc_html( __( 'Popup category(s) published.', "ays-popup-box" ) );
         elseif ( 'unpublished' == $status )
-            $updated_message = esc_html( __( 'Popup category(s) unpublished.', $this->plugin_name ) );
+            $updated_message = esc_html( __( 'Popup category(s) unpublished.', "ays-popup-box" ) );
 
 
         if ( empty( $updated_message ) )

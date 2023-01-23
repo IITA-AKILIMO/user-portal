@@ -5,7 +5,7 @@
  * Description:       Kenta Companion is an extension to the Kenta theme. It provides a lot of features and one-click demo import for Kenta Theme.
  * Requires at least: 5.4
  * Requires PHP:      7.2
- * Version:           1.0.7
+ * Version:           1.1.5
  * Author:            WP Moose
  * Author URI:        https://www.wpmoose.com
  * License:           GPL-2.0-or-later
@@ -22,8 +22,8 @@ if ( !defined( 'ABSPATH' ) ) {
  *
  * @since 1.0.0
  */
-define( 'KCMP_VERSION', '1.0.7' );
-define( 'MIN_KENTA_VERSION', '1.0.10' );
+define( 'KCMP_VERSION', '1.1.5' );
+define( 'MIN_KENTA_VERSION', '1.1.6' );
 define( 'KCMP_PLUGIN_FILE', __FILE__ );
 define( 'KCMP_PLUGIN_PATH', trailingslashit( plugin_dir_path( KCMP_PLUGIN_FILE ) ) );
 define( 'KCMP_PLUGIN_URL', trailingslashit( plugins_url( '/', KCMP_PLUGIN_FILE ) ) );
@@ -53,10 +53,12 @@ if ( function_exists( 'kenta_fs' ) ) {
                     'public_key'     => 'pk_64db37825bd0972890eb37821be91',
                     'is_premium'     => false,
                     'premium_suffix' => 'Premium',
+                    'anonymous_mode' => true,
                     'has_addons'     => false,
                     'has_paid_plans' => true,
                     'menu'           => array(
                     'slug'    => 'kenta-companion',
+                    'pricing' => false,
                     'contact' => true,
                     'support' => true,
                 ),
@@ -73,8 +75,6 @@ if ( function_exists( 'kenta_fs' ) ) {
         do_action( 'kenta_fs_loaded' );
     }
     
-    // Using pricing page v2
-    kenta_fs()->add_filter( 'freemius_pricing_js_path', 'kcmp_custom_pricing_js_path' );
     add_action( 'admin_enqueue_scripts', 'kcmp_enqueue_admin_scripts' );
     // Kenta theme not match requirement
     

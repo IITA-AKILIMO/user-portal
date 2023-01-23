@@ -7,6 +7,7 @@
 
 use LottaFramework\Customizer\Controls\Background;
 use LottaFramework\Customizer\Controls\Border;
+use LottaFramework\Customizer\Controls\CallToAction;
 use LottaFramework\Customizer\Controls\ColorPicker;
 use LottaFramework\Customizer\Controls\Condition;
 use LottaFramework\Customizer\Controls\Icons;
@@ -61,6 +62,7 @@ if ( ! class_exists( 'Kenta_Archive_Section' ) ) {
 					( new Section( 'kenta_archive_sidebar_section' ) )
 						->setLabel( __( 'Sidebar', 'kenta' ) )
 						->enableSwitch( false )
+						->keepMarginBelow()
 						->setControls( [
 							( new ImageRadio( 'kenta_archive_sidebar_layout' ) )
 								->setLabel( __( 'Sidebar Layout', 'kenta' ) )
@@ -76,7 +78,18 @@ if ( ! class_exists( 'Kenta_Archive_Section' ) ) {
 									],
 								] )
 							,
+							( new CallToAction() )
+								->setLabel( __( 'Customize Sidebar', 'kenta' ) )
+								->displayAsButton()
+								->expandCustomize( 'kenta_global:kenta_global_sidebar_section' )
+							,
 						] )
+					,
+					kenta_docs_control(
+						__( '%sRead documentation for archive customize%s', 'kenta' ),
+						'https://kentatheme.com/docs/kenta-theme/archive-theme-options/archive-layout/',
+						'kenta_archive_layout_doc'
+					)
 				]
 			);
 		}
@@ -183,11 +196,40 @@ if ( ! class_exists( 'Kenta_Archive_Section' ) ) {
 						'color' => 'var(--kenta-accent-active)',
 					] )
 				,
+				( new Separator() ),
+				( new Toggle( 'kenta_archive_header_has_overlay' ) )
+					->setLabel( __( 'Enable Overlay', 'kenta' ) )
+					->selectiveRefresh( '.kenta-archive-header', 'kenta_show_archive_header', [
+						'container_inclusive' => true,
+					] )
+					->closeByDefault()
+				,
+				( new Condition() )
+					->setCondition( [ 'kenta_archive_header_has_overlay' => 'yes' ] )
+					->setControls( [
+						( new Slider( 'kenta_archive_header_overlay_opacity' ) )
+							->setLabel( __( 'Overlay Opacity', 'kenta' ) )
+							->asyncCss( '.kenta-archive-header::after', [ 'opacity' => 'value' ] )
+							->setMin( 0 )
+							->setMax( 1 )
+							->setDecimals( 2 )
+							->setDefaultUnit( false )
+							->setDefaultValue( 0.6 )
+						,
+						( new Background( 'kenta_archive_header_overlay' ) )
+							->setLabel( __( 'Header Overlay', 'kenta' ) )
+							->asyncCss( '.kenta-archive-header::after', AsyncCss::background() )
+							->setDefaultValue( [
+								'type'  => 'color',
+								'color' => 'var(--kenta-accent-color)',
+							] )
+						,
+					] ),
 			];
 
 			if ( ! KENTA_CMP_PRO_ACTIVE ) {
 				$controls = array_merge(
-					array(
+					[
 						( new ColorPicker( 'kenta_archive_title_color' ) )
 							->setLabel( __( 'Title Color', 'kenta' ) )
 							->asyncColors( '.kenta-archive-header .archive-title', [
@@ -202,7 +244,7 @@ if ( ! class_exists( 'Kenta_Archive_Section' ) ) {
 							] )
 							->addColor( 'initial', __( 'Initial', 'kenta' ), 'var(--kenta-base-200)' )
 						,
-					),
+					],
 					$controls
 				);
 			}
@@ -246,6 +288,10 @@ if ( ! class_exists( 'Kenta_Archive_Section' ) ) {
 			] );
 
 			return array(
+				kenta_docs_control(
+					__( '%sRead documentation for post card options%s', 'kenta' ),
+					'https://kentatheme.com/docs/kenta-theme/archive-theme-options/post-card/'
+				),
 				( new Tabs() )
 					->setActiveTab( 'content' )
 					->addTab( 'content', __( 'Content', 'kenta' ), apply_filters(
@@ -265,6 +311,7 @@ if ( ! class_exists( 'Kenta_Archive_Section' ) ) {
 		 */
 		protected function getPaginationControls() {
 			return [
+				kenta_docs_control( __( '%sRead documentation for posts pagination%s', 'kenta' ), 'https://kentatheme.com/docs/kenta-theme/archive-theme-options/pagination/' ),
 				( new Tabs() )
 					->setActiveTab( 'general' )
 					->addTab( 'general', __( 'General', 'kenta' ), $this->getPaginationGeneralControls() )
@@ -399,6 +446,13 @@ if ( ! class_exists( 'Kenta_Archive_Section' ) ) {
 								'container_inclusive' => true,
 							] )
 							->closeByDefault()
+						,
+						( new Toggle( 'kenta_pagination_scroll_reveal' ) )
+							->setLabel( __( 'Enable Scroll Reveal', 'kenta' ) )
+							->selectiveRefresh( '.kenta-pagination', 'kenta_show_posts_pagination', [
+								'container_inclusive' => true,
+							] )
+							->openByDefault()
 						,
 					] )
 				,

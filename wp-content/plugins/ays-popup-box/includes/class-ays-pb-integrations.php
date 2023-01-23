@@ -135,7 +135,7 @@ class Popup_Box_Integrations
         public function ays_popup_page_mailchimp_content( $integrations, $args ){
 
             $icon = AYS_PB_ADMIN_URL .'/images/integrations/mailchimp_logo.png';
-            $title = __('MailChimp Settings',$this->plugin_name);
+            $title = __('MailChimp Settings',"ays-popup-box");
 
             $content = '';
 
@@ -144,15 +144,15 @@ class Popup_Box_Integrations
                 $content .= '<div class="pro_features">';
                     $content .= '<div>';
                         $content .= '<p>';
-                            $content .= __("This feature is available only in ", $this->plugin_name);
-                            $content .= '<a href="https://ays-pro.com/wordpress/popup-box?src=16" target="_blank" title="PRO feature"> ' .__("PRO version!!!", $this->plugin_name) .'</a>';
+                            $content .= __("This feature is available only in ", "ays-popup-box");
+                            $content .= '<a href="https://ays-pro.com/wordpress/popup-box?src=16" target="_blank" title="PRO feature"> ' .__("PRO version!!!", "ays-popup-box") .'</a>';
                         $content .= '</p>';
                     $content .= '</div>';
                 $content .= '</div>';
             $content .= '<hr>';
             $content .= '<div class="form-group row">
                 <div class="col-sm-4">
-                    <label for="ays_enable_mailchimp">'. __('Enable MailChimp',$this->plugin_name) .'</label>
+                    <label for="ays_enable_mailchimp">'. __('Enable MailChimp',"ays-popup-box") .'</label>
                 </div>
                 <div class="col-sm-1">
                     <input type="checkbox" class="ays-enable-timer1" id="ays_enable_mailchimp" value="on" >';
@@ -162,11 +162,11 @@ class Popup_Box_Integrations
             <hr>
             <div class="form-group row">
                 <div class="col-sm-4">
-                    <label for="ays_mailchimp_list">'. __('MailChimp list',$this->plugin_name) .'</label>
+                    <label for="ays_mailchimp_list">'. __('MailChimp list',"ays-popup-box") .'</label>
                 </div>
                 <div class="col-sm-8">';
             $content .= '<select id="ays_mailchimp_list">';
-            $content .= '<option value="" disabled selected>'. __( "Select list", $this->plugin_name ) .'</option>';
+            $content .= '<option value="" disabled selected>'. __( "Select list", "ays-popup-box" ) .'</option>';
             $content .= '</select>';
             $content .= '</div>
             </div>
@@ -195,7 +195,7 @@ class Popup_Box_Integrations
             $mailchimp_api_key = isset($mailchimp['apiKey']) ? $mailchimp['apiKey'] : '' ;
 
             $icon  = AYS_PB_ADMIN_URL . '/images/integrations/mailchimp_logo.png';
-            $title = __( 'MailChimp', $this->plugin_name );
+            $title = __( 'MailChimp', "ays-popup-box" );
 
             $content = '';
             $content .= '<div class="form-group row" style="margin:0px;">';
@@ -203,8 +203,8 @@ class Popup_Box_Integrations
                 $content .= '<div class="pro_features">';
                     $content .= '<div>';
                         $content .= '<p>';
-                            $content .= __("This feature is available only in ", $this->plugin_name);
-                            $content .= '<a href="https://ays-pro.com/wordpress/popup-box?src=31" target="_blank" title="PRO feature"> ' .__("PRO version!!!", $this->plugin_name) .'</a>';
+                            $content .= __("This feature is available only in ", "ays-popup-box");
+                            $content .= '<a href="https://ays-pro.com/wordpress/popup-box?src=31" target="_blank" title="PRO feature"> ' .__("PRO version!!!", "ays-popup-box") .'</a>';
                         $content .= '</p>';
                     $content .= '</div>';
                 $content .= '</div>';
@@ -212,7 +212,7 @@ class Popup_Box_Integrations
                 <div class="col-sm-12">
                     <div class="form-group row" aria-describedby="aaa">
                         <div class="col-sm-3">
-                            <label for="ays_mailchimp_username">'. __( 'MailChimp Username', $this->plugin_name ) .'</label>
+                            <label for="ays_mailchimp_username">'. __( 'MailChimp Username', "ays-popup-box" ) .'</label>
                         </div>
                         <div class="col-sm-9">
                             <input type="text"
@@ -226,7 +226,7 @@ class Popup_Box_Integrations
                     <hr/>
                     <div class="form-group row" aria-describedby="aaa">
                         <div class="col-sm-3">
-                            <label for="ays_mailchimp_api_key">'. __( 'MailChimp API Key', $this->plugin_name ) .'</label>
+                            <label for="ays_mailchimp_api_key">'. __( 'MailChimp API Key', "ays-popup-box" ) .'</label>
                         </div>
                         <div class="col-sm-9">
                             <input type="text"
@@ -238,7 +238,7 @@ class Popup_Box_Integrations
                         </div>
                     </div>
                     <blockquote>';
-            $content .= sprintf( __( "You can get your API key from your ", $this->plugin_name ) . "<a href='%s' target='_blank'> %s.</a>", "https://us20.admin.mailchimp.com/account/api/", "Account Extras menu" );
+            $content .= sprintf( __( "You can get your API key from your ", "ays-popup-box" ) . "<a href='%s' target='_blank'> %s.</a>", "https://us20.admin.mailchimp.com/account/api/", "Account Extras menu" );
             $content .= '</blockquote>
                 </div>
             </div>
@@ -267,7 +267,7 @@ class Popup_Box_Integrations
         public function ays_popup_page_camp_monitor_content($integrations, $args){
 
             $icon = AYS_PB_ADMIN_URL .'/images/integrations/campaignmonitor_logo.png';
-            $title = __('Campaign Monitor Settings',$this->plugin_name);
+            $title = __('Campaign Monitor Settings',"ays-popup-box");
             $content = '';
 
             $content .= '<div class="form-group row" style="margin:0px;">';
@@ -275,15 +275,15 @@ class Popup_Box_Integrations
                 $content .= '<div class="pro_features">';
                     $content .= '<div>';
                         $content .= '<p>';
-                            $content .= __("This feature is available only in ", $this->plugin_name);
-                            $content .= '<a href="https://ays-pro.com/wordpress/popup-box?src=17" target="_blank" title="PRO feature"> ' .__("PRO version!!!", $this->plugin_name) .'</a>';
+                            $content .= __("This feature is available only in ", "ays-popup-box");
+                            $content .= '<a href="https://ays-pro.com/wordpress/popup-box?src=17" target="_blank" title="PRO feature"> ' .__("PRO version!!!", "ays-popup-box") .'</a>';
                         $content .= '</p>';
                     $content .= '</div>';
                 $content .= '</div>';
             $content .= '<hr/>
                 <div class="form-group row">
                     <div class="col-sm-4">
-                        <label for="ays_enable_monitor">'.__('Enable Campaign Monitor', $this->plugin_name).'</label>
+                        <label for="ays_enable_monitor">'.__('Enable Campaign Monitor', "ays-popup-box").'</label>
                     </div>
                     <div class="col-sm-1">
                         <input type="checkbox" class="ays-enable-timer1" id="ays_enable_monitor" value="on" />
@@ -292,11 +292,11 @@ class Popup_Box_Integrations
                 <hr>
                 <div class="form-group row">
                     <div class="col-sm-4">
-                        <label for="ays_monitor_list">'.__('Campaign Monitor list', $this->plugin_name).'</label>
+                        <label for="ays_monitor_list">'.__('Campaign Monitor list', "ays-popup-box").'</label>
                     </div>
                     <div class="col-sm-8">';
                 $content .= '<select id="ays_monitor_list">
-                    <option disabled selected>'.__("Select List", $this->plugin_name).'</option>';
+                    <option disabled selected>'.__("Select List", "ays-popup-box").'</option>';
                 $content .= '</select>';
             $content .= '
                     </div>
@@ -324,7 +324,7 @@ class Popup_Box_Integrations
             $monitor_api_key = isset($monitor['apiKey']) ? $monitor['apiKey'] : '';
             
             $icon  = AYS_PB_ADMIN_URL . '/images/integrations/campaignmonitor_logo.png';
-            $title = __( 'Campaign Monitor', $this->plugin_name );
+            $title = __( 'Campaign Monitor', "ays-popup-box" );
 
             $content = '';
             $content .= '<div class="form-group row" style="margin:0px;">';
@@ -332,8 +332,8 @@ class Popup_Box_Integrations
                 $content .= '<div class="pro_features">';
                     $content .= '<div>';
                         $content .= '<p>';
-                            $content .= __("This feature is available only in ", $this->plugin_name);
-                            $content .= '<a href="https://ays-pro.com/wordpress/popup-box?src=32" target="_blank" title="PRO feature"> ' .__("PRO version!!!", $this->plugin_name) .'</a>';
+                            $content .= __("This feature is available only in ", "ays-popup-box");
+                            $content .= '<a href="https://ays-pro.com/wordpress/popup-box?src=32" target="_blank" title="PRO feature"> ' .__("PRO version!!!", "ays-popup-box") .'</a>';
                         $content .= '</p>';
                     $content .= '</div>';
                 $content .= '</div>';
@@ -341,7 +341,7 @@ class Popup_Box_Integrations
                 <div class="col-sm-12">
                     <div class="form-group row" aria-describedby="aaa">
                         <div class="col-sm-3">
-                            <label for="ays_monitor_client">'. __( 'Campaign Monitor Client ID', $this->plugin_name ) .'</label>
+                            <label for="ays_monitor_client">'. __( 'Campaign Monitor Client ID', "ays-popup-box" ) .'</label>
                         </div>
                         <div class="col-sm-9">
                             <input type="text" 
@@ -355,7 +355,7 @@ class Popup_Box_Integrations
                     <hr/>
                     <div class="form-group row" aria-describedby="aaa">
                         <div class="col-sm-3">
-                            <label for="ays_monitor_api_key">'. __( 'Campaign Monitor API Key', $this->plugin_name ) .'</label>
+                            <label for="ays_monitor_api_key">'. __( 'Campaign Monitor API Key', "ays-popup-box" ) .'</label>
                         </div>
                         <div class="col-sm-9">
                             <input type="text" 
@@ -398,7 +398,7 @@ class Popup_Box_Integrations
         public function ays_popup_page_active_camp_content($integrations, $args){
 
             $icon = AYS_PB_ADMIN_URL .'/images/integrations/activecampaign_logo.png';
-            $title = __('ActiveCampaign Settings', $this->plugin_name);
+            $title = __('ActiveCampaign Settings', "ays-popup-box");
 
             $content = '';
             $content .= '<div class="form-group row" style="margin:0px;">';
@@ -406,15 +406,15 @@ class Popup_Box_Integrations
                 $content .= '<div class="pro_features">';
                     $content .= '<div>';
                         $content .= '<p>';
-                            $content .= __("This feature is available only in ", $this->plugin_name);
-                            $content .= '<a href="https://ays-pro.com/wordpress/popup-box?src=18" target="_blank" title="PRO feature"> ' .__("PRO version!!!", $this->plugin_name) .'</a>';
+                            $content .= __("This feature is available only in ", "ays-popup-box");
+                            $content .= '<a href="https://ays-pro.com/wordpress/popup-box?src=18" target="_blank" title="PRO feature"> ' .__("PRO version!!!", "ays-popup-box") .'</a>';
                         $content .= '</p>';
                     $content .= '</div>';
                 $content .= '</div>';
                     $content .= '<hr/>
                     <div class="form-group row">
                         <div class="col-sm-4">
-                            <label for="ays_enable_active_camp">'. __('Enable ActiveCampaign', $this->plugin_name) .'</label>
+                            <label for="ays_enable_active_camp">'. __('Enable ActiveCampaign', "ays-popup-box") .'</label>
                         </div>
                         <div class="col-sm-1">
                             <input type="checkbox" class="ays-enable-timer1" id="ays_enable_active_camp" value="on">
@@ -423,24 +423,24 @@ class Popup_Box_Integrations
                     <hr/>
                     <div class="form-group row">
                         <div class="col-sm-4">
-                            <label for="ays_active_camp_list">'.__('ActiveCampaign list', $this->plugin_name).'</label>
+                            <label for="ays_active_camp_list">'.__('ActiveCampaign list', "ays-popup-box").'</label>
                         </div>
                         <div class="col-sm-8">';
                 $content .= '<select id="ays_active_camp_list">
-                    <option value="" disabled selected>'. __("Select List", $this->plugin_name) .'</option>
-                    <option value="">'.__("Just create contact", $this->plugin_name).'</option>';
+                    <option value="" disabled selected>'. __("Select List", "ays-popup-box") .'</option>
+                    <option value="">'.__("Just create contact", "ays-popup-box").'</option>';
                 $content .= '</select></div>';
             $content .= '</div><hr>';
             $content .= '
             <div class="form-group row">
                 <div class="col-sm-4">
-                    <label for="ays_active_camp_automation">'.__("ActiveCampaign automation", $this->plugin_name).'</label>
+                    <label for="ays_active_camp_automation">'.__("ActiveCampaign automation", "ays-popup-box").'</label>
                 </div>
                 <div class="col-sm-8">';
 
             $content .= '<select id="ays_active_camp_automation">
-                <option value="" disabled selected>'.__("Select List", $this->plugin_name).'</option>
-                <option value="">'.__("Just create contact", $this->plugin_name).'</option>';
+                <option value="" disabled selected>'.__("Select List", "ays-popup-box").'</option>
+                <option value="">'.__("Just create contact", "ays-popup-box").'</option>';
             $content .= '</select></div>';
             $content .= '</div></div>';
 
@@ -466,7 +466,7 @@ class Popup_Box_Integrations
             $active_camp_api_key = isset($active_camp['apiKey']) ? $active_camp['apiKey'] : '';
             
             $icon  = AYS_PB_ADMIN_URL . '/images/integrations/activecampaign_logo.png';
-            $title = __( 'ActiveCampaign', $this->plugin_name );
+            $title = __( 'ActiveCampaign', "ays-popup-box" );
 
             $content = '';
             $content .= '<div class="form-group row" style="margin:0px;">';
@@ -474,8 +474,8 @@ class Popup_Box_Integrations
                 $content .= '<div class="pro_features">';
                     $content .= '<div>';
                         $content .= '<p>';
-                            $content .= __("This feature is available only in ", $this->plugin_name);
-                            $content .= '<a href="https://ays-pro.com/wordpress/popup-box?src=33" target="_blank" title="PRO feature"> ' .__("PRO version!!!", $this->plugin_name) .'</a>';
+                            $content .= __("This feature is available only in ", "ays-popup-box");
+                            $content .= '<a href="https://ays-pro.com/wordpress/popup-box?src=33" target="_blank" title="PRO feature"> ' .__("PRO version!!!", "ays-popup-box") .'</a>';
                         $content .= '</p>';
                     $content .= '</div>';
                 $content .= '</div>';
@@ -483,7 +483,7 @@ class Popup_Box_Integrations
                             <div class="col-sm-12">
                             <div class="form-group row" aria-describedby="aaa">
                                 <div class="col-sm-3">
-                                    <label for="ays_active_camp_url">'. __( 'API Access URL', $this->plugin_name ) .'</label>
+                                    <label for="ays_active_camp_url">'. __( 'API Access URL', "ays-popup-box" ) .'</label>
                                 </div>
                                 <div class="col-sm-9">
                                     <input type="text" 
@@ -497,7 +497,7 @@ class Popup_Box_Integrations
                             <hr/>
                             <div class="form-group row" aria-describedby="aaa">
                                 <div class="col-sm-3">
-                                    <label for="ays_active_camp_api_key">'. __( 'API Access Key', $this->plugin_name ) .'</label>
+                                    <label for="ays_active_camp_api_key">'. __( 'API Access Key', "ays-popup-box" ) .'</label>
                                 </div>
                                 <div class="col-sm-9">
                                     <input type="text" 
@@ -539,7 +539,7 @@ class Popup_Box_Integrations
         public function ays_settings_page_get_response_content( $integrations, $args ){
 
             $icon  = AYS_PB_ADMIN_URL . '/images/integrations/get_response.png';
-            $title = __( 'GetResponse', $this->plugin_name );
+            $title = __( 'GetResponse', "ays-popup-box" );
 
             $content = '';
             $content .= '<div class="form-group row" style="margin:0px;">';
@@ -547,8 +547,8 @@ class Popup_Box_Integrations
                     $content .= '<div class="pro_features">';
                         $content .= '<div>';
                             $content .= '<p>';
-                                $content .= __("This feature is available only in ", $this->plugin_name);
-                                $content .= '<a href="https://ays-pro.com/wordpress/popup-box?src=34" target="_blank" title="PRO feature"> ' .__("PRO version!!!", $this->plugin_name) .'</a>';
+                                $content .= __("This feature is available only in ", "ays-popup-box");
+                                $content .= '<a href="https://ays-pro.com/wordpress/popup-box?src=34" target="_blank" title="PRO feature"> ' .__("PRO version!!!", "ays-popup-box") .'</a>';
                             $content .= '</p>';
                         $content .= '</div>';
                     $content .= '</div>';
@@ -556,17 +556,17 @@ class Popup_Box_Integrations
                                     <div class="col-sm-12">
                                         <div class="form-group row">
                                             <div class="col-sm-3">
-                                                <label for="ays_popup_getresponse_api_key">'. __('GetResponse API Key', $this->plugin_name) .'</label>
+                                                <label for="ays_popup_getresponse_api_key">'. __('GetResponse API Key', "ays-popup-box") .'</label>
                                             </div>
                                             <div class="col-sm-9">
                                                 <input type="text" class="ays-text-input">
                                             </div>
                                         </div>';
                             $content .= '<blockquote>';
-                            $content .= sprintf( __( "You can get your API key from your ", $this->plugin_name ) . "<a href='%s' target='_blank'> %s.</a>", "https://app.getresponse.com/api", "account" );
+                            $content .= sprintf( __( "You can get your API key from your ", "ays-popup-box" ) . "<a href='%s' target='_blank'> %s.</a>", "https://app.getresponse.com/api", "account" );
                             $content .= '</blockquote>';
                             $content .= '<blockquote>';
-                            $content .= __( "For security reasons, unused API keys expire after 90 days. When that happens, you'll need to generate a new key.", $this->plugin_name );
+                            $content .= __( "For security reasons, unused API keys expire after 90 days. When that happens, you'll need to generate a new key.", "ays-popup-box" );
                             $content .= '</blockquote>';
                             $content .= '
                                     </div>
@@ -588,22 +588,22 @@ class Popup_Box_Integrations
         public function ays_popup_page_get_response_content( $integrations, $args ){
 
             $icon = AYS_PB_ADMIN_URL .'/images/integrations/get_response.png';
-            $title = __('GetResponse Settings',$this->plugin_name);
+            $title = __('GetResponse Settings',"ays-popup-box");
             $content = '';
             $content .= '<div class="form-group row" style="margin:0px;">';
                 $content .= '<div class="col-sm-12 only_pro">';
                     $content .= '<div class="pro_features">';
                         $content .= '<div>';
                             $content .= '<p>';
-                                $content .= __("This feature is available only in ", $this->plugin_name);
-                                $content .= '<a href="https://ays-pro.com/wordpress/popup-box?src=19" target="_blank" title="PRO feature"> ' .__("PRO version!!!", $this->plugin_name) .'</a>';
+                                $content .= __("This feature is available only in ", "ays-popup-box");
+                                $content .= '<a href="https://ays-pro.com/wordpress/popup-box?src=19" target="_blank" title="PRO feature"> ' .__("PRO version!!!", "ays-popup-box") .'</a>';
                             $content .= '</p>';
                         $content .= '</div>';
                     $content .= '</div>';
                     $content .= '<hr/>';
                     $content .= '<div class="form-group row">
                                     <div class="col-sm-4">
-                                        <label for="ays_popup_enable_getResponse">'. __('Enable GetResponse', $this->plugin_name) .'</label>
+                                        <label for="ays_popup_enable_getResponse">'. __('Enable GetResponse', "ays-popup-box") .'</label>
                                     </div>
                                     <div class="col-sm-1">
                                         <input type="checkbox" class="ays-enable-timer1">
@@ -612,7 +612,7 @@ class Popup_Box_Integrations
                                 <hr>
                                 <div class="form-group row">
                                     <div class="col-sm-4">
-                                        <label>'. __('GetResponse List', $this->plugin_name) .'</label>
+                                        <label>'. __('GetResponse List', "ays-popup-box") .'</label>
                                     </div>
                                     <div class="col-sm-8">
                                         <select >
@@ -646,7 +646,7 @@ class Popup_Box_Integrations
         public function ays_settings_page_convert_kit_content( $integrations, $args ){
 
             $icon  = AYS_PB_ADMIN_URL . '/images/integrations/convertkit_logo.png';
-            $title = __( 'ConvertKit', $this->plugin_name );
+            $title = __( 'ConvertKit', "ays-popup-box" );
 
             $content = '';
             $content .= '<div class="form-group row" style="margin:0px;">';
@@ -654,8 +654,8 @@ class Popup_Box_Integrations
                     $content .= '<div class="pro_features">';
                         $content .= '<div>';
                             $content .= '<p>';
-                                $content .= __("This feature is available only in ", $this->plugin_name);
-                                $content .= '<a href="https://ays-pro.com/wordpress/popup-box?src=35" target="_blank" title="PRO feature"> ' .__("PRO version!!!", $this->plugin_name) .'</a>';
+                                $content .= __("This feature is available only in ", "ays-popup-box");
+                                $content .= '<a href="https://ays-pro.com/wordpress/popup-box?src=35" target="_blank" title="PRO feature"> ' .__("PRO version!!!", "ays-popup-box") .'</a>';
                             $content .= '</p>';
                         $content .= '</div>';
                     $content .= '</div>';
@@ -663,14 +663,14 @@ class Popup_Box_Integrations
                                     <div class="col-sm-12">
                                         <div class="form-group row">
                                             <div class="col-sm-3">
-                                                <label for="ays_popup_convert_kit">'. __('API Key', $this->plugin_name) .'</label>
+                                                <label for="ays_popup_convert_kit">'. __('API Key', "ays-popup-box") .'</label>
                                             </div>
                                             <div class="col-sm-9">
                                                 <input type="text" class="ays-text-input">
                                             </div>
                                         </div>';
                             $content .= '<blockquote>';
-                            $content .= sprintf( __( "You can get your API key from your ", $this->plugin_name ) . "<a href='%s' target='_blank'> %s.</a>", "https://app.convertkit.com/account/edit", "Account" );
+                            $content .= sprintf( __( "You can get your API key from your ", "ays-popup-box" ) . "<a href='%s' target='_blank'> %s.</a>", "https://app.convertkit.com/account/edit", "Account" );
                             $content .= '</blockquote>';
                             $content .= '
                                     </div>
@@ -692,7 +692,7 @@ class Popup_Box_Integrations
         public function ays_popup_page_convert_kit_content( $integrations, $args ){
 
             $icon  = AYS_PB_ADMIN_URL .'/images/integrations/convertkit_logo.png';
-            $title = __('ConvertKit Settings',$this->plugin_name);
+            $title = __('ConvertKit Settings',"ays-popup-box");
 
             $content = '';
             $content .= '<div class="form-group row" style="margin:0px;">';
@@ -700,15 +700,15 @@ class Popup_Box_Integrations
                     $content .= '<div class="pro_features">';
                         $content .= '<div>';
                             $content .= '<p>';
-                                $content .= __("This feature is available only in ", $this->plugin_name);
-                                $content .= '<a href="https://ays-pro.com/wordpress/popup-box?src=20" target="_blank" title="PRO feature"> ' .__("PRO version!!!", $this->plugin_name) .'</a>';
+                                $content .= __("This feature is available only in ", "ays-popup-box");
+                                $content .= '<a href="https://ays-pro.com/wordpress/popup-box?src=20" target="_blank" title="PRO feature"> ' .__("PRO version!!!", "ays-popup-box") .'</a>';
                             $content .= '</p>';
                         $content .= '</div>';
                     $content .= '</div>';
                     $content .= '<hr/>';
                     $content .= '<div class="form-group row">
                                     <div class="col-sm-4">
-                                        <label for="ays_popup_enable_convertkit">'. __('Enable ConvertKit', $this->plugin_name) .'</label>
+                                        <label for="ays_popup_enable_convertkit">'. __('Enable ConvertKit', "ays-popup-box") .'</label>
                                     </div>
                                     <div class="col-sm-1">
                                         <input type="checkbox" class="ays-enable-timer1">
@@ -717,7 +717,7 @@ class Popup_Box_Integrations
                                 <hr>
                                 <div class="form-group row">
                                     <div class="col-sm-4">
-                                        <label for="ays_popup_convertKit_list">'. __('ConvertKit List', $this->plugin_name) .'</label>
+                                        <label for="ays_popup_convertKit_list">'. __('ConvertKit List', "ays-popup-box") .'</label>
                                     </div>
                                     <div class="col-sm-8">
                                         <select>
@@ -755,7 +755,7 @@ class Popup_Box_Integrations
         public function ays_popup_page_sendinblue_content( $integrations, $args ){
 
             $icon  = AYS_PB_ADMIN_URL .'/images/integrations/sendinblue.png';
-            $title = __('Sendinblue Settings',$this->plugin_name);
+            $title = __('Sendinblue Settings',"ays-popup-box");
 
             $content = '';
             $content .= '<div class="form-group row" style="margin:0px;">';
@@ -763,15 +763,15 @@ class Popup_Box_Integrations
                     $content .= '<div class="pro_features">';
                         $content .= '<div>';
                             $content .= '<p>';
-                                $content .= __("This feature is available only in ", $this->plugin_name);
-                                $content .= '<a href="https://ays-pro.com/wordpress/popup-box?src=21" target="_blank" title="PRO feature"> ' .__("PRO version!!!", $this->plugin_name) .'</a>';
+                                $content .= __("This feature is available only in ", "ays-popup-box");
+                                $content .= '<a href="https://ays-pro.com/wordpress/popup-box?src=21" target="_blank" title="PRO feature"> ' .__("PRO version!!!", "ays-popup-box") .'</a>';
                             $content .= '</p>';
                         $content .= '</div>';
                     $content .= '</div>';
                     $content .= '<hr/>';
                     $content .= '<div class="form-group row">
                                     <div class="col-sm-4">
-                                        <label for="ays_popup_enable_sendinblue">'. __('Enable Sendinblue', $this->plugin_name) .'</label>
+                                        <label for="ays_popup_enable_sendinblue">'. __('Enable Sendinblue', "ays-popup-box") .'</label>
                                     </div>
                                     <div class="col-sm-1">
                                         <input type="checkbox" class="ays-enable-timer1">
@@ -780,7 +780,7 @@ class Popup_Box_Integrations
                                 <hr>
                                 <div class="form-group row">
                                     <div class="col-sm-4">
-                                        <label for="ays_popup_sendinblue_list">'. __('Sendinblue List', $this->plugin_name) .'</label>
+                                        <label for="ays_popup_sendinblue_list">'. __('Sendinblue List', "ays-popup-box") .'</label>
                                     </div>
                                     <div class="col-sm-8">
                                         <select>
@@ -805,7 +805,7 @@ class Popup_Box_Integrations
         // Sendinblue Settings integration in General settings page content
         public function ays_settings_page_sendinblue_content( $integrations, $args ){
             $icon  = AYS_PB_ADMIN_URL . '/images/integrations/sendinblue.png';
-            $title = __( 'Sendinblue', $this->plugin_name );
+            $title = __( 'Sendinblue', "ays-popup-box" );
 
             $content = '';
             $content .= '<div class="form-group row" style="margin:0px;">';
@@ -813,8 +813,8 @@ class Popup_Box_Integrations
                     $content .= '<div class="pro_features">';
                         $content .= '<div>';
                             $content .= '<p>';
-                                $content .= __("This feature is available only in ", $this->plugin_name);
-                                $content .= '<a href="https://ays-pro.com/wordpress/popup-box?src=36" target="_blank" title="PRO feature"> ' .__("PRO version!!!", $this->plugin_name) .'</a>';
+                                $content .= __("This feature is available only in ", "ays-popup-box");
+                                $content .= '<a href="https://ays-pro.com/wordpress/popup-box?src=36" target="_blank" title="PRO feature"> ' .__("PRO version!!!", "ays-popup-box") .'</a>';
                             $content .= '</p>';
                         $content .= '</div>';
                     $content .= '</div>';
@@ -822,14 +822,14 @@ class Popup_Box_Integrations
                                     <div class="col-sm-12">
                                         <div class="form-group row">
                                             <div class="col-sm-3">
-                                                <label for="ays_popup_sendinblue">'. __('API Key', $this->plugin_name) .'</label>
+                                                <label for="ays_popup_sendinblue">'. __('API Key', "ays-popup-box") .'</label>
                                             </div>
                                             <div class="col-sm-9">
                                                 <input type="text" class="ays-text-input">
                                             </div>
                                         </div>';
                             $content .= '<blockquote>';
-                            $content .= sprintf( __( "You can get your API key from your ", $this->plugin_name ) . "<a href='%s' target='_blank'> %s.</a>", "https://account.sendinblue.com/advanced/api", "Account" );
+                            $content .= sprintf( __( "You can get your API key from your ", "ays-popup-box" ) . "<a href='%s' target='_blank'> %s.</a>", "https://account.sendinblue.com/advanced/api", "Account" );
                             $content .= '</blockquote>';
                             $content .= '
                                     </div>
@@ -861,7 +861,7 @@ class Popup_Box_Integrations
         public function ays_popup_page_mailerLite_content( $integrations, $args ){
 
             $icon  = AYS_PB_ADMIN_URL .'/images/integrations/mailerlite.png';
-            $title = __('MailerLite Settings',$this->plugin_name);
+            $title = __('MailerLite Settings',"ays-popup-box");
 
             $content = '';
             $content .= '<div class="form-group row" style="margin:0px;">';
@@ -869,15 +869,15 @@ class Popup_Box_Integrations
                     $content .= '<div class="pro_features">';
                         $content .= '<div>';
                             $content .= '<p>';
-                                $content .= __("This feature is available only in ", $this->plugin_name);
-                                $content .= '<a href="https://ays-pro.com/wordpress/popup-box?src=22" target="_blank" title="PRO feature"> ' .__("PRO version!!!", $this->plugin_name) .'</a>';
+                                $content .= __("This feature is available only in ", "ays-popup-box");
+                                $content .= '<a href="https://ays-pro.com/wordpress/popup-box?src=22" target="_blank" title="PRO feature"> ' .__("PRO version!!!", "ays-popup-box") .'</a>';
                             $content .= '</p>';
                         $content .= '</div>';
                     $content .= '</div>';
                     $content .= '<hr/>';
                     $content .= '<div class="form-group row">
                                     <div class="col-sm-4">
-                                        <label for="ays_popup_enable_mailerlite">'. __('Enable MailerLite', $this->plugin_name) .'</label>
+                                        <label for="ays_popup_enable_mailerlite">'. __('Enable MailerLite', "ays-popup-box") .'</label>
                                     </div>
                                     <div class="col-sm-1">
                                         <input type="checkbox" class="ays-enable-timer1">
@@ -886,7 +886,7 @@ class Popup_Box_Integrations
                                 <hr>
                                 <div class="form-group row">
                                     <div class="col-sm-4">
-                                        <label for="ays_popup_mailerlite_list">'. __('MailerLite List', $this->plugin_name) .'</label>
+                                        <label for="ays_popup_mailerlite_list">'. __('MailerLite List', "ays-popup-box") .'</label>
                                     </div>
                                     <div class="col-sm-8">
                                         <select>
@@ -919,7 +919,7 @@ class Popup_Box_Integrations
             $mailerLite_api_key = isset($mailerLite['api_key']) && $mailerLite['api_key'] != "" ? esc_attr($mailerLite['api_key']) : '';
 
             $icon  = AYS_PB_ADMIN_URL . '/images/integrations/mailerlite.png';
-            $title = __( 'MailerLite', $this->plugin_name );
+            $title = __( 'MailerLite', "ays-popup-box" );
 
             $content = '';
             $content .= '<div class="form-group row" style="margin:0px;">';
@@ -927,8 +927,8 @@ class Popup_Box_Integrations
                 $content .= '<div class="pro_features">';
                     $content .= '<div>';
                         $content .= '<p>';
-                            $content .= __("This feature is available only in ", $this->plugin_name);
-                            $content .= '<a href="https://ays-pro.com/wordpress/popup-box?src=37" target="_blank" title="PRO feature"> ' .__("PRO version!!!", $this->plugin_name) .'</a>';
+                            $content .= __("This feature is available only in ", "ays-popup-box");
+                            $content .= '<a href="https://ays-pro.com/wordpress/popup-box?src=37" target="_blank" title="PRO feature"> ' .__("PRO version!!!", "ays-popup-box") .'</a>';
                         $content .= '</p>';
                     $content .= '</div>';
                 $content .= '</div>';
@@ -936,14 +936,14 @@ class Popup_Box_Integrations
                                 <div class="col-sm-12">
                                     <div class="form-group row">
                                         <div class="col-sm-3">
-                                            <label for="ays_popup_mailerlite">'. __('API Key', $this->plugin_name) .'</label>
+                                            <label for="ays_popup_mailerlite">'. __('API Key', "ays-popup-box") .'</label>
                                         </div>
                                         <div class="col-sm-9">
                                             <input type="text" class="ays-text-input">
                                         </div>
                                     </div>';
                         $content .= '<blockquote>';
-                        $content .= sprintf( __( "You can get your API key from your ", $this->plugin_name ) . "<a href='%s' target='_blank'> %s.</a>", "https://app.mailerlite.com/integrations/api", "Account" );
+                        $content .= sprintf( __( "You can get your API key from your ", "ays-popup-box" ) . "<a href='%s' target='_blank'> %s.</a>", "https://app.mailerlite.com/integrations/api", "Account" );
                         $content .= '</blockquote>';
                         $content .= '
                                 </div>

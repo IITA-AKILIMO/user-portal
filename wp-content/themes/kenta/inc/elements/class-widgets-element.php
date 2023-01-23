@@ -50,8 +50,13 @@ if ( ! class_exists( 'Kenta_Widgets_Element' ) ) {
 			add_action( 'widgets_init', function () use ( $id, $options, $settings ) {
 
 				$widgets_class = 'kenta-widget clearfix %2$s';
-				$title_class   = 'widget-title mb-half-gutter heading-content';
-				$tag           = $options->get( $this->getSlug( 'title-tag' ), $settings );
+
+				if ( $options->checked( $this->getSlug( 'scroll-reveal' ) ) ) {
+					$widgets_class = 'kenta-scroll-reveal ' . $widgets_class;
+				}
+
+				$title_class = 'widget-title mb-half-gutter heading-content';
+				$tag         = $options->get( $this->getSlug( 'title-tag' ), $settings );
 
 				register_sidebar( [
 					'name'          => $this->getLabel(),

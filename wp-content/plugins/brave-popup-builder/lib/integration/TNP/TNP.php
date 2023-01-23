@@ -76,7 +76,7 @@ if ( ! class_exists( 'BravePop_TNP' ) ) {
          if(count($customFields) > 0){
             foreach ($customFields as $key => $value) {
                if(!empty($value)){
-                  $contact['profile_'.$key] = $value;
+                  $contact['profile_'.$key] = !empty($value) && is_array($value) ?  implode(',', $value) : $value;
                }
             }
          }

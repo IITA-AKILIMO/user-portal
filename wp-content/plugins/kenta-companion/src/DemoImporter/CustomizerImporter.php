@@ -109,6 +109,12 @@ class CustomizerImporter {
 			$data['options'] = self::import_lotta_images( $data['options'] );
 		}
 
+		// Handle links
+		if ( apply_filters( 'kcmp/customizer_import_links', true ) ) {
+			$data['mods']    = self::import_demo_links( $data['mods'], KCMP_DEMO_SITE_URL . $demo_slug, home_url() );
+			$data['options'] = self::import_demo_links( $data['options'], KCMP_DEMO_SITE_URL . $demo_slug, home_url() );
+		}
+
 		// Modify settings array.
 		$data = apply_filters( 'kcmp/customizer_import_settings', $data, $demo_slug, $demo_data );
 
@@ -197,6 +203,33 @@ class CustomizerImporter {
 					}
 				} else {
 					$settings[ $key ] = self::import_lotta_images( $val );
+				}
+			}
+		}
+
+		return $settings;
+	}
+
+	/**
+	 * Handle demo site url
+	 *
+	 * @param $settings
+	 * @param $demo_site
+	 * @param $home
+	 *
+	 * @return mixed
+	 */
+	private static function import_demo_links( $settings, $demo_site, $home ) {
+
+		foreach ( $settings as $key => $val ) {
+			if ( is_array( $val ) ) {
+				$settings[ $key ] = self::import_demo_links( $val, $demo_site, $home );
+			} else if ( is_string( $val ) && filter_var( $val, FILTER_VALIDATE_URL ) !== false ) {
+				$page = get_page_by_path( str_replace( $demo_site, '', $val ) );
+				if ( $page ) {
+					$settings[ $key ] = get_page_link( $page );
+				} else {
+					$settings[ $key ] = str_replace( $demo_site, $home, $val );
 				}
 			}
 		}

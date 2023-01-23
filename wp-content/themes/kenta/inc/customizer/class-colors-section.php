@@ -85,6 +85,11 @@ if ( ! class_exists( 'Kenta_Colors_Section' ) ) {
 					->addColor( '100', __( 'Base 100', 'kenta' ), 'var(--kenta-base-100)' )
 					->addColor( 'default', __( 'Base Color', 'kenta' ), 'var(--kenta-base-color)' )
 				,
+				kenta_docs_control(
+					__( '%sRead Colors Documentation%s', 'kenta' ),
+					'https://kentatheme.com/docs/kenta-theme/general-theme-options/colors/',
+					'kenta_colors_doc'
+				)->hideBackground(),
 				( new Separator( 'kenta_site_background_separator' ) ),
 				( new Toggle( 'kenta_enable_site_wrap' ) )
 					->setLabel( __( 'Site Wrap', 'kenta' ) )
@@ -99,7 +104,7 @@ if ( ! class_exists( 'Kenta_Colors_Section' ) ) {
 							'no'  => '100vw',
 						] ) ),
 					] )
-					->openByDefault()
+					->closeByDefault()
 				,
 				( new Background( 'kenta_site_background' ) )
 					->setLabel( __( 'Site Background', 'kenta' ) )
@@ -136,10 +141,20 @@ if ( ! class_exists( 'Kenta_Colors_Section' ) ) {
 						,
 					] )
 				,
+				kenta_docs_control(
+					__( '%sLearn how to use site wrap & site background%s', 'kenta' ),
+					'https://kentatheme.com/docs/kenta-theme/general-theme-options/site-wrap-site-background/',
+					'kenta_site_wrap_doc'
+				)->hideBackground(),
 				( new Filters( 'kenta_site_filters' ) )
 					->setLabel( __( 'Site Css Filters', 'kenta' ) )
 					->asyncCss( ':root', AsyncCss::filters() )
 				,
+				kenta_docs_control(
+					__( '%sLearn how to use site filters', 'kenta' ),
+					'https://kentatheme.com/docs/kenta-theme/general-theme-options/site-css-filters/',
+					'kenta_site_filters_doc'
+				)->hideBackground(),
 				( new Separator( 'kenta_gutenberg_color_palette_separator' ) ),
 				( new Toggle( 'kenta_color_palette_in_gutenberg' ) )
 					->setLabel( __( 'Use Colors in Gutenberg Editor', 'kenta' ) )

@@ -26,10 +26,14 @@ if ( $page_container && $page_container !== 'default' ) {
 	$container_style = CZ::get( 'kenta_single_post_container_style' );
 }
 
+/**
+ * Hook - kenta_action_before_single_post_container.
+ */
+do_action( 'kenta_action_before_single_post_container', $layout );
 ?>
 
 <div class="<?php Utils::the_clsx( kenta_container_css( $layout, $container_style ) ) ?>">
-    <div id="content" class="flex-grow max-w-full">
+    <div id="content" class="kenta-article-content-wrap flex-grow max-w-full">
 		<?php
 		// posts loop
 		while ( have_posts() ) {
@@ -43,7 +47,7 @@ if ( $page_container && $page_container !== 'default' ) {
 			/**
 			 * Hook - kenta_action_single_post.
 			 */
-			do_action( 'kenta_action_single_post' );
+			do_action( 'kenta_action_single_post', $layout );
 
 			/**
 			 * Hook - kenta_action_after_single_post.

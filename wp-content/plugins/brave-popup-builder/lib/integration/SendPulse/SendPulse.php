@@ -81,7 +81,7 @@ if ( ! class_exists( 'BravePop_SendPulse' ) ) {
          if(count($customFields) > 0){
             foreach ($customFields as $key => $value) {
                if( $contact['emails'][0]['variables']){
-                  $contact['emails'][0]['variables'][$key] = $value;
+                  $contact['emails'][0]['variables'][$key] = !empty($value) && is_array($value) ?  implode(',', $value) : $value;
                }
             }
          }

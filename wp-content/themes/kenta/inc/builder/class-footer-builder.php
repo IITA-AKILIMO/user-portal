@@ -45,6 +45,8 @@ if ( ! class_exists( 'Kenta_Footer_Builder' ) ) {
 					'top-level-height-unit' => 'px',
 					'selective-refresh'     => 'kenta-footer-selective-css',
 				] ) )
+				// Breadcrumbs
+				->addElement( new Kenta_Breadcrumbs_Element( 'breadcrumbs', 'kenta_footer_el_breadcrumbs', __( 'Breadcrumbs', 'kenta' ) ) )
 				// Widgets
 				->addElement( new Kenta_Widgets_Element( 'widgets-1', 'kenta_footer_el_widgets_1', __( 'Widgets Area #1', 'kenta' ) ) )
 				->addElement( new Kenta_Widgets_Element( 'widgets-2', 'kenta_footer_el_widgets_2', __( 'Widgets Area #2', 'kenta' ) ) )
@@ -53,74 +55,126 @@ if ( ! class_exists( 'Kenta_Footer_Builder' ) ) {
 				->addElement( new Kenta_Socials_Element( 'footer-socials', 'kenta_footer_el_socials', __( 'Socials', 'kenta' ) ) );
 
 			$this->_builder
-				->addRow(
-					( new Kenta_Footer_Row( 'top', __( 'Top Row', 'kenta' ) ) )
-						->setMaxColumns( 4 )
-						->addColumn( [], [
-							'width' => [ 'desktop' => '25%', 'tablet' => '50%', 'mobile' => '100%' ]
-						] )
-						->addColumn( [], [
-							'width' => [ 'desktop' => '25%', 'tablet' => '50%', 'mobile' => '100%' ]
-						] )
-						->addColumn( [], [
-							'width' => [ 'desktop' => '25%', 'tablet' => '50%', 'mobile' => '100%' ]
-						] )
-						->addColumn( [], [
-							'width' => [ 'desktop' => '25%', 'tablet' => '50%', 'mobile' => '100%' ]
-						] )
-				)
-				->addRow(
-					( new Kenta_Footer_Row( 'middle', __( 'Middle Row', 'kenta' ) ) )
-						->setMaxColumns( 4 )
-						->addColumn( [ 'widgets-1' ], [
-							'width'   => [ 'desktop' => '25%', 'tablet' => '50%', 'mobile' => '100%' ],
-							'padding' => [ 'top' => '12px', 'right' => '12px', 'bottom' => '12px', 'left' => '12px' ]
-						] )
-						->addColumn( [ 'widgets-2' ], [
-							'width'   => [ 'desktop' => '25%', 'tablet' => '50%', 'mobile' => '100%' ],
-							'padding' => [ 'top' => '12px', 'right' => '12px', 'bottom' => '12px', 'left' => '12px' ]
-						] )
-						->addColumn( [ 'widgets-3' ], [
-							'width'   => [ 'desktop' => '25%', 'tablet' => '50%', 'mobile' => '100%' ],
-							'padding' => [ 'top' => '12px', 'right' => '12px', 'bottom' => '12px', 'left' => '12px' ]
-						] )
-						->addColumn( [ 'footer-logo' ], [
-							'width'   => [ 'desktop' => '25%', 'tablet' => '50%', 'mobile' => '100%' ],
-							'padding' => [ 'top' => '12px', 'right' => '12px', 'bottom' => '12px', 'left' => '12px' ]
-						] )
-				)
-				->addRow(
-					( new Kenta_Footer_Row( 'bottom', __( 'Bottom Row', 'kenta' ), [
-						'border_top' => [
-							1,
-							'solid',
-							'var(--kenta-base-300)'
-						]
-					] ) )
-						->setMaxColumns( 4 )
-						->addColumn( [ 'footer-menu' ], [
-							'width'           => [ 'desktop' => '60%', 'tablet' => '100%', 'mobile' => '100%' ],
-							'direction'       => 'row',
-							'align-items'     => 'center',
-							'justify-content' => [
-								'desktop' => 'flex-start',
-								'tablet'  => 'center',
-								'mobile'  => 'center'
-							],
-						] )
-						->addColumn( [ 'copyright' ], [
-							'width'           => [ 'desktop' => '40%', 'tablet' => '100%', 'mobile' => '100%' ],
-							'direction'       => 'row',
-							'align-items'     => 'center',
-							'justify-content' => [
-								'desktop' => 'flex-end',
-								'tablet'  => 'center',
-								'mobile'  => 'center'
-							],
-						] )
-				);
+				->addRow( $this->getTopRow() )
+				->addRow( $this->getMiddleRow() )
+				->addRow( $this->getBottomRow() );
 
 			do_action( 'kenta_footer_builder_initialized', $this->_builder );
+		}
+
+		protected function getTopRow() {
+			$data = apply_filters( 'kenta_footer_top_row_default_value', [
+				[
+					'elements' => [],
+					'settings' => [ 'width' => [ 'desktop' => '25%', 'tablet' => '50%', 'mobile' => '100%' ] ],
+				],
+				[
+					'elements' => [],
+					'settings' => [ 'width' => [ 'desktop' => '25%', 'tablet' => '50%', 'mobile' => '100%' ] ],
+				],
+				[
+					'elements' => [],
+					'settings' => [ 'width' => [ 'desktop' => '25%', 'tablet' => '50%', 'mobile' => '100%' ] ],
+				],
+				[
+					'elements' => [],
+					'settings' => [ 'width' => [ 'desktop' => '25%', 'tablet' => '50%', 'mobile' => '100%' ] ],
+				]
+			] );
+
+			$row = ( new Kenta_Footer_Row( 'top', __( 'Top Row', 'kenta' ) ) );
+
+			$row->setMaxColumns( apply_filters( 'kenta_footer_top_row_max_columns', 4 ) );
+
+			foreach ( $data as $column ) {
+				$row->addColumn( $column['elements'], $column['settings'] );
+			}
+
+			return $row;
+		}
+
+		protected function getMiddleRow() {
+			$data = apply_filters( 'kenta_footer_middle_row_default_value', [
+				[
+					'elements' => [],
+					'settings' => [
+						'width'   => [ 'desktop' => '25%', 'tablet' => '50%', 'mobile' => '100%' ],
+						'padding' => [ 'top' => '12px', 'right' => '12px', 'bottom' => '12px', 'left' => '12px' ]
+					],
+				],
+				[
+					'elements' => [],
+					'settings' => [
+						'width'   => [ 'desktop' => '25%', 'tablet' => '50%', 'mobile' => '100%' ],
+						'padding' => [ 'top' => '12px', 'right' => '12px', 'bottom' => '12px', 'left' => '12px' ]
+					],
+				],
+				[
+					'elements' => [],
+					'settings' => [
+						'width'   => [ 'desktop' => '25%', 'tablet' => '50%', 'mobile' => '100%' ],
+						'padding' => [ 'top' => '12px', 'right' => '12px', 'bottom' => '12px', 'left' => '12px' ]
+					],
+				],
+				[
+					'elements' => [],
+					'settings' => [
+						'width'   => [ 'desktop' => '25%', 'tablet' => '50%', 'mobile' => '100%' ],
+						'padding' => [ 'top' => '12px', 'right' => '12px', 'bottom' => '12px', 'left' => '12px' ]
+					],
+				]
+			] );
+
+			$row = ( new Kenta_Footer_Row( 'middle', __( 'Middle Row', 'kenta' ) ) );
+
+			$row->setMaxColumns( apply_filters( 'kenta_footer_middle_row_max_columns', 4 ) );
+
+			foreach ( $data as $column ) {
+				$row->addColumn( $column['elements'], $column['settings'] );
+			}
+
+			return $row;
+		}
+
+		protected function getBottomRow() {
+			$data = apply_filters( 'kenta_footer_bottom_row_default_value', [
+				[
+					'elements' => [ 'footer-menu' ],
+					'settings' => [
+						'width'           => [ 'desktop' => '60%', 'tablet' => '100%', 'mobile' => '100%' ],
+						'direction'       => 'row',
+						'align-items'     => 'center',
+						'justify-content' => [
+							'desktop' => 'flex-start',
+							'tablet'  => 'center',
+							'mobile'  => 'center'
+						],
+					],
+				],
+				[
+					'elements' => [ 'copyright' ],
+					'settings' => [
+						'width'           => [ 'desktop' => '40%', 'tablet' => '100%', 'mobile' => '100%' ],
+						'direction'       => 'row',
+						'align-items'     => 'center',
+						'justify-content' => [
+							'desktop' => 'flex-end',
+							'tablet'  => 'center',
+							'mobile'  => 'center'
+						],
+					],
+				]
+			] );
+
+			$row = ( new Kenta_Footer_Row( 'bottom', __( 'Bottom Row', 'kenta' ) ) );
+
+			$row->setMaxColumns( apply_filters( 'kenta_footer_bottom_row_max_columns', 4 ) );
+
+			foreach ( $data as $column ) {
+				$row->addColumn( $column['elements'], $column['settings'] );
+			}
+
+			return $row;
 		}
 
 		/**

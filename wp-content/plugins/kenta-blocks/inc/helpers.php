@@ -17,6 +17,30 @@ if ( !function_exists( 'kenta_blocks_css' ) ) {
     }
 
 }
+if ( !function_exists( 'kenta_blocks_script' ) ) {
+    /**
+     * Get script utils instance
+     *
+     * @return \KentaBlocks\Script
+     */
+    function kenta_blocks_script()
+    {
+        return \KentaBlocks\Script::get_instance();
+    }
+
+}
+if ( !function_exists( 'kenta_blocks_assets' ) ) {
+    /**
+     * Get assets utils instance
+     *
+     * @return \KentaBlocks\Assets
+     */
+    function kenta_blocks_assets()
+    {
+        return \KentaBlocks\Assets::get_instance();
+    }
+
+}
 if ( !function_exists( 'kenta_blocks_setting' ) ) {
     /**
      * Get settings instance or setting value
@@ -185,10 +209,6 @@ if ( !function_exists( 'kenta_blocks_get_shapes' ) ) {
             'tilt'     => array(
             'title'   => _x( 'Tilt', 'Shapes', 'kenta-blocks' ),
             'options' => array( 'shape_flip' ),
-        ),
-            'clouds'   => array(
-            'title'   => _x( 'Clouds (Pro)', 'Shapes', 'kenta-blocks' ),
-            'options' => array( 'shape_flip', 'shape_invert' ),
         ),
             'triangle' => array(
             'title'   => _x( 'Triangle (Pro)', 'Shapes', 'kenta-blocks' ),
@@ -407,6 +427,28 @@ if ( !function_exists( 'kenta_blocks_process_import_content_urls' ) ) {
             $content = str_replace( $old_url, $new_url, $content );
         }
         return $content;
+    }
+
+}
+if ( !function_exists( 'kenta_blocks_notices' ) ) {
+    /**
+     * Get notices instance
+     *
+     * @return mixed|\Wpmoose\WpDismissibleNotice\Notices
+     */
+    function kenta_blocks_notices()
+    {
+        return \Wpmoose\WpDismissibleNotice\Notices::instance( 'kenta_blocks', KENTA_BLOCKS_PLUGIN_URL . 'vendor/wpmoose/wp-dismissible-notice/' );
+    }
+
+}
+if ( !function_exists( 'kenta_blocks_regenerate_assets' ) ) {
+    /**
+     * Regenerate all assets file when next page loading
+     */
+    function kenta_blocks_regenerate_assets()
+    {
+        update_option( 'kenta_blocks_dynamic_assets_posts', array() );
     }
 
 }

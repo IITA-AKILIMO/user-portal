@@ -132,6 +132,7 @@ nav.woocommerce-pagination .kenta-pagination-finish,
 .kenta-cookies-consent-container .kenta-cookies-consent .kenta-cookies-consent-buttons .kenta-button {
   display: inline-block;
   margin-right: 6px;
+  border: none;
 }
 .kenta-cookies-consent-container .kenta-cookies-consent .kenta-cookies-consent-buttons .kenta-button:last-of-type {
   margin-right: 0;

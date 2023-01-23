@@ -16,12 +16,16 @@ $attributes = array_merge(
     'width'             => array(
     'type' => 'object',
 ),
+    'order'             => array(
+    'type' => 'object',
+),
 ),
     kenta_blocks_container_global_style(),
     kenta_blocks_box_attrs(),
     kenta_blocks_overlay_attrs(),
     kenta_blocks_shape_attrs(),
-    kenta_blocks_advanced_attrs()
+    kenta_blocks_advanced_attrs(),
+    kenta_blocks_transform_attrs()
 );
 $metadata = array(
     'title'      => __( 'Column (KB)', 'kenta-blocks' ),
@@ -41,6 +45,7 @@ return array(
     $wrapperCss = array(
         '--kb-column-flex-grow' => ( $width ? 0 : 1 ),
         '--kb-column-width'     => $width,
+        'order'                 => kenta_blocks_block_attr( 'order', $attrs, $metadata ),
         'z-index'               => kenta_blocks_block_attr( 'zIndex', $attrs, $metadata ),
     );
     $columnCss = array_merge(
@@ -48,7 +53,8 @@ return array(
         kenta_blocks_css()->shadow( kenta_blocks_block_attr( 'shadow', $attrs, $metadata ) ),
         kenta_blocks_css()->background( kenta_blocks_block_attr( 'background', $attrs, $metadata ) ),
         kenta_blocks_css()->dimensions( kenta_blocks_block_attr( 'radius', $attrs, $metadata ), '--kb-border-radius' ),
-        kenta_blocks_advanced_css( $attrs, $metadata, array( 'z-index', 'margin' ) )
+        kenta_blocks_advanced_css( $attrs, $metadata, array( 'z-index', 'margin' ) ),
+        kenta_blocks_transform_css( $attrs, $metadata )
     );
     $css[".kb-column-wrapper-{$id}"] = array_merge( $wrapperCss, kenta_blocks_container_global_css( $attrs, $metadata ) );
     $css[".kb-column-{$id}"] = $columnCss;

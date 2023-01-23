@@ -26,6 +26,10 @@ class Route {
 			Route::class,
 			'can_manage_options'
 		) );
+		$router->create( '/settings/assets', array( Route::class, 'regenerate' ) )->use( array(
+			Route::class,
+			'can_manage_options'
+		) );
 
 		/**
 		 *  Library api
@@ -116,6 +120,15 @@ class Route {
 	}
 
 	/**
+	 * Regenerate dynamic assets file
+	 */
+	public static function regenerate() {
+		kenta_blocks_regenerate_assets();
+
+		return rest_ensure_response( array( 'status' => 'ok' ) );
+	}
+
+	/**
 	 * Remove all library patterns cache
 	 *
 	 * @param $request
@@ -191,6 +204,13 @@ class Route {
 
 		$result = self::do_library_api_request( $endpoint );
 		if ( is_array( $result ) && isset( $result['content'] ) ) {
+
+			if ( isset( $result['min_version'] ) && $result['min_version'] !== '' && version_compare( KENTA_BLOCKS_VERSION, $result['min_version'], '<' ) ) {
+				return rest_ensure_response(
+					new \WP_Error( '403', __( 'Your plugin version is too old, please upgrade to the latest version and try again.', 'kenta-blocks' ) )
+				);
+			}
+
 			$result['content'] = kenta_blocks_process_import_content_urls( $result['content'] );
 		}
 

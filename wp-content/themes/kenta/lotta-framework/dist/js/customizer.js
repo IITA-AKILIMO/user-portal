@@ -26231,21 +26231,6 @@ object-assign
         function _nonIterableRest() {
             throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
         }
-        function _unsupportedIterableToArray(o, minLen) {
-            if (!o) return;
-            if (typeof o === "string") return _arrayLikeToArray(o, minLen);
-            var n = Object.prototype.toString.call(o).slice(8, -1);
-            if (n === "Object" && o.constructor) n = o.constructor.name;
-            if (n === "Map" || n === "Set") return Array.from(o);
-            if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen);
-        }
-        function _arrayLikeToArray(arr, len) {
-            if (len == null || len > arr.length) len = arr.length;
-            for (var i = 0, arr2 = new Array(len); i < len; i++) {
-                arr2[i] = arr[i];
-            }
-            return arr2;
-        }
         function _iterableToArrayLimit(arr, i) {
             var _i = arr == null ? null : typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"];
             if (_i == null) return;
@@ -26273,16 +26258,53 @@ object-assign
         function _arrayWithHoles(arr) {
             if (Array.isArray(arr)) return arr;
         }
-        function Editor(_ref) {
-            var id = _ref.id, value = _ref.value, options = _ref.options, _onChange = _ref.onChange;
+        function _toConsumableArray(arr) {
+            return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread();
+        }
+        function _nonIterableSpread() {
+            throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+        }
+        function _unsupportedIterableToArray(o, minLen) {
+            if (!o) return;
+            if (typeof o === "string") return _arrayLikeToArray(o, minLen);
+            var n = Object.prototype.toString.call(o).slice(8, -1);
+            if (n === "Object" && o.constructor) n = o.constructor.name;
+            if (n === "Map" || n === "Set") return Array.from(o);
+            if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen);
+        }
+        function _iterableToArray(iter) {
+            if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter);
+        }
+        function _arrayWithoutHoles(arr) {
+            if (Array.isArray(arr)) return _arrayLikeToArray(arr);
+        }
+        function _arrayLikeToArray(arr, len) {
+            if (len == null || len > arr.length) len = arr.length;
+            for (var i = 0, arr2 = new Array(len); i < len; i++) {
+                arr2[i] = arr[i];
+            }
+            return arr2;
+        }
+        function useRefCallback(fn, dependencies) {
+            var ref = (0, _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useRef)(fn);
+            (0, _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useEffect)((function() {
+                ref.current = fn;
+            }), [ fn ].concat(_toConsumableArray(dependencies)));
+            return (0, _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useCallback)((function() {
+                var fn = ref.current;
+                return fn();
+            }), [ ref ]);
+        }
+        function Editor(props) {
+            var id = props.id, value = props.value, options = props.options, _onChange = props.onChange;
             var el = (0, _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useRef)();
             var _useState = (0, _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)("".concat(id, "-").concat(md5__WEBPACK_IMPORTED_MODULE_1___default()(Math.random() + "-" + Math.random() + "-" + Math.random()))), _useState2 = _slicedToArray(_useState, 2), editorId = _useState2[0], _ = _useState2[1];
             var correctEditor = function correctEditor() {
                 return wp.oldEditor || wp.editor;
             };
-            var listener = (0, _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useCallback)((function() {
+            var listener = useRefCallback((function() {
                 _onChange(correctEditor().getContent(editorId));
-            }), [ editorId ]);
+            }), [ editorId, _onChange ]);
             var editorParams = _objectSpread(_objectSpread({
                 quicktags: !!options.quicktags,
                 mediaButtons: !!options.mediaButtons
@@ -26334,8 +26356,8 @@ object-assign
                 }, _objectSpread(_objectSpread({}, options.field_attr ? options.field_attr : {}), options.attr && options.attr.placeholder ? {
                     placeholder: options.attr.placeholder
                 } : {})), {}, {
-                    onChange: function onChange(_ref2) {
-                        var value = _ref2.target.value;
+                    onChange: function onChange(_ref) {
+                        var value = _ref.target.value;
                         return _onChange(value);
                     }
                 }))

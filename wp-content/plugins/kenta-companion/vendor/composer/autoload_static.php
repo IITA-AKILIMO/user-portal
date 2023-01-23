@@ -4,13 +4,17 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit76e718b1b526c13e6a0e6bcbe4884141
+class ComposerStaticInitc09bc2421a37014d44e279722425b71c
 {
     public static $files = array (
         '619b60a437f56e322b992fcedc03812a' => __DIR__ . '/../..' . '/src/helpers.php',
     );
 
     public static $prefixLengthsPsr4 = array (
+        'W' => 
+        array (
+            'Wpmoose\\WpDismissibleNotice\\' => 28,
+        ),
         'P' => 
         array (
             'Psr\\SimpleCache\\' => 16,
@@ -28,6 +32,10 @@ class ComposerStaticInit76e718b1b526c13e6a0e6bcbe4884141
     );
 
     public static $prefixDirsPsr4 = array (
+        'Wpmoose\\WpDismissibleNotice\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/wpmoose/wp-dismissible-notice/src',
+        ),
         'Psr\\SimpleCache\\' => 
         array (
             0 => __DIR__ . '/..' . '/psr/simple-cache/src',
@@ -57,9 +65,9 @@ class ComposerStaticInit76e718b1b526c13e6a0e6bcbe4884141
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit76e718b1b526c13e6a0e6bcbe4884141::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit76e718b1b526c13e6a0e6bcbe4884141::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInit76e718b1b526c13e6a0e6bcbe4884141::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInitc09bc2421a37014d44e279722425b71c::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInitc09bc2421a37014d44e279722425b71c::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInitc09bc2421a37014d44e279722425b71c::$classMap;
 
         }, null, ClassLoader::class);
     }

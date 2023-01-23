@@ -84,7 +84,7 @@ if ( ! class_exists( 'BravePop_Mailchimp' ) ) {
          //Add Custom Field Values
          if(count($customFields) > 0){
             foreach ($customFields as $key => $value) {
-               $contact['merge_fields'][trim($key)] = $value;
+               $contact['merge_fields'][trim($key)] = !empty($value) && is_array($value) ? implode(", ", $value) : $value;
             }
          }
          //Add Tags

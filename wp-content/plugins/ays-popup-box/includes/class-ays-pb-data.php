@@ -16,6 +16,18 @@ class Ays_Pb_Data {
         return $results;
     }
 
+    public static function get_popups(){
+        global $wpdb;
+        $popups_table = esc_sql( $wpdb->prefix . 'ays_pb' );
+
+        $sql = "SELECT id,title
+                FROM {$popups_table}";
+
+        $popups = $wpdb->get_results( $sql , "ARRAY_A" );
+
+        return $popups;
+    }
+
     public static function get_pb_options_by_id( $id ){
         global $wpdb;
         $ays_pb_table = $wpdb->prefix .'ays_pb';
@@ -181,7 +193,7 @@ class Ays_Pb_Data {
         $ays_pb_ishmar += intval(get_option('ays_pb_sale_dismiss_for_two_month_spring'));
         if($ays_pb_ishmar == 0 ){
             if (isset($_GET['page']) && strpos($_GET['page'], AYS_PB_NAME) !== false) {
-                self::ays_pb_black_friday_message($ays_pb_ishmar);
+                // self::ays_pb_christmas_message($ays_pb_ishmar);
                 // self::ays_pb_spring_bundle_message($ays_pb_ishmar);
             }
         }
@@ -348,7 +360,7 @@ class Ays_Pb_Data {
                                                         </a>
                                                     </span>
                                                     <span style='display: block;'>
-                                                        Quiz + Popup + Copy
+                                                        pb + Popup + Copy
                                                     </span>", AYS_PB_NAME );
                             $content[] = '</strong>';
                             $content[] = '<br>';
@@ -445,9 +457,9 @@ class Ays_Pb_Data {
     //                         $content[] = '</div>';
 
     //                         // $content[] = '<form action="" method="POST">';
-    //                         //     $content[] = '<div id="ays-quiz-dismiss-buttons-content">';
-    //                         //         $content[] = '<button class="btn btn-link ays-button" name="ays_quiz_sale_btn" style="height: 32px; margin-left: 0;padding-left: 0">Dismiss ad</button>';
-    //                         //         $content[] = '<button class="btn btn-link ays-button" name="ays_quiz_sale_btn_for_two_months" style="height: 32px; padding-left: 0">Dismiss ad for 2 months</button>';
+    //                         //     $content[] = '<div id="ays-pb-dismiss-buttons-content">';
+    //                         //         $content[] = '<button class="btn btn-link ays-button" name="ays_pb_sale_btn" style="height: 32px; margin-left: 0;padding-left: 0">Dismiss ad</button>';
+    //                         //         $content[] = '<button class="btn btn-link ays-button" name="ays_pb_sale_btn_for_two_months" style="height: 32px; padding-left: 0">Dismiss ad for 2 months</button>';
     //                         //     $content[] = '</div>';
     //                         // $content[] = '</form>';
 
@@ -459,8 +471,8 @@ class Ays_Pb_Data {
     //                     $content[] = '<a href="https://ays-pro.com/wordpress/popup-box?src=43" class="button button-primary ays-buy-now-button" id="ays-button-top-buy-now" target="_blank" style="" >' . __( 'Buy Now !', AYS_PB_NAME ) . '</a>';
     //                 $content[] = '</div>';
 
-    //                 // $content[] = '<div class="ays-quiz-dicount-wrap-box ays-quiz-dicount-wrap-opacity-box">';
-    //                 //     $content[] = '<a href="https://ays-pro.com/great-bundle" class="ays-buy-now-opacity-button" target="_blank">' . __( 'link', AYS_QUIZ_NAME ) . '</a>';
+    //                 // $content[] = '<div class="ays-pb-dicount-wrap-box ays-pb-dicount-wrap-opacity-box">';
+    //                 //     $content[] = '<a href="https://ays-pro.com/great-bundle" class="ays-buy-now-opacity-button" target="_blank">' . __( 'link', AYS_pb_NAME ) . '</a>';
     //                 // $content[] = '</div>';
 
     //             $content[] = '</div>';
@@ -625,4 +637,59 @@ class Ays_Pb_Data {
         Sale Banner | End
     ==========================================
     */
+
+    // Christmas banner
+    // public static function ays_pb_christmas_message($ishmar){
+    //     if($ishmar == 0 ){
+    //         $content = array();
+    
+    //         $content[] = '<div id="ays-pb-dicount-christmas-month-main" class="notice notice-success is-dismissible ays_pb_dicount_info">';
+    //             $content[] = '<div id="ays-pb-dicount-christmas-month" class="ays_pb_dicount_month">';
+    //                 $content[] = '<div class="ays-pb-dicount-christmas-box">';
+    //                     $content[] = '<div class="ays-pb-dicount-christmas-wrap-box ays-pb-dicount-christmas-wrap-box-80">';
+    //                         $content[] = '<div class="ays-pb-dicount-christmas-title-row">' . __( 'Limited Time', AYS_PB_NAME ) .' '. '<a href="https://ays-pro.com/wordpress/popup-box" class="ays-pb-dicount-christmas-button-sale" target="_blank">' . __( '20%', AYS_PB_NAME ) . '</a>' . ' SALE</div>';
+    //                         $content[] = '<div class="ays-pb-dicount-christmas-title-row">' . __( 'Popup Box Plugin', AYS_PB_NAME ) . '</div>';
+    //                     $content[] = '</div>';
+    
+    //                     $content[] = '<div class="ays-pb-dicount-christmas-wrap-box" style="width: 25%;">';
+    //                         $content[] = '<div id="ays-pb-countdown-main-container">';
+    //                             $content[] = '<div class="ays-pb-countdown-container">';
+    //                                 $content[] = '<div id="ays-pb-countdown" style="display: block;">';
+    //                                     $content[] = '<ul>';
+    //                                         $content[] = '<li><span id="ays-pb-countdown-days"></span>' . __( 'Days', AYS_PB_NAME ) . '</li>';
+    //                                         $content[] = '<li><span id="ays-pb-countdown-hours"></span>' . __( 'Hours', AYS_PB_NAME ) . '</li>';
+    //                                         $content[] = '<li><span id="ays-pb-countdown-minutes"></span>' . __( 'Minutes', AYS_PB_NAME ) . '</li>';
+    //                                         $content[] = '<li><span id="ays-pb-countdown-seconds"></span>' . __( 'Seconds', AYS_PB_NAME ) . '</li>';
+    //                                     $content[] = '</ul>';
+    //                                 $content[] = '</div>';
+    //                                 $content[] = '<div id="ays-pb-countdown-content" class="emoji" style="display: none;">';
+    //                                     $content[] = '<span>🚀</span>';
+    //                                     $content[] = '<span>⌛</span>';
+    //                                     $content[] = '<span>🔥</span>';
+    //                                     $content[] = '<span>💣</span>';
+    //                                 $content[] = '</div>';
+    //                             $content[] = '</div>';
+    //                         $content[] = '</div>';
+    //                     $content[] = '</div>';
+    
+    //                     $content[] = '<div class="ays-pb-dicount-christmas-wrap-box" style="width: 25%;">';
+    //                         $content[] = '<a href="https://ays-pro.com/wordpress/popup-box" class="ays-pb-dicount-christmas-button-buy-now" target="_blank">' . __( 'BUY NOW!', AYS_PB_NAME ) . '</a>';
+    //                     $content[] = '</div>';
+    //                 $content[] = '</div>';
+    //             $content[] = '</div>';
+    
+    //             $content[] = '<div style="position: absolute;right: 0;bottom: 1px;"  class="ays-pb-dismiss-buttons-container-for-form-christmas">';
+    //                 $content[] = '<form action="" method="POST">';
+    //                     $content[] = '<div id="ays-pb-dismiss-buttons-content-christmas">';
+    //                         $content[] = '<button class="btn btn-link ays-button-christmas" name="ays_pb_sale_btn" style="">' . __( 'Dismiss ad', AYS_PB_NAME ) . '</button>';
+    //                     $content[] = '</div>';
+    //                 $content[] = '</form>';
+    //             $content[] = '</div>';
+    //         $content[] = '</div>';
+    
+    //         $content = implode( '', $content );
+    
+    //         echo $content;
+    //     }
+    // }
 }

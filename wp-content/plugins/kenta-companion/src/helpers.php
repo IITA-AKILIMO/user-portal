@@ -26,6 +26,20 @@ if ( ! function_exists( 'kcmp' ) ) {
 	}
 }
 
+if ( ! function_exists( 'kcmp_notices' ) ) {
+	/**
+	 * Get notices instance
+	 *
+	 * @return mixed|\Wpmoose\WpDismissibleNotice\Notices
+	 */
+	function kcmp_notices() {
+		return \Wpmoose\WpDismissibleNotice\Notices::instance(
+			'kcmp',
+			KCMP_PLUGIN_URL . 'vendor/wpmoose/wp-dismissible-notice/'
+		);
+	}
+}
+
 if ( ! function_exists( 'kcmp_get_template_part' ) ) {
 	/**
 	 * Include template
@@ -134,6 +148,23 @@ if ( ! function_exists( 'kcmp_plugin_starter_page' ) ) {
 			'menu_title'  => esc_html__( 'Starter Sites', 'kenta-companion' ),
 			'capability'  => 'switch_themes',
 			'menu_slug'   => 'kenta-starter-sites',
+		] );
+	}
+}
+
+if ( ! function_exists( 'kcmp_plugin_optin_page' ) ) {
+	/**
+	 * Get the plugin optin template page setup data.
+	 *
+	 * @return array
+	 */
+	function kcmp_plugin_optin_page() {
+		return apply_filters( 'kcmp/plugin_optin_page', [
+			'parent_slug' => 'kenta-companion',
+			'page_title'  => esc_html__( 'Opt In', 'kenta-companion' ),
+			'menu_title'  => esc_html__( 'Opt In', 'kenta-companion' ),
+			'capability'  => 'switch_themes',
+			'menu_slug'   => 'kenta-companion-optin',
 		] );
 	}
 }
@@ -336,7 +367,8 @@ if ( ! function_exists( 'kcmp_upsell_url' ) ) {
 	 * @return string
 	 */
 	function kcmp_upsell_url() {
-		return admin_url( 'admin.php?page=kenta-companion-pricing' );
+//		return admin_url( 'admin.php?page=kenta-companion-pricing' );
+		return 'https://kentatheme.com/pricing/';
 	}
 }
 
@@ -438,5 +470,20 @@ if ( ! function_exists( 'map_deep' ) ) {
 		}
 
 		return $value;
+	}
+}
+
+if ( ! function_exists( 'kcmp_is_premium_kb_installed' ) ) {
+	/**
+	 * Check is premium kenta blocks installed or not
+	 *
+	 * @return bool
+	 */
+	function kcmp_is_premium_kb_installed() {
+		if ( function_exists( 'kb_fs' ) ) {
+			return kb_fs()->can_use_premium_code();
+		}
+
+		return false;
 	}
 }

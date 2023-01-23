@@ -12,9 +12,17 @@ if ( ! function_exists( 'kenta_admin_get_start_notice' ) ) {
 	 * @return void
 	 */
 	function kenta_admin_get_start_notice() {
-		if ( ! KENTA_CMP_ACTIVE ) {
-			get_template_part( 'template-parts/admin-start' );
+		if ( get_option( 'kenta_active_template' ) ) {
+			return;
 		}
+
+		$screen = get_current_screen();
+
+		if ( false !== strpos( $screen->base, 'kenta' ) ) {
+			return;
+		}
+
+		get_template_part( 'template-parts/admin-start' );
 	}
 }
 
@@ -32,7 +40,7 @@ if ( ! function_exists( 'kenta_dismiss_notice' ) ) {
 		$dismiss_option = filter_input( INPUT_GET, 'kenta_dismiss', FILTER_SANITIZE_STRING );
 		if ( is_string( $dismiss_option ) && in_array( $dismiss_option, array( 'start' ) ) ) {
 			add_user_meta( $user_id, "kenta_dismissed_$dismiss_option", 'true', true );
-			// delete_user_meta( $user_id, "kenta_dismissed_$dismiss_option", 'true', true );
+//			delete_user_meta( $user_id, "kenta_dismissed_$dismiss_option", 'true', true );
 			wp_die( '', '', array( 'response' => 200 ) );
 		}
 	}
@@ -51,7 +59,7 @@ if ( ! function_exists( 'kenta_install_companion' ) ) {
 			<?php
 			kenta_do_install_plugins( [
 				'kenta-companion' => esc_html__( 'Kenta Companion', 'kenta' ),
-				'kenta-blocks' => esc_html__( 'Kenta Blocks', 'kenta' ),
+				'kenta-blocks'    => esc_html__( 'Kenta Blocks', 'kenta' ),
 			], admin_url( 'themes.php' ) );
 			?>
         </div>
@@ -59,6 +67,8 @@ if ( ! function_exists( 'kenta_install_companion' ) ) {
 	}
 }
 add_action( 'admin_action_kenta_install_companion', 'kenta_install_companion' );
+// Update dynamic css cache action
+add_action( 'admin_action_kenta_update_dynamic_css_cache', 'kenta_update_dynamic_css_cache' );
 
 if ( ! function_exists( 'kenta_show_admin_page' ) ) {
 	/**
@@ -67,7 +77,7 @@ if ( ! function_exists( 'kenta_show_admin_page' ) ) {
 	 * @return void
 	 */
 	function kenta_show_admin_page() {
-		get_template_part( 'template-parts/admin', 'welcome' );
+		get_template_part( 'template-parts/admin', 'container' );
 	}
 }
 
