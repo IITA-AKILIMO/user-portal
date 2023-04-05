@@ -1,0 +1,59 @@
+#accordion-section-kenta_header,
+#accordion-section-kenta_archive,
+#accordion-section-custom_css,
+#accordion-section-title_tagline,
+#kenta_update_dynamic_css_cache {
+  margin-top: 12px;
+}
+#accordion-section-kenta_header .accordion-section-title,
+#accordion-section-kenta_archive .accordion-section-title,
+#accordion-section-custom_css .accordion-section-title,
+#accordion-section-title_tagline .accordion-section-title,
+#kenta_update_dynamic_css_cache .accordion-section-title {
+  border-top: 1px solid #dcdcde;
+}
+
+#accordion-section-kenta_single_post .accordion-section-title::before,
+#accordion-section-kenta_pages .accordion-section-title::before,
+#accordion-panel-woocommerce .accordion-section-title::before {
+  content: "\f474";
+  font-family: dashicons;
+  font-weight: 400;
+  font-style: normal;
+  display: inline-block;
+  vertical-align: top;
+  text-align: center;
+  font-size: 12px;
+  margin: 0 8px;
+  color: #a7aaad;
+  transform: scaleX(-1);
+}
+
+#kenta_install_companion .button .loader {
+  width: 16px;
+  height: 16px;
+  margin-right: 6px;
+  border-radius: 50%;
+  display: inline-block;
+  border-top: 3px solid currentColor;
+  border-right: 3px solid transparent;
+  box-sizing: border-box;
+  -webkit-animation: rotation 1s linear infinite;
+          animation: rotation 1s linear infinite;
+}
+@-webkit-keyframes rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+@keyframes rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

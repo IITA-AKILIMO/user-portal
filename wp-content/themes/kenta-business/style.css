@@ -1,0 +1,308 @@
+/*!
+Theme Name:   Kenta Business
+Theme URI:    https://kentatheme.com/child-themes/kenta-business
+Author:       WP Moose
+Author URI:   https://www.wpmoose.com
+Description:  Kenta Business is a child theme of the Powerful and Multipurpose Kenta Theme. It comes with a set of beautifully designed patterns and home page. You can also access the Kenta theme's rich Starter Sites to help you create your sites with just one click instead of starting from scratch. It provides endless possibilities to create your site visually in minutes, without coding skills. We also have tons of options for you to customize every part of your site. You can almost build any kind of websites, like blog, business, portfolio, WooCommerce storefronts etc. Whether you're bloggers, editors, online magazines, newspaper, news portals, content publishers, creative business, small businesses, startups and freelancers, we can help you build an amazing website.
+Template:     kenta
+Version:      1.0.2
+Tested up to: 6.0
+Requires PHP: 7.0
+License:      GNU General Public License v2 or later
+License URI:  http://www.gnu.org/licenses/gpl-2.0.html
+Text Domain:  kenta-business
+Tags: blog, portfolio, e-commerce, grid-layout, one-column, two-columns, three-columns, four-columns, left-sidebar, right-sidebar, block-patterns, block-styles, custom-background, custom-colors, custom-header, custom-logo, custom-menu, editor-style, featured-image-header, featured-images, footer-widgets, full-width-template, rtl-language-support, sticky-post, threaded-comments, theme-options, translation-ready, wide-blocks
+*/
+
+/*--------------------------------------------------------------
+# Breakpoints
+
+- Desktop >= 1024px
+- Tablet >= 768px
+- Mobile >= 576px
+
+----------------------------------------------------------------*/
+
+/*--------------------------------------------------------------
+# TABLE OF CONTENTS:
+----------------------------------------------------------------
+- Global vars
+- Utilities
+- Patterns
+    1. Hero Pattern
+    2. Heading Pattern
+    3. Features Pattern
+    4. Grid Pattern
+    5. Team Pattern
+    6. Pricing Table Pattern
+----------------------------------------------------------------*/
+
+/*-------------------------------------------------------------
+## Global fallback vars
+-------------------------------------------------------------*/
+:root {
+    --kenta-transparent: rgba(0, 0, 0, 0);
+    --kenta-primary-color: var(--kenta-primary-color-admin, #5956e9);
+    --kenta-primary-active: var(--kenta-primary-active-admin, #0693E3);
+    --kenta-accent-color: var(--kenta-accent-color-admin, #000248);
+    --kenta-accent-active: var(--kenta-accent-active-admin, #52526c);
+    --kenta-base-color: var(--kenta-base-color-admin, #ffffff);
+    --kenta-base-100: var(--kenta-base-100-admin, #f8fafc);
+    --kenta-base-200: var(--kenta-base-200-admin, #f1f5f9);
+    --kenta-base-300: var(--kenta-base-300-admin, #e2e8f0);
+}
+
+/*-------------------------------------------------------------
+## Utilities
+-------------------------------------------------------------*/
+.justify-center {
+    justify-content: center !important;
+}
+
+.justify-start {
+    justify-content: flex-start !important;
+}
+
+.justify-end {
+    justify-content: flex-end !important;
+}
+
+.align-items-center {
+    align-items: center !important;
+}
+
+.align-items-start {
+    align-items: flex-start !important;
+}
+
+.align-items-end {
+    align-items: flex-end !important;
+}
+
+.m-0 {
+    margin: 0 !important;
+}
+
+.mt-0 {
+    margin-top: 0 !important;
+}
+
+.mb-0 {
+    margin-bottom: 0 !important;
+}
+
+.mb-half-gutter {
+    margin-bottom: 12px !important;
+}
+
+.mt-half-gutter {
+    margin-top: 12px !important;
+}
+
+.mb-gutter {
+    margin-bottom: 24px !important;
+}
+
+.mt-gutter {
+    margin-top: 24px !important;
+}
+
+.p-gutter {
+    padding: 24px !important;
+}
+
+.p-half-gutter {
+    padding: 12px !important;
+}
+
+.uppercase {
+    text-transform: uppercase !important;
+}
+
+.capitalize {
+    text-transform: capitalize !important;
+}
+
+/*-------------------------------------------------------------
+## Patterns
+-------------------------------------------------------------*/
+/*-------------------------------------------------------------
+### Hero Pattern
+-------------------------------------------------------------*/
+.kenta-business-hero .wp-block-columns {
+    margin-bottom: 0;
+}
+
+.kenta-business-hero .wp-block-column h1,
+.kenta-business-hero .wp-block-column h2,
+.kenta-business-hero .wp-block-column h3,
+.kenta-business-hero .wp-block-column h4,
+.kenta-business-hero .wp-block-column h5,
+.kenta-business-hero .wp-block-column h6 {
+    font-size: 3rem;
+}
+
+@media (max-width: 1024px) {
+    .kenta-business-hero .wp-block-column h1,
+    .kenta-business-hero .wp-block-column h2,
+    .kenta-business-hero .wp-block-column h3,
+    .kenta-business-hero .wp-block-column h4,
+    .kenta-business-hero .wp-block-column h5,
+    .kenta-business-hero .wp-block-column h6 {
+        font-size: 2.25rem;
+    }
+
+    .kenta-business-hero {
+        text-align: center;
+    }
+
+    .kenta-business-hero .wp-block-buttons {
+        justify-content: center;
+    }
+
+    .kenta-business-hero .wp-block-columns {
+        flex-wrap: wrap !important;
+    }
+
+    .kenta-business-hero .wp-block-columns:not(.is-not-stacked-on-mobile) > .wp-block-column {
+        flex-basis: 100% !important;
+        flex-grow: 1 !important;
+    }
+}
+
+/*-------------------------------------------------------------
+### Heading Pattern
+-------------------------------------------------------------*/
+.kenta-business-heading .kenta-business-heading-badge {
+    position: relative;
+    color: var(--kenta-primary-color);
+    padding: 4px 12px;
+    font-size: 0.875rem;
+    z-index: 1;
+    background: #fff;
+}
+
+.kenta-business-heading .kenta-business-heading-badge::after {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    background: var(--kenta-primary-color);
+    opacity: 0.12;
+}
+
+.kenta-business-heading .kenta-business-heading-badge a {
+    text-decoration: none;
+}
+
+.kenta-business-heading .kenta-business-heading-title {
+    margin-top: 0.25em;
+    margin-bottom: 1em;
+}
+
+.kenta-business-heading .kenta-business-heading-title a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.kenta-business-heading-desc {
+    max-width: 640px;
+    margin: 0 auto;
+}
+
+/*-------------------------------------------------------------
+### Features Pattern
+-------------------------------------------------------------*/
+.kenta-business-features .wp-block-column {
+    box-shadow: 0 10px 30px rgba(166, 209, 237, 0.2);
+    position: relative;
+    z-index: 1;
+    border-radius: 10px;
+}
+
+.kenta-business-features .wp-block-column::before {
+    content: " ";
+    width: 100%;
+    height: 100%;
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: #fff;
+    border-radius: 10px;
+    z-index: -2;
+}
+
+.kenta-business-features .wp-block-column:focus::after,
+.kenta-business-features .wp-block-column::after {
+    content: " ";
+    width: 95%;
+    height: 95%;
+    z-index: -3;
+    position: absolute;
+    top: auto;
+    bottom: 1px;
+    left: 1px;
+    border-radius: 12px;
+    background-image: linear-gradient(100deg, var(--kenta-primary-color), var(--kenta-primary-active));
+    background-repeat: repeat-x;
+    outline: 1px solid transparent;
+    transition: all 0.5s;
+}
+
+.kenta-business-features .wp-block-column.active::after,
+.kenta-business-features .wp-block-column:hover::after {
+    transform: rotate(2deg) translateX(-5px) translateY(16px);
+}
+
+.kenta-business-features .wp-block-column .wp-block-image {
+    margin-top: 0;
+    margin-bottom: 1em;
+}
+
+/*-------------------------------------------------------------
+### Grid Pattern
+-------------------------------------------------------------*/
+.kenta-business-cards .kenta-business-heading .kenta-business-heading-badge {
+    font-size: 0.75rem;
+}
+
+/*-------------------------------------------------------------
+### Team Pattern
+-------------------------------------------------------------*/
+.kenta-business-team > .wp-block-column {
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+/*-------------------------------------------------------------
+### Pricing Table Pattern
+-------------------------------------------------------------*/
+.kenta-business-pricing-table hr {
+    margin-top: 1.5em !important;
+    margin-bottom: 1.5em !important;
+}
+
+.kenta-business-pricing-table .feature-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    margin-bottom: 24px;
+}
+
+.kenta-business-pricing-table .kenta-business-price {
+    align-items: flex-end;
+}
+
+.kenta-business-pricing-table .kenta-business-price .price {
+    line-height: 1;
+}
+
+.kenta-business-pricing-table .feature-list li {
+    padding: 12px 0;
+    margin: 0;
+    border-bottom: 1px solid var(--kenta-base-300);
+}

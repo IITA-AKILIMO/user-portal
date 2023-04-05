@@ -1,0 +1,27 @@
+
+---Importing widgets---
+Primary Sidebar : 
+
+Block - No Title - Widget already exists
+Block - No Title - Widget already exists
+Block - No Title - Widget already exists
+
+Store Sidebar : 
+
+Block - No Title - Widget already exists
+Block - No Title - Widget already exists
+
+Widgets Area #1 : 
+
+Text - Find Us - Imported
+
+Widgets Area #2 : 
+
+Text - About This Site - Imported
+
+Widgets Area #3 : 
+
+Recent Posts - No Title - Imported
+Categories - No Title - Imported
+
+

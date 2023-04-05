@@ -1,12 +1,17 @@
 <?php
+/**
+ * Front to the WordPress application. This file doesn't do anything, but loads
+ * wp-blog-header.php which does and tells WordPress to load the theme.
+ *
+ * @package WordPress
+ */
 
-// comment out the following two lines when deployed to production
-defined('YII_DEBUG') or define('YII_DEBUG', true);
-defined('YII_ENV') or define('YII_ENV', 'dev');
+/**
+ * Tells WordPress to load the WordPress theme and output it.
+ *
+ * @var bool
+ */
+define( 'WP_USE_THEMES', true );
 
-require __DIR__ . '/vendor/autoload.php';
-require __DIR__ . '/vendor/yiisoft/yii2/Yii.php';
-
-$config = require __DIR__ . '/config/web.php';
-
-(new yii\web\Application($config))->run();
+/** Loads the WordPress Environment and Template */
+require __DIR__ . '/wp-blog-header.php';
