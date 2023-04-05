@@ -14,6 +14,7 @@ $layout          = CZ::get( 'yuki_archive_layout' );
 $card_attrs = [
 	'id'               => 'post-' . get_the_ID(),
 	'class'            => Utils::clsx(
+		[ 'card-thumb-motion' => CZ::checked( 'yuki_entry_thumbnail_motion' ) ],
 		get_post_class( [ 'yuki-scroll-reveal card overflow-hidden h-full' ] )
 	),
 	'data-card-layout' => $layout,

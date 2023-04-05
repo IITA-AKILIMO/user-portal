@@ -15,6 +15,7 @@ use  LottaFramework\Customizer\Controls\Section ;
 use  LottaFramework\Customizer\Controls\Select ;
 use  LottaFramework\Customizer\Controls\Separator ;
 use  LottaFramework\Customizer\Controls\Slider ;
+use  LottaFramework\Customizer\Controls\Spacing ;
 use  LottaFramework\Customizer\Controls\Tabs ;
 use  LottaFramework\Customizer\Controls\Text ;
 use  LottaFramework\Customizer\Controls\Toggle ;
@@ -75,6 +76,13 @@ if ( !class_exists( 'Yuki_Hero_Element' ) ) {
                 'left'   => __( 'Left', 'yuki' ),
                 'center' => __( 'Center', 'yuki' ),
                 'right'  => __( 'Right', 'yuki' ),
+            ] ),
+                ( new Spacing( $this->getSlug( 'content_spacing' ) ) )->enableResponsive()->setLabel( __( 'Content Spacing', 'yuki' ) )->setDefaultValue( [
+                'top'    => '24px',
+                'right'  => '24px',
+                'bottom' => '24px',
+                'left'   => '24px',
+                'linked' => true,
             ] )
             ] )->addTab( 'media', __( 'Media', 'yuki' ), [ ( new ImageUploader( $this->getSlug( 'media' ) ) )->setLabel( __( 'Media', 'yuki' ) )->setDefaultValue( $this->getDefaultSetting( 'media', [
                 'url' => yuki_image_url( 'hero-media.png' ),
@@ -176,14 +184,19 @@ if ( !class_exists( 'Yuki_Hero_Element' ) ) {
             }
             $settings = $data['settings'] ?? [];
             add_filter( 'yuki_filter_dynamic_css', function ( $css ) use( $id, $settings ) {
-                $css[".yuki-hero.{$id}"] = array_merge( [
+                $css[".yuki-hero.{$id}"] = array_merge(
+                    [
                     '--media-max-height'        => $this->get( $this->getSlug( 'media_height' ), $settings ),
                     '--yuki-hero-media-align'   => $this->get( $this->getSlug( 'media_align' ), $settings ),
                     '--yuki-hero-content-align' => $this->get( $this->getSlug( 'content_align' ), $settings ),
                     'min-height'                => $this->get( $this->getSlug( 'min_height' ), $settings ),
-                ], Css::background( $this->get( $this->getSlug( 'background' ), $settings ) ), Css::colors( $this->get( $this->getSlug( 'shape_color' ), $settings ), [
+                ],
+                    Css::dimensions( $this->get( $this->getSlug( 'content_spacing' ), $settings ), '--yuki-hero-content-padding' ),
+                    Css::background( $this->get( $this->getSlug( 'background' ), $settings ) ),
+                    Css::colors( $this->get( $this->getSlug( 'shape_color' ), $settings ), [
                     'initial' => '--yuki-hero-shape-fill',
-                ] ) );
+                ] )
+                );
                 // overlay
                 $css[".yuki-hero.{$id} .hero-overlay"] = array_merge( Css::background( $this->get( $this->getSlug( 'overlay_background' ), $settings ) ), [
                     'opacity' => $this->get( $this->getSlug( 'overlay_opacity' ), $settings ),
@@ -329,7 +342,7 @@ if ( !class_exists( 'Yuki_Hero_Element' ) ) {
                 <div class="<?php 
             Utils::the_clsx( [ 'hero-container container mx-auto px-gutter relative z-[1]', 'flex-row-reverse' => $this->get( $this->getSlug( 'layout' ), $settings ) === 'media-content' ] );
             ?>">
-                    <div class="hero-content yuki-scroll-reveal p-gutter lg:p-0">
+                    <div class="hero-content yuki-scroll-reveal">
 						<?php 
             
             if ( $title != '' ) {

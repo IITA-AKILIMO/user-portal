@@ -75,9 +75,9 @@ if ( ! trait_exists( 'Yuki_Button_Controls' ) ) {
 					'bottom' => '2px',
 				],
 				'padding'           => [
-					'top'    => '0.25em',
+					'top'    => '0.85em',
 					'right'  => '1.25em',
-					'bottom' => '0.25em',
+					'bottom' => '0.85em',
 					'left'   => '1.25em',
 				],
 			] );

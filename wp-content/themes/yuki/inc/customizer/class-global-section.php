@@ -63,7 +63,8 @@ if ( !class_exists( 'Yuki_Global_Section' ) ) {
                 ( new Slider( 'yuki_homepage_content_spacing' ) )->setLabel( __( 'Homepage', 'yuki' ) )->enableResponsive()->bindSelectiveRefresh( 'yuki-global-selective-css' )->setDefaultUnit( 'px' )->setDefaultValue( '0px' ),
                 ( new Slider( 'yuki_archive_content_spacing' ) )->setLabel( __( 'Archive', 'yuki' ) )->enableResponsive()->bindSelectiveRefresh( 'yuki-global-selective-css' )->setDefaultUnit( 'px' )->setDefaultValue( '24px' ),
                 ( new Slider( 'yuki_single_post_content_spacing' ) )->setLabel( __( 'Single Post', 'yuki' ) )->enableResponsive()->bindSelectiveRefresh( 'yuki-global-selective-css' )->setDefaultUnit( 'px' )->setDefaultValue( '24px' ),
-                ( new Slider( 'yuki_pages_content_spacing' ) )->setLabel( __( 'Pages', 'yuki' ) )->enableResponsive()->bindSelectiveRefresh( 'yuki-global-selective-css' )->setDefaultUnit( 'px' )->setDefaultValue( '24px' )
+                ( new Slider( 'yuki_pages_content_spacing' ) )->setLabel( __( 'Pages', 'yuki' ) )->enableResponsive()->bindSelectiveRefresh( 'yuki-global-selective-css' )->setDefaultUnit( 'px' )->setDefaultValue( '24px' ),
+                ( new Slider( 'yuki_store_content_spacing' ) )->setLabel( __( 'Store', 'yuki' ) )->enableResponsive()->bindSelectiveRefresh( 'yuki-global-selective-css' )->setDefaultUnit( 'px' )->setDefaultValue( '24px' )
             ] ) ];
         }
         
@@ -76,7 +77,7 @@ if ( !class_exists( 'Yuki_Global_Section' ) ) {
                 'official' => '#557dbc',
             ],
                 'label' => 'Facebook',
-                'url'   => '',
+                'url'   => '#',
                 'share' => 'https://www.facebook.com/sharer/sharer.php?u={url}',
                 'icon'  => [
                 'value'   => 'fab fa-facebook',
@@ -90,7 +91,7 @@ if ( !class_exists( 'Yuki_Global_Section' ) ) {
                 'official' => '#7acdee',
             ],
                 'label' => 'Twitter',
-                'url'   => '',
+                'url'   => '#',
                 'share' => 'https://twitter.com/share?url={url}&text={text}',
                 'icon'  => [
                 'value'   => 'fab fa-twitter',
@@ -104,7 +105,7 @@ if ( !class_exists( 'Yuki_Global_Section' ) ) {
                 'official' => '#ed1376',
             ],
                 'label' => 'Instagram',
-                'url'   => '',
+                'url'   => '#',
                 'icon'  => [
                 'value'   => 'fab fa-instagram',
                 'library' => 'fa-brands',

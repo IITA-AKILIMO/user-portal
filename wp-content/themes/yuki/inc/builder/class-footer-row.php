@@ -8,6 +8,7 @@
 use  LottaFramework\Customizer\Controls\Background ;
 use  LottaFramework\Customizer\Controls\Border ;
 use  LottaFramework\Customizer\Controls\MultiSelect ;
+use  LottaFramework\Customizer\Controls\Number ;
 use  LottaFramework\Customizer\Controls\Separator ;
 use  LottaFramework\Customizer\Controls\Slider ;
 use  LottaFramework\Customizer\Controls\Tabs ;
@@ -36,6 +37,7 @@ if ( !class_exists( 'Yuki_Footer_Row' ) ) {
                 $visibility = CZ::get( $this->getRowControlKey( 'visibility' ) );
                 $css[".yuki-footer-row-{$this->id}"] = array_merge(
                     [
+                    'z-index'        => CZ::get( $this->getRowControlKey( 'z_index' ) ),
                     'display'        => [
                     'desktop' => ( isset( $visibility['desktop'] ) && $visibility['desktop'] === 'yes' ? 'block' : 'none' ),
                     'tablet'  => ( isset( $visibility['tablet'] ) && $visibility['tablet'] === 'yes' ? 'block' : 'none' ),
@@ -48,7 +50,7 @@ if ( !class_exists( 'Yuki_Footer_Row' ) ) {
                     Css::border( CZ::get( $this->getRowControlKey( 'border_top' ) ), 'border-top' ),
                     Css::border( CZ::get( $this->getRowControlKey( 'border_bottom' ) ), 'border-bottom' )
                 );
-                return $css;
+                return apply_filters( 'yuki_footer_row_css', $css );
             } );
         }
         
@@ -95,10 +97,14 @@ if ( !class_exists( 'Yuki_Footer_Row' ) ) {
          */
         protected function getRowControls()
         {
-            return [ ( new Tabs() )->setActiveTab( 'general' )->addTab( 'general', __( 'General', 'yuki' ), [ ( new Slider( $this->getRowControlKey( 'vt_spacing' ) ) )->setLabel( __( 'Vertical Spacing', 'yuki' ) )->asyncCss( ".yuki-footer-row-{$this->id}", [
+            return [ ( new Tabs() )->setActiveTab( 'general' )->addTab( 'general', __( 'General', 'yuki' ), [
+                ( new Slider( $this->getRowControlKey( 'vt_spacing' ) ) )->setLabel( __( 'Vertical Spacing', 'yuki' ) )->asyncCss( ".yuki-footer-row-{$this->id}", [
                 'padding-top'    => 'value',
                 'padding-bottom' => 'value',
-            ] )->enableResponsive()->setMin( 0 )->setMax( 100 )->setDefaultUnit( 'px' )->setDefaultValue( '24px' ), new Separator(), ( new MultiSelect( $this->getRowControlKey( 'visibility' ) ) )->setLabel( __( 'Visibility', 'yuki' ) )->buttonsGroupView()->setChoices( [
+            ] )->enableResponsive()->setMin( 0 )->setMax( 100 )->setDefaultUnit( 'px' )->setDefaultValue( '24px' ),
+                ( new Number( $this->getRowControlKey( 'z_index' ) ) )->setLabel( __( 'Z Index', 'yuki' ) )->setMin( -99999 )->setMax( 99999 )->setDefaultUnit( false )->setDefaultValue( $this->getRowControlDefault( 'z_index', 9 ) ),
+                new Separator(),
+                ( new MultiSelect( $this->getRowControlKey( 'visibility' ) ) )->setLabel( __( 'Visibility', 'yuki' ) )->buttonsGroupView()->setChoices( [
                 'desktop' => yuki_image( 'desktop' ),
                 'tablet'  => yuki_image( 'tablet' ),
                 'mobile'  => yuki_image( 'mobile' ),
@@ -121,7 +127,8 @@ if ( !class_exists( 'Yuki_Footer_Row' ) ) {
                 'desktop' => 'yes',
                 'tablet'  => 'yes',
                 'mobile'  => 'yes',
-            ] ) ] )->addTab( 'style', __( 'Style', 'yuki' ), [
+            ] )
+            ] )->addTab( 'style', __( 'Style', 'yuki' ), [
                 ( new Background( $this->getRowControlKey( 'background' ) ) )->setLabel( __( 'Background', 'yuki' ) )->asyncCss( ".yuki-footer-row-{$this->id}", AsyncCss::background() )->enableResponsive()->setDefaultValue( [
                 'type'  => 'color',
                 'color' => 'var(--yuki-base-color)',

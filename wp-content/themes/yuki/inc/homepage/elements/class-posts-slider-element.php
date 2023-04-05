@@ -106,7 +106,7 @@ if ( !class_exists( 'Yuki_Posts_Slider_Element' ) ) {
                 'border-initial' => 'var(--yuki-primary-color)',
                 'border-hover'   => 'var(--yuki-primary-active)',
             ],
-            ] ), new Separator() ], $this->getCardContentControls( '', [
+            ] ), ( new Toggle( 'thumb-motion' ) )->setLabel( __( 'Thumbnail Motion', 'yuki' ) )->openByDefault(), new Separator() ], $this->getCardContentControls( '', [
                 'text'     => 'center',
                 'vertical' => 'center',
             ] ) ) ), ( new Collapse() )->setLabel( __( 'Settings', 'yuki' ) )->setControls( $this->getSettingsControls() ) ] )->addTab( 'style', __( 'Style', 'yuki' ), [
@@ -364,7 +364,7 @@ if ( !class_exists( 'Yuki_Posts_Slider_Element' ) ) {
                 'yuki-posts-slider',
                 'yuki-slider-navigation-motion' => $this->checked( 'navigation-motion', $settings ),
                 'yuki-slider-pagination-motion' => $this->checked( 'pagination-motion', $settings ),
-                'yuki-post-motion-item' => $this->checked( 'card-thumb-motion', $settings ),
+                'yuki-post-motion-item' => $this->checked( 'thumb-motion', $settings ),
                 $id
             ] ) );
             

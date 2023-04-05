@@ -38,11 +38,18 @@ if ( ! class_exists( 'Yuki_Socials_Element' ) ) {
 				'render-callback'   => $this->selectiveRefresh(),
 				'selector'          => ".$this->slug",
 				'icons-color-type'  => 'official',
-				'icons-box-spacing' => [
+				'icons-box-padding' => [
 					'top'    => '0px',
 					'bottom' => '0px',
 					'left'   => '12px',
 					'right'  => '12px',
+					'linked' => true,
+				],
+				'icons-box-spacing' => [
+					'top'    => '0px',
+					'bottom' => '0px',
+					'left'   => '0px',
+					'right'  => '0px',
 					'linked' => true,
 				],
 			] ) );
@@ -59,7 +66,8 @@ if ( ! class_exists( 'Yuki_Socials_Element' ) ) {
 						'--yuki-social-icons-size'    => CZ::get( $this->getSlug( 'icons_size' ) ),
 						'--yuki-social-icons-spacing' => CZ::get( $this->getSlug( 'icons_spacing' ) )
 					],
-					Css::dimensions( CZ::get( $this->getSlug( 'padding' ) ), 'padding' )
+					Css::dimensions( CZ::get( $this->getSlug( 'padding' ) ), 'padding' ),
+					Css::dimensions( CZ::get( $this->getSlug( 'margin' ) ), 'margin' )
 				);
 
 				$css[".$this->slug .yuki-social-link"] = array_merge(
@@ -119,12 +127,15 @@ if ( ! class_exists( 'Yuki_Socials_Element' ) ) {
 					'yuki-socials-' . $fill => $shape !== 'none',
 				] ); ?>">
 					<?php foreach ( $socials as $social ) { ?>
+						<?php if ( ! isset( $social['url'] ) || empty( $social['url'] ) ) {
+							continue;
+						} ?>
                         <a <?php $this->print_attribute_string( 'social-link' ); ?>
                                 style="--yuki-official-color: <?php echo esc_attr( $social['color']['official'] ?? 'var(--yuki-primary-active)' ) ?>;"
                                 href="<?php echo esc_url( $social['url'] ) ?>">
-					<span class="yuki-social-icon">
-                        <?php IconsManager::print( $social['icon'] ); ?>
-                    </span>
+                                <span class="yuki-social-icon">
+                                    <?php IconsManager::print( $social['icon'] ); ?>
+                                </span>
                         </a>
 					<?php } ?>
                 </div>

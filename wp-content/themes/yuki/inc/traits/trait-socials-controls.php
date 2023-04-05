@@ -59,6 +59,15 @@ if ( !trait_exists( 'Yuki_Socials_Controls' ) ) {
                 'icons-bg-hover'       => 'var(--yuki-primary-active)',
                 'icons-border-initial' => 'var(--yuki-base-200)',
                 'icons-border-hover'   => 'var(--yuki-primary-active)',
+                'disabled-padding'     => [ 'top', 'bottom' ],
+                'disabled-margin'      => [ 'top', 'bottom' ],
+                'icons-box-padding'    => [
+                'top'    => '0px',
+                'right'  => '0px',
+                'bottom' => '0px',
+                'left'   => '0px',
+                'linked' => true,
+            ],
                 'icons-box-spacing'    => [
                 'top'    => '0px',
                 'right'  => '0px',
@@ -116,7 +125,8 @@ if ( !trait_exists( 'Yuki_Socials_Controls' ) ) {
             $controls = array_merge( $controls, [
                 ( new Placeholder( $this->getSocialControlId( 'icons_bg_color' ) ) )->addColor( 'initial', $defaults['icons-bg-initial'] )->addColor( 'hover', $defaults['icons-bg-hover'] ),
                 ( new Placeholder( $this->getSocialControlId( 'icons_border_color' ) ) )->addColor( 'initial', $defaults['icons-border-initial'] )->addColor( 'hover', $defaults['icons-border-hover'] ),
-                ( new Placeholder( $this->getSocialControlId( 'padding' ) ) )->setDefaultValue( $defaults['icons-box-spacing'] ),
+                ( new Placeholder( $this->getSocialControlId( 'padding' ) ) )->setDefaultValue( $defaults['icons-box-padding'] ),
+                ( new Placeholder( $this->getSocialControlId( 'margin' ) ) )->setDefaultValue( $defaults['icons-box-spacing'] ),
                 yuki_upsell_info_control( __( 'Fully customize your social icons in our %sPro Version%s', 'yuki' ) )
             ] );
             return $controls;

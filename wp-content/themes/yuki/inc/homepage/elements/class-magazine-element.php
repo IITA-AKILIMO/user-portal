@@ -11,6 +11,7 @@ use LottaFramework\Customizer\Controls\Select;
 use LottaFramework\Customizer\Controls\Separator;
 use LottaFramework\Customizer\Controls\Slider;
 use LottaFramework\Customizer\Controls\Tabs;
+use LottaFramework\Customizer\Controls\Toggle;
 use LottaFramework\Facades\Css;
 use LottaFramework\Utils;
 
@@ -95,8 +96,13 @@ if ( ! class_exists( 'Yuki_Magazine_Element' ) ) {
 										'border-hover'   => 'var(--yuki-primary-active)',
 									],
 								] ),
+								( new Toggle( 'thumb-motion' ) )
+									->setLabel( __( 'Thumbnail Motion', 'yuki' ) )
+									->openByDefault()
+								,
 								( new Separator() ),
 							], $this->getCardContentControls( '', [
+								'exclude'  => [ 'thumb-spacing' ],
 								'vertical' => 'flex-end'
 							] ) ) )
 						,
@@ -277,7 +283,7 @@ if ( ! class_exists( 'Yuki_Magazine_Element' ) ) {
 				<?php while ( $posts->have_posts() ): $posts->the_post(); ?>
                     <article class="<?php Utils::the_clsx(
 						get_post_class( 'yuki-magazine-item', get_the_ID() ),
-						[ 'yuki-post-motion-item' => $this->checked( 'card-thumb-motion', $settings ) ]
+						[ 'yuki-post-motion-item' => $this->checked( 'thumb-motion', $settings ) ]
 					); ?>">
 
 						<?php $this->renderPasswordProtectedInput(); ?>

@@ -15,6 +15,7 @@ class Bootstrap {
 		\LottaFramework\Customizer\Customizer::class,
 		\LottaFramework\Css::class,
 		\LottaFramework\Query::class,
+		\LottaFramework\Extensions\Breadcrumbs::class,
 	];
 
 	/**
@@ -23,9 +24,10 @@ class Bootstrap {
 	 * @var array
 	 */
 	protected static $aliases = [
-		'CZ'    => \LottaFramework\Customizer\Customizer::class,
-		'css'   => \LottaFramework\Css::class,
-		'query' => \LottaFramework\Query::class,
+		'CZ'          => \LottaFramework\Customizer\Customizer::class,
+		'css'         => \LottaFramework\Css::class,
+		'query'       => \LottaFramework\Query::class,
+		'breadcrumbs' => \LottaFramework\Extensions\Breadcrumbs::class,
 	];
 
 	/**

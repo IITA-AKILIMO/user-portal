@@ -17,6 +17,7 @@
 
 #accordion-section-yuki_single_post .accordion-section-title::before,
 #accordion-section-yuki_pages .accordion-section-title::before,
+#accordion-panel-woocommerce .accordion-section-title::before,
 #accordion-section-yuki_store .accordion-section-title::before {
   content: "\f474";
   font-family: dashicons;

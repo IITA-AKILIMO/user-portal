@@ -181,19 +181,30 @@ abstract class Element {
 
 	/**
 	 * Seletive refresh args
-	 * 
-	 * @return array 
+	 *
+	 * @return array
 	 */
 	protected function selectiveRefresh() {
 		return [
-			".{$this->slug}", [ $this, 'build' ], [ 'container_inclusive' => true, 'fallback_refresh' => true ]
+			".{$this->slug}",
+			[ $this, 'build' ],
+			[ 'container_inclusive' => true, 'fallback_refresh' => true ]
 		];
+	}
+
+	/**
+	 * Should render this element
+	 *
+	 * @return bool
+	 */
+	public function shouldRender() {
+		return true;
 	}
 
 	/**
 	 * Build element
 	 */
-	public function build()	{
+	public function build() {
 		$attrs = [
 			'data-builder-element' => $this->id,
 		];
@@ -206,6 +217,6 @@ abstract class Element {
 			}
 		}
 
-		$this->render($attrs);
+		$this->render( $attrs );
 	}
 }

@@ -677,12 +677,6 @@ select {
   --tw-backdrop-saturate:  ;
   --tw-backdrop-sepia:  ;
 }
-.wp-block-image::after {
-  display: block;
-  content: "";
-  clear: both;
-}
-
 .alignleft {
   float: left;
   margin: 0px;
@@ -850,6 +844,10 @@ div:not(.is-style-outline) > .wp-block-button__link:not(:disabled):hover,
   background-color: transparent;
 }
 
+.components-button.is-primary {
+  background: var(--wp-admin-theme-color) !important;
+}
+
 .has-drop-cap::first-letter {
   float: left;
   margin: 0 12px 0 0;
@@ -861,16 +859,16 @@ div:not(.is-style-outline) > .wp-block-button__link:not(:disabled):hover,
   --tw-prose-body: var(--yuki-content-base-color);
   color: var(--yuki-content-base-color);
 }
-.prose-yuki figure > img {
+.prose-yuki figure img {
   margin-top: 0;
   margin-bottom: 0;
 }
 .prose-yuki a {
   transition: all ease 0.25s;
-  color: var(--yuki-link-initial-color);
+  color: var(--yuki-link-initial-color, var(--yuki-primary-color));
 }
 .prose-yuki a:hover {
-  color: var(--yuki-link-hover-color);
+  color: var(--yuki-link-hover-color, var(--yuki-primary-active));
 }
 .prose-yuki h1, .prose-yuki h2, .prose-yuki h3 {
   margin-top: 3rem;
@@ -926,6 +924,9 @@ div:not(.is-style-outline) > .wp-block-button__link:not(:disabled):hover,
   border-width: 1px;
   border-color: var(--yuki-base-200);
 }
+.prose-yuki table td, .prose-yuki table th {
+  border: inherit;
+}
 .prose-yuki table tr > :not([hidden]) ~ :not([hidden]) {
   --tw-divide-x-reverse: 0;
   border-right-width: calc(1px * var(--tw-divide-x-reverse));
@@ -977,11 +978,6 @@ div:not(.is-style-outline) > .wp-block-button__link:not(:disabled):hover,
   background-color: var(--yuki-base-100);
 }
 
-.yuki-no-sidebar .wp-block-image::after {
-  display: block;
-  content: "";
-  clear: both;
-}
 .yuki-no-sidebar .alignleft {
   float: left;
   margin: 0px;
@@ -1481,18 +1477,18 @@ div:not(.is-style-outline) > .wp-block-button__link:not(:disabled):hover,
   color: var(--yuki-content-base-color);
 }
 
-:root figure > img {
+:root figure img {
   margin-top: 0;
   margin-bottom: 0;
 }
 
 :root a {
   transition: all ease 0.25s;
-  color: var(--yuki-link-initial-color);
+  color: var(--yuki-link-initial-color, var(--yuki-primary-color));
 }
 
 :root a:hover {
-  color: var(--yuki-link-hover-color);
+  color: var(--yuki-link-hover-color, var(--yuki-primary-active));
 }
 
 :root h1,  :root h2,  :root h3 {
@@ -1561,6 +1557,10 @@ div:not(.is-style-outline) > .wp-block-button__link:not(:disabled):hover,
 :root table {
   border-width: 1px;
   border-color: var(--yuki-base-200);
+}
+
+:root table td,  :root table th {
+  border: inherit;
 }
 
 :root table tr > :not([hidden]) ~ :not([hidden]) {

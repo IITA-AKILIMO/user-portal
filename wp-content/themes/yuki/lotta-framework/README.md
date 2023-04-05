@@ -2,6 +2,14 @@
 
 ## Changelog
 
+### v2.0.7
+
+* Fix: Homepage builder error in edge case
+
+### v2.0.6
+
+* Fix: Editor control update error
+
 ### v2.0.5
 
 * Add: WPML & Polylang translate utils

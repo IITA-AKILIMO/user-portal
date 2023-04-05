@@ -13,6 +13,7 @@ use LottaFramework\Customizer\Controls\Section;
 use LottaFramework\Customizer\Controls\Separator;
 use LottaFramework\Customizer\Controls\Spacing;
 use LottaFramework\Customizer\Section as CustomizerSection;
+use LottaFramework\Facades\AsyncCss;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -38,7 +39,7 @@ if ( ! class_exists( 'Yuki_Single_Post_Section' ) ) {
 		 * {@inheritDoc}
 		 */
 		public function getControls() {
-			return [
+			$controls = [
 				( new Section( 'yuki_post_container' ) )
 					->setLabel( __( 'Container', 'yuki' ) )
 					->setControls( $this->getContainerControls( 'single_post', [
@@ -89,11 +90,21 @@ if ( ! class_exists( 'Yuki_Single_Post_Section' ) ) {
 						'icons-color-hover'   => 'var(--yuki-base-color)',
 						'icons-bg-initial'    => 'var(--yuki-official-color)',
 						'icons-bg-hover'      => 'var(--yuki-primary-color)',
-						'icons-box-spacing'   => [
-							'top'    => '48px',
+						'disabled-padding'    => [ 'left', 'right' ],
+						'disabled-margin'     => [ 'left', 'right' ],
+						'icons-box-padding'   => [
+							'top'    => '0px',
 							'right'  => '0px',
-							'bottom' => '24px',
+							'bottom' => '0px',
 							'left'   => '0px',
+							'linked' => true,
+						],
+						'icons-box-spacing'   => [
+							'top'    => '36px',
+							'right'  => '0px',
+							'bottom' => '36px',
+							'left'   => '0px',
+							'linked' => true,
 						],
 					) ) )
 				,
@@ -104,6 +115,8 @@ if ( ! class_exists( 'Yuki_Single_Post_Section' ) ) {
 					->setControls( $this->getNavigationControls( 'post' ) )
 				,
 			];
+
+			return apply_filters( 'yuki_single_post_section_controls', $controls );
 		}
 
 		/**
@@ -113,7 +126,10 @@ if ( ! class_exists( 'Yuki_Single_Post_Section' ) ) {
 			return [
 				( new ColorPicker( 'yuki_' . $type . '_navigation_text_color' ) )
 					->setLabel( __( 'Text Color', 'yuki' ) )
-					->bindSelectiveRefresh( 'yuki-global-selective-css' )
+					->asyncColors( '.yuki-post-navigation', [
+						'initial' => '--yuki-navigation-initial-color',
+						'hover'   => '--yuki-navigation-hover-color',
+					] )
 					->addColor( 'initial', __( 'Initial', 'yuki' ), 'var(--yuki-accent-color)' )
 					->addColor( 'hover', __( 'Hover', 'yuki' ), 'var(--yuki-primary-color)' )
 				,
@@ -135,18 +151,18 @@ if ( ! class_exists( 'Yuki_Single_Post_Section' ) ) {
 				( new Separator() ),
 				( new Border( 'yuki_' . $type . '_navigation_border_top' ) )
 					->setLabel( __( 'Border Top', 'yuki' ) )
-					->bindSelectiveRefresh( 'yuki-global-selective-css' )
-					->setDefaultBorder( 1, 'dashed', 'var(--yuki-base-200)' )
+					->asyncCss( '.yuki-post-navigation', AsyncCss::border( 'border-top' ) )
+					->setDefaultBorder( 1, 'dashed', 'var(--yuki-base-300)' )
 				,
 				( new Border( 'yuki_' . $type . '_navigation_border_bottom' ) )
 					->setLabel( __( 'Border Bottom', 'yuki' ) )
-					->bindSelectiveRefresh( 'yuki-global-selective-css' )
-					->setDefaultBorder( 1, 'dashed', 'var(--yuki-base-200)' )
+					->asyncCss( '.yuki-post-navigation', AsyncCss::border( 'border-bottom' ) )
+					->setDefaultBorder( 1, 'dashed', 'var(--yuki-base-300)' )
 				,
 				( new Separator() ),
 				( new Spacing( 'yuki_' . $type . '_navigation_padding' ) )
 					->setLabel( __( 'Padding', 'yuki' ) )
-					->bindSelectiveRefresh( 'yuki-global-selective-css' )
+					->asyncCss( '.yuki-post-navigation', AsyncCss::dimensions( 'padding' ) )
 					->setDisabled( [ 'left', 'right' ] )
 					->setSpacing( [
 						'top'    => '24px',
@@ -156,11 +172,22 @@ if ( ! class_exists( 'Yuki_Single_Post_Section' ) ) {
 				,
 				( new Spacing( 'yuki_' . $type . '_navigation_margin' ) )
 					->setLabel( __( 'Margin', 'yuki' ) )
-					->bindSelectiveRefresh( 'yuki-global-selective-css' )
+					->asyncCss( '.yuki-post-navigation', AsyncCss::dimensions() )
 					->setDisabled( [ 'left', 'right' ] )
 					->setSpacing( [
-						'top'    => '24px',
-						'bottom' => '24px',
+						'top'    => '36px',
+						'bottom' => '36px',
+						'linked' => true
+					] )
+				,
+				( new Spacing( 'yuki_' . $type . '_navigation_thumb_radius' ) )
+					->setLabel( __( 'Thumbnail Radius', 'yuki' ) )
+					->asyncCss( '.yuki-post-navigation', AsyncCss::dimensions( '--yuki-navigation-thumb-radius' ) )
+					->setSpacing( [
+						'top'    => '8px',
+						'right'  => '8px',
+						'bottom' => '8px',
+						'left'   => '8px',
 						'linked' => true
 					] )
 				,

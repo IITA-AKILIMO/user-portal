@@ -211,25 +211,28 @@ function yuki_dynamic_css()
     if ( is_front_page() && !is_home() ) {
         $post_type = 'homepage';
     }
+    if ( yuki_is_woo_shop() ) {
+        $post_type = 'store';
+    }
+    /**
+     * Site container
+     */
+    $content_container_type = CZ::get( "yuki_{$post_type}_container_layout" ) ?? 'normal';
+    $css['.yuki-container'] = [
+        'padding-top'    => CZ::get( "yuki_{$post_type}_content_spacing" ),
+        'padding-bottom' => CZ::get( "yuki_{$post_type}_content_spacing" ),
+    ];
     /**
      * Site background
      */
     $css['.yuki-body'] = array_merge( Css::background( CZ::get( 'yuki_site_background' ) ), [
+        '--yuki-max-w-content'  => ( $content_container_type === 'normal' ? 'auto' : CZ::get( 'yuki_' . $post_type . '_container_max_width' ) ),
         '--wp-admin-bar-height' => ( !is_admin_bar_showing() || is_customize_preview() ? [] : [
         'desktop' => '32px',
         'tablet'  => '32px',
         'mobile'  => '46px',
     ] ),
     ] );
-    /**
-     * Site container
-     */
-    $content_container_type = CZ::get( "yuki_{$post_type}_container_layout" ) ?? 'normal';
-    $css['.yuki-container'] = [
-        'padding-top'          => CZ::get( "yuki_{$post_type}_content_spacing" ),
-        'padding-bottom'       => CZ::get( "yuki_{$post_type}_content_spacing" ),
-        '--yuki-max-w-content' => ( $content_container_type === 'normal' ? 'auto' : '65ch' ),
-    ];
     /**
      * Post card
      */
@@ -257,9 +260,10 @@ function yuki_dynamic_css()
             Css::border( CZ::get( 'yuki_card_border' ) ),
             Css::dimensions( CZ::get( 'yuki_card_radius' ), 'border-radius' ),
             [
-            'text-align'             => CZ::get( 'yuki_card_content_alignment' ),
-            'justify-content'        => CZ::get( 'yuki_card_vertical_alignment' ),
-            '--card-content-spacing' => CZ::get( 'yuki_card_content_spacing' ),
+            'text-align'               => CZ::get( 'yuki_card_content_alignment' ),
+            'justify-content'          => CZ::get( 'yuki_card_vertical_alignment' ),
+            '--card-content-spacing'   => CZ::get( 'yuki_card_content_spacing' ),
+            '--card-thumbnail-spacing' => CZ::get( 'yuki_card_thumbnail_spacing' ),
         ]
         );
     }
@@ -268,7 +272,7 @@ function yuki_dynamic_css()
      * Post elements
      */
     $post_elements_scope = [
-        'entry' => [
+        'entry'         => [
         'condition' => is_archive() || is_home() || is_search(),
         'elements'  => [
         'title',
@@ -282,7 +286,7 @@ function yuki_dynamic_css()
     ],
         'selector'  => '.card',
     ],
-        'post'  => [
+        'post'          => [
         'condition' => is_single(),
         'elements'  => [
         'title',
@@ -292,7 +296,7 @@ function yuki_dynamic_css()
     ],
         'selector'  => '.yuki-article-header',
     ],
-        'page'  => [
+        'page'          => [
         'condition' => is_page(),
         'elements'  => [
         'title',
@@ -301,6 +305,20 @@ function yuki_dynamic_css()
         'tags'
     ],
         'selector'  => '.yuki-article-header',
+    ],
+        'related_posts' => [
+        'condition' => is_single() && CZ::checked( 'yuki_post_related_posts' ),
+        'elements'  => [
+        'title',
+        'metas',
+        'categories',
+        'tags',
+        'excerpt',
+        'thumbnail',
+        'divider',
+        'read-more'
+    ],
+        'selector'  => '.yuki-related-posts-wrap .card',
     ],
     ];
     foreach ( $post_elements_scope as $id => $scope ) {
@@ -315,13 +333,17 @@ function yuki_dynamic_css()
      */
     $css['.yuki-archive-header'] = array_merge( [
         'text-align' => CZ::get( 'yuki_archive_header_alignment' ),
-    ], Css::dimensions( CZ::get( 'yuki_archive_header_padding' ), 'padding' ) );
+    ], Css::background( CZ::get( 'yuki_archive_header_background' ) ) );
+    $css['.yuki-archive-header .container'] = Css::dimensions( CZ::get( 'yuki_archive_header_padding' ), 'padding' );
     $css['.yuki-archive-header .archive-title'] = array_merge( Css::typography( CZ::get( 'yuki_archive_title_typography' ) ), Css::colors( CZ::get( 'yuki_archive_title_color' ), [
         'initial' => 'color',
     ] ) );
     $css['.yuki-archive-header .archive-description'] = array_merge( Css::typography( CZ::get( 'yuki_archive_description_typography' ) ), Css::colors( CZ::get( 'yuki_archive_description_color' ), [
         'initial' => 'color',
     ] ) );
+    $css['.yuki-archive-header::after'] = array_merge( [
+        'opacity' => CZ::get( 'yuki_archive_header_overlay_opacity' ),
+    ], Css::background( CZ::get( 'yuki_archive_header_overlay' ) ) );
     /**
      * Posts Pagination
      */
@@ -406,6 +428,8 @@ function yuki_dynamic_css()
         ], Css::shadow( CZ::get( "{$prefix}_featured_image_shadow" ) ), Css::dimensions( CZ::get( "{$prefix}_featured_image_radius" ), 'border-radius' ) );
         // Article typography
         $css = yuki_content_typography_css( '.yuki-article-content', $css );
+        // Article links
+        $css = yuki_content_link_style_preset( '.yuki-article-content a', CZ::get( 'yuki_content_link_style' ), $css );
         // Article button
         $button_selectors = [
             // widgets
@@ -414,13 +438,9 @@ function yuki_dynamic_css()
             // article
             '.yuki-article-content .wp-block-button',
             '.yuki-article-content button',
-            '.yuki-article-content [type="submit"]',
-            '.yuki-form [type="submit"]',
-            '.yuki-raw-html [type="submit"]',
             '.prose-yuki .wp-block-button',
             '.prose-yuki button',
-            '.prose-yuki [type="submit"]',
-            '.yuki-comments-area [type="submit"]',
+            '[type="submit"]',
         ];
         $css[implode( ',', $button_selectors )] = yuki_content_buttons_css();
         // Share box
@@ -429,7 +449,7 @@ function yuki_dynamic_css()
             $css['.yuki-' . $article_type . '-socials'] = array_merge( [
                 '--yuki-social-icons-size'    => CZ::get( 'yuki_' . $article_type . '_share_box_icons_size' ),
                 '--yuki-social-icons-spacing' => CZ::get( 'yuki_' . $article_type . '_share_box_icons_spacing' ),
-            ], Css::dimensions( CZ::get( 'yuki_' . $article_type . '_share_box_padding' ), 'padding' ) );
+            ], Css::dimensions( CZ::get( 'yuki_' . $article_type . '_share_box_padding' ), 'padding' ), Css::dimensions( CZ::get( 'yuki_' . $article_type . '_share_box_margin' ), 'margin' ) );
             $css['.yuki-' . $article_type . '-socials .yuki-social-link'] = array_merge( Css::colors( CZ::get( 'yuki_' . $article_type . '_share_box_icons_color' ), [
                 'initial' => '--yuki-social-icon-initial-color',
                 'hover'   => '--yuki-social-icon-hover-color',
@@ -447,6 +467,7 @@ function yuki_dynamic_css()
             $css['.yuki-post-navigation'] = array_merge(
                 Css::dimensions( CZ::get( 'yuki_post_navigation_padding' ), 'padding' ),
                 Css::dimensions( CZ::get( 'yuki_post_navigation_margin' ), 'margin' ),
+                Css::dimensions( CZ::get( 'yuki_post_navigation_thumb_radius' ), '--yuki-navigation-thumb-radius' ),
                 Css::border( CZ::get( 'yuki_post_navigation_border_top' ), 'border-top' ),
                 Css::border( CZ::get( 'yuki_post_navigation_border_bottom' ), 'border-bottom' ),
                 Css::colors( CZ::get( 'yuki_post_navigation_text_color' ), [
@@ -472,6 +493,34 @@ function yuki_dynamic_css()
             Css::border( CZ::get( 'yuki_content_comments_border_top' ), 'border-top' ),
             Css::border( CZ::get( 'yuki_content_comments_border_bottom' ), 'border-bottom' )
         );
+        // Related posts
+        
+        if ( CZ::checked( 'yuki_post_related_posts' ) ) {
+            $css['.yuki-related-posts-list'] = [
+                '--card-gap' => CZ::get( 'yuki_related_posts_grid_items_gap' ),
+            ];
+            $archive_layout = CZ::get( 'yuki_archive_layout' );
+            $card_width = [];
+            foreach ( CZ::get( 'yuki_related_posts_grid_columns' ) as $device => $columns ) {
+                $card_width[$device] = sprintf( "%.2f", substr( sprintf( "%.3f", 100 / (int) $columns ), 0, -1 ) ) . '%';
+            }
+            $css['.yuki-related-posts-list .card-wrapper'] = [
+                'width' => $card_width,
+            ];
+            $css['.yuki-related-posts-list .card'] = array_merge(
+                Css::background( CZ::get( 'yuki_related_posts_card_background' ) ),
+                Css::shadow( CZ::get( 'yuki_related_posts_card_shadow' ) ),
+                Css::border( CZ::get( 'yuki_related_posts_card_border' ) ),
+                Css::dimensions( CZ::get( 'yuki_related_posts_card_radius' ), 'border-radius' ),
+                [
+                'text-align'               => CZ::get( 'yuki_related_posts_card_content_alignment' ),
+                'justify-content'          => CZ::get( 'yuki_related_posts_card_vertical_alignment' ),
+                '--card-content-spacing'   => CZ::get( 'yuki_related_posts_card_content_spacing' ),
+                '--card-thumbnail-spacing' => CZ::get( 'yuki_related_posts_card_thumbnail_spacing' ),
+            ]
+            );
+        }
+    
     }
     
     /**
@@ -545,12 +594,16 @@ function yuki_dynamic_css()
         );
     }
     // Forms
-    $css['.woocommerce form, .yuki-form'] = Css::typography( CZ::get( 'yuki_content_form_typography' ) );
-    $css['.woocommerce form, .yuki-form, .yuki-article-content, .prose-yuki, .yuki-widget, .yuki-raw-html'] = array_merge( yuki_form_style_preset( CZ::get( 'yuki_content_form_style' ) ), Css::colors( CZ::get( 'yuki_content_form_color' ), [
+    $css['form, .yuki-form, [type="submit"]'] = Css::typography( CZ::get( 'yuki_content_form_typography' ) );
+    $form_presets = yuki_form_style_presets();
+    $css[implode( ',', array_keys( $form_presets ) )] = array_merge( Css::colors( CZ::get( 'yuki_content_form_color' ), [
         'background' => '--yuki-form-background-color',
         'border'     => '--yuki-form-border-color',
         'active'     => '--yuki-form-active-color',
     ] ) );
+    foreach ( $form_presets as $selector => $preset ) {
+        $css[$selector] = $preset;
+    }
     $css = apply_filters( 'yuki_filter_dynamic_css', $css );
     return Css::parse( $css );
 }

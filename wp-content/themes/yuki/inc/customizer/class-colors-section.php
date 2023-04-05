@@ -156,6 +156,7 @@ if ( !class_exists( 'Yuki_Colors_Section' ) ) {
                 'light' => __( 'Light', 'yuki' ),
                 'dark'  => __( 'Dark', 'yuki' ),
             ] ),
+                ( new \LottaFramework\Customizer\Controls\Toggle( 'yuki_save_color_scheme' ) )->setLabel( __( 'Save User Color Scheme', 'yuki' ) )->setDescription( __( "Save the user's color scheme to the cookie and refresh the page without losing current color scheme.", 'yuki' ) )->openByDefault(),
                 new Separator( 'yuki_site_background_separator' ),
                 ( new Background( 'yuki_site_background' ) )->setLabel( __( 'Site Background', 'yuki' ) )->asyncCss( '.yuki-body', AsyncCss::background() )->enableResponsive()->setDefaultValue( [
                 'type'  => 'color',

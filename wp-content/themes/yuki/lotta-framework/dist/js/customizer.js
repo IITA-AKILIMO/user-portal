@@ -154,7 +154,8 @@
             getQueryParams: () => getQueryParams,
             in_array: () => in_array,
             round: () => round,
-            roundWholeNumbers: () => roundWholeNumbers
+            roundWholeNumbers: () => roundWholeNumbers,
+            sanitize_array_value: () => sanitize_array_value
         });
         var _index__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(5);
         function _typeof(obj) {
@@ -332,6 +333,9 @@
                 _iterator.f();
             }
             return target;
+        }
+        function sanitize_array_value(v) {
+            return Array.isArray(v) ? v : [];
         }
     }, (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
         "use strict";
@@ -26231,21 +26235,6 @@ object-assign
         function _nonIterableRest() {
             throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
         }
-        function _unsupportedIterableToArray(o, minLen) {
-            if (!o) return;
-            if (typeof o === "string") return _arrayLikeToArray(o, minLen);
-            var n = Object.prototype.toString.call(o).slice(8, -1);
-            if (n === "Object" && o.constructor) n = o.constructor.name;
-            if (n === "Map" || n === "Set") return Array.from(o);
-            if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen);
-        }
-        function _arrayLikeToArray(arr, len) {
-            if (len == null || len > arr.length) len = arr.length;
-            for (var i = 0, arr2 = new Array(len); i < len; i++) {
-                arr2[i] = arr[i];
-            }
-            return arr2;
-        }
         function _iterableToArrayLimit(arr, i) {
             var _i = arr == null ? null : typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"];
             if (_i == null) return;
@@ -26273,16 +26262,53 @@ object-assign
         function _arrayWithHoles(arr) {
             if (Array.isArray(arr)) return arr;
         }
-        function Editor(_ref) {
-            var id = _ref.id, value = _ref.value, options = _ref.options, _onChange = _ref.onChange;
+        function _toConsumableArray(arr) {
+            return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread();
+        }
+        function _nonIterableSpread() {
+            throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+        }
+        function _unsupportedIterableToArray(o, minLen) {
+            if (!o) return;
+            if (typeof o === "string") return _arrayLikeToArray(o, minLen);
+            var n = Object.prototype.toString.call(o).slice(8, -1);
+            if (n === "Object" && o.constructor) n = o.constructor.name;
+            if (n === "Map" || n === "Set") return Array.from(o);
+            if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen);
+        }
+        function _iterableToArray(iter) {
+            if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter);
+        }
+        function _arrayWithoutHoles(arr) {
+            if (Array.isArray(arr)) return _arrayLikeToArray(arr);
+        }
+        function _arrayLikeToArray(arr, len) {
+            if (len == null || len > arr.length) len = arr.length;
+            for (var i = 0, arr2 = new Array(len); i < len; i++) {
+                arr2[i] = arr[i];
+            }
+            return arr2;
+        }
+        function useRefCallback(fn, dependencies) {
+            var ref = (0, _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useRef)(fn);
+            (0, _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useEffect)((function() {
+                ref.current = fn;
+            }), [ fn ].concat(_toConsumableArray(dependencies)));
+            return (0, _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useCallback)((function() {
+                var fn = ref.current;
+                return fn();
+            }), [ ref ]);
+        }
+        function Editor(props) {
+            var id = props.id, value = props.value, options = props.options, _onChange = props.onChange;
             var el = (0, _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useRef)();
             var _useState = (0, _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)("".concat(id, "-").concat(md5__WEBPACK_IMPORTED_MODULE_1___default()(Math.random() + "-" + Math.random() + "-" + Math.random()))), _useState2 = _slicedToArray(_useState, 2), editorId = _useState2[0], _ = _useState2[1];
             var correctEditor = function correctEditor() {
                 return wp.oldEditor || wp.editor;
             };
-            var listener = (0, _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useCallback)((function() {
+            var listener = useRefCallback((function() {
                 _onChange(correctEditor().getContent(editorId));
-            }), [ editorId ]);
+            }), [ editorId, _onChange ]);
             var editorParams = _objectSpread(_objectSpread({
                 quicktags: !!options.quicktags,
                 mediaButtons: !!options.mediaButtons
@@ -26334,8 +26360,8 @@ object-assign
                 }, _objectSpread(_objectSpread({}, options.field_attr ? options.field_attr : {}), options.attr && options.attr.placeholder ? {
                     placeholder: options.attr.placeholder
                 } : {})), {}, {
-                    onChange: function onChange(_ref2) {
-                        var value = _ref2.target.value;
+                    onChange: function onChange(_ref) {
+                        var value = _ref.target.value;
                         return _onChange(value);
                     }
                 }))
@@ -29021,7 +29047,8 @@ object-assign
                 }), type === "color" && (0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)("div", {
                     className: "modal-content",
                     children: (0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(_components_react_color_picker__WEBPACK_IMPORTED_MODULE_3__["default"], {
-                        swatches: window.Lotta && window.Lotta.customizer && window.Lotta.customizer.colorPicker ? window.Lotta.customizer.colorPicker.swatches || [] : [],
+                        swatches: window.Lotta && window.Lotta.customizer && window.Lotta.customizer.colorPicker ? (0, 
+                        _utils__WEBPACK_IMPORTED_MODULE_7__.sanitize_array_value)(window.Lotta.customizer.colorPicker.swatches) : [],
                         enableAlpha: true,
                         color: (0, _utils__WEBPACK_IMPORTED_MODULE_7__.getColorValue)(color),
                         onChange: function onChange(v) {
@@ -29124,24 +29151,25 @@ object-assign
         var _wordpress_components__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(253);
         var _wordpress_components__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__);
         var clsx__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(9);
-        var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(10);
+        var _utils__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(4);
+        var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(10);
         var GradientPicker = function GradientPicker(_ref) {
             var gradient = _ref.gradient, _onChange = _ref.onChange, swatches = _ref.swatches;
             if (!swatches && window.Lotta && window.Lotta.customizer && window.Lotta.customizer.gradientPicker) {
                 swatches = window.Lotta.customizer.gradientPicker.swatches;
             }
-            return (0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("div", {
+            return (0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("div", {
                 className: "lotta-gradient-picker",
-                children: [ (0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.GradientPicker, {
+                children: [ (0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.GradientPicker, {
                     className: "wp-gradient-picker",
                     value: gradient,
                     onChange: function onChange(currentGradient) {
                         _onChange(currentGradient);
                     }
-                }), (0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("ul", {
+                }), (0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("ul", {
                     className: "lotta-gradient-switches",
-                    children: (swatches || []).map((function(swatch, index) {
-                        return (0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("li", {
+                    children: (0, _utils__WEBPACK_IMPORTED_MODULE_2__.sanitize_array_value)(swatches).map((function(swatch, index) {
+                        return (0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("li", {
                             className: (0, clsx__WEBPACK_IMPORTED_MODULE_1__["default"])({
                                 active: swatch.gradient === gradient
                             }),
@@ -31561,7 +31589,8 @@ object-assign
         var _icons__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(277);
         var _throttler__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(75);
         var _customize__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(320);
-        var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(10);
+        var _utils__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(4);
+        var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(10);
         function _typeof(obj) {
             "@babel/helpers - typeof";
             return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function(obj) {
@@ -31764,10 +31793,11 @@ object-assign
                     if (id.startsWith("row")) {
                         var rowIndex = Number(id.replace("row-", "").split("-")[0]);
                         if (!isNaN(rowIndex)) {
-                            if (Array.isArray(_this.props.value[rowIndex]["settings"])) {
+                            if (Array.isArray(_this.props.value) && Array.isArray(_this.props.value[rowIndex]["settings"])) {
                                 _this.props.value[rowIndex]["settings"] = {};
                             }
-                            _this.props.onChange(immutability_helper__WEBPACK_IMPORTED_MODULE_5___default()(_this.props.value, _defineProperty({}, rowIndex, {
+                            _this.props.onChange(immutability_helper__WEBPACK_IMPORTED_MODULE_5___default()((0, 
+                            _utils__WEBPACK_IMPORTED_MODULE_9__.sanitize_array_value)(_this.props.value), _defineProperty({}, rowIndex, {
                                 settings: _defineProperty({}, settingId, {
                                     $set: val
                                 })
@@ -31779,10 +31809,11 @@ object-assign
                         var _rowIndex = Number(indexes[0]);
                         var colIndex = Number(indexes[1]);
                         if (!isNaN(_rowIndex) && !isNaN(colIndex)) {
-                            if (Array.isArray(_this.props.value[_rowIndex]["columns"][colIndex]["settings"])) {
+                            if (Array.isArray(_this.props.value) && Array.isArray(_this.props.value[_rowIndex]["columns"][colIndex]["settings"])) {
                                 _this.props.value[_rowIndex]["columns"][colIndex]["settings"] = {};
                             }
-                            _this.props.onChange(immutability_helper__WEBPACK_IMPORTED_MODULE_5___default()(_this.props.value, _defineProperty({}, _rowIndex, {
+                            _this.props.onChange(immutability_helper__WEBPACK_IMPORTED_MODULE_5___default()((0, 
+                            _utils__WEBPACK_IMPORTED_MODULE_9__.sanitize_array_value)(_this.props.value), _defineProperty({}, _rowIndex, {
                                 columns: _defineProperty({}, colIndex, {
                                     settings: _defineProperty({}, settingId, {
                                         $set: val
@@ -31797,10 +31828,11 @@ object-assign
                         var _colIndex = Number(_indexes[1]);
                         var elIndex = Number(_indexes[2]);
                         if (!isNaN(_rowIndex2) && !isNaN(_colIndex) && !isNaN(elIndex)) {
-                            if (Array.isArray(_this.props.value[_rowIndex2]["columns"][_colIndex]["elements"][elIndex]["settings"])) {
+                            if (Array.isArray(_this.props.value) && Array.isArray(_this.props.value[_rowIndex2]["columns"][_colIndex]["elements"][elIndex]["settings"])) {
                                 _this.props.value[_rowIndex2]["columns"][_colIndex]["elements"][elIndex]["settings"] = {};
                             }
-                            _this.props.onChange(immutability_helper__WEBPACK_IMPORTED_MODULE_5___default()(_this.props.value, _defineProperty({}, _rowIndex2, {
+                            _this.props.onChange(immutability_helper__WEBPACK_IMPORTED_MODULE_5___default()((0, 
+                            _utils__WEBPACK_IMPORTED_MODULE_9__.sanitize_array_value)(_this.props.value), _defineProperty({}, _rowIndex2, {
                                 columns: _defineProperty({}, _colIndex, {
                                     elements: _defineProperty({}, elIndex, {
                                         settings: _defineProperty({}, settingId, {
@@ -31842,7 +31874,7 @@ object-assign
                     root.classList.add("lotta-page-builder-sidebar-wrapper");
                     document.querySelector(".wp-full-overlay").appendChild(root);
                     this.renderSidebar = function() {
-                        (0, _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.render)((0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)(_sidebar__WEBPACK_IMPORTED_MODULE_3__["default"], {
+                        (0, _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.render)((0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_10__.jsx)(_sidebar__WEBPACK_IMPORTED_MODULE_3__["default"], {
                             options: _this3.props.options,
                             type: _this3.state.sidebarType,
                             visible: _this3.state.sidebarVisible,
@@ -31854,13 +31886,14 @@ object-assign
                                 }));
                             },
                             onRowAdd: function onRowAdd(row) {
-                                _this3.props.onChange([].concat(_toConsumableArray(_this3.props.value), [ row ]));
+                                _this3.props.onChange([].concat(_toConsumableArray((0, _utils__WEBPACK_IMPORTED_MODULE_9__.sanitize_array_value)(_this3.props.value)), [ row ]));
                             },
                             onElementChoose: function onElementChoose(el) {
                                 if (_this3.state.activeRow === null || _this3.state.activeColumn === null) {
                                     return;
                                 }
-                                _this3.props.onChange(immutability_helper__WEBPACK_IMPORTED_MODULE_5___default()(_this3.props.value, _defineProperty({}, _this3.state.activeRow, {
+                                _this3.props.onChange(immutability_helper__WEBPACK_IMPORTED_MODULE_5___default()((0, 
+                                _utils__WEBPACK_IMPORTED_MODULE_9__.sanitize_array_value)(_this3.props.value), _defineProperty({}, _this3.state.activeRow, {
                                     columns: _defineProperty({}, _this3.state.activeColumn, {
                                         elements: {
                                             $push: [ {
@@ -31918,19 +31951,20 @@ object-assign
                 get: function get() {
                     var _this$props = this.props, value = _this$props.value, options = _this$props.options;
                     var listeners = {};
-                    value.forEach((function(row, ri) {
+                    console.log(value);
+                    (0, _utils__WEBPACK_IMPORTED_MODULE_9__.sanitize_array_value)(value).forEach((function(row, ri) {
                         listeners["row-".concat(ri)] = Object.assign({
                             id: "row-".concat(ri),
                             values: Object.assign({}, options.row.defaults, row.settings || {}),
                             label: "Row # ".concat(ri + 1)
                         }, options.row);
-                        (row.columns || []).forEach((function(col, ci) {
+                        (0, _utils__WEBPACK_IMPORTED_MODULE_9__.sanitize_array_value)(row.columns).forEach((function(col, ci) {
                             listeners["col-".concat(ri, "-").concat(ci)] = Object.assign({
                                 id: "col-".concat(ri, "-").concat(ci),
                                 values: Object.assign({}, options.column.defaults, col.settings || {}),
                                 label: "Column # ".concat(ri + 1, "-").concat(ci + 1)
                             }, options.column);
-                            (col.elements || []).forEach((function(el, ei) {
+                            (0, _utils__WEBPACK_IMPORTED_MODULE_9__.sanitize_array_value)(col.elements).forEach((function(el, ei) {
                                 var element = options.elements[el.id] || {};
                                 listeners["element-".concat(ri, "-").concat(ci, "-").concat(ei)] = Object.assign({
                                     id: "element-".concat(ri, "-").concat(ci, "-").concat(ei),
@@ -31946,7 +31980,7 @@ object-assign
                 value: function render() {
                     var _this6 = this;
                     var options = this.props.options;
-                    return (0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)(_panel__WEBPACK_IMPORTED_MODULE_1__["default"], {
+                    return (0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_10__.jsx)(_panel__WEBPACK_IMPORTED_MODULE_1__["default"], {
                         listeners: this.listeners,
                         onChange: this.handleChange,
                         getSettings: function getSettings(id) {
@@ -31958,21 +31992,21 @@ object-assign
                         children: function children(_ref) {
                             var container = _ref.container, open = _ref.open;
                             _this6.openPanel = open;
-                            return (0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)("div", {
+                            return (0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_10__.jsx)("div", {
                                 ref: container,
                                 className: "lotta-page-builder",
-                                children: (0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxs)("div", {
+                                children: (0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_10__.jsxs)("div", {
                                     className: "page-builder-content",
-                                    children: [ (0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)(_navigation__WEBPACK_IMPORTED_MODULE_4__["default"], {
+                                    children: [ (0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_10__.jsx)(_navigation__WEBPACK_IMPORTED_MODULE_4__["default"], {
                                         options,
-                                        value: _this6.props.value,
+                                        value: (0, _utils__WEBPACK_IMPORTED_MODULE_9__.sanitize_array_value)(_this6.props.value),
                                         onRowsChange: function onRowsChange(rows) {
                                             _this6.props.onChange(rows);
                                         },
                                         onColumnsChange: function onColumnsChange(row, columns) {
                                             if (_this6.columnsChangeThrottler === null) {
                                                 _this6.columnsChangeThrottler = new _throttler__WEBPACK_IMPORTED_MODULE_7__["default"](0, (function(changes) {
-                                                    var value = _this6.props.value;
+                                                    var value = (0, _utils__WEBPACK_IMPORTED_MODULE_9__.sanitize_array_value)(_this6.props.value);
                                                     changes.forEach((function(data) {
                                                         var _data = _slicedToArray(data, 2), row = _data[0], columns = _data[1];
                                                         value = immutability_helper__WEBPACK_IMPORTED_MODULE_5___default()(value, _defineProperty({}, row, {
@@ -31989,7 +32023,7 @@ object-assign
                                         onElementsChange: function onElementsChange(row, col, elements) {
                                             if (_this6.elementsChangeThrottler === null) {
                                                 _this6.elementsChangeThrottler = new _throttler__WEBPACK_IMPORTED_MODULE_7__["default"](0, (function(changes) {
-                                                    var value = _this6.props.value;
+                                                    var value = (0, _utils__WEBPACK_IMPORTED_MODULE_9__.sanitize_array_value)(_this6.props.value);
                                                     changes.forEach((function(data) {
                                                         var _data2 = _slicedToArray(data, 3), row = _data2[0], col = _data2[1], elements = _data2[2];
                                                         value = immutability_helper__WEBPACK_IMPORTED_MODULE_5___default()(value, _defineProperty({}, row, {
@@ -32006,19 +32040,22 @@ object-assign
                                             _this6.elementsChangeThrottler.buffer(row, col, elements);
                                         },
                                         onRowRemove: function onRowRemove(row) {
-                                            _this6.props.onChange(immutability_helper__WEBPACK_IMPORTED_MODULE_5___default()(_this6.props.value, {
+                                            _this6.props.onChange(immutability_helper__WEBPACK_IMPORTED_MODULE_5___default()((0, 
+                                            _utils__WEBPACK_IMPORTED_MODULE_9__.sanitize_array_value)(_this6.props.value), {
                                                 $splice: [ [ row, 1 ] ]
                                             }));
                                         },
                                         onColumnRemove: function onColumnRemove(row, col) {
-                                            _this6.props.onChange(immutability_helper__WEBPACK_IMPORTED_MODULE_5___default()(_this6.props.value, _defineProperty({}, row, {
+                                            _this6.props.onChange(immutability_helper__WEBPACK_IMPORTED_MODULE_5___default()((0, 
+                                            _utils__WEBPACK_IMPORTED_MODULE_9__.sanitize_array_value)(_this6.props.value), _defineProperty({}, row, {
                                                 columns: {
                                                     $splice: [ [ col, 1 ] ]
                                                 }
                                             })));
                                         },
                                         onElementRemove: function onElementRemove(row, col, el) {
-                                            _this6.props.onChange(immutability_helper__WEBPACK_IMPORTED_MODULE_5___default()(_this6.props.value, _defineProperty({}, row, {
+                                            _this6.props.onChange(immutability_helper__WEBPACK_IMPORTED_MODULE_5___default()((0, 
+                                            _utils__WEBPACK_IMPORTED_MODULE_9__.sanitize_array_value)(_this6.props.value), _defineProperty({}, row, {
                                                 columns: _defineProperty({}, col, {
                                                     elements: {
                                                         $splice: [ [ el, 1 ] ]
@@ -32027,7 +32064,8 @@ object-assign
                                             })));
                                         },
                                         onColumnAdd: function onColumnAdd(row) {
-                                            _this6.props.onChange(immutability_helper__WEBPACK_IMPORTED_MODULE_5___default()(_this6.props.value, _defineProperty({}, row, {
+                                            _this6.props.onChange(immutability_helper__WEBPACK_IMPORTED_MODULE_5___default()((0, 
+                                            _utils__WEBPACK_IMPORTED_MODULE_9__.sanitize_array_value)(_this6.props.value), _defineProperty({}, row, {
                                                 columns: {
                                                     $push: [ {
                                                         elements: [],
@@ -32050,28 +32088,28 @@ object-assign
                                         onAddElement: function onAddElement(row, col) {
                                             _this6.showElementsSidebar(row, col);
                                         }
-                                    }), (0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxs)("button", {
+                                    }), (0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_10__.jsxs)("button", {
                                         className: "page-builder-add-row",
                                         type: "button",
                                         onClick: function onClick() {
                                             return _this6.showRowStructureSidebar();
                                         },
-                                        children: [ (0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)(_icons__WEBPACK_IMPORTED_MODULE_6__.PlusSolid, {
+                                        children: [ (0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_10__.jsx)(_icons__WEBPACK_IMPORTED_MODULE_6__.PlusSolid, {
                                             w: 14,
                                             h: 14
-                                        }), (0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)("span", {
+                                        }), (0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_10__.jsx)("span", {
                                             children: (0, _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Add Row")
                                         }) ]
-                                    }), (0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxs)("button", {
+                                    }), (0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_10__.jsxs)("button", {
                                         className: "page-builder-reset",
                                         type: "button",
                                         onClick: function onClick() {
                                             return _this6.props.onChange(_this6.props.options["default"]);
                                         },
-                                        children: [ (0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)(_icons__WEBPACK_IMPORTED_MODULE_6__.RotateLeft, {
+                                        children: [ (0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_10__.jsx)(_icons__WEBPACK_IMPORTED_MODULE_6__.RotateLeft, {
                                             w: 14,
                                             h: 14
-                                        }), (0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)("span", {
+                                        }), (0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_10__.jsx)("span", {
                                             children: (0, _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Reset Default")
                                         }) ]
                                     }) ]
@@ -33629,7 +33667,7 @@ object-assign
                             all: value[row]
                         };
                         Object.keys(responsiveValue).forEach((function(device) {
-                            var columns = responsiveValue[device].columns || [];
+                            var columns = (0, _utils__WEBPACK_IMPORTED_MODULE_3__.sanitize_array_value)(responsiveValue[device].columns);
                             columns.forEach((function(col, ci) {
                                 listeners[row + "-" + device + "-" + ci] = Object.assign({
                                     id: row + "-" + device + "-" + ci,
@@ -33708,6 +33746,7 @@ object-assign
                             })).filter((function(e) {
                                 return e !== null;
                             }));
+                            console.log("sortableElements", sortableElements);
                             return (0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_10__.jsx)("div", {
                                 ref: container,
                                 children: (0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_10__.jsx)(react_sortablejs__WEBPACK_IMPORTED_MODULE_6__.ReactSortable, {
@@ -34059,7 +34098,8 @@ object-assign
         var deep_equal__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(14);
         var deep_equal__WEBPACK_IMPORTED_MODULE_2___default = __webpack_require__.n(deep_equal__WEBPACK_IMPORTED_MODULE_2__);
         var _icons__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(277);
-        var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(10);
+        var _utils__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(4);
+        var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(10);
         function _typeof(obj) {
             "@babel/helpers - typeof";
             return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function(obj) {
@@ -34181,39 +34221,39 @@ object-assign
                             settings: {}
                         } ];
                     }
-                    return (0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("div", {
+                    return (0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxs)("div", {
                         className: "builder-row",
-                        children: [ (0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("div", {
+                        children: [ (0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)("div", {
                             className: "builder-row-actions",
-                            children: (0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("button", {
+                            children: (0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxs)("button", {
                                 disabled: row.controls.length <= 0,
                                 type: "button",
                                 onClick: function onClick() {
                                     return _onClick(id);
                                 },
-                                children: [ (0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("span", {
+                                children: [ (0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)("span", {
                                     className: "lotta-dashicon dashicons-admin-generic mr-4"
-                                }), (0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("span", {
+                                }), (0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)("span", {
                                     children: row.label
                                 }) ]
                             })
-                        }), (0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("div", {
+                        }), (0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)("div", {
                             className: "builder-columns",
                             children: showColumns.map((function(column, colIndex) {
-                                var columnItems = column.elements || [];
+                                var columnItems = (0, _utils__WEBPACK_IMPORTED_MODULE_4__.sanitize_array_value)(column.elements);
                                 var sortableItems = columnItems.map((function(i) {
                                     return {
                                         id: i
                                     };
                                 }));
-                                return (0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("div", {
+                                return (0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxs)("div", {
                                     className: "builder-column",
                                     style: {
                                         width: Math.floor(1 / showColumns.length * 100 * 100) / 100 + "%"
                                     },
-                                    children: [ (0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("div", {
+                                    children: [ (0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxs)("div", {
                                         className: "builder-column-content",
-                                        children: [ (0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(react_sortablejs__WEBPACK_IMPORTED_MODULE_1__.ReactSortable, {
+                                        children: [ (0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(react_sortablejs__WEBPACK_IMPORTED_MODULE_1__.ReactSortable, {
                                             list: sortableItems,
                                             group: "builder-item",
                                             className: "builder-sortable-items",
@@ -34226,15 +34266,15 @@ object-assign
                                                 })));
                                             },
                                             children: columnItems.map((function(item) {
-                                                return (0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("div", {
+                                                return (0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxs)("div", {
                                                     "data-id": item,
                                                     className: "builder-item",
                                                     onClick: function onClick() {
                                                         return onElementClick(item);
                                                     },
-                                                    children: [ (0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("span", {
+                                                    children: [ (0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)("span", {
                                                         children: (elements[item] || {}).label
-                                                    }), (0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("span", {
+                                                    }), (0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)("span", {
                                                         className: "lotta-dashicon dashicons-no-alt",
                                                         onClick: function onClick(ev) {
                                                             ev.stopPropagation();
@@ -34243,34 +34283,34 @@ object-assign
                                                     }) ]
                                                 }, item);
                                             }))
-                                        }), (0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("div", {
+                                        }), (0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)("div", {
                                             className: "builder-column-actions",
-                                            children: (0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("button", {
+                                            children: (0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)("button", {
                                                 type: "button",
                                                 onClick: function onClick() {
                                                     return onSettingColumn(id, colIndex);
                                                 },
-                                                children: (0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("span", {
+                                                children: (0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)("span", {
                                                     className: "lotta-dashicon dashicons-admin-generic"
                                                 })
                                             })
                                         }) ]
-                                    }), !isOffCanvas && (0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("div", {
+                                    }), !isOffCanvas && (0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxs)("div", {
                                         className: "builder-change-columns",
-                                        children: [ showColumns.length < row.maxColumns && (0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("button", {
+                                        children: [ showColumns.length < row.maxColumns && (0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)("button", {
                                             className: "builder-add-column",
                                             type: "button",
                                             onClick: function onClick() {
                                                 return onAddColumn(id, colIndex);
                                             },
-                                            children: (0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_icons__WEBPACK_IMPORTED_MODULE_3__.PlusSolid, {})
-                                        }), (0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("button", {
+                                            children: (0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_icons__WEBPACK_IMPORTED_MODULE_3__.PlusSolid, {})
+                                        }), (0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)("button", {
                                             className: "builder-remove-column",
                                             type: "button",
                                             onClick: function onClick() {
                                                 return onRemoveColumn(id, colIndex);
                                             },
-                                            children: (0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_icons__WEBPACK_IMPORTED_MODULE_3__.CircleXMark, {})
+                                            children: (0, react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_icons__WEBPACK_IMPORTED_MODULE_3__.CircleXMark, {})
                                         }) ]
                                     }) ]
                                 }, colIndex);
@@ -34288,6 +34328,7 @@ object-assign
             ensureBuilderValueStructure: () => ensureBuilderValueStructure,
             ensureRowValueStructure: () => ensureRowValueStructure
         });
+        var _utils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(4);
         function _toConsumableArray(arr) {
             return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread();
         }
@@ -34316,11 +34357,11 @@ object-assign
             return arr2;
         }
         function sanitizeRowData(value) {
-            var columns = value.columns || [];
+            var columns = (0, _utils__WEBPACK_IMPORTED_MODULE_0__.sanitize_array_value)(value.columns);
             var newColumns = [];
             columns.forEach((function(col) {
                 newColumns.push({
-                    elements: _toConsumableArray(col.elements || []),
+                    elements: _toConsumableArray((0, _utils__WEBPACK_IMPORTED_MODULE_0__.sanitize_array_value)(col.elements)),
                     settings: JSON.parse(JSON.stringify(col.settings || {}))
                 });
             }));

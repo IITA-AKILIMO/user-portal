@@ -17,9 +17,19 @@ if ( !function_exists( 'yuki_html_attributes' ) ) {
      */
     function yuki_html_attributes()
     {
-        $attrs = [
-            'data-yuki-theme' => $_COOKIE['yuki-color-mode'] ?? CZ::get( 'yuki_default_color_scheme' ),
-        ];
+        
+        if ( CZ::checked( 'yuki_save_color_scheme' ) ) {
+            $attrs = [
+                'data-save-color-scheme' => 'yes',
+                'data-yuki-theme'        => $_COOKIE['yuki-color-mode'] ?? CZ::get( 'yuki_default_color_scheme' ),
+            ];
+        } else {
+            $attrs = [
+                'data-save-color-scheme' => 'no',
+                'data-yuki-theme'        => CZ::get( 'yuki_default_color_scheme' ),
+            ];
+        }
+        
         Utils::print_attribute_string( apply_filters( 'yuki_html_attributes', $attrs ) );
     }
 
@@ -1489,7 +1499,7 @@ if ( !function_exists( 'yuki_show_share_box' ) ) {
 				<?php 
         foreach ( $socials as $social ) {
             
-            if ( isset( $social['share'] ) ) {
+            if ( isset( $social['share'] ) && !empty($social['share']) ) {
                 $home_url = Utils::encode_uri_component( get_the_permalink() );
                 $share_url = str_replace( '{url}', $home_url, str_replace( '{text}', Utils::encode_uri_component( get_the_title() ), $social['share'] ) );
                 ?>
@@ -1519,16 +1529,17 @@ if ( !function_exists( 'yuki_show_share_box' ) ) {
     }
 
 }
-if ( !function_exists( 'yuki_form_style_preset' ) ) {
+if ( !function_exists( 'yuki_form_style_presets' ) ) {
     /**
      * @param $style
      *
      * @return array
      */
-    function yuki_form_style_preset( $style )
+    function yuki_form_style_presets()
     {
-        $presets = [
-            'modern' => [
+        return [
+            '.yuki-form-classic' => [],
+            '.yuki-form-modern'  => [
             '--yuki-form-border-top'             => 'none',
             '--yuki-form-border-right'           => 'none',
             '--yuki-form-border-left'            => 'none',
@@ -1539,7 +1550,101 @@ if ( !function_exists( 'yuki_form_style_preset' ) ) {
             '--yuki-form-checkbox-border-bottom' => '2px solid var(--yuki-form-border-color)',
         ],
         ];
-        return $presets[$style] ?? [];
+    }
+
+}
+if ( !function_exists( 'yuki_content_link_style_preset' ) ) {
+    /**
+     * @param $style
+     *
+     * @return array
+     */
+    function yuki_content_link_style_preset( $scope, $style, $css = array() )
+    {
+        $presets = [
+            'underline'       => [
+            $scope => [
+            'text-decoration' => 'underline',
+        ],
+        ],
+            'plain'           => [
+            $scope => [
+            'text-decoration' => 'none',
+        ],
+        ],
+            'hover-underline' => [
+            $scope            => [
+            'text-decoration' => 'none',
+        ],
+            $scope . ':hover' => [
+            'text-decoration' => 'underline',
+        ],
+        ],
+        ];
+        return array_merge( $css, $presets[$style] ?? $presets['underline'] );
+    }
+
+}
+if ( !function_exists( 'yuki_show_archive_header' ) ) {
+    /**
+     * Show archive header
+     */
+    function yuki_show_archive_header()
+    {
+        $should_show_archive_header = !(is_home() && CZ::checked( 'yuki_disable_blogs_archive_header' )) && !(is_search() && !have_posts()) && !(yuki_is_woo_shop() && CZ::checked( 'yuki_disable_shop_archive_header' ));
+        if ( !apply_filters( 'yuki_should_show_archive_header', $should_show_archive_header ) ) {
+            return;
+        }
+        $attrs = [
+            'class' => Utils::clsx( array(
+            'yuki-archive-header'             => true,
+            'yuki-archive-header-has-overlay' => CZ::checked( 'yuki_archive_header_has_overlay' ),
+        ) ),
+        ];
+        
+        if ( is_customize_preview() ) {
+            $attrs['data-shortcut'] = 'border';
+            $attrs['data-shortcut-location'] = 'yuki_archive:yuki_archive_header';
+        }
+        
+        ?>
+        <section <?php 
+        \LottaFramework\Utils::print_attribute_string( $attrs );
+        ?>>
+            <div class="container mx-auto px-gutter">
+				<?php 
+        
+        if ( is_search() ) {
+            ?>
+                    <h1 class="archive-title">
+						<?php 
+            /* translators: %s: Keywords searched by users */
+            printf( CZ::get( 'yuki_search_archive_header_prefix' ) . ' %s', '<span>' . get_search_query() . '</span>' );
+            ?>
+                    </h1>
+					<?php 
+        } else {
+            
+            if ( yuki_is_woo_shop() ) {
+                ?>
+                    <h1 class="archive-title"><?php 
+                woocommerce_page_title();
+                ?></h1>
+                    <div class="archive-description mt-half-gutter"><?php 
+                woocommerce_taxonomy_archive_description();
+                ?></div>
+					<?php 
+            } else {
+                the_archive_title( '<h1 class="archive-title">', '</h1>' );
+                the_archive_description( '<div class="archive-description mt-half-gutter">', '</div>' );
+            }
+        
+        }
+        
+        ?>
+            </div>
+        </section>
+		<?php 
     }
 
 }

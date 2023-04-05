@@ -9,7 +9,7 @@
  */
 if ( !defined( 'YUKI_VERSION' ) ) {
     // Replace the version number of the theme on each release.
-    define( 'YUKI_VERSION', '1.2.7' );
+    define( 'YUKI_VERSION', '1.3.4' );
 }
 if ( !defined( 'YUKI_WOOCOMMERCE_ACTIVE' ) ) {
     // Used to check whether WooCommerce plugin is activated
@@ -93,6 +93,14 @@ require get_template_directory() . '/inc/template-tags.php';
  */
 require get_template_directory() . '/inc/template-functions.php';
 /**
+ * Traits functions
+ */
+require get_template_directory() . '/inc/traits.php';
+/**
+ * Traits functions
+ */
+require get_template_directory() . '/inc/extensions.php';
+/**
  * Customizer additions.
  */
 require get_template_directory() . '/inc/customizer.php';
@@ -113,6 +121,12 @@ yuki_app( 'CZ' )->storeAs( 'option' );
 // add preloader customize partial
 yuki_app( 'CZ' )->addPartial( 'yuki-preloader-selective-css', '#yuki-preloader-selective-css', function () {
     echo  yuki_preloader_css() ;
+} );
+// add WooCommerce css partial
+yuki_app( 'CZ' )->addPartial( 'yuki-woo-selective-css', '#yuki-woo-selective-css', function () {
+    if ( function_exists( 'yuki_woo_dynamic_css' ) ) {
+        echo  \LottaFramework\Facades\Css::parse( yuki_woo_dynamic_css() ) ;
+    }
 } );
 // add global customize partial
 yuki_app( 'CZ' )->addPartial( 'yuki-global-selective-css', '#yuki-global-selective-css', function () {

@@ -4,7 +4,7 @@ Author: WP Moose
 Requires at least: WordPress 5.2+
 Tested up to: WordPress 6.1
 Requires PHP: 7.2
-Stable tag: 1.2.7
+Stable tag: 1.3.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Tags: news, blog, portfolio, grid-layout, one-column, two-columns, three-columns, four-columns, left-sidebar, right-sidebar, block-styles, custom-background, custom-colors, custom-header, custom-logo, custom-menu, editor-style, featured-image-header, featured-images, footer-widgets, full-width-template, rtl-language-support, sticky-post, threaded-comments, theme-options, translation-ready, wide-blocks
@@ -75,6 +75,61 @@ GPL v2 - src/lotta-framework/LICENSE
 Credits - src/lotta-framework/README.md
 
 == Changelog ==
+
+= 1.3.4 =
+
+* Ref: Security updates
+* Ref: WooCommerce compatibility enhancement
+* Ref: Update hero element
+* Add: More archive header customizable options
+* Add: WooCommerce product catalog options
+* Add: WooCommerce store notice options
+* Add: Shop cart header element
+
+= 1.3.3 =
+
+* Add: Toggle option to save/not save user's color scheme
+* Add: Content links style and color options
+* Ref: Change default color for content links
+* Fix: Cookies error in some edge cases
+
+= 1.3.2 =
+
+* Ref: Update lotta-framework
+* Fix: Ignore empty share items in social element and share box
+
+= 1.3.0 =
+
+* Add: Thumbnail motion effect
+* Add: Related posts section after single post
+* Add: {theme_version} copyright placeholder
+* Add: Article content maximum width option
+* Ref: Update social share box style
+* Ref: Update post navigation style
+* Fix: Form placeholder text is not hidden when it is not empty
+
+= 1.2.11 =
+
+* Fix: Background style error for primary button in the block editor
+* Fix: [Header dropdown style error](https://wordpress.org/support/topic/drop-down-menu-bugging-out/)
+* Add: [Header & footer row support z-index option](https://wordpress.org/support/topic/drop-down-menu-bugging-out/)
+
+= 1.2.10 =
+
+* Fix: Editor control update error
+* Fix: Logo element max width style error
+* Add: Breadcrumb element (Premium)
+
+= 1.2.9 =
+
+* Add: Header row overlay
+* Ref: Update theme filters
+
+= 1.2.8 =
+
+* Ref: Table block style
+* Ref: Gallery block style
+* Fix: Masonry layout thumbnail height error
 
 = 1.2.7 =
 

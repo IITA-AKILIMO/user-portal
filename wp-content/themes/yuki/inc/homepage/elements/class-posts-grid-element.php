@@ -171,7 +171,7 @@ if ( ! class_exists( 'Yuki_Posts_Grid_Element' ) ) {
                     <div class="card-wrapper">
                         <article data-card-layout="archive-grid" class="<?php Utils::the_clsx(
 							get_post_class( 'yuki-scroll-reveal card overflow-hidden h-full', get_the_ID() ),
-							[ 'card-thumb-motion' => $this->checked( 'card_thumb_motion', $settings ) ]
+							[ 'card-thumb-motion' => $this->checked( 'yuki_el_thumbnail_motion', $settings ) ]
 						); ?>">
 							<?php
 							yuki_post_structure( ...$this->get_post_structure_args( $id, $settings ) );
