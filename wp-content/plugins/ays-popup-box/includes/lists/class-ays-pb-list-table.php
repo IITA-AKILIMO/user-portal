@@ -37,6 +37,12 @@ class Ays_PopupBox_List_Table extends WP_List_Table {
         global $wpdb;
         $titles_sql = "SELECT {$wpdb->prefix}ays_pb_categories.title,{$wpdb->prefix}ays_pb_categories.id FROM {$wpdb->prefix}ays_pb_categories";
         $cat_titles = $wpdb->get_results($titles_sql);
+
+        $users = $wpdb->get_results(
+            "SELECT ID, display_name FROM {$wpdb->users} ORDER BY display_name",
+            ARRAY_A
+        );
+
         $cat_id = null;
         if( isset( $_GET['filterby'] )){
             $cat_id = absint( intval( $_GET['filterby'] ) );
@@ -59,6 +65,28 @@ class Ays_PopupBox_List_Table extends WP_List_Table {
             $ays_pb_status = ( $_GET['filterbyStatus'] );
         }
 
+        $author_id = null;
+        if( isset( $_GET['filterbyAuthor'] )){
+            $author_id = absint( intval($_GET['filterbyAuthor']) );
+        }
+        $authors_select = array();
+        foreach($users as $key => $user){
+            $selected = "";
+            if($author_id === intval($user["ID"])){
+                $selected = "selected";
+            }
+            $authors_select[$user["ID"]]['display_name'] = $user["display_name"];
+            $authors_select[$user["ID"]]['selected'] = $selected;
+            $authors_select[$user["ID"]]['id'] = $user["ID"];
+        }
+
+        sort($authors_select);
+
+        $ays_pb_type = null;
+        if( isset( $_GET['filterbyType'] )){
+            $ays_pb_type = ( $_GET['filterbyType'] );
+        }
+
         ?>
         <div id="category-filter-div" class="alignleft actions bulkactions ays-pb-filter-by-category">
             <select name="filterby" id="bulk-action-selector-top">
@@ -78,6 +106,26 @@ class Ays_PopupBox_List_Table extends WP_List_Table {
                 <option <?php if($ays_pb_status == "Off") echo "selected"; ?> value="Off"><?php echo __('Off',"ays-popup-box")?></option>
             </select>
             <input type="button" id="doaction" class="status-filter-apply button" value="Filter">
+        </div>
+        <div id="author-filter-div" class="alignleft actions bulkactions ays-pb-filter-by-author">
+            <select name="filterbyAuthor" id="bulk-action-selector-top">
+                <option value=""><?php echo __('Select Author',"ays-popup-box")?></option>
+                <?php
+                    foreach($authors_select as $key => $author){
+                        echo "<option ".$author['selected']." value='".$author['id']."'>".$author['display_name']."</option>";
+                    }
+                ?>
+            </select>
+            <input type="button" id="doaction" class="author-filter-apply button" value="Filter">
+        </div>
+        <div id="type-filter-div" class="alignleft actions bulkactions ays-pb-filter-by-type">
+            <select name="filterbyType" id="bulk-action-selector-top">
+                <option value=""><?php echo __('Select Type',"ays-popup-box")?></option>
+                <option <?php if($ays_pb_type == "custom_html") echo "selected"; ?> value="custom_html"><?php echo __('Custom Content',"ays-popup-box")?></option>
+                <option <?php if($ays_pb_type == "shortcode") echo "selected"; ?> value="shortcode"><?php echo __('Shortcode',"ays-popup-box")?></option>
+                <option <?php if($ays_pb_type == "video_type") echo "selected"; ?> value="video_type"><?php echo __('Video',"ays-popup-box")?></option>
+            </select>
+            <input type="button" id="doaction" class="type-filter-apply button" value="Filter">
         </div>
         
         <a style="" href="?page=<?php echo esc_attr( $_REQUEST['page'] ); ?>" class="button"><?php echo __( "Clear filters", "ays-popup-box" ); ?></a>
@@ -145,6 +193,16 @@ class Ays_PopupBox_List_Table extends WP_List_Table {
         if(! empty( $_REQUEST['filterbyStatus'] )){
             $ays_pb_status = esc_sql( sanitize_text_field( $_REQUEST['filterbyStatus'] ) );
             $where[] = " onoffswitch = '$ays_pb_status'";
+        }
+
+        if(! empty( $_REQUEST['filterbyAuthor'] )){
+            $ays_pb_author = esc_sql( sanitize_text_field( $_REQUEST['filterbyAuthor'] ) );
+            $where[] = " JSON_EXTRACT(options, '$.create_author') = $ays_pb_author";
+        }
+
+        if(! empty( $_REQUEST['filterbyType'] )){
+            $ays_pb_type = esc_sql( sanitize_text_field( $_REQUEST['filterbyType'] ) );
+            $where[] = " modal_content = '$ays_pb_type'";
         }
 
         if( isset( $_REQUEST['fstatus'] ) ){
@@ -410,7 +468,7 @@ class Ays_PopupBox_List_Table extends WP_List_Table {
 		$id = ( $data["id"] != NULL ) ? absint( intval( $data["id"] ) ) : null;
     
         //Width
-		$width = ( isset( $data['ays-pb']["width"] ) && $data['ays-pb']["width"] != '' ) ? absint( intval( $data['ays-pb']["width"] ) ) : 400;
+		$width = ( isset( $data['ays-pb']["width"] ) && $data['ays-pb']["width"] != '' ) ? absint( intval( $data['ays-pb']["width"] ) ) : '';
 
         //Height
 		$height = ( isset( $data['ays-pb']["height"] ) && $data['ays-pb']["height"] ) ? absint( intval( $data['ays-pb']["height"] ) ) : 500;
@@ -534,6 +592,9 @@ class Ays_PopupBox_List_Table extends WP_List_Table {
         //Close button text
         $close_button_text = (isset($data['ays_pb_close_button_text']) && $data['ays_pb_close_button_text'] != '') ? $data['ays_pb_close_button_text'] : 'x';
 
+        //Close button hover text
+        $close_button_hover_text = (isset($data['ays_pb_close_button_hover_text']) && $data['ays_pb_close_button_hover_text'] != '') ? $data['ays_pb_close_button_hover_text'] : '';
+
         // PopupBox width for mobile option
         $mobile_width = (isset($data['ays_pb_mobile_width']) && $data['ays_pb_mobile_width'] != "") ?abs(intval($data['ays_pb_mobile_width']))  : '';
 
@@ -557,6 +618,13 @@ class Ays_PopupBox_List_Table extends WP_List_Table {
         //popup width with percentage
         $popup_width_by_percentage_px = (isset($data['ays_popup_width_by_percentage_px']) && $data['ays_popup_width_by_percentage_px'] != '') ? $data['ays_popup_width_by_percentage_px'] : 'pixels';
 
+        //popup width with percentage
+        $popup_padding_by_percentage_px = (isset($data['ays_popup_padding_by_percentage_px']) && $data['ays_popup_padding_by_percentage_px'] != '') ? $data['ays_popup_padding_by_percentage_px'] : 'pixels';
+
+        //Padding
+        $default_padding = ($view_type == "minimal") ? 0 : 20;
+        $padding = ( isset($data['ays_popup_content_padding']) && $data['ays_popup_content_padding'] != '' ) ? absint( intval( $data['ays_popup_content_padding'] ) ) : $default_padding;
+
         //font-family
         $pb_font_family = (isset($data['ays_pb_font_family']) && $data['ays_pb_font_family'] != '') ? $data['ays_pb_font_family'] : 'inherit';
         
@@ -568,6 +636,9 @@ class Ays_PopupBox_List_Table extends WP_List_Table {
        
        //hide timer
        $enable_hide_timer = (isset($data['ays_pb_hide_timer']) && $data['ays_pb_hide_timer'] == 'on') ? 'on' : 'off';
+
+       //autoclose on video compltion
+       $enable_autoclose_on_completion = (isset($data['ays_pb_autoclose_on_completion']) && $data['ays_pb_autoclose_on_completion'] == 'on') ? 'on' : 'off';
 
         // Social Media links
         $enable_social_links = (isset($data['ays_pb_enable_social_links']) && $data['ays_pb_enable_social_links'] == "on") ? 'on' : 'off';
@@ -788,6 +859,7 @@ class Ays_PopupBox_List_Table extends WP_List_Table {
             'close_animation_speed'             => $close_animation_speed,
             'pb_mobile'                         => $pb_mobile,
             'close_button_text'                 => $close_button_text,
+            'close_button_hover_text'           => $close_button_hover_text,
             'mobile_width'                      => $mobile_width,
             'mobile_max_width'                  => $mobile_max_width,
             'mobile_height'                     => $mobile_height,
@@ -796,10 +868,13 @@ class Ays_PopupBox_List_Table extends WP_List_Table {
             'show_on_home_page'                 => $show_on_home_page,
             'close_popup_esc'                   => $close_popup_esc,
             'popup_width_by_percentage_px'      => $popup_width_by_percentage_px,
+            'popup_content_padding'             => $padding,
+            'popup_padding_by_percentage_px'    => $popup_padding_by_percentage_px,
             'pb_font_family'                    => $pb_font_family,
             'close_popup_overlay'               => $close_popup_overlay,
             'enable_pb_fullscreen'              => $enable_pb_fullscreen,
             'enable_hide_timer'                 => $enable_hide_timer,
+            'enable_autoclose_on_completion'    => $enable_autoclose_on_completion,
             'enable_social_links'               => $enable_social_links,
             'social_links'                      => $social_links,
             'social_buttons_heading'            => $social_buttons_heading,
@@ -1042,7 +1117,7 @@ class Ays_PopupBox_List_Table extends WP_List_Table {
 			$message = "updated";
 		}
 
-        $ays_pb_tab = isset($data['ays_pb_tab']) ? $data['ays_pb_tab'] : 'tab1';
+        $ays_pb_tab = isset($data['ays_pb_tab']) ? sanitize_text_field($data['ays_pb_tab']) : 'tab1';
 		if( $pb_result >= 0 ){
 			if($submit_type != ''){
                 if($id == null){
@@ -1108,6 +1183,21 @@ class Ays_PopupBox_List_Table extends WP_List_Table {
         if( isset( $_GET['filterby'] ) && absint( sanitize_text_field( $_GET['filterby'] ) ) > 0){
             $cat_id = absint( sanitize_text_field( $_GET['filterby'] ) );
             $filter[] = ' category_id = '.$cat_id.' ';
+        }
+
+        if(! empty( $_REQUEST['filterbyStatus'] )){
+            $ays_pb_status = esc_sql( sanitize_text_field( $_REQUEST['filterbyStatus'] ) );
+            $filter[] = " onoffswitch = '$ays_pb_status'";
+        }
+
+        if(! empty( $_REQUEST['filterbyAuthor'] )){
+            $ays_pb_author = esc_sql( sanitize_text_field( $_REQUEST['filterbyAuthor'] ) );
+            $filter[] = " JSON_EXTRACT(options, '$.create_author') = $ays_pb_author";
+        }
+
+        if(! empty( $_REQUEST['filterbyType'] )){
+            $ays_pb_type = esc_sql( sanitize_text_field( $_REQUEST['filterbyType'] ) );
+            $filter[] = " modal_content = '$ays_pb_type'";
         }
 
         if( isset( $_REQUEST['fstatus'] ) && ! is_null( sanitize_text_field( $_REQUEST['fstatus'] ) ) ){
@@ -1323,8 +1413,9 @@ class Ays_PopupBox_List_Table extends WP_List_Table {
     }
 
     function column_create_date( $item ) {
-        
-        $options = json_decode($item['options'], true);
+        if ($item['options']) {
+            $options = json_decode($item['options'], true);
+        }
         $date = isset($options['create_date']) && $options['create_date'] != '' ? $options['create_date'] : "0000-00-00 00:00:00";
         if(isset($options['author'])){
             if(is_array($options['author'])){

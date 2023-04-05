@@ -29,7 +29,7 @@
                             <label for="ays_pb_export_import">
                                 <?php echo __('Select popups', "ays-popup-box"); ?>
                                 <a class="ays_help ays-pb-help-pro" data-toggle="tooltip" title="<?php echo __('Specify the popup boxes which must be exported. If you want to export all popup boxes just leave blank.',"ays-popup-box")?>">
-                                    <i class="ays_fa ays_fa-info-circle"></i>
+                                    <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                                 </a>
                             </label>
                         </div>

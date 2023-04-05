@@ -1,7 +1,7 @@
 === Kenta Gutenberg Blocks – Responsive Blocks and block templates library for Gutenberg Editor ===
 Contributors: ibllex
 Tags: gutenberg, gutenberg blocks, block editor, blocks, block, editor, page builder
-Stable tag: 1.2.2
+Stable tag: 1.2.3
 Requires at least: 5.6
 Tested up to: 6.1
 Requires PHP: 7.2
@@ -45,6 +45,11 @@ No! You can create amazing websites without touching a single line of code.
 Absolutely Yes! Kenta Blocks has been created using the Gutenberg editor. So, it does not go well with classic editor or other page builder plugins.
 
 == Changelog ==
+
+= 1.2.3 =
+
+* Ref: Force clear cache after plugin update
+* Perf: Improves performance
 
 = 1.2.2 =
 

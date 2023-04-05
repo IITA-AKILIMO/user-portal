@@ -2,11 +2,11 @@
 /**
  * Page Template for Kenta.
  *
- * Template name: Kenta Business Homepage
+ * Template name: Kenta: Fluid Page Builder Template With Transparent Header
  */
 
 // template override settings
-set_query_var( 'site-container-style', 'boxed' );
+set_query_var( 'site-container-style', 'fluid' );
 set_query_var( 'site-container-layout', 'normal' );
 set_query_var( 'site-transparent-header', 'enable' );
 set_query_var( 'disable-article-header', 'yes' );

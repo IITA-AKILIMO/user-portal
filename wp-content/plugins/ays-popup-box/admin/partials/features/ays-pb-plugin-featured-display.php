@@ -56,7 +56,7 @@
             </div>
             <div class="ays-pb-card__footer">
                 <a target="_blank" href="https://wordpress.org/plugins/survey-maker/" class="ays-pb-card__btn-info">WP.org</a>
-                <a target="_blank" href="https://ays-pro.com/wordpress/survey-maker/" class="ays-pb-card__btn-primary"><?php echo __('Buy Now', "ays-popup-box"); ?></a>
+                <a target="_blank" href="https://ays-pro.com/wordpress/survey-maker?utm_source=dashboard-our-products&utm_medium=free&utm_campaign=popup" class="ays-pb-card__btn-primary"><?php echo __('Buy Now', "ays-popup-box"); ?></a>
             </div>
         </div>
         <div class="ays-pb-card">

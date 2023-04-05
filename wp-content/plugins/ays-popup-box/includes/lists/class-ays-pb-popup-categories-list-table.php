@@ -371,13 +371,13 @@ class Popup_Categories_List_Table extends WP_List_Table{
         $status_html = '';
         switch( $status ) {
             case 1:
-                $status_html = '<span class="ays-pb-publish-status"><i class="ays_far ays_fa_check_square" aria-hidden="true"></i></span>';
+                $status_html = '<span class="ays-pb-publish-status"><img src=' . AYS_PB_ADMIN_URL . "./images/icons/check-square.svg" . '></span>';
                 break;
             case 0:
-                $status_html = '<span class="ays-pb-publish-status"><i class="ays_far ays_fa_square" aria-hidden="true"></i></span>';
+                $status_html = '<span class="ays-pb-publish-status"><img src=' . AYS_PB_ADMIN_URL . "./images/icons/square.svg" . '></span>';
                 break;
             default:
-                $status_html = '<span class="ays-pb-publish-status"><i class="ays_far ays_fa_square" aria-hidden="true"></i></span>';
+                $status_html = '<span class="ays-pb-publish-status"><img src=' . AYS_PB_ADMIN_URL . "./images/icons/square.svg" . '></span>';
                 break;
         }
 

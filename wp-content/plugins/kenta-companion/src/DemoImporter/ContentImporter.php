@@ -56,6 +56,10 @@ class ContentImporter {
 		if ( ! function_exists( 'post_exists' ) ) {
 			include_once ABSPATH . 'wp-admin/includes/post.php';
 		}
+
+		if ( ! function_exists( 'wp_insert_category' ) ) {
+			include_once ABSPATH . 'wp-admin/includes/taxonomy.php';
+		}
 	}
 
 	/**

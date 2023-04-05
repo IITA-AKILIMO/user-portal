@@ -80,7 +80,9 @@ if ( !function_exists( 'kenta_blocks_all' ) ) {
      */
     function kenta_blocks_all( $key = null )
     {
-        $blocks = (require KENTA_BLOCKS_PLUGIN_PATH . 'inc/blocks.php');
+        $blocks = \KentaBlocks\Store::get( 'kenta-blocks' . $key, function () {
+            return require KENTA_BLOCKS_PLUGIN_PATH . 'inc/blocks.php';
+        } );
         if ( $key ) {
             $blocks = array_map( function ( $item ) use( $key ) {
                 return $item[$key];

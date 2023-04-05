@@ -73,7 +73,7 @@ if ( isset( $id ) && !is_null( $id ) ) {
                     <label for='ays-title'>
                         <?php echo __('Category name', "ays-popup-box"); ?>
                         <a class="ays_help" data-toggle="tooltip" title="<?php echo __('Define the category name.',"ays-popup-box")?>">
-                            <i class="ays_fa ays_fa-info-circle"></i>
+                            <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                         </a>
                     </label>
                 </div>
@@ -87,7 +87,7 @@ if ( isset( $id ) && !is_null( $id ) ) {
                 <label for='ays-description'>
                     <?php echo __('Description', "ays-popup-box"); ?>
                     <a class="ays_help" data-toggle="tooltip" title="<?php echo __('Write category description if necessary.',"ays-popup-box")?>">
-                        <i class="ays_fa ays_fa-info-circle"></i>
+                        <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                     </a>
                 </label>
                 <?php
@@ -112,7 +112,7 @@ if ( isset( $id ) && !is_null( $id ) ) {
                         <label for="ays_show_random_posts_category">
                             <?php echo __('Show random popup by category', "ays-popup-box")?>
                             <a class="ays_help ays-pb-help-pro" data-toggle="tooltip" title="<?php echo __('If this option is enabled a random popup will be displayed from the selected category based on the chosen post.',"ays-popup-box"); ?>">
-                                <i class="ays_fa ays_fa-info-circle"></i>
+                                <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                             </a>
                         </label>
                     </div>
@@ -140,7 +140,7 @@ if ( isset( $id ) && !is_null( $id ) ) {
                                             "<li>". __('Include - Choose the post/page and post/page types including the popup.',"ays-popup-box") ."</li>".
                                         "</ul>";
                                     ?>">
-                                    <i class="ays_fa ays_fa-info-circle"></i>
+                                    <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                                 </a>
                             </div>
                         </div>
@@ -153,7 +153,7 @@ if ( isset( $id ) && !is_null( $id ) ) {
                     <label>
                         <?php echo __('Category status', "ays-popup-box"); ?>
                         <a class="ays_help" data-toggle="tooltip" title="<?php echo __('Select whether or not to display the new category in the settings.',"ays-popup-box")?>">
-                            <i class="ays_fa ays_fa-info-circle"></i>
+                            <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                         </a>
                     </label>
                 </div>

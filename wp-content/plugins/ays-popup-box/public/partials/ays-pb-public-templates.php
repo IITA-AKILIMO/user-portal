@@ -174,6 +174,9 @@ class Ays_Pb_Public_Templates {
             }
         }
 
+        //close button hover text
+        $ays_pb_close_button_hover_text = (isset($options->close_button_hover_text) && $options->close_button_hover_text != '') ? $options->close_button_hover_text : "";
+
         //Bg image position
         $pb_bg_image_position = (isset($options->pb_bg_image_position) && $options->pb_bg_image_position != "") ? str_ireplace('-', ' ', $options->pb_bg_image_position) : 'center center';
 
@@ -363,6 +366,23 @@ class Ays_Pb_Public_Templates {
             $pb_height = '500px';
         }
 
+        //popup padding percentage
+        $ays_pb_padding = (isset($options->popup_content_padding) && $options->popup_content_padding != '') ? $options->popup_content_padding : '20';
+        $popup_padding_by_percentage_px = (isset($options->popup_padding_by_percentage_px) && $options->popup_padding_by_percentage_px != '') ? $options->popup_padding_by_percentage_px : 'pixels';
+        if(isset($ays_pb_padding) && $ays_pb_padding != ''){
+            if ($popup_padding_by_percentage_px && $popup_padding_by_percentage_px == 'percentage') {
+                if (absint(intval($ays_pb_padding)) > 100 ) {
+                    $pb_padding = '100%';
+                }else{
+                    $pb_padding = $ays_pb_padding . '%';
+                }
+            }else{
+                $pb_padding = $ays_pb_padding . 'px';
+            }
+        }else{
+            $pb_padding = '20px';
+        }
+
         //hide timer
         $enable_hide_timer  = (isset($options->enable_hide_timer) && $options->enable_hide_timer == 'on') ? 'on' : 'off';
         
@@ -513,7 +533,8 @@ class Ays_Pb_Public_Templates {
                     $ays_pb_title
                     $ays_pb_description".
              (($show_desc !== "On" && $show_title !== "On") ?  '' :  '<hr/>')
-                    ."<div class='ays_content_box'>".
+                    
+                    ."<div class='ays_content_box' style='padding: {$pb_padding}'>".
                         (($ays_pb_modal_content == 'shortcode') ? do_shortcode($ays_pb_shortcode) : Ays_Pb_Public::ays_autoembed($ays_pb_custom_html))
                     ."</div>
                     {$ays_social_links}
@@ -523,7 +544,7 @@ class Ays_Pb_Public_Templates {
                         </button>
                     </div>
                     $ays_pb_timer_desc
-                    <label for='ays-pb-modal-checkbox_".$id."' class='ays-pb-modal-close ".$closeButton." ays-pb-modal-close_".$id." ays-pb-close-button-delay ays_pb_pause_sound_".$id."' style='color: $close_button_color !important; font-family:$ays_pb_font_family;{$close_button_position};transform:scale({$close_btn_size})'>". $ays_pb_close_button_text ."</label>
+                    <label for='ays-pb-modal-checkbox_".$id."' class='ays-pb-modal-close ".$closeButton." ays-pb-modal-close_".$id." ays-pb-close-button-delay ays_pb_pause_sound_".$id."' style='color: $close_button_color !important; font-family:$ays_pb_font_family;{$close_button_position};transform:scale({$close_btn_size})' data-toggle='tooltip' title='$ays_pb_close_button_hover_text'>". $ays_pb_close_button_text ."</label>
                 </div>
                 <script>
                     (function($){
@@ -611,6 +632,9 @@ class Ays_Pb_Public_Templates {
         }else{
             $title_text_shadow = "";
         }
+
+        //close button hover text
+        $ays_pb_close_button_hover_text = (isset($options->close_button_hover_text) && $options->close_button_hover_text != '') ? $options->close_button_hover_text : "";
         
         // Box shadow
         $options->enable_box_shadow = (isset($options->enable_box_shadow) && $options->enable_box_shadow == 'on') ? 'on' : 'off'; 
@@ -733,6 +757,22 @@ class Ays_Pb_Public_Templates {
             $pb_height = '500px';
         }
 
+        $ays_pb_padding = (isset($options->popup_content_padding) && $options->popup_content_padding != '') ? $options->popup_content_padding : '20';
+        //popup padding percentage
+        $popup_padding_by_percentage_px = (isset($options->popup_padding_by_percentage_px) && $options->popup_padding_by_percentage_px != '') ? $options->popup_padding_by_percentage_px : 'pixels';
+        if(isset($ays_pb_padding) && $ays_pb_padding != ''){
+            if ($popup_padding_by_percentage_px && $popup_padding_by_percentage_px == 'percentage') {
+                if (absint(intval($ays_pb_padding)) > 100 ) {
+                    $pb_padding = '100%';
+                }else{
+                    $pb_padding = $ays_pb_padding . '%';
+                }
+            }else{
+                $pb_padding = $ays_pb_padding . 'px';
+            }
+        }else{
+            $pb_padding = '20px';
+        }        
 
         //hide timer
         $enable_hide_timer  = (isset($options->enable_hide_timer) && $options->enable_hide_timer == 'on') ? 'on' : 'off';
@@ -873,7 +913,7 @@ class Ays_Pb_Public_Templates {
 
         $mac_view = "<div class='ays_window ays-pb-modal_".$id." ".$custom_class." ".$ays_pb_animate_in_open." ".$ays_pb_disable_scroll_on_popup_class."' {$ays_pb_flag} style='width: {$pb_width}; height: {$pb_height}; {$ays_pb_bg_image}; background-color: $ays_pb_bgcolor; color: $ays_pb_textcolor !important; border: {$ays_pb_bordersize}px $border_style $ays_pb_bordercolor; border-radius: {$ays_pb_border_radius}px;font-family:{$ays_pb_font_family};{$box_shadow}'>
                          <div class='ays_topBar'>
-                            <div class='".$closeButton."'>
+                            <div class='".$closeButton."' data-toggle='tooltip' title='" . $ays_pb_close_button_hover_text . "'>
                             <label for='ays-pb-modal-checkbox_".$id."' class='ays-pb-modal-close ays_close ays-pb-modal-close_".$id." ays-pb-close-button-delay ays_pb_pause_sound_".$id."'></label>
                             </div>
                             <div>
@@ -889,7 +929,7 @@ class Ays_Pb_Public_Templates {
                          <div class='ays_text'>
                          $ays_pb_sound_mute
                             <div class='ays_text-inner'>
-                                <div class='ays_content_box'>".
+                                <div class='ays_content_box' style='padding: {$pb_padding}'>".
                                     (($ays_pb_modal_content == 'shortcode') ? do_shortcode($ays_pb_shortcode) : Ays_Pb_Public::ays_autoembed($ays_pb_custom_html))
                                 ."</div>
                             </div>
@@ -907,7 +947,8 @@ class Ays_Pb_Public_Templates {
                     $('.ays_hide').on('click', function() {
                       $('.ays_window').css({
                         height: '{$ays_pb_height}px',
-                        width: '{$pb_width}'
+                        width: '{$pb_width}',
+                        padding: '{$pb_padding}'
                       });
                     });
 
@@ -1000,6 +1041,9 @@ class Ays_Pb_Public_Templates {
         }else{
             $title_text_shadow = "";
         }
+
+        //close button hover text
+        $ays_pb_close_button_hover_text = (isset($options->close_button_hover_text) && $options->close_button_hover_text != '') ? $options->close_button_hover_text : "";
         
         // Box shadow
         $options->enable_box_shadow = (isset($options->enable_box_shadow) && $options->enable_box_shadow == 'on') ? 'on' : 'off'; 
@@ -1121,6 +1165,22 @@ class Ays_Pb_Public_Templates {
             $pb_height = '500px';
         }
 
+        $ays_pb_padding = (isset($options->popup_content_padding) && $options->popup_content_padding != '') ? $options->popup_content_padding : '20';
+        //popup padding percentage
+        $popup_padding_by_percentage_px = (isset($options->popup_padding_by_percentage_px) && $options->popup_padding_by_percentage_px != '') ? $options->popup_padding_by_percentage_px : 'pixels';
+        if(isset($ays_pb_padding) && $ays_pb_padding != ''){
+            if ($popup_padding_by_percentage_px && $popup_padding_by_percentage_px == 'percentage') {
+                if (absint(intval($ays_pb_padding)) > 100 ) {
+                    $pb_padding = '100%';
+                }else{
+                    $pb_padding = $ays_pb_padding . '%';
+                }
+            }else{
+                $pb_padding = $ays_pb_padding . 'px';
+            }
+        }else{
+            $pb_padding = '20px';
+        }
 
         //hide timer
         $enable_hide_timer  = (isset($options->enable_hide_timer) && $options->enable_hide_timer == 'on') ? 'on' : 'off';
@@ -1273,7 +1333,7 @@ class Ays_Pb_Public_Templates {
                                 <ul class='ays_cmd_window-controls-ul'>
                                     <li><span class='ays_cmd_control-item ays_cmd_control-minimize ays_cmd_js-minimize'>‒</span></li>
                                     <li><span class='ays_cmd_control-item ays_cmd_control-maximize ays_cmd_js-maximize'>□</span></li>
-                                    <li><label for='ays-pb-modal-checkbox_".$id."' class='ays_cmd_control-item ".$closeButton." ays_cmd_control-close ays-pb-modal-close_".$id." ays-pb-close-button-delay'><span class='ays_cmd_control-item ays_cmd_control-close ays_cmd_js-close ays_pb_pause_sound_".$id."'>x</span></label></li>
+                                    <li><label for='ays-pb-modal-checkbox_".$id."' class='ays_cmd_control-item ".$closeButton." ays_cmd_control-close ays-pb-modal-close_".$id." ays-pb-close-button-delay' data-toggle='tooltip' title='" . $ays_pb_close_button_hover_text . "'><span class='ays_cmd_control-item ays_cmd_control-close ays_cmd_js-close ays_pb_pause_sound_".$id."'>x</span></label></li>
                                 </ul>
                             </nav>
                         </header>
@@ -1287,7 +1347,7 @@ class Ays_Pb_Public_Templates {
                         <main class='ays_cmd_window-content'>
                             <div class='ays_text'>
                                 <div class='ays_text-inner'>
-                                <div class='ays_content_box'>".
+                                <div class='ays_content_box' style='padding: {$pb_padding}'>".
                                     (($ays_pb_modal_content == 'shortcode') ? do_shortcode($ays_pb_shortcode) : Ays_Pb_Public::ays_autoembed($ays_pb_custom_html))
                                 ."</div>
                                 </div>
@@ -1427,6 +1487,9 @@ class Ays_Pb_Public_Templates {
             $title_text_shadow = "";
         }
 
+        //close button hover text
+        $ays_pb_close_button_hover_text = (isset($options->close_button_hover_text) && $options->close_button_hover_text != '') ? $options->close_button_hover_text : "";
+
         // Box shadow
         $options->enable_box_shadow = (isset($options->enable_box_shadow) && $options->enable_box_shadow == 'on') ? 'on' : 'off'; 
         $enable_box_shadow = (isset($options->enable_box_shadow) && $options->enable_box_shadow == 'on') ? true : false; 
@@ -1543,6 +1606,23 @@ class Ays_Pb_Public_Templates {
 
         if($pb_height == '0px'){       
             $pb_height = '500px';
+        }
+
+        $ays_pb_padding = (isset($options->popup_content_padding) && $options->popup_content_padding != '') ? $options->popup_content_padding : '20';
+        //popup padding percentage
+        $popup_padding_by_percentage_px = (isset($options->popup_padding_by_percentage_px) && $options->popup_padding_by_percentage_px != '') ? $options->popup_padding_by_percentage_px : 'pixels';
+        if(isset($ays_pb_padding) && $ays_pb_padding != ''){
+            if ($popup_padding_by_percentage_px && $popup_padding_by_percentage_px == 'percentage') {
+                if (absint(intval($ays_pb_padding)) > 100 ) {
+                    $pb_padding = '100%';
+                }else{
+                    $pb_padding = $ays_pb_padding . '%';
+                }
+            }else{
+                $pb_padding = $ays_pb_padding . 'px';
+            }
+        }else{
+            $pb_padding = '20px';
         }
 
         //hide timer
@@ -1687,7 +1767,7 @@ class Ays_Pb_Public_Templates {
         $ubuntu_view = "<div class='ays_ubuntu_window ays-pb-modal_".$id." ".$custom_class." ".$ays_pb_animate_in_open." ".$ays_pb_disable_scroll_on_popup_class."' {$ays_pb_flag} style='width: {$pb_width}; height: {$pb_height}; {$ays_pb_bg_image};  background-color: $ays_pb_bgcolor; color: $ays_pb_textcolor !important; border: {$ays_pb_bordersize}px $border_style $ays_pb_bordercolor; border-radius: {$ays_pb_border_radius}px;font-family:{$ays_pb_font_family};{$box_shadow}'>
                       <div class='ays_ubuntu_topbar'>
                         <div class='ays_ubuntu_icons'>
-                          <div class='ays_ubuntu_close  ".$closeButton." ays-pb-close-button-delay'>
+                          <div class='ays_ubuntu_close  ".$closeButton." ays-pb-close-button-delay' data-toggle='tooltip' title='" . $ays_pb_close_button_hover_text . "'>
                             <label for='ays-pb-modal-checkbox_".$id."' class='ays_ubuntu_close ays-pb-modal-close_".$id." ays_pb_pause_sound_".$id."'></label>
                           </div>
                           <div class='ays_ubuntu_hide'></div>
@@ -1710,7 +1790,7 @@ class Ays_Pb_Public_Templates {
                       <div class='ays_ubuntu_window_content'>
                             $ays_pb_description".
             (($show_desc !== "On") ?  '' :  '<hr/>')
-                            ."<div class='ays_content_box'>".
+                            ."<div class='ays_content_box' style='padding: {$pb_padding}';>".
                                 (($ays_pb_modal_content == 'shortcode') ? do_shortcode($ays_pb_shortcode) : Ays_Pb_Public::ays_autoembed($ays_pb_custom_html))
                             ."</div>
                             {$ays_social_links}
@@ -1826,6 +1906,9 @@ class Ays_Pb_Public_Templates {
         }else{
             $title_text_shadow = "";
         }
+
+        //close button hover text
+        $ays_pb_close_button_hover_text = (isset($options->close_button_hover_text) && $options->close_button_hover_text != '') ? $options->close_button_hover_text : "";
 
         // Box shadow
         $options->enable_box_shadow = (isset($options->enable_box_shadow) && $options->enable_box_shadow == 'on') ? 'on' : 'off'; 
@@ -1946,6 +2029,23 @@ class Ays_Pb_Public_Templates {
 
         if($pb_height == '0px'){       
             $pb_height = '500px';
+        }
+
+        $ays_pb_padding = (isset($options->popup_content_padding) && $options->popup_content_padding != '') ? $options->popup_content_padding : '20';
+        //popup padding percentage
+        $popup_padding_by_percentage_px = (isset($options->popup_padding_by_percentage_px) && $options->popup_padding_by_percentage_px != '') ? $options->popup_padding_by_percentage_px : 'pixels';
+        if(isset($ays_pb_padding) && $ays_pb_padding != ''){
+            if ($popup_padding_by_percentage_px && $popup_padding_by_percentage_px == 'percentage') {
+                if (absint(intval($ays_pb_padding)) > 100 ) {
+                    $pb_padding = '100%';
+                }else{
+                    $pb_padding = $ays_pb_padding . '%';
+                }
+            }else{
+                $pb_padding = $ays_pb_padding . 'px';
+            }
+        }else{
+            $pb_padding = '20px';
         }
 
         //hide timer
@@ -2091,10 +2191,12 @@ class Ays_Pb_Public_Templates {
                                 <div class='ays_winxp_title-bar-title'>
                                     $ays_pb_title
                                 </div>
-                                <div class='ays_winxp_title-bar-close ".$closeButton." ays-pb-close-button-delay'>
+                                <div class='ays_winxp_title-bar-close ".$closeButton." ays-pb-close-button-delay' data-toggle='tooltip' title='" . $ays_pb_close_button_hover_text . "'>
                                     <label for='ays-pb-modal-checkbox_".$id."' class='ays_winxp_close  ays-pb-modal-close_".$id." ays_pb_pause_sound_".$id."'>".$x_close_button."</label>
                                 </div>
-                                <div class='ays_winxp_title-bar-max ays_pb_fa ays_pb_far far fa-window-maximize fa-xs' aria-hidden='true'></div>
+                                <div class='ays_winxp_title-bar-max ays_pb_fa ays_pb_far far' aria-hidden='true'>
+                                    <img src='" .  AYS_PB_ADMIN_URL . "/images/icons/window-maximize.svg'>
+                                </div>
                                 <div class='ays_winxp_title-bar-min'></div>
                             </div>
                             <div class='ays_winxp_content' style='background-color: $ays_pb_bgcolor; {$ays_pb_bg_image}; '>
@@ -2103,7 +2205,7 @@ class Ays_Pb_Public_Templates {
                                     $ays_pb_description".
             (($show_title !== "On") ?  '' :  '<hr/>')
                                 ."</div>
-                                <div class='ays_content_box'>".
+                                <div class='ays_content_box' style='padding: {$pb_padding}'>".
                                     (($ays_pb_modal_content == 'shortcode') ? do_shortcode($ays_pb_shortcode) : Ays_Pb_Public::ays_autoembed($ays_pb_custom_html))
                                 ."</div>
                                 {$ays_social_links}
@@ -2216,7 +2318,10 @@ class Ays_Pb_Public_Templates {
             $title_text_shadow = 'text-shadow: '.$pb_title_text_shadow_x_offset.'px '.$pb_title_text_shadow_y_offset.'px '.$pb_title_text_shadow_z_offset.'px '.$pb_title_text_shadow;
         }else{
             $title_text_shadow = "";
-        }   
+        }
+
+        //close button hover text
+        $ays_pb_close_button_hover_text = (isset($options->close_button_hover_text) && $options->close_button_hover_text != '') ? $options->close_button_hover_text : "";
         
         // Box shadow
         $options->enable_box_shadow = (isset($options->enable_box_shadow) && $options->enable_box_shadow == 'on') ? 'on' : 'off'; 
@@ -2343,6 +2448,23 @@ class Ays_Pb_Public_Templates {
 
         if($pb_height == '0px'){       
             $pb_height = '500px';
+        }
+
+        $ays_pb_padding = (isset($options->popup_content_padding) && $options->popup_content_padding != '') ? $options->popup_content_padding : '20';
+        //popup padding percentage
+        $popup_padding_by_percentage_px = (isset($options->popup_padding_by_percentage_px) && $options->popup_padding_by_percentage_px != '') ? $options->popup_padding_by_percentage_px : 'pixels';
+        if(isset($ays_pb_padding) && $ays_pb_padding != ''){
+            if ($popup_padding_by_percentage_px && $popup_padding_by_percentage_px == 'percentage') {
+                if (absint(intval($ays_pb_padding)) > 100 ) {
+                    $pb_padding = '100%';
+                }else{
+                    $pb_padding = $ays_pb_padding . '%';
+                }
+            }else{
+                $pb_padding = $ays_pb_padding . 'px';
+            }
+        }else{
+            $pb_padding = '20px';
         }
 
         //hide timer
@@ -2482,13 +2604,13 @@ class Ays_Pb_Public_Templates {
             $ays_pb_disable_scroll_on_popup_class = 'ays-pb-disable-scroll-on-popup';
         }
 
-        $ubuntu_view = "<div class='ays_win98_window ays-pb-modal_".$id." ".$custom_class." ".$ays_pb_animate_in_open." ".$ays_pb_disable_scroll_on_popup_class."' {$ays_pb_flag} style='width: {$pb_width}; height: {$pb_height}; background-color: $ays_pb_bgcolor; {$ays_pb_bg_image};  color: $ays_pb_textcolor !important; border: {$ays_pb_bordersize}px $border_style $ays_pb_bordercolor; border-radius: {$ays_pb_border_radius}px;font-family:{$ays_pb_font_family};{$box_shadow};'>
+        $ubuntu_view = "<div class='ays_win98_window ays-pb-modal_".$id." ".$custom_class." ".$ays_pb_animate_in_open." ".$ays_pb_disable_scroll_on_popup_class."' {$ays_pb_flag} style='width: {$pb_width}; height: {$pb_height}; padding: {$pb_padding}; background-color: $ays_pb_bgcolor; {$ays_pb_bg_image};  color: $ays_pb_textcolor !important; border: {$ays_pb_bordersize}px $border_style $ays_pb_bordercolor; border-radius: {$ays_pb_border_radius}px;font-family:{$ays_pb_font_family};{$box_shadow};'>
                             <header class='ays_win98_head' style='background-color: $ays_pb_bgcolor;'>
                                 <div class='ays_win98_header'>
                                     <div class='ays_win98_title'>
                                         $ays_pb_title
                                     </div>
-                                    <div class='ays_win98_btn-close ".$closeButton." ays-pb-close-button-delay'><label for='ays-pb-modal-checkbox_".$id."' class='ays-pb-modal-close_".$id." ays_pb_pause_sound_".$id."'><span >". $ays_pb_close_button_text ."</span></label></div>
+                                    <div class='ays_win98_btn-close ".$closeButton." ays-pb-close-button-delay'  data-toggle='tooltip' title='" . $ays_pb_close_button_hover_text . "'><label for='ays-pb-modal-checkbox_".$id."' class='ays-pb-modal-close_".$id." ays_pb_pause_sound_".$id."'><span >". $ays_pb_close_button_text ."</span></label></div>
                                 </div>
                             </header>
                             <div class='ays_win98_main'>
@@ -2497,7 +2619,7 @@ class Ays_Pb_Public_Templates {
                                     $ays_pb_description".
             (($show_title !== "On") ?  '' :  '<hr/>')
             ."                               
-                                    <div class='ays_content_box'>".
+                                    <div class='ays_content_box' style='padding: {$pb_padding}'>".
                                         (($ays_pb_modal_content == 'shortcode') ? do_shortcode($ays_pb_shortcode) : Ays_Pb_Public::ays_autoembed($ays_pb_custom_html))
                                     ."</div>
                                     {$ays_social_links}
@@ -2630,6 +2752,9 @@ class Ays_Pb_Public_Templates {
                 $close_lil_btn_class = 'close-lil-btn-text';
             }
         }
+
+        //close button hover text
+        $ays_pb_close_button_hover_text = (isset($options->close_button_hover_text) && $options->close_button_hover_text != '') ? $options->close_button_hover_text : "";
 
         //Bg image position
         $pb_bg_image_position = (isset($options->pb_bg_image_position) && $options->pb_bg_image_position != "") ? str_ireplace('-', ' ', $options->pb_bg_image_position) : 'center center';
@@ -2766,7 +2891,24 @@ class Ays_Pb_Public_Templates {
         if($pb_height == '0px'){       
             $pb_height = '500px';
         }
-        
+
+        $ays_pb_padding = (isset($options->popup_content_padding) && $options->popup_content_padding != '') ? $options->popup_content_padding : '20';
+        //popup padding percentage
+        $popup_padding_by_percentage_px = (isset($options->popup_padding_by_percentage_px) && $options->popup_padding_by_percentage_px != '') ? $options->popup_padding_by_percentage_px : 'pixels';
+        if(isset($ays_pb_padding) && $ays_pb_padding != ''){
+            if ($popup_padding_by_percentage_px && $popup_padding_by_percentage_px == 'percentage') {
+                if (absint(intval($ays_pb_padding)) > 100 ) {
+                    $pb_padding = '100%';
+                }else{
+                    $pb_padding = $ays_pb_padding . '%';
+                }
+            }else{
+                $pb_padding = $ays_pb_padding . 'px';
+            }
+        }else{
+            $pb_padding = '20px';
+        }        
+
         //hide timer
         $enable_hide_timer  = (isset($options->enable_hide_timer) && $options->enable_hide_timer == 'on') ? 'on' : 'off';
     
@@ -2914,13 +3056,13 @@ class Ays_Pb_Public_Templates {
                                         <div class='ays_lil_title'>
                                             $ays_pb_title
                                         </div>
-                                        <div class='ays_lil_btn-close ".$closeButton." ays-pb-close-button-delay'><label for='ays-pb-modal-checkbox_".$id."' class='ays-pb-modal-close_".$id."' ><a class='close-lil-btn ays_pb_pause_sound_".$id." ".$close_lil_btn_class."' style='background-color:".$ays_pb_textcolor." !important; color: ".$close_button_color." ; font-family:{$ays_pb_font_family};{$close_button_position};transform:scale({$close_btn_size})'>". $ays_pb_close_button_text ."</a></label></div>
+                                        <div class='ays_lil_btn-close ".$closeButton." ays-pb-close-button-delay'><label for='ays-pb-modal-checkbox_".$id."' class='ays-pb-modal-close_".$id."' ><a class='close-lil-btn ays_pb_pause_sound_".$id." ".$close_lil_btn_class."' style='background-color:".$ays_pb_textcolor." !important; color: ".$close_button_color." ; font-family:{$ays_pb_font_family};{$close_button_position};transform:scale({$close_btn_size})'  data-toggle='tooltip' title='" . $ays_pb_close_button_hover_text . "'>". $ays_pb_close_button_text ."</a></label></div>
                                     </div>
                                 </header>
                                 <div class='ays_lil_main'>
                                     <div class='ays_lil_content'>
                                         $ays_pb_description                           
-                                        <div class='ays_content_box'>".
+                                        <div class='ays_content_box' style='padding: {$pb_padding};'>".
                                         (($ays_pb_modal_content == 'shortcode') ? do_shortcode($ays_pb_shortcode) : Ays_Pb_Public::ays_autoembed($ays_pb_custom_html))
                                         ."</div>
                                         {$ays_social_links}
@@ -3050,6 +3192,9 @@ class Ays_Pb_Public_Templates {
             }
         }
         
+        //close button hover text
+        $ays_pb_close_button_hover_text = (isset($options->close_button_hover_text) && $options->close_button_hover_text != '') ? $options->close_button_hover_text : "";
+
         //Bg image position
         $pb_bg_image_position = (isset($options->pb_bg_image_position) && $options->pb_bg_image_position != "") ? str_ireplace('-', ' ', $options->pb_bg_image_position) : 'center center';
 
@@ -3195,6 +3340,22 @@ class Ays_Pb_Public_Templates {
             $pb_height = '500px';
         }
 
+        $ays_pb_padding = (isset($options->popup_content_padding) && $options->popup_content_padding != '') ? $options->popup_content_padding : '20';
+        //popup padding percentage
+        $popup_padding_by_percentage_px = (isset($options->popup_padding_by_percentage_px) && $options->popup_padding_by_percentage_px != '') ? $options->popup_padding_by_percentage_px : 'pixels';
+        if(isset($ays_pb_padding) && $ays_pb_padding != ''){
+            if ($popup_padding_by_percentage_px && $popup_padding_by_percentage_px == 'percentage') {
+                if (absint(intval($ays_pb_padding)) > 100 ) {
+                    $pb_padding = '100%';
+                }else{
+                    $pb_padding = $ays_pb_padding . '%';
+                }
+            }else{
+                $pb_padding = $ays_pb_padding . 'px';
+            }
+        }else{
+            $pb_padding = '20px';
+        }
         //hide timer
         $enable_hide_timer  = (isset($options->enable_hide_timer) && $options->enable_hide_timer == 'on') ? 'on' : 'off';
     
@@ -3339,13 +3500,13 @@ class Ays_Pb_Public_Templates {
                                         <div class='ays_popup_image_title'>
                                             $ays_pb_title
                                         </div>
-                                        <div class='ays_image_btn-close ".$closeButton."'><label for='ays-pb-modal-checkbox_".$id."' class='ays-pb-modal-close_".$id." ays-pb-close-button-delay' ><label class='close-image-btn ays_pb_pause_sound_".$id."' style='color: ".$ays_pb_textcolor." ; font-family:{$ays_pb_font_family};{$close_button_position};transform:scale({$close_btn_size})'>". $ays_pb_close_button_text ."</label></label></div>
+                                        <div class='ays_image_btn-close ".$closeButton."'><label for='ays-pb-modal-checkbox_".$id."' class='ays-pb-modal-close_".$id." ays-pb-close-button-delay' ><label class='close-image-btn ays_pb_pause_sound_".$id."' style='color: ".$ays_pb_textcolor." ; font-family:{$ays_pb_font_family};{$close_button_position};transform:scale({$close_btn_size})'  data-toggle='tooltip' title='" . $ays_pb_close_button_hover_text . "'>". $ays_pb_close_button_text ."</label></label></div>
                                     </div>
                                 </header>
                                 <div class='ays_image_main ".$ays_pb_disable_scroll_on_popup_class."' style='{$image_content_height}' >
                                     <div class='ays_image_content'>
                                         $ays_pb_description                           
-                                        <div class='ays_content_box'>".
+                                        <div class='ays_content_box' style='padding: {$pb_padding};'>".
                                         (($ays_pb_modal_content == 'shortcode') ? do_shortcode($ays_pb_shortcode) : Ays_Pb_Public::ays_autoembed($ays_pb_custom_html))
                                         ."</div>
                                         {$ays_social_links}
@@ -3504,6 +3665,9 @@ class Ays_Pb_Public_Templates {
                                 background-size: cover;';
         }
 
+        //close button hover text
+        $ays_pb_close_button_hover_text = (isset($options->close_button_hover_text) && $options->close_button_hover_text != '') ? $options->close_button_hover_text : "";
+
         //Close button position
         $close_button_position = (isset($options->close_button_position) && $options->close_button_position != '') ? $options->close_button_position : 'right-top';
         switch($close_button_position) {
@@ -3597,6 +3761,23 @@ class Ays_Pb_Public_Templates {
         if($pb_height == '0px'){       
             $pb_height = '500px';
         }
+
+        $ays_pb_padding = (isset($options->popup_content_padding) && $options->popup_content_padding != '') ? $options->popup_content_padding : '20';
+        //popup padding percentage
+        $popup_padding_by_percentage_px = (isset($options->popup_padding_by_percentage_px) && $options->popup_padding_by_percentage_px != '') ? $options->popup_padding_by_percentage_px : 'pixels';
+        if(isset($ays_pb_padding) && $ays_pb_padding != ''){
+            if ($popup_padding_by_percentage_px && $popup_padding_by_percentage_px == 'percentage') {
+                if (absint(intval($ays_pb_padding)) > 100 ) {
+                    $pb_padding = '100%';
+                }else{
+                    $pb_padding = $ays_pb_padding . '%';
+                }
+            }else{
+                $pb_padding = $ays_pb_padding . 'px';
+            }
+        }else{
+            $pb_padding = '20px';
+        }        
 
         //hide timer
         $enable_hide_timer  = (isset($options->enable_hide_timer) && $options->enable_hide_timer == 'on') ? 'on' : 'off';
@@ -3755,7 +3936,7 @@ class Ays_Pb_Public_Templates {
                                         </div>
                                         <div class='ays_template_btn-close ".$closeButton." '>
                                             <label for='ays-pb-modal-checkbox_".$id."' class='ays-pb-modal-close_".$id." ays-pb-close-button-delay' >
-                                                <label class='close-template-btn ays_pb_pause_sound_".$id."' style='color: ".$close_button_color." ;font-family:{$ays_pb_font_family}; {$close_button_position};transform:scale({$close_btn_size})'>". $ays_pb_close_button_text ."</label>
+                                                <label class='close-template-btn ays_pb_pause_sound_".$id."' style='color: ".$close_button_color." ;font-family:{$ays_pb_font_family}; {$close_button_position};transform:scale({$close_btn_size})' data-toggle='tooltip' title='" . $ays_pb_close_button_hover_text . "'>". $ays_pb_close_button_text ."</label>
                                             </label>
                                         </div>
                                     </div>
@@ -3765,7 +3946,7 @@ class Ays_Pb_Public_Templates {
                                     <div class='ays_template_content ' style=''>
                                         $ays_pb_sound_mute
                                         $ays_pb_description 
-                                        <div class='ays_content_box ays_template_main ".$ays_pb_disable_scroll_on_popup_class."'>".
+                                        <div class='ays_content_box ays_template_main ".$ays_pb_disable_scroll_on_popup_class."' style='padding: {$pb_padding};'>".
                                         (($ays_pb_modal_content == 'shortcode') ? do_shortcode($ays_pb_shortcode) : Ays_Pb_Public::ays_autoembed($ays_pb_custom_html))
                                         ."</div>
                                         {$ays_social_links}
@@ -3891,6 +4072,9 @@ class Ays_Pb_Public_Templates {
                 $ays_pb_close_button_text .= $ays_pb_close_button_val;
             }
         }
+
+        //close button hover text
+        $ays_pb_close_button_hover_text = (isset($options->close_button_hover_text) && $options->close_button_hover_text != '') ? $options->close_button_hover_text : "";
 
         //Bg image position
         $pb_bg_image_position = (isset($options->pb_bg_image_position) && $options->pb_bg_image_position != "") ? str_ireplace('-', ' ', $options->pb_bg_image_position) : 'center center';
@@ -4046,6 +4230,23 @@ class Ays_Pb_Public_Templates {
             $pb_height = '500px';
         }
 
+        $ays_pb_padding = (isset($options->popup_content_padding) && $options->popup_content_padding != '') ? $options->popup_content_padding : '0';
+        //popup padding percentage
+        $popup_padding_by_percentage_px = (isset($options->popup_padding_by_percentage_px) && $options->popup_padding_by_percentage_px != '') ? $options->popup_padding_by_percentage_px : 'pixels';
+        if(isset($ays_pb_padding) && $ays_pb_padding != ''){
+            if ($popup_padding_by_percentage_px && $popup_padding_by_percentage_px == 'percentage') {
+                if (absint(intval($ays_pb_padding)) > 100 ) {
+                    $pb_padding = '100%';
+                }else{
+                    $pb_padding = $ays_pb_padding . '%';
+                }
+            }else{
+                $pb_padding = $ays_pb_padding . 'px';
+            }
+        }else{
+            $pb_padding = '0';
+        }        
+
         //hide timer
         $enable_hide_timer  = (isset($options->enable_hide_timer) && $options->enable_hide_timer == 'on') ? 'on' : 'off';
     
@@ -4190,13 +4391,13 @@ class Ays_Pb_Public_Templates {
                                         <div class='ays_popup_minimal_title'>
                                             $ays_pb_title
                                         </div>
-                                        <div class='ays_minimal_btn-close ".$closeButton."'><label for='ays-pb-modal-checkbox_".$id."' class='ays-pb-modal-close_".$id." ays-pb-close-button-delay' ><label class='close-minimal-btn ays_pb_pause_sound_".$id."' style='color: ".$ays_pb_textcolor." ; font-family:{$ays_pb_font_family};{$close_button_position};transform:scale({$close_btn_size})'>". $ays_pb_close_button_text ."</label></label></div>
+                                        <div class='ays_minimal_btn-close ".$closeButton."'><label for='ays-pb-modal-checkbox_".$id."' class='ays-pb-modal-close_".$id." ays-pb-close-button-delay' ><label class='close-minimal-btn ays_pb_pause_sound_".$id."' style='color: ".$ays_pb_textcolor." ; font-family:{$ays_pb_font_family};{$close_button_position};transform:scale({$close_btn_size})'  data-toggle='tooltip' title='" . $ays_pb_close_button_hover_text . "'>". $ays_pb_close_button_text ."</label></label></div>
                                     </div>
                                 </header>
                                 <div class='ays_minimal_main ".$ays_pb_disable_scroll_on_popup_class."' style='{$image_content_height}' >
                                     <div class='ays_minimal_content'>
                                         $ays_pb_description                           
-                                        <div class='ays_content_box'>".
+                                        <div class='ays_content_box' style='padding: {$pb_padding};'>".
                                         (($ays_pb_modal_content == 'shortcode') ? do_shortcode($ays_pb_shortcode) : Ays_Pb_Public::ays_autoembed($ays_pb_custom_html))
                                         ."</div>
                                         {$ays_social_links}
@@ -4320,6 +4521,12 @@ class Ays_Pb_Public_Templates {
                 $ays_pb_close_button_text .= $ays_pb_close_button_val;
             }
         }
+
+        //close button image
+        $autoclose_on_video_completion = (isset($options->enable_autoclose_on_completion) && $options->enable_autoclose_on_completion == 'on') ? 'on' : 'off';
+
+        //close button hover text
+        $ays_pb_close_button_hover_text = (isset($options->close_button_hover_text) && $options->close_button_hover_text != '') ? $options->close_button_hover_text : "";
         
         //Bg image position
         $pb_bg_image_position = (isset($options->pb_bg_image_position) && $options->pb_bg_image_position != "") ? str_ireplace('-', ' ', $options->pb_bg_image_position) : 'center center';
@@ -4606,12 +4813,13 @@ class Ays_Pb_Public_Templates {
                                     <div class='ays_video_header'>
                                         $ays_pb_sound_mute
                                         
-                                        <div class='ays_video_btn-close ".$closeButton."'><label for='ays-pb-modal-checkbox_".$id."' class='ays-pb-modal-close_".$id." ays-pb-close-button-delay' ><label class='close-image-btn ays_pb_pause_sound_".$id."' style='color: ".$ays_pb_textcolor." ; font-family:{$ays_pb_font_family};{$close_button_position};transform:scale({$close_btn_size})'>". $ays_pb_close_button_text ."</label></label></div>
+                                        <div class='ays_video_btn-close ".$closeButton."'><label for='ays-pb-modal-checkbox_".$id."' class='ays-pb-modal-close_".$id." ays-pb-close-button-delay' ><label class='close-image-btn ays_pb_pause_sound_".$id."' style='color: ".$ays_pb_textcolor." ; font-family:{$ays_pb_font_family};{$close_button_position};transform:scale({$close_btn_size})'  data-toggle='tooltip' title='" . $ays_pb_close_button_hover_text . "'>". $ays_pb_close_button_text ."</label></label></div>
                                     </div>
                                 </header>
                                 <div class='ays_video_main' >
                                      <div class='ays_video_content'>
                                         <video controls src='".$ays_pb_video_src."' class='wp-video-shortcode' style='border-radius:".$attr['border_radius']."px'></video>
+                                        <input type='hidden' class='autoclose_on_video_completion_check' value='".$autoclose_on_video_completion."'>
                                     </div>
                                 </div>
                                 $ays_pb_timer_desc

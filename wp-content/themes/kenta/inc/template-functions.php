@@ -528,8 +528,8 @@ function kenta_add_post_navigation() {
 	echo '<div class="kenta-post-navigation">';
 
 	the_post_navigation( [
-		'prev_text'          => IconsManager::render( CZ::get( 'kenta_post_navigation_prev_icon' ) ) . '<div class="item-wrap px-gutter"><span class="item-label">' . esc_html__( 'Previous Post', '' ) . '</span><span class="item-title">%title</span></div>',
-		'next_text'          => IconsManager::render( CZ::get( 'kenta_post_navigation_next_icon' ) ) . '<div class="item-wrap px-gutter"><span class="item-label">' . esc_html__( 'Next Post', '' ) . '</span><span class="item-title">%title</span></div>',
+		'prev_text'          => IconsManager::render( CZ::get( 'kenta_post_navigation_prev_icon' ) ) . '<div class="item-wrap px-gutter"><span class="item-label">' . esc_html__( 'Previous Post', 'kenta' ) . '</span><span class="item-title">%title</span></div>',
+		'next_text'          => IconsManager::render( CZ::get( 'kenta_post_navigation_next_icon' ) ) . '<div class="item-wrap px-gutter"><span class="item-label">' . esc_html__( 'Next Post', 'kenta' ) . '</span><span class="item-title">%title</span></div>',
 		'screen_reader_text' => '<span class="nav-subtitle screen-reader-text">' . esc_html__( 'Page', 'kenta' ) . '</span>',
 	] );
 

@@ -9,7 +9,7 @@
 
 if ( ! defined( 'KENTA_VERSION' ) ) {
 	// Replace the version number of the theme on each release.
-	define( 'KENTA_VERSION', '1.1.8' );
+	define( 'KENTA_VERSION', '1.1.9' );
 }
 
 if ( ! defined( 'MIN_KENTA_CMP_VERSION' ) ) {

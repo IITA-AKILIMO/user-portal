@@ -137,7 +137,9 @@ class Route {
 	 */
 	public static function clear( $request ) {
 		delete_transient( 'kb-library-categories' );
+		delete_transient( 'kb-library-categories-version' );
 		delete_transient( 'kb-library-patterns' );
+		delete_transient( 'kb-library-patterns-version' );
 
 		return rest_ensure_response( array( 'status' => 'ok' ) );
 	}
@@ -146,12 +148,14 @@ class Route {
 	 * Get library categories
 	 */
 	public static function categories( $request ) {
-		$categories = get_transient( 'kb-library-categories' );
+		$categories    = get_transient( 'kb-library-categories' );
+		$cache_version = get_transient( 'kb-library-categories-version' );
 		// Check from cache first
-		if ( false === $categories ) {
+		if ( false === $categories || $cache_version !== KENTA_BLOCKS_VERSION ) {
 			$categories = self::do_library_api_request( '/categories' );
 			if ( ! is_wp_error( $categories ) ) {
 				set_transient( 'kb-library-categories', $categories, KENTA_BLOCKS_LIBRARY_API_CACHE_SECONDS );
+				set_transient( 'kb-library-categories-version', KENTA_BLOCKS_VERSION, KENTA_BLOCKS_LIBRARY_API_CACHE_SECONDS );
 			}
 		}
 
@@ -171,6 +175,12 @@ class Route {
 		$cache_key    = "kb-patterns-{$paged}-{$taxonomy}";
 		$all_patterns = get_transient( 'kb-library-patterns' ) ?? array();
 		$taxonomy     = $taxonomy ? "&taxonomy={$taxonomy}" : '';
+
+		// Reset patterns cache after plugin update
+		if ( get_transient( 'kb-library-patterns-version' ) !== KENTA_BLOCKS_VERSION ) {
+			$all_patterns = array();
+			set_transient( 'kb-library-patterns-version', KENTA_BLOCKS_VERSION, KENTA_BLOCKS_LIBRARY_API_CACHE_SECONDS );
+		}
 
 		// Check from cache first
 		if ( ! isset( $all_patterns[ $cache_key ] ) ) {

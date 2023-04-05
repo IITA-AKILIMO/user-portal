@@ -6,7 +6,7 @@
 <div class="wrap">  
      <div class="ays-pb-heart-beat-main-heading ays-pb-heart-beat-main-heading-container">
         <h1 class="ays-popup-box-wrapper ays_heart_beat">
-            <?php echo __(esc_html(get_admin_page_title()),"ays-popup-box"); ?> <i class="ays_fa ays_fa_heart animated"></i>
+            <?php echo __(esc_html(get_admin_page_title()),"ays-popup-box"); ?> <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/hearth-black.svg"?>">
         </h1>
     </div>
     <div class="ays-pb-faq-main">
@@ -78,7 +78,7 @@
         </div>
         <div class="ays-pb-community-item">
             <a href="https://ays-pro.com/contact" target="_blank" class="ays-pb-community-item-cover" style="color: #E78A2C;">
-                <i class="ays-pb-community-item-img ays_fas ays_fa-users"></i>
+                <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/users.svg"?>" class="ays-pb-community-item-img">
             </a>
             <h3 class="ays-pb-community-item-title">Premium support</h3>
             <p class="ays-pb-community-item-desc">Get 12 months updates and support for the Business package and lifetime updates and support for the Developer package.</p>
