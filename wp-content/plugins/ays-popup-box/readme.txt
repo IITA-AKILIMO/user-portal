@@ -3,8 +3,8 @@ Contributors: ays-pro
 Donate link: https://ays-pro.com/wordpress/popup-box
 Tags: popup, popups, exit popup, pop up, wordpress popup, marketing, lead generation, modal, modal popup
 Requires at least: 4.0
-Tested up to: 6.1.1
-Stable tag: 3.4.8
+Tested up to: 6.2
+Stable tag: 3.4.9
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -271,6 +271,10 @@ Simply and effortlessly! Either you are switching from the free to pro, or the l
 This is not even a question! Surely, you can customize the best popups the way you wish. Choose one of our premade themes, change the background color, image, text, and everything that you can think of. Can’t find anything of your taste? You are free to add your **custom CSS code** to get your preferred design.
 
 == Changelog ==
+
+= 3.4.9 =
+* Fixed: Style issues on the admin dashboard
+* Tested: Compatible up to 6.2 
 
 = 3.4.8 =
 * Added: Filter by Popup Type

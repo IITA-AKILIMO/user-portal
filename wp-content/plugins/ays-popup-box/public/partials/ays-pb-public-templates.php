@@ -296,7 +296,7 @@ class Ays_Pb_Public_Templates {
                 },100);";
                 break;
             default:
-                $close_button_position = "top: 10px; right: 10px;";
+                $close_button_position = "top: 10px; right: 4%;";
                 $close_button_position_script = "";
         }
         
@@ -388,7 +388,7 @@ class Ays_Pb_Public_Templates {
         
 
         if($enable_hide_timer == 'on'){
-            $ays_pb_timer_desc = "<p class='ays_pb_timer ays_pb_timer_".$id."' style='visibility:hidden'>".__("This will close in ", "ays-popup-box")." <span data-seconds='$ays_pb_autoclose' data-ays-seconds='{$attr["autoclose"]}'>$ays_pb_autoclose<'/span>".__(" seconds", "ays-popup-box")."</p>";
+            $ays_pb_timer_desc = "<p class='ays_pb_timer ays_pb_timer_".$id."' style='visibility:hidden'>".__("This will close in ", "ays-popup-box")." <span data-seconds='$ays_pb_autoclose' data-ays-seconds='{$attr["autoclose"]}'>$ays_pb_autoclose</span>".__(" seconds", "ays-popup-box")."</p>";
         }else{
             $ays_pb_timer_desc = "<p class='ays_pb_timer ays_pb_timer_".$id."'>".__("This will close in ", "ays-popup-box")." <span data-seconds='$ays_pb_autoclose' data-ays-seconds='{$attr["autoclose"]}'>$ays_pb_autoclose</span>".__(" seconds", "ays-popup-box")."</p>";
         }
@@ -2819,7 +2819,7 @@ class Ays_Pb_Public_Templates {
                 $close_button_position = "top: ". $close_button_top ."px; right: 10px; bottom: auto; left: auto;";
                 break;
             default:
-                $close_button_position = "top: 10px; right: 10px;";
+                $close_button_position = "top: 10px; right: 4%;";
         }
 
 

@@ -1448,7 +1448,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                         <div>
                             <p>
                                 <?php echo __("This feature is available only in ", "ays-popup-box"); ?>
-                                <a href="https://ays-pro.com/wordpress/popup-box?src=1" target="_blank" title="PRO feature"><?php echo __("PRO version!!!", "ays-popup-box"); ?></a>
+                                <a href="https://ays-pro.com/wordpress/popup-box" target="_blank" title="PRO feature"><?php echo __("PRO version!!!", "ays-popup-box"); ?></a>
                             </p>
                         </div>
                     </div>
@@ -1484,7 +1484,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                             <div>
                                 <p>
                                     <?php echo __("This feature is available only in ", "ays-popup-box"); ?>
-                                    <a href="https://ays-pro.com/wordpress/popup-box?src=2" target="_blank" title="PRO feature"><?php echo __("PRO version!!!", "ays-popup-box"); ?></a>
+                                    <a href="https://ays-pro.com/wordpress/popup-box" target="_blank" title="PRO feature"><?php echo __("PRO version!!!", "ays-popup-box"); ?></a>
                                 </p>
                             </div>
                         </div>
@@ -1974,7 +1974,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                         <div>
                             <p>
                                 <?php echo __("This feature is available only in ", "ays-popup-box"); ?>
-                                <a href="https://ays-pro.com/wordpress/popup-box?src=3" target="_blank" title="PRO feature"><?php echo __("PRO version!!!", "ays-popup-box"); ?></a>
+                                <a href="https://ays-pro.com/wordpress/popup-box" target="_blank" title="PRO feature"><?php echo __("PRO version!!!", "ays-popup-box"); ?></a>
                             </p>
                         </div>
                     </div>
@@ -2067,7 +2067,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                         <div>
                             <p>
                                 <?php echo __("This feature is available only in ", "ays-popup-box"); ?>
-                                <a href="https://ays-pro.com/wordpress/popup-box?src=4" target="_blank" title="PRO feature"><?php echo __("PRO version!!!", "ays-popup-box"); ?></a>
+                                <a href="https://ays-pro.com/wordpress/popup-box" target="_blank" title="PRO feature"><?php echo __("PRO version!!!", "ays-popup-box"); ?></a>
                             </p>
                         </div>
                     </div>
@@ -2348,7 +2348,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                                                     <p><?php echo __('Peachy', "ays-popup-box") ?></p>
                                                     <p>
                                                         <a href="https://bit.ly/3If66Hm" target="_blank" style="background:#d06b46;border: 1px solid #d06b46;">Demo</a>
-                                                        <a href="https://ays-pro.com/wordpress/popup-box?src=5" target="_blank">Pro</a>
+                                                        <a href="https://ays-pro.com/wordpress/popup-box" target="_blank">Pro</a>
                                                     </p>
                                                 </div>
                                             </div>
@@ -2364,7 +2364,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                                                         <p><?php echo __('Yellowish', "ays-popup-box") ?></p>
                                                         <p>
                                                             <a href="https://bit.ly/3Iafmwy" target="_blank" style="background:#d06b46;border: 1px solid #d06b46;">Demo</a>
-                                                            <a href="https://ays-pro.com/wordpress/popup-box?src=6" target="_blank">Pro</a>
+                                                            <a href="https://ays-pro.com/wordpress/popup-box" target="_blank">Pro</a>
                                                         </p>
                                                 </div>
                                             </div>
@@ -2380,7 +2380,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                                                     <p><?php echo __('Coral', "ays-popup-box") ?></p>
                                                     <p>
                                                         <a href="https://bit.ly/3AqvPLg" target="_blank" style="background:#d06b46;border: 1px solid #d06b46;">Demo</a>
-                                                        <a href="https://ays-pro.com/wordpress/popup-box?src=7" target="_blank">Pro</a>
+                                                        <a href="https://ays-pro.com/wordpress/popup-box" target="_blank">Pro</a>
                                                     </p>
                                                 </div>
                                             </div>
@@ -2397,7 +2397,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                                                     <p><?php echo __('Frozen', "ays-popup-box") ?></p>
                                                     <p>
                                                         <a href="https://bit.ly/3R5szuB" target="_blank" style="background:#d06b46;border: 1px solid #d06b46;">Demo</a>
-                                                        <a href="https://ays-pro.com/wordpress/popup-box?src=8" target="_blank">Pro</a>
+                                                        <a href="https://ays-pro.com/wordpress/popup-box" target="_blank">Pro</a>
                                                     </p>
                                                 </div>
                                             </div>
@@ -2413,7 +2413,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                                                         <p><?php echo __('Food', "ays-popup-box") ?></p>
                                                         <p>
                                                             <a href="https://bit.ly/3Al4qKI" target="_blank" style="background:#d06b46;">Demo</a>
-                                                            <a href="https://ays-pro.com/wordpress/popup-box?src=9" target="_blank">Pro</a>
+                                                            <a href="https://ays-pro.com/wordpress/popup-box" target="_blank">Pro</a>
                                                         </p>
                                                 </div>
                                             </div>
@@ -2429,7 +2429,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                                                     <p><?php echo __('Forest', "ays-popup-box") ?></p>
                                                     <p>
                                                         <a href="https://bit.ly/3acggfr" target="_blank" style="background:#d06b46; border: 1px solid #d06b46;">Demo</a>
-                                                        <a href="https://ays-pro.com/wordpress/popup-box?src=10" target="_blank">Pro</a>
+                                                        <a href="https://ays-pro.com/wordpress/popup-box" target="_blank">Pro</a>
                                                     </p>
                                                 </div>
                                             </div>
@@ -2624,7 +2624,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                 <div class="row">
                     <div class="col-sm-12 col-md-6">
                         <div class="form-group row" id="ays-pb-show-title-description-box">
-                            <div class="col-sm-6">
+                            <div class="col-sm-4">
                                 <label>
                                     <?php echo __("Display Content", "ays-popup-box");?>
                                     <a class="ays_help" data-toggle="tooltip" title="<?php echo __("Show Popup head information- Enable to show the title and(or) the description inside the popup.", "ays-popup-box"); ?>">
@@ -2814,22 +2814,6 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                         </div>
                         <!-- Popup Text Color End -->
                         <hr>
-                        <!-- Popup Disable Font Family Start -->
-                        <div class="form-group row">
-                            <div class="col-sm-4">
-                                <label for="open_pb_fullscreen">
-                                    <span><?php echo __('Full-screen mode', "ays-popup-box"); ?></span>
-                                    <a class="ays_help" data-toggle="tooltip" title="<?php echo __('Enable this option to display the popup on a full screen.',"ays-popup-box")?>">
-                                        <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
-                                    </a>
-                                </label>
-                            </div>
-                            <div class="col-sm-6 ays_divider_left">
-                                <input type="checkbox" id="open_pb_fullscreen" class="" name="enable_pb_fullscreen"  <?php echo $ays_enable_pb_fullscreen == 'on' ? 'checked' : ''; ?> />
-                            </div>
-                        </div>
-                        <!-- Popup Disable Font Family End -->
-                        <hr>
                         <!-- Popup Font Family Start -->
                         <div class="form-group row">
                             <div class="col-sm-4">
@@ -2971,7 +2955,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                                 <div>
                                     <p>
                                         <?php echo __("This feature is available only in ", "ays-popup-box"); ?>
-                                        <a href="https://ays-pro.com/wordpress/popup-box?src=11" target="_blank" title="PRO feature"><?php echo __("PRO version!!!", "ays-popup-box"); ?></a>
+                                        <a href="https://ays-pro.com/wordpress/popup-box" target="_blank" title="PRO feature"><?php echo __("PRO version!!!", "ays-popup-box"); ?></a>
                                     </p>
                                 </div>
                             </div>
@@ -3575,7 +3559,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                                 <div>
                                     <p>
                                         <?php echo __("This feature is available only in ", "ays-popup-box"); ?>
-                                        <a href="https://ays-pro.com/wordpress/popup-box?src=12" target="_blank" title="PRO feature"><?php echo __("PRO version!!!", "ays-popup-box"); ?></a>
+                                        <a href="https://ays-pro.com/wordpress/popup-box" target="_blank" title="PRO feature"><?php echo __("PRO version!!!", "ays-popup-box"); ?></a>
                                     </p>
                                 </div>
                             </div>
@@ -4228,7 +4212,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                             <div>
                                 <p>
                                     <?php echo __("This feature is available only in ", "ays-popup-box"); ?>
-                                    <a href="https://ays-pro.com/wordpress/popup-box?src=13" target="_blank" title="PRO feature"><?php echo __("PRO version!!!", "ays-popup-box"); ?></a>
+                                    <a href="https://ays-pro.com/wordpress/popup-box" target="_blank" title="PRO feature"><?php echo __("PRO version!!!", "ays-popup-box"); ?></a>
                                 </p>
                             </div>
                         </div>
@@ -4317,7 +4301,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                             <div>
                                 <p>
                                     <?php echo __("This feature is available only in ", "ays-popup-box"); ?>
-                                    <a href="https://ays-pro.com/wordpress/popup-box?src=14" target="_blank" title="PRO feature"><?php echo __("PRO version!!!", "ays-popup-box"); ?></a>
+                                    <a href="https://ays-pro.com/wordpress/popup-box" target="_blank" title="PRO feature"><?php echo __("PRO version!!!", "ays-popup-box"); ?></a>
                                 </p>
                             </div>
                         </div>
@@ -4381,7 +4365,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                                 <div>
                                     <p>
                                         <?php echo __("This feature is available only in ", "ays-popup-box"); ?>
-                                        <a href="https://ays-pro.com/wordpress/popup-box?src=15" target="_blank" title="PRO feature"><?php echo __("PRO version!!!", "ays-popup-box"); ?></a>
+                                        <a href="https://ays-pro.com/wordpress/popup-box" target="_blank" title="PRO feature"><?php echo __("PRO version!!!", "ays-popup-box"); ?></a>
                                     </p>
                                 </div>
                             </div>

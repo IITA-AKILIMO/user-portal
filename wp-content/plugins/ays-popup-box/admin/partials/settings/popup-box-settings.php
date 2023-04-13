@@ -206,7 +206,7 @@ $categories_title_length = (isset($options['categories_title_length']) && intval
                                                 <div>
                                                     <p>
                                                         <?php echo __("This feature is available only in ", "ays-popup-box"); ?>
-                                                        <a href="https://ays-pro.com/wordpress/popup-box?src=30" target="_blank" title="PRO feature"><?php echo __("PRO version!!!", "ays-popup-box"); ?></a>
+                                                        <a href="https://ays-pro.com/wordpress/popup-box" target="_blank" title="PRO feature"><?php echo __("PRO version!!!", "ays-popup-box"); ?></a>
                                                     </p>
                                                 </div>
                                         </div>

@@ -1186,7 +1186,7 @@
 
             $(this).parents('form#ays_pb_form').find('input#ays_title_text_shadow_color').wpColorPicker('color', defaultValues.textShColor);
 
-            $(this).parents('form#ays_pb_form').find('input#ays_ays_pb_title_text_shadow_x_offset').val(defaultValues.textShX);
+            $(this).parents('form#ays_pb_form').find('input#ays_pb_title_text_shadow_x_offset').val(defaultValues.textShX);
 
             $(this).parents('form#ays_pb_form').find('input#ays_pb_title_text_shadow_y_offset').val(defaultValues.textShY);
 

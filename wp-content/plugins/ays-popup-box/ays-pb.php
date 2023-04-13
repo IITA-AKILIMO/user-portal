@@ -16,7 +16,7 @@ ob_start();
  * Plugin Name:       Popup Box
  * Plugin URI:        http://ays-pro.com/wordpress/popup-box
  * Description:       Pop up anything you want! Create informative and promotional popups all in one plugin. Boost your website traffic with eye-catching popups. 
- * Version:           3.4.8
+ * Version:           3.4.9
  * Author:            Popup Box Team
  * Author URI:        http://ays-pro.com/
  * License:           GPL-2.0+
@@ -35,7 +35,7 @@ if ( ! defined( 'WPINC' ) ) {
  * Start at version 1.0.0 and use SemVer - https://semver.org
  * Rename this for your plugin and update it as you release new versions.
  */
-define( 'AYS_PB_NAME_VERSION', '3.4.8' );
+define( 'AYS_PB_NAME_VERSION', '3.4.9' );
 define( 'AYS_PB_NAME', 'ays-pb' );
 
 if( ! defined( 'AYS_PB_ADMIN_URL' ) ) {
@@ -110,7 +110,7 @@ function general_ays_pb_admin_notice(){
                             </a>
                         </div>
                         <ul id="menu">
-                            <li class="modile-ddmenu-xss"><img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/diamond.svg"?>" style="margin-right: 5px"><a class="ays-btn" href="https://ays-pro.com/wordpress/popup-box?39" target="_blank">PRO</a></li>
+                            <li class="modile-ddmenu-xss"><img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/diamond.svg"?>" style="margin-right: 5px"><a class="ays-btn" href="https://ays-pro.com/wordpress/popup-box" target="_blank">PRO</a></li>
                             <!-- <li class="modile-ddmenu-lg"><a class="ays-btn"  href="https://ays-pro.com/wordpress-popup-box-plugin-user-manual" target="_blank">Documentation</a></li> -->
                             <li class="modile-ddmenu-lg"><a class="ays-btn" href="https://ays-demo.com/popup-box-plugin-free-demo/" target="_blank">Demo</a></li>
                             <li class="modile-ddmenu-lg"><a class="ays-btn" href="https://wordpress.org/support/plugin/ays-popup-box" target="_blank">Free Support</a></li>

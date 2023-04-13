@@ -277,7 +277,7 @@ class Ays_Pb_Admin {
                 <a href="https://ays-pro.com/wordpress-popup-box-plugin-user-manual" target="_blank">' . __( 'Documentation: ', "ays-popup-box" ) . '</a>
             </p>' .
 			'<p>
-                <a href="https://ays-pro.com/wordpress/popup-box?src=45" target="_blank">' . __( 'Popup Box plugin Premium version:', "ays-popup-box" ) . '</a>
+                <a href="https://ays-pro.com/wordpress/popup-box" target="_blank">' . __( 'Popup Box plugin Premium version:', "ays-popup-box" ) . '</a>
             </p>'
 		);
 	}
@@ -439,7 +439,7 @@ class Ays_Pb_Admin {
         $settings_link = array(
             '<a href="' . admin_url( 'options-general.php?page=' . $this->plugin_name ) . '">' . __('Settings', "ays-popup-box") . '</a>',
             '<a href="https://ays-demo.com/popup-box-plugin-free-demo/" target="_blank">' . __('Demo', "ays-popup-box") . '</a>',
-            '<a href="https://ays-pro.com/wordpress/popup-box?src=44" target="_blank" style="color:red; font-weight: bold;">' . __('Buy Now', "ays-popup-box") . '</a>',
+            '<a href="https://ays-pro.com/wordpress/popup-box" target="_blank" style="color:red; font-weight: bold;">' . __('Buy Now', "ays-popup-box") . '</a>',
         );
         return array_merge(  $settings_link, $links );
 

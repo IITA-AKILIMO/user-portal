@@ -418,18 +418,18 @@ class Ays_Pb_Data {
 
     //         $content[] = '<div id="ays-pb-dicount-month-main" class="notice notice-success is-dismissible ays_pb_dicount_info">';
     //             $content[] = '<div id="ays-pb-dicount-month" class="ays_pb_dicount_month">';
-    //                 $content[] = '<a href="https://ays-pro.com/wordpress/popup-box?src=40" target="_blank" class="ays-pb-sale-banner-link" ><img src="' . AYS_PB_ADMIN_URL . '/images/icons/icon-popup-128x128.png"></a>';
+    //                 $content[] = '<a href="https://ays-pro.com/wordpress/popup-box" target="_blank" class="ays-pb-sale-banner-link" ><img src="' . AYS_PB_ADMIN_URL . '/images/icons/icon-popup-128x128.png"></a>';
 
     //                 $content[] = '<div class="ays-pb-dicount-wrap-box">';
 
     //                     $content[] = '<strong style="font-weight: bold;">';
-    //                         $content[] = __( "Limited Time <span class='ays-pb-dicount-wrap-color'>20%</span> SALE on <br><span><a href='https://ays-pro.com/wordpress/popup-box?src=41' target='_blank' class='ays-pb-dicount-wrap-color ays-pb-dicount-wrap-text-decoration' style='display:block;'>Popup Box Premium Versions</a></span>", AYS_PB_NAME );
+    //                         $content[] = __( "Limited Time <span class='ays-pb-dicount-wrap-color'>20%</span> SALE on <br><span><a href='https://ays-pro.com/wordpress/popup-box' target='_blank' class='ays-pb-dicount-wrap-color ays-pb-dicount-wrap-text-decoration' style='display:block;'>Popup Box Premium Versions</a></span>", AYS_PB_NAME );
     //                     $content[] = '</strong>';
 
     //                     // $content[] = '<br>';
 
     //                     $content[] = '<strong>';
-    //                             $content[] = __( "Hurry up! <a href='https://ays-pro.com/wordpress/popup-box?src=42' target='_blank'>Check it out!</a>", AYS_PB_NAME );
+    //                             $content[] = __( "Hurry up! <a href='https://ays-pro.com/wordpress/popup-box' target='_blank'>Check it out!</a>", AYS_PB_NAME );
     //                     $content[] = '</strong>';
                             
     //                 $content[] = '</div>';
@@ -469,7 +469,7 @@ class Ays_Pb_Data {
     //                 $content[] = '</div>';
 
     //                 $content[] = '<div class="ays-pb-dicount-wrap-box ays-buy-now-button-box">';
-    //                     $content[] = '<a href="https://ays-pro.com/wordpress/popup-box?src=43" class="button button-primary ays-buy-now-button" id="ays-button-top-buy-now" target="_blank" style="" >' . __( 'Buy Now !', AYS_PB_NAME ) . '</a>';
+    //                     $content[] = '<a href="https://ays-pro.com/wordpress/popup-box" class="button button-primary ays-buy-now-button" id="ays-button-top-buy-now" target="_blank" style="" >' . __( 'Buy Now !', AYS_PB_NAME ) . '</a>';
     //                 $content[] = '</div>';
 
     //                 // $content[] = '<div class="ays-pb-dicount-wrap-box ays-pb-dicount-wrap-opacity-box">';

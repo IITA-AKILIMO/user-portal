@@ -1,5 +1,5 @@
 <?php
-    // $url = "https://ays-pro.com/wordpress/popup-box?src=38";
+    // $url = "https://ays-pro.com/wordpress/popup-box";
     // wp_redirect( $url );
     // exit;
 
