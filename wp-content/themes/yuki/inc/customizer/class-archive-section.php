@@ -5,6 +5,7 @@
  *
  * @package Yuki
  */
+use  LottaFramework\Customizer\Controls\Background ;
 use  LottaFramework\Customizer\Controls\Border ;
 use  LottaFramework\Customizer\Controls\ColorPicker ;
 use  LottaFramework\Customizer\Controls\Condition ;
@@ -22,6 +23,7 @@ use  LottaFramework\Customizer\Controls\Text ;
 use  LottaFramework\Customizer\Controls\Toggle ;
 use  LottaFramework\Customizer\Controls\Typography ;
 use  LottaFramework\Customizer\Section as CustomizeSection ;
+use  LottaFramework\Facades\AsyncCss ;
 
 if ( !defined( 'ABSPATH' ) ) {
     exit;
@@ -104,6 +106,25 @@ if ( !class_exists( 'Yuki_Archive_Section' ) ) {
          * @return array
          */
         protected function getArchiveHeaderControls()
+        {
+            return [ ( new Tabs() )->setActiveTab( 'content' )->addTab( 'content', __( 'Content', 'yuki' ), $this->getArchiveHeaderContentControls() )->addTab( 'style', __( 'Style', 'yuki' ), $this->getArchiveHeaderStyleControls() ) ];
+        }
+        
+        protected function getArchiveHeaderContentControls()
+        {
+            $controls = [ ( new Toggle( 'yuki_disable_blogs_archive_header' ) )->setLabel( __( 'Disable Header On Blogs Home', 'yuki' ) )->selectiveRefresh( '.yuki-archive-header', 'yuki_show_archive_header', [
+                'container_inclusive' => true,
+            ] )->openByDefault() ];
+            if ( YUKI_WOOCOMMERCE_ACTIVE ) {
+                $controls[] = ( new Toggle( 'yuki_disable_shop_archive_header' ) )->setLabel( __( 'Disable Header On Shop', 'yuki' ) )->selectiveRefresh( '.yuki-archive-header', 'yuki_show_archive_header', [
+                    'container_inclusive' => true,
+                ] )->closeByDefault();
+            }
+            $controls[] = yuki_upsell_info_control( __( 'More archive header options in %sPro Version%s', 'yuki' ) )->showBackground();
+            return apply_filters( 'yuki_archive_header_content_controls', $controls );
+        }
+        
+        protected function getArchiveHeaderStyleControls()
         {
             $controls = [
                 ( new Radio( 'yuki_archive_header_alignment' ) )->setLabel( __( 'Alignment', 'yuki' ) )->bindSelectiveRefresh( 'yuki-global-selective-css' )->buttonsGroupView()->setDefaultValue( 'left' )->setChoices( [

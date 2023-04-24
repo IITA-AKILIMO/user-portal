@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 return array(
 	'kb_sync_kenta_theme'          => array(
 		'sanitize' => 'kenta_blocks_sanitize_checkbox',
-		'default'  => 'no',
+		'default'  => 'yes',
 	),
 	'kb_primary_color'             => array(
 		'sanitize' => 'kenta_blocks_sanitize_rgba_color_collect',

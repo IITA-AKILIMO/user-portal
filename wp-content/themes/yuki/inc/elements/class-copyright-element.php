@@ -80,11 +80,13 @@ if ( !class_exists( 'Yuki_Copyright_Element' ) ) {
             }
             $theme = wp_get_theme();
             $theme_info = sprintf( '<a href="%s" target="_blank">%s</a>', esc_url( $theme->get( 'ThemeURI' ) ), $theme->get( 'Name' ) . ' ' . esc_html( __( 'Theme', 'yuki' ) ) );
+            $theme_version = 'v' . $theme->get( 'Version' );
             $author_info = sprintf( '<a href="%s" target="_blank">%s</a>', esc_url( $theme->get( 'AuthorURI' ) ), $theme->get( 'Author' ) );
             $text = 'Copyright &copy; {current_year}  -  {about_theme} By {about_author}';
             $text = str_replace( '{current_year}', date( 'Y' ), $text );
             $text = str_replace( '{site_title}', get_bloginfo( 'name' ), $text );
             $text = str_replace( '{about_theme}', $theme_info, $text );
+            $text = str_replace( '{theme_version}', $theme_version, $text );
             $text = str_replace( '{about_author}', $author_info, $text );
             ?>
             <div <?php 

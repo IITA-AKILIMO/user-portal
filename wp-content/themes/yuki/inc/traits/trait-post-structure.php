@@ -210,25 +210,28 @@ if ( !trait_exists( 'Yuki_Post_Structure' ) ) {
         protected function getThumbnailControls( $id, $defaults = array() )
         {
             $defaults = wp_parse_args( $defaults, [
-                'border-radius' => [
+                'height'           => '240px',
+                'thumbnail-motion' => 'yes',
+                'border-radius'    => [
                 'top'    => '0px',
                 'right'  => '0px',
                 'bottom' => '0px',
                 'left'   => '0px',
                 'linked' => true,
             ],
-                'shadow'        => [
+                'shadow'           => [
                 'rgba(54,63,70,0.35)',
                 '0px',
                 '18px',
                 '18px',
                 '-15px'
             ],
-                'shadow-enable' => false,
-                'fallback'      => 'yes',
+                'shadow-enable'    => false,
+                'fallback'         => 'yes',
             ] );
             $selector = ( empty($defaults['selector']) ? '' : $defaults['selector'] . ' .entry-thumbnail' );
             $controls = [
+                ( new Toggle( 'yuki_' . $id . '_thumbnail_motion' ) )->setLabel( __( 'Thumbnail Motion', 'yuki' ) )->setDefaultValue( $defaults['thumbnail-motion'] ),
                 new Separator(),
                 ( new Slider( 'yuki_' . $id . '_thumbnail_height' ) )->setLabel( __( 'Height', 'yuki' ) )->asyncCss( $selector, [
                 'height' => 'value',
@@ -240,7 +243,7 @@ if ( !trait_exists( 'Yuki_Post_Structure' ) ) {
                 'unit' => '%',
                 'min'  => 10,
                 'max'  => 100,
-            ] ] )->setDefaultValue( '240px' ),
+            ] ] )->setDefaultValue( $defaults['height'] ),
                 ( new Toggle( 'yuki_' . $id . '_thumbnail_use_fallback' ) )->setLabel( __( 'Use Fallback Image', 'yuki' ) )->setDescription( __( 'If the current post does not have a featured image, then this image will be displayed.', 'yuki' ) )->selectiveRefresh( ...$defaults['selective-refresh'] )->setDefaultValue( $defaults['fallback'] ),
                 ( new CallToAction() )->setLabel( __( 'Edit Fallback Image', 'yuki' ) )->displayAsButton()->expandCustomize( 'yuki_single_post:yuki_post_featured_image' ),
                 new Separator()

@@ -340,8 +340,13 @@ class Builder extends ContainerControl {
 		foreach ( $settings as $data ) {
 			$columns = $data['columns'] ?? [];
 			foreach ( $columns as $column ) {
-				if ( ! empty( ( $column['elements'] ?? [] ) ) ) {
-					return true;
+				$elements = $column['elements'] ?? [];
+
+				// Check renderable elements
+				foreach ( $elements as $item ) {
+					if ( isset( $this->elements[ $item ] ) && $this->elements[ $item ]->shouldRender() ) {
+						return true;
+					}
 				}
 			}
 		}
@@ -455,7 +460,7 @@ class Builder extends ContainerControl {
 
 				// Elements
 				foreach ( $elements as $item ) {
-					if ( isset( $this->elements[ $item ] ) ) {
+					if ( isset( $this->elements[ $item ] ) && $this->elements[ $item ]->shouldRender() ) {
 						$this->elements[ $item ]->build();
 					}
 				}

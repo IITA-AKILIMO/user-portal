@@ -51,6 +51,10 @@ if ( !class_exists( 'Yuki_Header_Builder' ) ) {
             ],
             ]
             ) )->desktopOnly() )->addElement( ( new Yuki_Menu_Element( 'menu-2', 'yuki_header_el_menu_2', __( 'Menu #2', 'yuki' ) ) )->desktopOnly() )->addElement( new Yuki_Button_Element( 'button-1', 'yuki_header_el_button_1', __( 'Button #1', 'yuki' ) ) );
+            // WooCommerce Elements
+            if ( YUKI_WOOCOMMERCE_ACTIVE ) {
+                $this->_builder->addElement( new Yuki_Cart_Element( 'cart', 'yuki_header_el_cart', __( 'Cart', 'yuki' ) ) );
+            }
             // add rows
             $this->_builder->addRow( $this->getModalRow() )->addRow( $this->getTopBarRow() )->addRow( $this->getPrimaryRow() )->addRow( $this->getBottomRow() );
         }
@@ -111,6 +115,7 @@ if ( !class_exists( 'Yuki_Header_Builder' ) ) {
             ] );
             $row = new Yuki_Header_Row( 'top_bar', __( 'Top Bar', 'yuki' ), [
                 'min_height'    => '90px',
+                'z_index'       => 100,
                 'border_bottom' => [ 1, 'solid', 'var(--yuki-base-200)' ],
                 'background'    => [
                 'type'  => 'color',
@@ -168,6 +173,7 @@ if ( !class_exists( 'Yuki_Header_Builder' ) ) {
             ] );
             $row = new Yuki_Header_Row( 'primary_navbar', __( 'Primary Navbar', 'yuki' ), [
                 'min_height'    => '50px',
+                'z_index'       => 99,
                 'border_bottom' => [ 1, 'solid', 'var(--yuki-base-200)' ],
             ] );
             $row->setMaxColumns( apply_filters( 'yuki_header_primary_row_max_columns', 3 ) );
@@ -196,10 +202,8 @@ if ( !class_exists( 'Yuki_Header_Builder' ) ) {
             ],
             ] ],
             ] );
-            $row = ( new Yuki_Header_Row( 'bottom_row', __( 'Bottom Row', 'yuki' ) ) )->setMaxColumns( 3 )->addDesktopColumn( [], [
-                'width' => '100%',
-            ] )->addMobileColumn( [], [
-                'width' => '100%',
+            $row = new Yuki_Header_Row( 'bottom_row', __( 'Bottom Row', 'yuki' ), [
+                'z_index' => 98,
             ] );
             $row->setMaxColumns( apply_filters( 'yuki_header_bottom_row_max_columns', 3 ) );
             foreach ( $data['desktop'] as $column ) {

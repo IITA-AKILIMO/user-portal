@@ -4,7 +4,7 @@ Author: WP Moose
 Requires at least: WordPress 5.2+
 Tested up to: WordPress 6.0
 Requires PHP: 7.0
-Stable tag: 1.0.2
+Stable tag: 1.0.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Tags: blog, portfolio, e-commerce, grid-layout, one-column, two-columns, three-columns, four-columns, left-sidebar, right-sidebar, block-patterns, block-styles, custom-background, custom-colors, custom-header, custom-logo, custom-menu, editor-style, featured-image-header, featured-images, footer-widgets, full-width-template, rtl-language-support, sticky-post, threaded-comments, theme-options, translation-ready, wide-blocks
@@ -43,6 +43,10 @@ License: MIT (https://github.com/mikolajdobrucki/ikonate/blob/master/LICENSE)
 URL: https://ikonate.com/
 
 == Changelog ==
+
+= 1.0.3 =
+
+* Ref: Kenta v1.1.2 compatible
 
 = 1.0.2 =
 

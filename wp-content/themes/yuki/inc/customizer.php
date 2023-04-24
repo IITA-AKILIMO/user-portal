@@ -6,18 +6,6 @@
  * @package Yuki
  */
 use  LottaFramework\Facades\CZ ;
-// customizer traits
-require get_template_directory() . '/inc/traits/trait-button-controls.php';
-require get_template_directory() . '/inc/traits/trait-icon-button-controls.php';
-require get_template_directory() . '/inc/traits/trait-socials-controls.php';
-require get_template_directory() . '/inc/traits/trait-widgets-controls.php';
-require get_template_directory() . '/inc/traits/trait-post-card.php';
-require get_template_directory() . '/inc/traits/trait-post-structure.php';
-require get_template_directory() . '/inc/traits/trait-post-query.php';
-require get_template_directory() . '/inc/traits/trait-article-controls.php';
-require get_template_directory() . '/inc/traits/trait-card-element-controls.php';
-require get_template_directory() . '/inc/traits/trait-password-protected.php';
-require get_template_directory() . '/inc/traits/trait-advanced-css-controls.php';
 // customizer elements
 require get_template_directory() . '/inc/elements/class-logo-element.php';
 require get_template_directory() . '/inc/elements/class-menu-element.php';
@@ -30,6 +18,7 @@ require get_template_directory() . '/inc/elements/class-collapsable-menu-element
 require get_template_directory() . '/inc/elements/class-widgets-element.php';
 require get_template_directory() . '/inc/elements/class-theme-switch-element.php';
 require get_template_directory() . '/inc/elements/class-copyright-element.php';
+require get_template_directory() . '/inc/elements/class-cart-element.php';
 // customizer builder
 require get_template_directory() . '/inc/builder/class-builder-column.php';
 require get_template_directory() . '/inc/builder/class-header-column.php';
@@ -65,7 +54,8 @@ require get_template_directory() . '/inc/customizer/class-archive-section.php';
 require get_template_directory() . '/inc/customizer/class-content-section.php';
 require get_template_directory() . '/inc/customizer/class-single-post-section.php';
 require get_template_directory() . '/inc/customizer/class-pages-section.php';
-require get_template_directory() . '/inc/customizer/class-store-section.php';
+require get_template_directory() . '/inc/customizer/class-store-notice-section.php';
+require get_template_directory() . '/inc/customizer/class-store-catalog-section.php';
 /**
  * Theme customizer register
  *
@@ -106,9 +96,35 @@ function yuki_customize_register( $wp_customize )
     CZ::addSection( $wp_customize, new Yuki_Content_Section( 'yuki_content', __( 'Content Settings', 'yuki' ) ) );
     CZ::addSection( $wp_customize, new Yuki_Single_Post_Section( 'yuki_single_post', __( 'Single Post Settings', 'yuki' ) ) );
     CZ::addSection( $wp_customize, new Yuki_Pages_Section( 'yuki_pages', __( 'Pages Settings', 'yuki' ) ) );
+    
     if ( YUKI_WOOCOMMERCE_ACTIVE ) {
-        CZ::addSection( $wp_customize, new Yuki_Store_Section( 'yuki_store', __( 'Store Settings', 'yuki' ) ) );
+        
+        if ( $wp_customize ) {
+            CZ::changeObject(
+                $wp_customize,
+                'panel',
+                'woocommerce',
+                'priority',
+                20
+            );
+            // Remove default catalog columns
+            $wp_customize->remove_control( 'woocommerce_catalog_columns' );
+        }
+        
+        CZ::addSection( $wp_customize, new Yuki_Store_Notice_Section(
+            'woocommerce_store_notice',
+            __( 'Store Notice', 'yuki' ),
+            0,
+            'woocommerce'
+        ) );
+        CZ::addSection( $wp_customize, new Yuki_Store_Catalog_Section(
+            'woocommerce_product_catalog',
+            __( 'Product Catalog', 'yuki' ),
+            0,
+            'woocommerce'
+        ) );
     }
+
 }
 
 add_action( 'customize_register', 'yuki_customize_register' );

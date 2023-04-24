@@ -76,42 +76,128 @@ if ( !class_exists( 'Yuki_Footer_Builder' ) ) {
             ]
             ) );
             // add rows
-            $this->_builder->addRow( ( new Yuki_Footer_Row( 'top', __( 'Top Row', 'yuki' ), [
+            $this->_builder->addRow( $this->getTopRow() )->addRow( $this->getMiddleRow() )->addRow( $this->getBottomRow() );
+        }
+        
+        protected function getTopRow()
+        {
+            $data = apply_filters( 'yuki_footer_top_row_default_value', [
+                [
+                'elements' => [],
+                'settings' => [
+                'width' => [
+                'desktop' => '25%',
+                'tablet'  => '50%',
+                'mobile'  => '100%',
+            ],
+            ],
+            ],
+                [
+                'elements' => [],
+                'settings' => [
+                'width' => [
+                'desktop' => '25%',
+                'tablet'  => '50%',
+                'mobile'  => '100%',
+            ],
+            ],
+            ],
+                [
+                'elements' => [],
+                'settings' => [
+                'width' => [
+                'desktop' => '25%',
+                'tablet'  => '50%',
+                'mobile'  => '100%',
+            ],
+            ],
+            ],
+                [
+                'elements' => [],
+                'settings' => [
+                'width' => [
+                'desktop' => '25%',
+                'tablet'  => '50%',
+                'mobile'  => '100%',
+            ],
+            ],
+            ]
+            ] );
+            $row = new Yuki_Footer_Row( 'top', __( 'Top Row', 'yuki' ), [
                 'border_top' => [ 1, 'solid', 'var(--yuki-base-200)' ],
+                'z_index'    => 100,
                 'background' => [
                 'type'  => 'color',
                 'color' => 'var(--yuki-base-color)',
             ],
-            ] ) )->setMaxColumns( 4 )->addColumn( [] )->addColumn( [] )->addColumn( [] )->addColumn( [] ) )->addRow( ( new Yuki_Footer_Row( 'middle', __( 'Middle Row', 'yuki' ), [
+            ] );
+            $row->setMaxColumns( apply_filters( 'yuki_footer_top_row_max_columns', 4 ) );
+            foreach ( $data as $column ) {
+                $row->addColumn( $column['elements'], $column['settings'] );
+            }
+            return $row;
+        }
+        
+        protected function getMiddleRow()
+        {
+            $data = apply_filters( 'yuki_footer_middle_row_default_value', [
+                [
+                'elements' => [ 'widgets-1', 'footer-socials' ],
+                'settings' => [
+                'width' => [
+                'desktop' => '25%',
+                'tablet'  => '50%',
+                'mobile'  => '100%',
+            ],
+            ],
+            ],
+                [
+                'elements' => [ 'widgets-2' ],
+                'settings' => [
+                'width' => [
+                'desktop' => '25%',
+                'tablet'  => '50%',
+                'mobile'  => '100%',
+            ],
+            ],
+            ],
+                [
+                'elements' => [ 'widgets-3' ],
+                'settings' => [
+                'width' => [
+                'desktop' => '25%',
+                'tablet'  => '50%',
+                'mobile'  => '100%',
+            ],
+            ],
+            ],
+                [
+                'elements' => [ 'widgets-4' ],
+                'settings' => [
+                'width' => [
+                'desktop' => '25%',
+                'tablet'  => '50%',
+                'mobile'  => '100%',
+            ],
+            ],
+            ]
+            ] );
+            $row = new Yuki_Footer_Row( 'middle', __( 'Middle Row', 'yuki' ), [
+                'z_index'    => 99,
                 'border_top' => [ 1, 'solid', 'var(--yuki-base-200)' ],
-            ] ) )->setMaxColumns( 4 )->addColumn( [ 'widgets-1', 'footer-socials' ], [
-                'width' => [
-                'desktop' => '25%',
-                'tablet'  => '50%',
-                'mobile'  => '100%',
-            ],
-            ] )->addColumn( [ 'widgets-2' ], [
-                'width' => [
-                'desktop' => '25%',
-                'tablet'  => '50%',
-                'mobile'  => '100%',
-            ],
-            ] )->addColumn( [ 'widgets-3' ], [
-                'width' => [
-                'desktop' => '25%',
-                'tablet'  => '50%',
-                'mobile'  => '100%',
-            ],
-            ] )->addColumn( [ 'widgets-4' ], [
-                'width' => [
-                'desktop' => '25%',
-                'tablet'  => '50%',
-                'mobile'  => '100%',
-            ],
-            ] ) )->addRow( ( new Yuki_Footer_Row( 'bottom', __( 'Bottom Row', 'yuki' ), [
-                'border_top' => [ 1, 'solid', 'var(--yuki-base-200)' ],
-                'vt_align'   => 'center',
-            ] ) )->setMaxColumns( 4 )->addColumn( [ 'footer-menu' ], [
+            ] );
+            $row->setMaxColumns( apply_filters( 'yuki_footer_middle_row_max_columns', 4 ) );
+            foreach ( $data as $column ) {
+                $row->addColumn( $column['elements'], $column['settings'] );
+            }
+            return $row;
+        }
+        
+        protected function getBottomRow()
+        {
+            $data = apply_filters( 'yuki_footer_bottom_row_default_value', [ [
+                'elements' => [ 'footer-menu' ],
+                'settings' => [
                 'width'           => [
                 'desktop' => '60%',
                 'tablet'  => '100%',
@@ -124,7 +210,10 @@ if ( !class_exists( 'Yuki_Footer_Builder' ) ) {
                 'tablet'  => 'center',
                 'mobile'  => 'center',
             ],
-            ] )->addColumn( [ 'copyright' ], [
+            ],
+            ], [
+                'elements' => [ 'copyright' ],
+                'settings' => [
                 'width'           => [
                 'desktop' => '40%',
                 'tablet'  => '100%',
@@ -137,7 +226,18 @@ if ( !class_exists( 'Yuki_Footer_Builder' ) ) {
                 'tablet'  => 'center',
                 'mobile'  => 'center',
             ],
-            ] ) );
+            ],
+            ] ] );
+            $row = new Yuki_Footer_Row( 'bottom', __( 'Bottom Row', 'yuki' ), [
+                'border_top' => [ 1, 'solid', 'var(--yuki-base-200)' ],
+                'z_index'    => 98,
+                'vt_align'   => 'center',
+            ] );
+            $row->setMaxColumns( apply_filters( 'yuki_footer_bottom_row_max_columns', 4 ) );
+            foreach ( $data as $column ) {
+                $row->addColumn( $column['elements'], $column['settings'] );
+            }
+            return $row;
         }
         
         /**

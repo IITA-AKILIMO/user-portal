@@ -16,7 +16,7 @@ ob_start();
  * Plugin Name:       Popup Box
  * Plugin URI:        http://ays-pro.com/wordpress/popup-box
  * Description:       Pop up anything you want! Create informative and promotional popups all in one plugin. Boost your website traffic with eye-catching popups. 
- * Version:           3.3.9
+ * Version:           3.4.9
  * Author:            Popup Box Team
  * Author URI:        http://ays-pro.com/
  * License:           GPL-2.0+
@@ -35,7 +35,7 @@ if ( ! defined( 'WPINC' ) ) {
  * Start at version 1.0.0 and use SemVer - https://semver.org
  * Rename this for your plugin and update it as you release new versions.
  */
-define( 'AYS_PB_NAME_VERSION', '3.3.9' );
+define( 'AYS_PB_NAME_VERSION', '3.4.9' );
 define( 'AYS_PB_NAME', 'ays-pb' );
 
 if( ! defined( 'AYS_PB_ADMIN_URL' ) ) {
@@ -104,15 +104,20 @@ function general_ays_pb_admin_notice(){
                         <!-- <a class="logo-container" href="https://ays-pro.com/" target="_blank">
                             <img class="logo" src="<?php //echo AYS_PB_ADMIN_URL . '/images/ays_pro.png'; ?>" alt="AYS Pro logo" title="AYS Pro logo"/>
                         </a> -->
+                        <div class="logo-container">
+                            <a href="https://ays-pro.com/wordpress/popup-box" target="_blank">
+                                <img  src="<?php echo esc_attr(AYS_PB_ADMIN_URL) . '/images/icons/icon-popup-128x128.png'; ?>" alt="Popup Box" title="Popup Box"/>
+                            </a>
+                        </div>
                         <ul id="menu">
-                            <li class="modile-ddmenu-xss"><i class="ays_fa ays_fa_diamond ays-fa-margin-right" style="color:#5561A3;font-size: 14px;"></i><a class="ays-btn" href="https://ays-pro.com/wordpress/popup-box?39" target="_blank">PRO</a></li>
+                            <li class="modile-ddmenu-xss"><img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/diamond.svg"?>" style="margin-right: 5px"><a class="ays-btn" href="https://ays-pro.com/wordpress/popup-box" target="_blank">PRO</a></li>
                             <!-- <li class="modile-ddmenu-lg"><a class="ays-btn"  href="https://ays-pro.com/wordpress-popup-box-plugin-user-manual" target="_blank">Documentation</a></li> -->
                             <li class="modile-ddmenu-lg"><a class="ays-btn" href="https://ays-demo.com/popup-box-plugin-free-demo/" target="_blank">Demo</a></li>
                             <li class="modile-ddmenu-lg"><a class="ays-btn" href="https://wordpress.org/support/plugin/ays-popup-box" target="_blank">Free Support</a></li>
                             <li class="modile-ddmenu-xs make_a_suggestion take_survay"><a class="ays-btn" href="https://ays-demo.com/popup-box-plugin-survey/" target="_blank">Make a Suggestion</a></li>
                             <li class="modile-ddmenu-lg"><a class="ays-btn" href="https://wordpress.org/support/plugin/ays-popup-box" target="_blank">Contact us</a></li>
                             <li class="modile-ddmenu-md">
-                                <a class="toggle_ddmenu" href="javascript:void(0);"><i class="ays_fa ays_fa_ellipsis_h"></i></a>
+                                <a class="toggle_ddmenu" href="javascript:void(0);"><img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/ellipsis.svg" ?>"></a>
                                 <ul class="ddmenu" data-expanded="false">
                                     <li><a class="ays-btn" href="https://ays-pro.com/wordpress-popup-box-plugin-user-manual" target="_blank">Documentation</a></li>
                                     <li><a class="ays-btn" href="https://ays-demo.com/popup-box-plugin-free-demo/" target="_blank">Demo</a></li>
@@ -121,7 +126,7 @@ function general_ays_pb_admin_notice(){
                                 </ul>
                             </li>
                             <li class="modile-ddmenu-sm">
-                            <a class="toggle_ddmenu" href="javascript:void(0);"><i class="ays_fa ays_fa_ellipsis_h"></i></a>
+                            <a class="toggle_ddmenu" href="javascript:void(0);"><img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/ellipsis.svg" ?>"></a>
                             <ul class="ddmenu" data-expanded="false">
                                 <li><a class="ays-btn" href="https://ays-pro.com/wordpress-popup-box-plugin-user-manual" target="_blank">Documentation</a></li>
                                 <li><a class="ays-btn" href="https://ays-demo.com/popup-box-plugin-free-demo/" target="_blank">Demo</a></li>

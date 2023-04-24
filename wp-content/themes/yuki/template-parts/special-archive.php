@@ -7,13 +7,6 @@
  * @package Yuki
  */
 
-?>
+yuki_show_archive_header();
 
-<section class="yuki-archive-header container mx-auto px-gutter">
-	<?php
-	the_archive_title( '<h1 class="archive-title">', '</h1>' );
-	the_archive_description( '<div class="archive-description">', '</div>' );
-	?>
-</section>
-
-<?php get_template_part( 'template-parts/special', 'loop' ) ?>
+get_template_part( 'template-parts/special', 'loop' );

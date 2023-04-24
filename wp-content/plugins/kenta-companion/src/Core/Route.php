@@ -61,6 +61,9 @@ class Route {
 		$type   = $request->get_param( 'type' );
 		$switch = $request->get_param( 'switch' );
 
+		// Deactivate classic editor before import
+		kcmp_deactivate_classic_editor( true );
+
 		// site_settings
 		if ( ! in_array( $type, [ 'content', 'customizer', 'widgets', 'site_settings' ] ) ) {
 			return rest_ensure_response(
@@ -85,6 +88,9 @@ class Route {
 	public static function install_plugin( $request ) {
 		$slug   = $request->get_param( 'slug' );
 		$plugin = $request->get_param( 'plugin' );
+
+		// Deactivate classic editor before import
+		kcmp_deactivate_classic_editor( true );
 
 		return rest_ensure_response(
 			self::handle_wp_error( kcmp_install_plugin( $slug, $plugin ) )

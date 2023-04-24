@@ -33,7 +33,7 @@ if ( ! class_exists( 'Yuki_Pages_Section' ) ) {
 		 * {@inheritDoc}
 		 */
 		public function getControls() {
-			return [
+			$controls = [
 				( new Section( 'yuki_page_container' ) )
 					->setLabel( __( 'Container', 'yuki' ) )
 					->setControls( $this->getContainerControls( 'pages' ) )
@@ -90,15 +90,27 @@ if ( ! class_exists( 'Yuki_Pages_Section' ) ) {
 						'icons-color-hover'   => 'var(--yuki-base-color)',
 						'icons-bg-initial'    => 'var(--yuki-official-color)',
 						'icons-bg-hover'      => 'var(--yuki-primary-color)',
-						'icons-box-spacing'   => [
-							'top'    => '48px',
+						'disabled-padding'    => [ 'left', 'right' ],
+						'disabled-margin'     => [ 'left', 'right' ],
+						'icons-box-padding'   => [
+							'top'    => '0px',
 							'right'  => '0px',
-							'bottom' => '24px',
+							'bottom' => '0px',
 							'left'   => '0px',
+							'linked' => true,
+						],
+						'icons-box-spacing'   => [
+							'top'    => '36px',
+							'right'  => '0px',
+							'bottom' => '36px',
+							'left'   => '0px',
+							'linked' => true,
 						],
 					) ) )
 				,
 			];
+
+			return apply_filters( 'yuki_pages_section_controls', $controls );
 		}
 	}
 }

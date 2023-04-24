@@ -27,6 +27,7 @@ if ( ! class_exists( 'Kenta_Widgets_Element' ) ) {
 				'css-selective-refresh' => 'kenta-footer-selective-css',
 				'async-selector'        => '.' . $this->slug,
 				'widgets-style'         => 'ghost',
+				'scroll-reveal'         => 'no',
 				'widgets-padding'       => [
 					'top'    => '0px',
 					'right'  => '0px',

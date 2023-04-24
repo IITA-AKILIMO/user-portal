@@ -244,6 +244,12 @@
             function ThemeSwitch($) {
                 _classCallCheck(this, ThemeSwitch);
                 var $switch = this;
+                var mode = js_cookie__WEBPACK_IMPORTED_MODULE_0__["default"].get("yuki-color-mode");
+                var active = jQuery(document.documentElement).attr("data-yuki-theme");
+                var isPersistent = jQuery(document.documentElement).attr("data-save-color-scheme") === "yes";
+                if (isPersistent && mode !== active) {
+                    jQuery(document.documentElement).attr("data-yuki-theme", mode);
+                }
                 $(".yuki-theme-switch").each((function() {
                     var $this = $(this);
                     if ($this.hasClass("yuki-theme-switch-initialized")) {
@@ -268,18 +274,22 @@
                 value: function setLightMode() {
                     this.setGlobalTransition();
                     jQuery(document.documentElement).attr("data-yuki-theme", "light");
-                    js_cookie__WEBPACK_IMPORTED_MODULE_0__["default"].set("yuki-color-mode", "light", {
-                        expires: 365
-                    });
+                    if (jQuery(document.documentElement).attr("data-save-color-scheme") === "yes") {
+                        js_cookie__WEBPACK_IMPORTED_MODULE_0__["default"].set("yuki-color-mode", "light", {
+                            expires: 365
+                        });
+                    }
                 }
             }, {
                 key: "setDarkMode",
                 value: function setDarkMode() {
                     this.setGlobalTransition();
                     jQuery(document.documentElement).attr("data-yuki-theme", "dark");
-                    js_cookie__WEBPACK_IMPORTED_MODULE_0__["default"].set("yuki-color-mode", "dark", {
-                        expires: 365
-                    });
+                    if (jQuery(document.documentElement).attr("data-save-color-scheme") === "yes") {
+                        js_cookie__WEBPACK_IMPORTED_MODULE_0__["default"].set("yuki-color-mode", "dark", {
+                            expires: 365
+                        });
+                    }
                 }
             }, {
                 key: "setGlobalTransition",

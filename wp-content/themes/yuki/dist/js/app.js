@@ -18,6 +18,8 @@
         var _modules_datetime__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(13);
         var _modules_slick__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(14);
         var _modules_preloader__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(15);
+        var _modules_form__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(16);
+        var _modules_popup__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(17);
         jQuery(document).ready((function($) {
             "use strict";
             new _modules_create_scroll_reveal__WEBPACK_IMPORTED_MODULE_2__["default"]($);
@@ -32,6 +34,8 @@
             new _modules_datetime__WEBPACK_IMPORTED_MODULE_11__["default"]($);
             new _modules_slick__WEBPACK_IMPORTED_MODULE_12__["default"]($);
             new _modules_preloader__WEBPACK_IMPORTED_MODULE_13__["default"]($);
+            new _modules_form__WEBPACK_IMPORTED_MODULE_14__["default"]($);
+            new _modules_popup__WEBPACK_IMPORTED_MODULE_15__["default"]($);
         }));
     }, function() {
         (function() {
@@ -316,6 +320,12 @@
             function ThemeSwitch($) {
                 _classCallCheck(this, ThemeSwitch);
                 var $switch = this;
+                var mode = js_cookie__WEBPACK_IMPORTED_MODULE_0__["default"].get("yuki-color-mode");
+                var active = jQuery(document.documentElement).attr("data-yuki-theme");
+                var isPersistent = jQuery(document.documentElement).attr("data-save-color-scheme") === "yes";
+                if (isPersistent && mode !== active) {
+                    jQuery(document.documentElement).attr("data-yuki-theme", mode);
+                }
                 $(".yuki-theme-switch").each((function() {
                     var $this = $(this);
                     if ($this.hasClass("yuki-theme-switch-initialized")) {
@@ -340,18 +350,22 @@
                 value: function setLightMode() {
                     this.setGlobalTransition();
                     jQuery(document.documentElement).attr("data-yuki-theme", "light");
-                    js_cookie__WEBPACK_IMPORTED_MODULE_0__["default"].set("yuki-color-mode", "light", {
-                        expires: 365
-                    });
+                    if (jQuery(document.documentElement).attr("data-save-color-scheme") === "yes") {
+                        js_cookie__WEBPACK_IMPORTED_MODULE_0__["default"].set("yuki-color-mode", "light", {
+                            expires: 365
+                        });
+                    }
                 }
             }, {
                 key: "setDarkMode",
                 value: function setDarkMode() {
                     this.setGlobalTransition();
                     jQuery(document.documentElement).attr("data-yuki-theme", "dark");
-                    js_cookie__WEBPACK_IMPORTED_MODULE_0__["default"].set("yuki-color-mode", "dark", {
-                        expires: 365
-                    });
+                    if (jQuery(document.documentElement).attr("data-save-color-scheme") === "yes") {
+                        js_cookie__WEBPACK_IMPORTED_MODULE_0__["default"].set("yuki-color-mode", "dark", {
+                            expires: 365
+                        });
+                    }
                 }
             }, {
                 key: "setGlobalTransition",
@@ -969,6 +983,157 @@
     }, (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
         "use strict";
         __webpack_require__.r(__webpack_exports__);
+        __webpack_require__.d(__webpack_exports__, {
+            default: () => __WEBPACK_DEFAULT_EXPORT__
+        });
+        function _toConsumableArray(arr) {
+            return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread();
+        }
+        function _nonIterableSpread() {
+            throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+        }
+        function _unsupportedIterableToArray(o, minLen) {
+            if (!o) return;
+            if (typeof o === "string") return _arrayLikeToArray(o, minLen);
+            var n = Object.prototype.toString.call(o).slice(8, -1);
+            if (n === "Object" && o.constructor) n = o.constructor.name;
+            if (n === "Map" || n === "Set") return Array.from(o);
+            if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen);
+        }
+        function _iterableToArray(iter) {
+            if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter);
+        }
+        function _arrayWithoutHoles(arr) {
+            if (Array.isArray(arr)) return _arrayLikeToArray(arr);
+        }
+        function _arrayLikeToArray(arr, len) {
+            if (len == null || len > arr.length) len = arr.length;
+            for (var i = 0, arr2 = new Array(len); i < len; i++) {
+                arr2[i] = arr[i];
+            }
+            return arr2;
+        }
+        function _defineProperties(target, props) {
+            for (var i = 0; i < props.length; i++) {
+                var descriptor = props[i];
+                descriptor.enumerable = descriptor.enumerable || false;
+                descriptor.configurable = true;
+                if ("value" in descriptor) descriptor.writable = true;
+                Object.defineProperty(target, descriptor.key, descriptor);
+            }
+        }
+        function _createClass(Constructor, protoProps, staticProps) {
+            if (protoProps) _defineProperties(Constructor.prototype, protoProps);
+            if (staticProps) _defineProperties(Constructor, staticProps);
+            Object.defineProperty(Constructor, "prototype", {
+                writable: false
+            });
+            return Constructor;
+        }
+        function _classCallCheck(instance, Constructor) {
+            if (!(instance instanceof Constructor)) {
+                throw new TypeError("Cannot call a class as a function");
+            }
+        }
+        var Form = _createClass((function Form($) {
+            _classCallCheck(this, Form);
+            var inputs = _toConsumableArray(document.querySelectorAll(".comment-form, .yuki-inner-label")).reduce((function(result, parent) {
+                return [].concat(_toConsumableArray(result), _toConsumableArray(parent.querySelectorAll("input,textarea")));
+            }), []).filter((function(input) {
+                return input.type !== "hidden" && input.type !== "checkbox" && input.type !== "submit";
+            }));
+            var inputWrapper = function inputWrapper(el) {
+                if (!el) {
+                    return null;
+                }
+                if (el.querySelector("label")) {
+                    return el;
+                }
+                return inputWrapper(el.parentNode);
+            };
+            var renderEmptiness = function renderEmptiness() {
+                inputs.map((function(input) {
+                    var wrapper = inputWrapper(input.parentNode);
+                    if (wrapper) {
+                        wrapper.classList.remove("yuki-not-empty-field");
+                    }
+                    if (!input.value) {
+                        return;
+                    }
+                    if (input.value.trim().length > 0) {
+                        if (wrapper) {
+                            wrapper.classList.add("yuki-not-empty-field");
+                        }
+                    }
+                }));
+            };
+            setTimeout((function() {
+                renderEmptiness();
+            }));
+            inputs.map((function(input) {
+                return input.addEventListener("input", renderEmptiness);
+            }));
+        }));
+        const __WEBPACK_DEFAULT_EXPORT__ = Form;
+    }, (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+        "use strict";
+        __webpack_require__.r(__webpack_exports__);
+        __webpack_require__.d(__webpack_exports__, {
+            default: () => __WEBPACK_DEFAULT_EXPORT__
+        });
+        function _defineProperties(target, props) {
+            for (var i = 0; i < props.length; i++) {
+                var descriptor = props[i];
+                descriptor.enumerable = descriptor.enumerable || false;
+                descriptor.configurable = true;
+                if ("value" in descriptor) descriptor.writable = true;
+                Object.defineProperty(target, descriptor.key, descriptor);
+            }
+        }
+        function _createClass(Constructor, protoProps, staticProps) {
+            if (protoProps) _defineProperties(Constructor.prototype, protoProps);
+            if (staticProps) _defineProperties(Constructor, staticProps);
+            Object.defineProperty(Constructor, "prototype", {
+                writable: false
+            });
+            return Constructor;
+        }
+        function _classCallCheck(instance, Constructor) {
+            if (!(instance instanceof Constructor)) {
+                throw new TypeError("Cannot call a class as a function");
+            }
+        }
+        var Popup = _createClass((function Popup($) {
+            _classCallCheck(this, Popup);
+            $("[data-popup-target]").each((function() {
+                var $this = $(this);
+                var $target = $($this.data("popup-target"));
+                var show = function show() {
+                    $target.stop().animate({
+                        opacity: "show",
+                        marginTop: "0"
+                    }, 300);
+                };
+                var hide = function hide() {
+                    $target.stop().animate({
+                        opacity: "hide",
+                        marginTop: "10"
+                    }, 150);
+                };
+                if ($this.data("popup-on-hover")) {
+                    $this.hover(show, hide);
+                } else {
+                    $this.click(show, hide);
+                }
+            }));
+        }));
+        const __WEBPACK_DEFAULT_EXPORT__ = Popup;
+    }, (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+        "use strict";
+        __webpack_require__.r(__webpack_exports__);
+    }, (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+        "use strict";
+        __webpack_require__.r(__webpack_exports__);
     }, (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
         "use strict";
         __webpack_require__.r(__webpack_exports__);
@@ -1064,6 +1229,7 @@
             3: 0,
             4: 0,
             5: 0,
+            7: 0,
             6: 0
         };
         __webpack_require__.O.j = chunkId => installedChunks[chunkId] === 0;
@@ -1092,10 +1258,11 @@
         chunkLoadingGlobal.forEach(webpackJsonpCallback.bind(null, 0));
         chunkLoadingGlobal.push = webpackJsonpCallback.bind(null, chunkLoadingGlobal.push.bind(chunkLoadingGlobal));
     })();
-    __webpack_require__.O(undefined, [ 3, 4, 5, 6 ], (() => __webpack_require__(0)));
-    __webpack_require__.O(undefined, [ 3, 4, 5, 6 ], (() => __webpack_require__(16)));
-    __webpack_require__.O(undefined, [ 3, 4, 5, 6 ], (() => __webpack_require__(17)));
-    __webpack_require__.O(undefined, [ 3, 4, 5, 6 ], (() => __webpack_require__(18)));
-    var __webpack_exports__ = __webpack_require__.O(undefined, [ 3, 4, 5, 6 ], (() => __webpack_require__(19)));
+    __webpack_require__.O(undefined, [ 3, 4, 5, 7, 6 ], (() => __webpack_require__(0)));
+    __webpack_require__.O(undefined, [ 3, 4, 5, 7, 6 ], (() => __webpack_require__(18)));
+    __webpack_require__.O(undefined, [ 3, 4, 5, 7, 6 ], (() => __webpack_require__(19)));
+    __webpack_require__.O(undefined, [ 3, 4, 5, 7, 6 ], (() => __webpack_require__(20)));
+    __webpack_require__.O(undefined, [ 3, 4, 5, 7, 6 ], (() => __webpack_require__(21)));
+    var __webpack_exports__ = __webpack_require__.O(undefined, [ 3, 4, 5, 7, 6 ], (() => __webpack_require__(22)));
     __webpack_exports__ = __webpack_require__.O(__webpack_exports__);
 })();

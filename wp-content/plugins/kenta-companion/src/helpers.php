@@ -169,6 +169,25 @@ if ( ! function_exists( 'kcmp_plugin_optin_page' ) ) {
 	}
 }
 
+if ( ! function_exists( 'kcmp_deactivate_classic_editor' ) ) {
+	/**
+	 * Deactivate classic editor
+	 *
+	 * @param bool $silent
+	 */
+	function kcmp_deactivate_classic_editor( $silent = true ) {
+
+		if ( is_plugin_active( 'classic-editor/classic-editor.php' ) ) {
+			deactivate_plugins( array( 'classic-editor/classic-editor.php' ) );
+		}
+
+		if ( ! $silent ) {
+			wp_redirect( admin_url( 'plugins.php' ) );
+			exit();
+		}
+	}
+}
+
 if ( ! function_exists( 'kcmp_install_plugin' ) ) {
 	/**
 	 * Install plugin
@@ -236,7 +255,7 @@ if ( ! function_exists( 'kcmp_install_plugin' ) ) {
 			return $status;
 		}
 
-		if ( $status['pluginVersion'] && version_compare( $status['pluginVersion'], $api->version, '>=' ) ) {
+		if ( isset( $status['pluginVersion'] ) && version_compare( $status['pluginVersion'], $api->version, '>=' ) ) {
 			return $status;
 		}
 

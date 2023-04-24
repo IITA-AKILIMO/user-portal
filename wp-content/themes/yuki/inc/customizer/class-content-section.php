@@ -10,6 +10,7 @@ use  LottaFramework\Customizer\Controls\ColorPicker ;
 use  LottaFramework\Customizer\Controls\Placeholder ;
 use  LottaFramework\Customizer\Controls\Radio ;
 use  LottaFramework\Customizer\Controls\Section ;
+use  LottaFramework\Customizer\Controls\Select ;
 use  LottaFramework\Customizer\Controls\Separator ;
 use  LottaFramework\Customizer\Controls\Spacing ;
 use  LottaFramework\Customizer\Controls\Typography ;
@@ -33,6 +34,7 @@ if ( !class_exists( 'Yuki_Content_Section' ) ) {
             return [
                 ( new Section( 'yuki_content_colors' ) )->setLabel( __( 'Colors', 'yuki' ) )->setControls( $this->getColorsControls() ),
                 ( new Section( 'yuki_content_typography' ) )->setLabel( __( 'Typography', 'yuki' ) )->setControls( $this->getTypographyControls() ),
+                ( new Section( 'yuki_content_links' ) )->setLabel( __( 'Links', 'yuki' ) )->setControls( $this->getLinksControls() ),
                 ( new Section( 'yuki_content_buttons' ) )->setLabel( __( 'Buttons', 'yuki' ) )->setControls( $this->getButtonStyleControls( 'yuki_content_buttons_', [
                 'selective-refresh' => true,
                 'button-selector'   => [
@@ -86,6 +88,18 @@ if ( !class_exists( 'Yuki_Content_Section' ) ) {
         /**
          * @return array
          */
+        protected function getLinksControls()
+        {
+            return [ ( new ColorPicker( 'yuki_content_link_color' ) )->setLabel( __( 'Colors', 'yuki' ) )->bindSelectiveRefresh( 'yuki-global-selective-css' )->addColor( 'initial', __( 'Initial', 'yuki' ), 'var(--yuki-primary-color)' )->addColor( 'hover', __( 'Hover', 'yuki' ), 'var(--yuki-primary-active)' ), ( new Select( 'yuki_content_link_style' ) )->setLabel( __( 'Link Style', 'yuki' ) )->bindSelectiveRefresh( 'yuki-global-selective-css' )->displayInline()->setDefaultValue( 'underline' )->setChoices( [
+                'underline'       => __( 'Underline', 'yuki' ),
+                'plain'           => __( 'Plain', 'yuki' ),
+                'hover-underline' => __( 'Hover Underline', 'yuki' ),
+            ] ) ];
+        }
+        
+        /**
+         * @return array
+         */
         protected function getColorsControls()
         {
             $colors = [
@@ -99,6 +113,13 @@ if ( !class_exists( 'Yuki_Content_Section' ) ) {
                 'label'  => __( 'All Headings Color (H1 - H6)', 'yuki' ),
                 'colors' => [
                 'initial' => 'var(--yuki-accent-active)',
+            ],
+            ],
+                'link_color'     => [
+                'label'  => __( 'Links Color', 'yuki' ),
+                'colors' => [
+                'initial' => 'var(--yuki-primary-color)',
+                'hover'   => 'var(--yuki-primary-active)',
             ],
             ],
             ];

@@ -305,8 +305,9 @@ if ( ! function_exists( 'kenta_install_cmp_redirect_url' ) ) {
 	 * @return string
 	 */
 	function kenta_install_cmp_redirect_url( $hash = '' ) {
-		$switch       = apply_filters( 'kenta_welcome_demo_switch_after_importing', false );
-		$args['page'] = 'kenta-starter-sites';
+		$switch              = apply_filters( 'kenta_welcome_demo_switch_after_importing', false );
+		$args['page']        = 'kenta-starter-sites';
+		$args['skip-opt-in'] = 'yes';
 		if ( $switch ) {
 			$args['switch'] = true;
 		}

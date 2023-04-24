@@ -31,10 +31,10 @@
 .ays_pb_far {
     font-weight: 400 !important;
 }
-
+/* 
 .fa-times:before {
     content: "\f00d" !important;
-}
+} */
 
 .ays_pb_fa_volume{
     content: "f028";
@@ -486,6 +486,9 @@ label.ays_winxp_close.ays-pb-modal-close_1 i {
 
 .ays_winxp_title-bar .ays_winxp_title-bar-max {
     right: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .ays_winxp_title-bar .ays_winxp_title-bar-min {
@@ -553,7 +556,7 @@ label.ays_winxp_close.ays-pb-modal-close_1 i {
 /*
  * Win98 window CSS styles
  */
-@import url(https://fonts.googleapis.com/css?family=Share+Tech+Mono); 
+/* @import url(https://fonts.googleapis.com/css?family=Share+Tech+Mono); */
 
 div[class*='ays-pb-modal_'].ays_win98_window {
     position: absolute;
@@ -760,8 +763,8 @@ div[class*='ays-pb-modal_'].ays_win98_window {
 /*
  * LIL CSS styles
  */
-@import url(https://fonts.googleapis.com/css?family=Share+Tech+Mono);
-@import url(https://fonts.googleapis.com/css?family=Open+Sans:400,700,400italic);
+/* @import url(https://fonts.googleapis.com/css?family=Share+Tech+Mono);
+@import url(https://fonts.googleapis.com/css?family=Open+Sans:400,700,400italic); */
 
 .close-lil-btn {
     width: 30px;

@@ -17,7 +17,7 @@ use  LottaFramework\Utils ;
  */
 function yuki_body_classes( $classes )
 {
-    $classes[] = 'yuki-body overflow-x-hidden';
+    $classes[] = 'yuki-body overflow-x-hidden yuki-form-' . CZ::get( 'yuki_content_form_style' );
     // Adds a class of hfeed to non-singular pages.
     if ( !is_singular() ) {
         $classes[] = 'hfeed';
@@ -40,7 +40,7 @@ add_filter( 'body_class', 'yuki_body_classes' );
  */
 function yuki_excerpt_length( $length )
 {
-    if ( is_admin() || !yuki_app()->has( 'store.excerpt_length' ) ) {
+    if ( is_admin() || !yuki_app()->has( 'store.excerpt_length' ) || absint( yuki_app()['store.excerpt_length'] ) <= 0 ) {
         return $length;
     }
     return absint( yuki_app()['store.excerpt_length'] );
@@ -54,7 +54,7 @@ add_filter( 'excerpt_length', 'yuki_excerpt_length' );
  */
 function yuki_excerpt_more( $link )
 {
-    if ( is_admin() || !yuki_app()->has( 'store.excerpt_more_text' ) ) {
+    if ( is_admin() || !yuki_app()->has( 'store.excerpt_more_text' ) || yuki_app()['store.excerpt_more_text'] === '' ) {
         return $link;
     }
     return yuki_app()['store.excerpt_more_text'];
@@ -78,6 +78,7 @@ function yuki_add_selective_css_container()
         ?>
         <style id="yuki-preloader-selective-css"></style>
         <style id="yuki-global-selective-css"></style>
+        <style id="yuki-woo-selective-css"></style>
         <style id="yuki-header-selective-css"></style>
         <style id="yuki-footer-selective-css"></style>
         <style id="yuki-homepage-selective-css"></style>
@@ -166,6 +167,64 @@ function yuki_add_header_close()
 }
 
 add_action( 'yuki_action_after_header', 'yuki_add_header_close' );
+/**
+ * Render header row
+ */
+function yuki_header_row_start( $id, $key )
+{
+    $classes = 'yuki-header-row yuki-header-row-' . $id;
+    $attrs = [
+        'class'    => $classes,
+        'data-row' => $id,
+    ];
+    
+    if ( is_customize_preview() ) {
+        $attrs['data-shortcut'] = 'border';
+        $attrs['data-shortcut-location'] = 'yuki_header:' . $id;
+    }
+    
+    echo  '<div ' . Utils::render_attribute_string( $attrs ) . '>' ;
+}
+
+add_action(
+    'yuki_start_header_row',
+    'yuki_header_row_start',
+    10,
+    2
+);
+function yuki_header_row_overlay( $id, $key )
+{
+    if ( CZ::checked( "yuki_header_{$id}_row_overlay" ) ) {
+        echo  '<div class="yuki-overlay"></div>' ;
+    }
+}
+
+add_action(
+    'yuki_start_header_row',
+    'yuki_header_row_overlay',
+    15,
+    2
+);
+function yuki_header_row_container_start( $id, $key )
+{
+    echo  '<div class="container mx-auto text-xs px-gutter flex flex-wrap items-stretch">' ;
+}
+
+add_action(
+    'yuki_start_header_row',
+    'yuki_header_row_container_start',
+    20,
+    2
+);
+function yuki_header_row_close()
+{
+    echo  '</div>' ;
+}
+
+// header row
+add_action( 'yuki_after_header_row', 'yuki_header_row_close', 10 );
+// container
+add_action( 'yuki_after_header_row', 'yuki_header_row_close', 20 );
 /**
  * Show posts pagination
  */
@@ -401,9 +460,13 @@ function yuki_add_post_navigation()
     }
     
     echo  '<div class="yuki-max-w-content mx-auto">' ;
+    $prev_post = get_previous_post();
+    $prev_thumbnail = '<div class="prev-post-thumbnail post-thumbnail">' . get_the_post_thumbnail( ( $prev_post ? $prev_post->ID : null ), 'medium' ) . IconsManager::render( CZ::get( 'yuki_post_navigation_prev_icon' ) ) . '</div>';
+    $next_post = get_next_post();
+    $next_thumbnail = '<div class="next-post-thumbnail post-thumbnail">' . get_the_post_thumbnail( ( $next_post ? $next_post->ID : null ), 'large' ) . IconsManager::render( CZ::get( 'yuki_post_navigation_next_icon' ) ) . '</div>';
     the_post_navigation( [
-        'prev_text'          => IconsManager::render( CZ::get( 'yuki_post_navigation_prev_icon' ) ) . '<span class="px-half-gutter">%title</span>',
-        'next_text'          => IconsManager::render( CZ::get( 'yuki_post_navigation_next_icon' ) ) . '<span class="px-half-gutter">%title</span>',
+        'prev_text'          => $prev_thumbnail . '<div class="item-wrap px-gutter"><span class="item-label">' . esc_html__( 'Previous Post', 'yuki' ) . '</span><span class="item-title">%title</span></div>',
+        'next_text'          => $next_thumbnail . '<div class="item-wrap px-gutter"><span class="item-label">' . esc_html__( 'Next Post', 'yuki' ) . '</span><span class="item-title">%title</span></div>',
         'screen_reader_text' => '<span class="nav-subtitle screen-reader-text">' . esc_html__( 'Page', 'yuki' ) . '</span>',
         'class'              => 'yuki-post-navigation',
     ] );
@@ -413,7 +476,7 @@ function yuki_add_post_navigation()
     echo  '</div>' ;
 }
 
-add_action( 'yuki_action_after_single_post', 'yuki_add_post_navigation' );
+add_action( 'yuki_action_after_single_post', 'yuki_add_post_navigation', 10 );
 function yuki_show_post_comments()
 {
     // If comments are open, or we have at least one comment, load up the comment template.

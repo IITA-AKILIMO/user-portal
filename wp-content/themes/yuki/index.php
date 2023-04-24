@@ -14,12 +14,8 @@
 
 get_header();
 
-if ( is_home() ) {
-	yuki_do_elementor_location( 'archive', 'template-parts/special', 'loop' );
-} else if ( is_archive() ) {
+if ( is_home() || is_archive() || is_search() ) {
 	yuki_do_elementor_location( 'archive', 'template-parts/special', 'archive' );
-} else if ( is_search() ) {
-	yuki_do_elementor_location( 'archive', 'template-parts/special', 'search' );
 } else if ( is_singular() ) {
 	yuki_do_elementor_location( 'single', 'template-parts/special', 'single' );
 } else {

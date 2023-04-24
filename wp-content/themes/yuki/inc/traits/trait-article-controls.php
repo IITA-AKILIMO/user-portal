@@ -65,6 +65,22 @@ if ( ! trait_exists( 'Yuki_Article_Controls' ) ) {
 						],
 					] )
 				,
+				( new Condition() )
+					->setCondition( [ 'yuki_' . $type . '_container_layout' => 'narrow' ] )
+					->setControls( [
+						( new Slider( 'yuki_' . $type . '_container_max_width' ) )
+							->setLabel( __( 'Content Max Width', 'yuki' ) )
+							->asyncCss( '.yuki-body', [
+								'--yuki-max-w-content' => 'value'
+							] )
+							->setUnits( [
+								[ 'unit' => 'px', 'min' => 500, 'max' => 1400 ],
+								[ 'unit' => '%', 'min' => 50, 'max' => 100 ],
+								[ 'unit' => 'ch', 'min' => 50, 'max' => 150 ],
+							] )
+							->setDefaultValue( '75ch' )
+					] )
+				,
 			];
 		}
 

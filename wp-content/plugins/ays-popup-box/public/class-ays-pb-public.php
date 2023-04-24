@@ -457,6 +457,9 @@ class Ays_Pb_Public {
 
             $enable_pb_fullscreen = (isset($options['enable_pb_fullscreen']) && $options['enable_pb_fullscreen'] == 'on') ? true : false;
 
+            //autoclose on video completion
+            $autoclose_on_video_completion = (isset($options['enable_autoclose_on_completion']) && $options['enable_autoclose_on_completion'] == 'on') ? 'on' : 'off';
+
             // popup minimal height
             $pb_min_height_val = (isset($options['pb_min_height']) && $options['pb_min_height'] != '') ? absint(intval($options['pb_min_height'])) : 0;
 
@@ -1379,6 +1382,16 @@ class Ays_Pb_Public {
                                     }
                                 });
                             }
+                            if('".$autoclose_on_video_completion."' == 'on') {
+                                var video = $(document).find('video.wp-video-shortcode');
+                                for (let i = 0; i < video.length; i++) {
+                                    video[i].addEventListener('ended', function() {
+                                        if ($(this).next().val() === 'on') {
+                                            $(this).parents('.ays_video_window').find('.close-image-btn').trigger('click');
+                                        }
+                                    });
+                                }
+                            }
                             
                             jQuery(document).on('click', '.ays-pb-modal-close_".$id."', function() {
                                 $(document).find('body').removeClass('pb_disable_scroll');
@@ -1794,7 +1807,16 @@ class Ays_Pb_Public {
                                     },500);
                                 }
                             }
-                            
+                            if('".$autoclose_on_video_completion."' == 'on') {
+                                var video = $(document).find('video.wp-video-shortcode');
+                                for (let i = 0; i < video.length; i++) {
+                                    video[i].addEventListener('ended', function() {
+                                        if ($(this).next().val() === 'on') {
+                                            $(this).parents('.ays_video_window').find('.close-image-btn').trigger('click');
+                                        }
+                                    });
+                                }
+                            }
                         });
                     })( jQuery );
                 </script>";

@@ -91,10 +91,11 @@ class Demos {
 			delete_transient( 'kcmp_demos' );
 		}
 
-		$demos    = get_transient( 'kcmp_demos' );
-		$template = kcmp_current_template();
+		$demos        = get_transient( 'kcmp_demos' );
+		$demos_verion = get_transient( 'kcmp_demos_version' );
+		$template     = kcmp_current_template();
 
-		if ( false === $demos || ( isset( $demos->slug ) && $template !== $demos->slug ) ) {
+		if ( false === $demos || ( isset( $demos->slug ) && $template !== $demos->slug ) || $demos_verion !== KCMP_VERSION ) {
 			$raw_demos = wp_safe_remote_get( $this->api( "{$template}/config.json" ) );
 
 			if ( ! is_wp_error( $raw_demos ) ) {
@@ -102,6 +103,7 @@ class Demos {
 
 				if ( $demos ) {
 					set_transient( 'kcmp_demos', $demos, DAY_IN_SECONDS );
+					set_transient( 'kcmp_demos_version', KCMP_VERSION, DAY_IN_SECONDS );
 				}
 			}
 		}

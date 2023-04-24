@@ -1,5 +1,5 @@
 <?php
-    // $url = "https://ays-pro.com/wordpress/popup-box?src=38";
+    // $url = "https://ays-pro.com/wordpress/popup-box";
     // wp_redirect( $url );
     // exit;
 
@@ -131,9 +131,9 @@
                     <td>
 						<?php echo __( 'Usage for lifetimes', "ays-popup-box" ); ?>
                     </td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
+                    <td><img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/check-mark.svg"?>"></td>
+                    <td><img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/check-mark.svg"?>"></td>
+                    <td><img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/check-mark.svg"?>"></td>
                 </tr>
                 <tr>
                     <td> </td>
@@ -145,9 +145,9 @@
                     <td>
 						<?php echo __( 'Session time option', "ays-popup-box" ); ?>
                     </td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
+                    <td><img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/check-mark.svg"?>"></td>
+                    <td><img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/check-mark.svg"?>"></td>
+                    <td><img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/check-mark.svg"?>"></td>
                 </tr>
                 <tr>
                     <td> </td>
@@ -159,9 +159,9 @@
                     <td>
 		                <?php echo __( 'Responsive design', "ays-popup-box" ); ?>
                     </td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
+                    <td><img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/check-mark.svg"?>"></td>
+                    <td><img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/check-mark.svg"?>"></td>
+                    <td><img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/check-mark.svg"?>"></td>
                 </tr>
                 <tr>
                     <td> </td>
@@ -174,8 +174,8 @@
 						<?php echo __( 'Scroll from top', "ays-popup-box" ); ?>
                     </td>
                     <td><span>–</span></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
+                    <td><img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/check-mark.svg"?>"></td>
+                    <td><img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/check-mark.svg"?>"></td>
                 </tr>
                 <tr>
                     <td> </td>
@@ -188,8 +188,8 @@
 		                <?php echo __( 'Styles', "ays-popup-box" ); ?>
                     </td>
                     <td><span>–</span></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
+                    <td><img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/check-mark.svg"?>"></td>
+                    <td><img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/check-mark.svg"?>"></td>
                 </tr>
                 <tr>
                     <td></td>
@@ -202,8 +202,8 @@
 						<?php echo __( 'Display on pages', "ays-popup-box" ); ?>
                     </td>
                     <td><span>–</span></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
+                    <td><img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/check-mark.svg"?>"></td>
+                    <td><img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/check-mark.svg"?>"></td>
                 </tr>
                 <tr>
                     <td></td>
@@ -216,8 +216,8 @@
 						<?php echo __( 'Delay', "ays-popup-box" ); ?>
                     </td>
                     <td><span>–</span></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
+                    <td><img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/check-mark.svg"?>"></td>
+                    <td><img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/check-mark.svg"?>"></td>
                 </tr>
                 <tr>
                     <td></td>
@@ -230,8 +230,8 @@
 						<?php echo __( 'Open with click', "ays-popup-box" ); ?>
                     </td>
                     <td><span>–</span></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
+                    <td><img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/check-mark.svg"?>"></td>
+                    <td><img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/check-mark.svg"?>"></td>
                 </tr>
                 <tr>
                     <td></td>
@@ -244,8 +244,8 @@
 						<?php echo __( 'Custom content', "ays-popup-box" ); ?>
                     </td>
                     <td><span>–</span></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
+                    <td><img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/check-mark.svg"?>"></td>
+                    <td><img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/check-mark.svg"?>"></td>
                 </tr>
                 <tr>
                     <td></td>
@@ -258,8 +258,8 @@
 		                <?php echo __( 'Popup box position', "ays-popup-box" ); ?>
                     </td>
                     <td><span>–</span></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
+                    <td><img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/check-mark.svg"?>"></td>
+                    <td><img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/check-mark.svg"?>"></td>
                 </tr>
                 <tr>
                     <td></td>
@@ -272,8 +272,8 @@
                         <?php echo __( 'Multiple scheduling', "ays-popup-box" ); ?>
                     </td>
                     <td><span>–</span></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
+                    <td><img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/check-mark.svg"?>"></td>
+                    <td><img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/check-mark.svg"?>"></td>
                 </tr>
                 <tr>
                     <td></td>
@@ -286,8 +286,8 @@
                         <?php echo __( 'PopupBox Reports', "ays-popup-box" ); ?>
                     </td>
                     <td><span>–</span></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
+                    <td><img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/check-mark.svg"?>"></td>
+                    <td><img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/check-mark.svg"?>"></td>
                 </tr>
 
                 <tr>
@@ -301,8 +301,8 @@
                         <?php echo __( 'Enable for selected user OS', "ays-popup-box" ); ?>
                     </td>
                     <td><span>–</span></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
+                    <td><img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/check-mark.svg"?>"></td>
+                    <td><img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/check-mark.svg"?>"></td>
                 </tr>
                 <tr>
                     <td></td>
@@ -315,8 +315,8 @@
                         <?php echo __( 'Enable for selected browser', "ays-popup-box" ); ?>
                     </td>
                     <td><span>–</span></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
+                    <td><img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/check-mark.svg"?>"></td>
+                    <td><img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/check-mark.svg"?>"></td>
                 </tr>
                 <tr>
                     <td></td>
@@ -329,8 +329,8 @@
                         <?php echo __( 'Limitation count', "ays-popup-box" ); ?>
                     </td>
                     <td><span>–</span></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
+                    <td><img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/check-mark.svg"?>"></td>
+                    <td><img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/check-mark.svg"?>"></td>
                 </tr>
                 <tr>
                     <td></td>
@@ -343,8 +343,8 @@
                         <?php echo __( 'Export/Import', "ays-popup-box" ); ?>
                     </td>
                     <td><span>–</span></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
+                    <td><img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/check-mark.svg"?>"></td>
+                    <td><img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/check-mark.svg"?>"></td>
                 </tr>
                 <tr>
                     <td></td>
@@ -357,8 +357,8 @@
                         <?php echo __( 'Close by scrolling down', "ays-popup-box" ); ?>
                     </td>
                     <td><span>–</span></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
+                    <td><img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/check-mark.svg"?>"></td>
+                    <td><img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/check-mark.svg"?>"></td>
                 </tr>
                 <tr>
                     <td></td>
@@ -371,8 +371,8 @@
                         <?php echo __( 'Close by classname', "ays-popup-box" ); ?>
                     </td>
                     <td><span>–</span></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
+                    <td><img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/check-mark.svg"?>"></td>
+                    <td><img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/check-mark.svg"?>"></td>
                 </tr>
                 <tr>
                     <td></td>
@@ -385,8 +385,8 @@
                         <?php echo __( 'Actions while clicking on the popup', "ays-popup-box" ); ?>
                     </td>
                     <td><span>–</span></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
+                    <td><img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/check-mark.svg"?>"></td>
+                    <td><img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/check-mark.svg"?>"></td>
                 </tr>
                 <tr>
                     <td></td>
@@ -399,8 +399,8 @@
                         <?php echo __( 'Title style', "ays-popup-box" ); ?>
                     </td>
                     <td><span>–</span></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
+                    <td><img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/check-mark.svg"?>"></td>
+                    <td><img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/check-mark.svg"?>"></td>
                 </tr>
                 <tr>
                     <td></td>
@@ -413,8 +413,8 @@
                         <?php echo __( 'Video theme', "ays-popup-box" ); ?>
                     </td>
                     <td><span>–</span></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
+                    <td><img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/check-mark.svg"?>"></td>
+                    <td><img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/check-mark.svg"?>"></td>
                 </tr>
                 <tr>
                     <td></td>
@@ -427,8 +427,8 @@
                         <?php echo __( 'Peachy theme', "ays-popup-box" ); ?>
                     </td>
                     <td><span>–</span></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
+                    <td><img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/check-mark.svg"?>"></td>
+                    <td><img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/check-mark.svg"?>"></td>
                 </tr>
                 <tr>
                     <td></td>
@@ -441,8 +441,8 @@
                         <?php echo __( 'Yellowish theme', "ays-popup-box" ); ?>
                     </td>
                     <td><span>–</span></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
+                    <td><img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/check-mark.svg"?>"></td>
+                    <td><img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/check-mark.svg"?>"></td>
                 </tr>
                 <tr>
                     <td></td>
@@ -455,8 +455,8 @@
                         <?php echo __( 'Coral theme', "ays-popup-box" ); ?>
                     </td>
                     <td><span>–</span></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
+                    <td><img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/check-mark.svg"?>"></td>
+                    <td><img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/check-mark.svg"?>"></td>
                 </tr>
 
                 <tr>
@@ -470,8 +470,8 @@
                         <?php echo __( 'User role permission', "ays-popup-box" ); ?>
                     </td>
                     <td><span>–</span></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
+                    <td><img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/check-mark.svg"?>"></td>
+                    <td><img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/check-mark.svg"?>"></td>
                 </tr>
 
                 <tr>
@@ -485,8 +485,8 @@
                         <?php echo __( 'Limit by country', "ays-popup-box" ); ?>
                     </td>
                     <td><span>–</span></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
+                    <td><img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/check-mark.svg"?>"></td>
+                    <td><img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/check-mark.svg"?>"></td>
                 </tr>
                 <tr>
                     <td></td>
@@ -499,8 +499,8 @@
                         <?php echo __( 'MailChimp integration', "ays-popup-box" ); ?>
                     </td>
                     <td><span>–</span></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
+                    <td><img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/check-mark.svg"?>"></td>
+                    <td><img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/check-mark.svg"?>"></td>
                 </tr>
                 <tr>
                     <td></td>
@@ -513,8 +513,8 @@
                         <?php echo __( 'Campaign Monitor integration', "ays-popup-box" ); ?>
                     </td>
                     <td><span>–</span></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
+                    <td><img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/check-mark.svg"?>"></td>
+                    <td><img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/check-mark.svg"?>"></td>
                 </tr>
                 <tr>
                     <td></td>
@@ -527,8 +527,8 @@
                         <?php echo __( 'ActiveCampaign integration', "ays-popup-box" ); ?>
                     </td>
                     <td><span>–</span></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
+                    <td><img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/check-mark.svg"?>"></td>
+                    <td><img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/check-mark.svg"?>"></td>
                 </tr>
                 <tr>
                     <td></td>
@@ -541,8 +541,8 @@
                         <?php echo __( 'GetResponse integration', "ays-popup-box" ); ?>
                     </td>
                     <td><span>–</span></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
+                    <td><img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/check-mark.svg"?>"></td>
+                    <td><img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/check-mark.svg"?>"></td>
                 </tr>
                 <tr>
                     <td></td>
@@ -555,8 +555,8 @@
                         <?php echo __( 'ConvertKit integration', "ays-popup-box" ); ?>
                     </td>
                     <td><span>–</span></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
+                    <td><img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/check-mark.svg"?>"></td>
+                    <td><img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/check-mark.svg"?>"></td>
                 </tr>
                 <tr>
                     <td></td>
@@ -569,8 +569,8 @@
                         <?php echo __( 'Sendinblue integration', "ays-popup-box" ); ?>
                     </td>
                     <td><span>–</span></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
+                    <td><img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/check-mark.svg"?>"></td>
+                    <td><img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/check-mark.svg"?>"></td>
                 </tr>
                 <tr>
                     <td></td>
@@ -583,8 +583,8 @@
                         <?php echo __( 'MailerLite integration', "ays-popup-box" ); ?>
                     </td>
                     <td><span>–</span></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
+                    <td><img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/check-mark.svg"?>"></td>
+                    <td><img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/check-mark.svg"?>"></td>
                 </tr>
 
                 <tr>
@@ -598,8 +598,8 @@
                         <?php echo __( 'Yes or No popup', "ays-popup-box" ); ?>
                     </td>
                     <td><span>–</span></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
+                    <td><img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/check-mark.svg"?>"></td>
+                    <td><img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/check-mark.svg"?>"></td>
                 </tr>
 
                 <tr>
@@ -613,8 +613,8 @@
                         <?php echo __( 'Video popup', "ays-popup-box" ); ?>
                     </td>
                     <td><span>–</span></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
+                    <td><img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/check-mark.svg"?>"></td>
+                    <td><img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/check-mark.svg"?>"></td>
                 </tr>
 
                 <tr>
@@ -628,8 +628,8 @@
                         <?php echo __( 'Iframe popup', "ays-popup-box" ); ?>
                     </td>
                     <td><span>–</span></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
+                    <td><img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/check-mark.svg"?>"></td>
+                    <td><img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/check-mark.svg"?>"></td>
                 </tr>
 
                 <tr>
@@ -643,8 +643,8 @@
                         <?php echo __( 'Subscription popup', "ays-popup-box" ); ?>
                     </td>
                     <td><span>–</span></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
+                    <td><img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/check-mark.svg"?>"></td>
+                    <td><img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/check-mark.svg"?>"></td>
                 </tr>
 
                 <tr>
@@ -658,8 +658,8 @@
                         <?php echo __( 'Contact form popup', "ays-popup-box" ); ?>
                     </td>
                     <td><span>–</span></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
+                    <td><img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/check-mark.svg"?>"></td>
+                    <td><img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/check-mark.svg"?>"></td>
                 </tr>
 
                 <tr>
@@ -673,8 +673,8 @@
                         <?php echo __( 'Send file after subscription popup', "ays-popup-box" ); ?>
                     </td>
                     <td><span>–</span></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
+                    <td><img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/check-mark.svg"?>"></td>
+                    <td><img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/check-mark.svg"?>"></td>
                 </tr>
                 <tr>
                     <td></td>
@@ -687,8 +687,8 @@
                         <?php echo __( 'Coupon popup', "ays-popup-box" ); ?>
                     </td>
                     <td><span>–</span></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
+                    <td><img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/check-mark.svg"?>"></td>
+                    <td><img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/check-mark.svg"?>"></td>
                 </tr>
                 <tr>
                     <td></td>
@@ -701,8 +701,8 @@
                         <?php echo __( 'Countdown popup', "ays-popup-box" ); ?>
                     </td>
                     <td><span>–</span></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
+                    <td><img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/check-mark.svg"?>"></td>
+                    <td><img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/check-mark.svg"?>"></td>
                 </tr>
                 <tr>
                     <td></td>
@@ -715,8 +715,8 @@
                         <?php echo __( 'Cookie popup', "ays-popup-box" ); ?>
                     </td>
                     <td><span>–</span></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
+                    <td><img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/check-mark.svg"?>"></td>
+                    <td><img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/check-mark.svg"?>"></td>
                 </tr>
                 <tr>
                     <td></td>
@@ -729,8 +729,8 @@
                         <?php echo __( 'Exit Intent Popup', "ays-popup-box" ); ?>
                     </td>
                     <td><span>–</span></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
+                    <td><img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/check-mark.svg"?>"></td>
+                    <td><img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/check-mark.svg"?>"></td>
                 </tr>
                 <tr>
                     <td></td>
@@ -743,8 +743,8 @@
                         <?php echo __( 'On Hover Trigger', "ays-popup-box" ); ?>
                     </td>
                     <td><span>–</span></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
+                    <td><img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/check-mark.svg"?>"></td>
+                    <td><img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/check-mark.svg"?>"></td>
                 </tr>
                 <tr>
                     <td></td>
@@ -757,8 +757,8 @@
                         <?php echo __( 'Inactivity Trigger', "ays-popup-box" ); ?>
                     </td>
                     <td><span>–</span></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
+                    <td><img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/check-mark.svg"?>"></td>
+                    <td><img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/check-mark.svg"?>"></td>
                 </tr>
                 <tr>
                     <td></td>
@@ -771,8 +771,8 @@
                         <?php echo __( 'After visiting X pages Trigger', "ays-popup-box" ); ?>
                     </td>
                     <td><span>–</span></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
+                    <td><img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/check-mark.svg"?>"></td>
+                    <td><img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/check-mark.svg"?>"></td>
                 </tr>
                 <tr>
                     <td></td>
@@ -785,8 +785,8 @@
                         <?php echo __( 'Scrolling to Element Trigger', "ays-popup-box" ); ?>
                     </td>
                     <td><span>–</span></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
-                    <td><i class="ays_fa ays_fa-check"></i></td>
+                    <td><img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/check-mark.svg"?>"></td>
+                    <td><img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/check-mark.svg"?>"></td>
                 </tr>
             
                 <tr>

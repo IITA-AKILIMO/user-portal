@@ -21,6 +21,7 @@ class KentaCompanion extends Container {
 		add_action( 'rest_api_init', [ Route::class, 'api_v1' ] );
 		add_action( 'admin_menu', [ $this, 'admin_menu' ] );
 		add_action( 'kcmp/show_admin_setup_page', [ $this, 'show_about_kenta_theme_page' ] );
+		add_action( 'admin_action_kcmp_deactivate_classic_editor', 'kcmp_deactivate_classic_editor' );
 		add_filter( 'kenta_admin_page_url', [ $this, 'admin_page_url' ], 10, 2 );
 		add_filter( 'kenta_admin_page_tabs', [ $this, 'admin_tabs' ] );
 		add_filter( 'kenta_admin_page_customizer_items', [ $this, 'admin_page_customizer_items' ] );
@@ -31,6 +32,10 @@ class KentaCompanion extends Container {
 
 		// starter sites
 		add_action( 'kcmp/template_imported', [ $this, 'update_imported_template' ], 10, 2 );
+
+		if ( is_plugin_active( 'classic-editor/classic-editor.php' ) ) {
+			add_action( 'admin_notices', [ $this, 'show_disable_classic_editor_notice' ] );
+		}
 
 		// opt-in notice
 		add_action( 'current_screen', [ $this, 'remove_optin_notice' ] );
@@ -176,10 +181,6 @@ class KentaCompanion extends Container {
 				'url'   => add_query_arg( [ 'page' => 'kenta-companion-optin' ], admin_url( 'admin.php' ) ),
 				'skip'  => kenta_fs()->is_registered(),
 			],
-			'contact-us'    => [
-				'label' => __( 'Contact Us', 'kenta-companion' ),
-				'url'   => add_query_arg( [ 'page' => 'kenta-companion-contact' ], admin_url( 'admin.php' ) ),
-			],
 		] );
 	}
 
@@ -198,6 +199,10 @@ class KentaCompanion extends Container {
 				'location' => 'kenta_global:kenta_global_cookies_consent',
 			],
 		] );
+	}
+
+	public function show_disable_classic_editor_notice() {
+		kcmp_get_template_part( 'classic-editor-notice' );
 	}
 
 	public function show_about_kenta_theme_page() {

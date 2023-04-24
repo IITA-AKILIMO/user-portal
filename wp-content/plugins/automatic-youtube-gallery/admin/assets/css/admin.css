@@ -1,0 +1,310 @@
+/*----------------------------------------------------------------------------------------------
+ *
+ *	Global
+ *
+ *--------------------------------------------------------------------------------------------*/
+.ayg-text-center {
+	text-align: center;
+}
+
+.ayg-text-error {
+	color: #EC4338;
+}
+
+.ayg-text-success {
+	color: green;
+}
+
+.ayg-ajax-status .spinner {
+	float: none;
+	visibility: visible;
+}
+
+/*----------------------------------------------------------------------------------------------
+ *
+ *	Dashboard
+ *
+ *--------------------------------------------------------------------------------------------*/
+#ayg-dashboard h1 {
+	font-size: 2em;
+	font-weight: 500;
+}
+
+#ayg-dashboard .wp-badge {
+	margin-bottom: 0;
+	background: #EC4338 url( '../images/logo.png' ) no-repeat top;
+}
+
+#ayg-table-api-key .ayg-ajax-status span {
+	margin: 0 7px;
+}
+
+#ayg-shortcode-builder {
+    display: -webkit-flex; /* Safari */
+    -webkit-flex-wrap: wrap; /* Safari 6.1+ */
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 -15px;
+}
+
+#ayg-shortcode-builder .ayg-left-col,
+#ayg-shortcode-builder .ayg-right-col {
+    width: 100%;
+}
+
+#ayg-shortcode-builder .ayg-col-content {
+	padding: 15px;
+}
+
+@media only screen and (min-width: 768px) {
+	#ayg-shortcode-builder .ayg-left-col { 
+        width: 60%; 
+	}
+
+    #ayg-shortcode-builder .ayg-right-col { 
+        width: 40%; 
+	}
+}
+
+/*----------------------------------------------------------------------------------------------
+ *
+ *	Settings
+ *
+ *--------------------------------------------------------------------------------------------*/
+#ayg-table-delete-cache {
+	margin-top: 0;
+}
+
+#ayg-table-delete-cache .ayg-text-success {
+	line-height: 28px;
+	margin: 0 7px;
+}
+
+/*----------------------------------------------------------------------------------------------
+ *
+ *	Modal
+ *
+ *--------------------------------------------------------------------------------------------*/
+.ayg-modal {
+    position: fixed;   
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0; 
+    top: 0;   
+    left: 0;
+    z-index: 9999;    
+}
+
+.ayg-modal-bg {
+    width: 100%;
+    height: 100%;
+    background-color: #000;
+    opacity: 0.9;
+}
+
+.ayg-modal-content {
+    position: absolute;   
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0; 
+    top: 0;   
+    left: 0;    
+    overflow-y: auto;
+    z-index: 1;
+}
+
+.ayg-modal-body {
+    position: relative;    
+    width: 90%;
+    max-width: 540px;
+    margin: 50px auto;
+    padding: 15px;
+    background-color: #fff;
+}
+
+.ayg-modal-body .ayg-modal-close {    
+	position: absolute; 
+	width: 25px;
+	height: 25px;   
+    top: 15px;
+    right: 15px;
+    color: #999;
+	font-size: 25px;
+	text-align: center;
+    cursor: pointer;
+}
+
+.ayg-modal-body .ayg-modal-title {
+    margin: 0 25px 15px 0;
+}
+
+/*----------------------------------------------------------------------------------------------
+ *
+ *	Editor
+ *
+ *--------------------------------------------------------------------------------------------*/
+.ayg-editor-section-header {	
+	margin: 5px 0 0 0;
+	padding: 10px;
+	background: #e5e5e5;   
+	border: 1px solid #ccc; 
+	font-size: 1.1em;
+	font-weight: normal;
+	line-height: normal;
+	cursor: pointer;
+}
+
+.ayg-editor-section-header:hover {	
+	background: #f9f9f9;
+}
+
+.ayg-editor-section-header .dashicons-before {
+	color: #006799;
+	line-height: 1.1em;
+}
+
+.ayg-editor-section-header .dashicons-plus {
+	display: inline-block;
+}
+
+.ayg-editor-section-header .dashicons-minus {
+	display: none;
+}
+
+.ayg-active .ayg-editor-section-header .dashicons-plus {
+	display: none;
+}
+
+.ayg-active .ayg-editor-section-header .dashicons-minus {
+	display: inline-block;
+}
+
+.ayg-editor-controls {
+	margin: -1px 0 0 0;
+	padding: 10px;
+	background: #fff;
+	border: 1px solid #ccc;
+}
+
+.ayg-editor-control {
+	margin-bottom: 15px;
+}
+
+.ayg-editor-control label {
+	display: block;
+	margin-bottom: 5px;
+}
+
+.ayg-editor-control .wp-picker-input-wrap label {
+	display: inline-block;
+}
+
+.ayg-editor-control-playlist,
+.ayg-editor-control-channel,
+.ayg-editor-control-username,
+.ayg-editor-control-search,
+.ayg-editor-control-video,
+.ayg-editor-control-videos,
+.ayg-editor-control-order,
+.ayg-editor-control-limit {
+	display: none;
+}
+
+.ayg-editor-field-type-playlist .ayg-editor-control-playlist {
+	display: block;
+}
+
+.ayg-editor-field-type-channel .ayg-editor-control-channel,
+.ayg-editor-field-type-livestream .ayg-editor-control-channel {
+	display: block;
+}
+
+.ayg-editor-field-type-username .ayg-editor-control-username {
+	display: block;
+}
+
+.ayg-editor-field-type-search .ayg-editor-control-search,
+.ayg-editor-field-type-search .ayg-editor-control-order,
+.ayg-editor-field-type-search .ayg-editor-control-limit {
+	display: block;
+}
+
+.ayg-editor-field-type-video .ayg-editor-control-video {
+	display: block;
+}
+
+.ayg-editor-field-type-video .ayg-editor-control-autoadvance {
+	display: none;
+}
+
+.ayg-editor-field-type-livestream .ayg-editor-control-cache,
+.ayg-editor-field-type-livestream .ayg-editor-control-player_title,
+.ayg-editor-field-type-livestream .ayg-editor-control-player_description,
+.ayg-editor-field-type-livestream .ayg-editor-control-autoadvance,
+.ayg-editor-field-type-livestream .ayg-editor-control-loop {
+	display: none;
+}
+
+.ayg-editor-field-type-video .ayg-editor-section-gallery,
+.ayg-editor-field-type-livestream .ayg-editor-section-gallery {
+	display: none;
+}
+
+.ayg-editor-field-type-videos .ayg-editor-control-videos {
+	display: block;
+}
+
+/*----------------------------------------------------------------------------------------------
+ *
+ *	Block
+ *
+ *--------------------------------------------------------------------------------------------*/
+.ayg-block-panel label {
+	font-weight: 500;
+}
+
+.ayg-block-panel .components-select-control__input {
+    line-height: normal !important;
+}
+
+/*----------------------------------------------------------------------------------------------
+ *
+ *	Widget
+ *
+ *--------------------------------------------------------------------------------------------*/
+.widget .ayg-editor {
+	margin-bottom: 15px;
+}
+
+.widget .ayg-editor .description {
+	padding: 5px 0 !important;
+	word-break: break-word; 
+}
+
+.branch-5-8 .widget .ayg-editor strong,
+.branch-5-9 .widget .ayg-editor strong,
+.branch-6 .widget .ayg-editor strong {
+	font-weight: 600;
+}
+
+.branch-5-8 .widget .ayg-editor .ayg-editor-section-header,
+.branch-5-9 .widget .ayg-editor .ayg-editor-section-header,
+.branch-6 .widget .ayg-editor .ayg-editor-section-header {
+	margin: 10px 0 0 0;
+	font-size: 14px;
+	font-weight: normal;
+}
+
+.branch-5-8 .widget .ayg-editor .ayg-editor-control,
+.branch-5-9 .widget .ayg-editor .ayg-editor-control,
+.branch-6 .widget .ayg-editor .ayg-editor-control {
+	margin-bottom: 7px;
+}
+
+.branch-5-8 .widget .ayg-editor .description,
+.branch-5-9 .widget .ayg-editor .description,
+.branch-6 .widget .ayg-editor .description {
+	margin: 0;
+}

@@ -3,8 +3,8 @@ Contributors: ays-pro
 Donate link: https://ays-pro.com/wordpress/popup-box
 Tags: popup, popups, exit popup, pop up, wordpress popup, marketing, lead generation, modal, modal popup
 Requires at least: 4.0
-Tested up to: 6.1.1
-Stable tag: 3.3.9
+Tested up to: 6.2
+Stable tag: 3.4.9
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -14,20 +14,20 @@ Popup everything you want! Create informative and promotional popups all in one 
 == Description ==
 
 
-### Wordpress Popup Plugin
+### WordPress Popup Plugin
 
 * [WordPress Popup plugin pricing](https://ays-pro.com/wordpress/popup-box)
 * [Popup Box FREE demo](https://ays-demo.com/popup-box-plugin-free-demo/)
 * [Popup Box PRO demo](https://ays-demo.com/popup-box-plugin-pro-demo/)
 * [Popup Box PRO documentation](https://ays-pro.com/wordpress-popup-box-plugin-user-manual)
 
-*In this short video, you can a quick overview of how to create a popup in WordPress.*
+*In this short video, you can find a quick overview of how to create a popup in WordPress.*
 
 https://www.youtube.com/watch?v=KhsVClP3dxU
 
 == Best free WordPress popup plugin ==
 
-[WordPress Popup plugin](https://ays-pro.com/wordpress/popup-box) is an easy way to **popup anything**. Add **eye-catching** and **high converting** popups to your website. The Popup plugin is here to break the stereotypes against the annoying popups. You don't have to be a tech-savvy person to use all the huge variety of features included in this plugin. This plugin offers the best popup designs for creating responsive, promotional and conversational popups. There are 14 types of popups that you can use for your website:
+[WordPress Popup plugin](https://ays-pro.com/wordpress/popup-box) is an easy way to **popup anything**. Add **eye-catching** and **high converting** popups to your website. The Popup plugin is here to break the stereotypes against annoying popups. You don't have to be a tech-savvy person to use the huge variety of features included in this plugin. This plugin offers the best popup designs for creating responsive, promotional, and conversational popups. There are 15 types of popups that you can use for your website:
 
 * **Shortcode** - Copy and paste the shortcode from other plugins and display it on your popup. 
 * **Custom Content** - You can add HTML and create your preferred popup from the scratch.
@@ -42,8 +42,8 @@ https://www.youtube.com/watch?v=KhsVClP3dxU
 * **Cookies** - Add privacy to your website and follow the GDPR requirements.
 * **Download** - Allow the users to download a file from your website inserted in the popup.
 * **Login** - The website visitors can log in to the website right in the popup without being redirected.
-* **Google Maps** - Insert your Google Maps API key into you Popup and display the map in your website.
-
+* **Google Maps** - Insert your Google Maps API key into your popup and display the map on your website.
+* **WooCommerce** - Build a WooCommerce popup to sell your products or services directly and increase your sales.
 
 
 **Popup Demos**
@@ -64,33 +64,41 @@ https://www.youtube.com/watch?v=KhsVClP3dxU
 * [Yes or No](https://ays-demo.com/yes-or-no-peachy-type/)
 
 
+== Popup Triggers ==
+* On page load
+* On click 
+* On hover (available in [Pro version](https://ays-pro.com/wordpress/popup-box))
+* Exit intent (available in [Pro version](https://ays-pro.com/wordpress/popup-box))
+* Inactivity (available in [Pro version](https://ays-pro.com/wordpress/popup-box))
+* After visiting x pages (available in [Pro version](https://ays-pro.com/wordpress/popup-box))
+* Scrolling to elements (available in [Pro version](https://ays-pro.com/wordpress/popup-box))
 
-Create newsletter subscription forms and collect your target audience for the next marketing campaign. Impressive, right? Moreover, you can add popup video, yes no popup, iframe elements and so much more using this modal survey plugin. [Export and import](https://ays-pro.com/blog/how-to-export-import-existing-popups-in-wordpress) your popups in seconds. 
+Create newsletter subscription forms and collect your target audience for the next marketing campaign. Impressive, right? Moreover, you can add popup videos, yes no popups, iframe elements and so much more using this modal survey plugin. [Export and import](https://ays-pro.com/blog/how-to-export-import-existing-popups-in-wordpress) your popups in seconds. 
 
 You can have an unlimited number of popups on your website and there can be different popups on different pages of your website. Use [pop-up custom HTML](https://ays-pro.com/blog/how-to-create-a-cta-on-custom-content-popup-with-basic-html) and add new opportunities to your WordPress modal. Other benefits are animation effects and you can have your favorite popup animation effect. And one more great thing! You control every single feature taking into account what you and your website visitors want! This Popup maker plugin is free for a lifetime and comfortable for usage.
 
-Now, more details about the general description and styles. Reveal all the advantages and benefits of our **Popup maker** popup plugin for wordpress just now!
+Now, more details about the general description and styles. Reveal all the advantages and benefits of our **Popup maker** popup plugin for WordPress just now!
 
-* **Show in all pages** – you can control whether popup appears on all pages of the website. If not, then you can choose the exact pages.
-* **Popup box content** – as mentioned above, you'll be able to add elements from another Wordpress plugin and if you want so, you just have to put a Shortcode. Yes, it's a shortcode popup plugin. Here are some of the elements you can have: *Image popup*, *Countdown popup*, *HTML popup*, *Video popup*, *Subscription popup*, *Contact popup*, *Social popup*, *Iframe popup*, *Facebook page popup*, *Google map popup*,*Form popup*. Anything can design your modal form or popup form. If you want to create something by yourself, then select Custom content and write.
+* **Show in all pages** – you can control whether a popup appears on all pages of the website. If not, then you can choose the exact pages.
+* **Popup box content** – as mentioned above, you'll be able to add elements from another WordPress plugin and if you want to, you just have to put a Shortcode. Yes, it's a shortcode popup plugin. Here are some of the elements you can have: *Image popup*, *Countdown popup*, *HTML popup*, *Video popup*, *Subscription popup*, *Contact popup*, *Social popup*, *Iframe popup*, *Facebook page popup*, *Google map popup*,*Form popup*. Anything can design your modal form or popup form. If you want to create something by yourself, then select Custom content and write.
 * **Appear popup box when** – popup box appears on click or without a click.
 * **Action button for open popup box** – after clicking on which button the box will appear.
 * **Popup box title** – here you can write an attractive and interesting title for the popup box.
 * **Popup box description** – here you can write the main text you want to transfer to your audience/website visitors/customers.
 * **Width** – is the total width of the box. You write the number in pixels.
 * **Height** – is the total height of the box. You write the number in pixels.
-So according to selected sizes you can have a full screen popup.
+So according to selected sizes, you can have a full-screen popup.
 * **Autoclose from seconds** – here you select in how many seconds the box closes automatically.
 * **Show promoter every 'X' minutes** – here you select after how many minutes the box will appear in order not to disturb the visitors in an uncontrolled way.
-* **Delay opening (ms)** – here you can select that popup box appears X milliseconds after the pages opens, not instantly.
+* **Delay opening (ms)** – here you can select that the popup box appears X milliseconds after the page opens, not instantly.
 * **Scroll from top (px)** – popup box appears depending on the scroll volume.
-* **Custom CSS** – as mentioned above, put your code, add something new.
+* **Custom CSS** – as mentioned above, put your code, and add something new.
 * **Box view theme** – this is the overall appearance/template of your box.
-* **Box background color** – this is the color of template. Popup overlay has its separate color.
-* **Popup box text color** – this is the color of written text.
-* **Popup box border size** – you can select the thickness of the border in pixels.
+* **Box background color** – this is the color of the template. The popup overlay has a different color.
+* **Popup box text color** – this is the color of the written text.
+* **Popup box border size** – you can select the border's thickness in pixels.
 * **Popup box border color** – you can select the border color.
-* **Popup box border radius** – this for conveying curvature to the corners of the box. 
+* **Popup box border-radius** – this is for conveying curvature to the corners of the box. 
 * **Box show in effect** – how the box will pop up.
 * **Box show out effect** – how the box will close.
 
@@ -100,23 +108,23 @@ You will be able to preview the changes before saving them.
 
 1. You can create popups of an **unlimited number**.
 1. You can have **different popup boxes for different pages** on one website.
-1. You can write **your own codes** and have HTML popup.
+1. You can write **your own codes** and have an HTML popup.
 1. You can [write shortcodes](https://ays-pro.com/blog/how-to-use-wordpress-shortcodes-with-popup-box) to **use features** from other WordPress plugins as well.
-1. You can **control** how often, how and on which pages the popup box will appear.
+1. You can **control** how often, how, and on which pages the popup box will appear.
 1. You can create a **subscription form** WordPress
 1. You can have the best type of **online advertising** using the best popup plugin for WordPress.
 1. You will get **support** related to our popup generator whenever needed.
 1. You will get **a great mix of features**. Other plugins don’t have all these features, they just contain a few of them and will make your virtual environment less flexible.
 
-All these points are available with our popup builder. Display pop up with this popup plugin in wordpress.[Get Started with the Popup Box plugin](https://www.youtube.com/watch?v=Puecfcp7JEs&) and make your user experience event better. 
+All these points are available with our popup builder. Display pop up with this popup plugin in WordPress.[Get Started with the Popup Box plugin](https://www.youtube.com/watch?v=Puecfcp7JEs&) and make your user experience even better. 
 
-== How important this wordpress popup can be nowadays in marketing world? ==
-* Lead is the most effective way to draw attention of your visitors/customers and we offer to do it in a professional way.
+== How important this WordPress popup can be nowadays in the marketing world? ==
+* Lead is the most effective way to draw the attention of your visitors/customers and we offer to do it in a professional way.
 * You don't just put a text or image on your website, you make people read, see and become interested!
-* Popup boxes make businesses develop because they make people be aware, want and buy! They will like your product/service and there's no second option.
-* You don't want your visitors/customers to be disturbed on your website, right? We care about it! Control how popup box will appear – simply pop up ? after scrolling ? Onclick popup ?
-* Add Subscriptions, FB Likebox and much more options as you wish.
-* Just know one thing – this popup generator will help you sell more, have better statistics and content clients who are not disturbed by a boring modal window. Get your professional pop up ad creator with.
+* Popup boxes make businesses develop because they make people be aware, want, and buy! They will like your product/service and there's no second option.
+* You don't want your visitors/customers to be disturbed on your website, right? We care about it! Control how the popup box will appear – simply pop up ? after scrolling ? Onclick popup ?
+* Add Subscriptions, FB Likebox, and much more options as you wish.
+* Just know one thing – this popup generator will help you sell more, and have better statistics and content clients who are not disturbed by a boring modal window. Get your professional pop up ad creator.
 
 **Popup Box Free Features**
 
@@ -135,7 +143,6 @@ All these points are available with our popup builder. Display pop up with this 
 * Hide popup on mobile
 * Show Popup only once
 * Live preview
-* More on the way …
 
 
 **[Popup Box PRO](https://ays-pro.com/wordpress/popup-box) Features**
@@ -158,12 +165,19 @@ All these points are available with our popup builder. Display pop up with this 
 * Export/Import popups
 * User role permission
 * Limit by country
-* More on the way ...
+* MailChimp Integration
+* Campaign Monitor Integration
+* ActiveCampaign Integration
+* GetResponse Integration
+* ConvertKit Integration
+* Sendinblue Integration
+* MailerLite Integration
+
 
 
 Aside from getting the best modal plugin WordPress, you will also become a part of our big community, which means, amazing customer support and constantly updated versions.
 
-By the way, we have also created [WordPress Survey plugin](https://ays-pro.com/wordpress/survey-maker).
+By the way, we have also created [WordPress Survey plugin](https://ays-pro.com/wordpress/survey-maker?utm_source=wordpress&utm_medium=ays-plugins&utm_campaign=popup).
 
 Don't forget, in case of any problems or upcoming questions feel free to contact us via the following [FREE SUPPORT FORUM](https://wordpress.org/support/plugin/ays-popup-box/).
 
@@ -257,6 +271,45 @@ Simply and effortlessly! Either you are switching from the free to pro, or the l
 This is not even a question! Surely, you can customize the best popups the way you wish. Choose one of our premade themes, change the background color, image, text, and everything that you can think of. Can’t find anything of your taste? You are free to add your **custom CSS code** to get your preferred design.
 
 == Changelog ==
+
+= 3.4.9 =
+* Fixed: Style issues on the admin dashboard
+* Tested: Compatible up to 6.2 
+
+= 3.4.8 =
+* Added: Filter by Popup Type
+* Added: Filter by Popup author
+
+= 3.4.7 =
+* Fixed: CSS style issues on the admin dashboard
+* Fixed: Search result display issue on multi-page list tables
+
+= 3.4.6 =
+* Fixed: CSS style issues on the admin dashboard
+* Fixed: Popup width option issue
+
+= 3.4.5 =
+* Added: Autoclose on video completion Option
+
+= 3.4.4 =
+* Changed: The banner style on the admin dashboard
+* Fixed: CSS style issues on the admin dashboard
+
+= 3.4.3 =
+* Added: Close Button Hover Text Option
+* Changed: Some styles on the admin dashboard
+* Fixed: PHP problem on the admin dashboard
+
+= 3.4.2 =
+* Changed: Some styles on the admin dashboard
+
+= 3.4.1 =
+* Fixed: JS issue on admin page
+* Fixed: Some style issues on the admin dashboard
+* Fixed: Some style issues on front page
+
+= 3.4.0 =
+* Added: Popup Content Padding Option
 
 = 3.3.9 =
 * Fixed: Popup duplication issue

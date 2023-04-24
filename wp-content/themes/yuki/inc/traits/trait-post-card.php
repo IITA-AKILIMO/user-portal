@@ -35,59 +35,73 @@ if ( !trait_exists( 'Yuki_Post_Card' ) ) {
         protected function getCardContentControls( $prefix = '', $defaults = array() )
         {
             $defaults = wp_parse_args( $defaults, apply_filters( 'yuki_card_content_defaults', [
-                'selector'     => '',
-                'spacing'      => '24px',
-                'text'         => 'left',
-                'vertical'     => 'flex-start',
-                'thumb-motion' => 'yes',
+                'exclude'           => [],
+                'selector'          => '',
+                'spacing'           => '24px',
+                'text'              => 'left',
+                'vertical'          => 'flex-start',
+                'thumbnail-spacing' => '0px',
             ] ) );
-            return [
-                ( new Slider( $prefix . 'card_content_spacing' ) )->setLabel( __( 'Content Spacing', 'yuki' ) )->asyncCss( $defaults['selector'], [
-                '--card-content-spacing' => 'value',
-            ] )->enableResponsive()->setDefaultUnit( 'px' )->setDefaultValue( $defaults['spacing'] ),
-                new Separator(),
-                ( new ImageRadio( $prefix . 'card_content_alignment' ) )->setLabel( __( 'Content Alignment', 'yuki' ) )->asyncCss( $defaults['selector'], [
-                'text-align' => 'value',
-            ] )->enableResponsive()->inlineChoices()->setDefaultValue( $defaults['text'] )->setChoices( [
-                'left'   => [
-                'src'   => yuki_image( 'text-left' ),
-                'title' => __( 'Left', 'yuki' ),
-            ],
-                'center' => [
-                'src'   => yuki_image( 'text-center' ),
-                'title' => __( 'Center', 'yuki' ),
-            ],
-                'right'  => [
-                'src'   => yuki_image( 'text-right' ),
-                'title' => __( 'Right', 'yuki' ),
-            ],
-            ] ),
-                new Separator(),
-                ( new ImageRadio( $prefix . 'card_vertical_alignment' ) )->setLabel( __( 'Vertical Alignment', 'yuki' ) )->asyncCss( $defaults['selector'], [
-                'justify-content' => 'value',
-            ] )->enableResponsive()->inlineChoices()->setDefaultValue( $defaults['vertical'] )->setChoices( [
-                'flex-start'    => [
-                'src'   => yuki_image( 'justify-start-v' ),
-                'title' => __( 'Start', 'yuki' ),
-            ],
-                'center'        => [
-                'src'   => yuki_image( 'justify-center-v' ),
-                'title' => __( 'Center', 'yuki' ),
-            ],
-                'flex-end'      => [
-                'src'   => yuki_image( 'justify-end-v' ),
-                'title' => __( 'End', 'yuki' ),
-            ],
-                'space-between' => [
-                'src'   => yuki_image( 'justify-space-between-v' ),
-                'title' => __( 'Between', 'yuki' ),
-            ],
-                'space-around'  => [
-                'src'   => yuki_image( 'justify-space-around-v' ),
-                'title' => __( 'Around', 'yuki' ),
-            ],
-            ] )
-            ];
+            $exclude = $defaults['exclude'];
+            $controls = [];
+            
+            if ( !in_array( 'thumb-spacing', $exclude ) ) {
+                $controls[] = ( new Slider( $prefix . 'card_thumbnail_spacing' ) )->setLabel( __( 'Thumbnail Spacing', 'yuki' ) )->asyncCss( $defaults['selector'], [
+                    '--card-thumbnail-spacing' => 'value',
+                ] )->enableResponsive()->setDefaultUnit( 'px' )->setDefaultValue( $defaults['thumbnail-spacing'] );
+                $controls[] = new Separator();
+            }
+            
+            
+            if ( !in_array( 'content-spacing', $exclude ) ) {
+                $controls[] = ( new Slider( $prefix . 'card_content_spacing' ) )->setLabel( __( 'Content Spacing', 'yuki' ) )->asyncCss( $defaults['selector'], [
+                    '--card-content-spacing' => 'value',
+                ] )->enableResponsive()->setDefaultUnit( 'px' )->setDefaultValue( $defaults['spacing'] );
+                $controls[] = new Separator();
+            }
+            
+            if ( !in_array( 'alignment', $exclude ) ) {
+                $controls = array_merge( $controls, [ ( new ImageRadio( $prefix . 'card_content_alignment' ) )->setLabel( __( 'Content Alignment', 'yuki' ) )->asyncCss( $defaults['selector'], [
+                    'text-align' => 'value',
+                ] )->enableResponsive()->inlineChoices()->setDefaultValue( $defaults['text'] )->setChoices( [
+                    'left'   => [
+                    'src'   => yuki_image( 'text-left' ),
+                    'title' => __( 'Left', 'yuki' ),
+                ],
+                    'center' => [
+                    'src'   => yuki_image( 'text-center' ),
+                    'title' => __( 'Center', 'yuki' ),
+                ],
+                    'right'  => [
+                    'src'   => yuki_image( 'text-right' ),
+                    'title' => __( 'Right', 'yuki' ),
+                ],
+                ] ), new Separator(), ( new ImageRadio( $prefix . 'card_vertical_alignment' ) )->setLabel( __( 'Vertical Alignment', 'yuki' ) )->asyncCss( $defaults['selector'], [
+                    'justify-content' => 'value',
+                ] )->enableResponsive()->inlineChoices()->setDefaultValue( $defaults['vertical'] )->setChoices( [
+                    'flex-start'    => [
+                    'src'   => yuki_image( 'justify-start-v' ),
+                    'title' => __( 'Start', 'yuki' ),
+                ],
+                    'center'        => [
+                    'src'   => yuki_image( 'justify-center-v' ),
+                    'title' => __( 'Center', 'yuki' ),
+                ],
+                    'flex-end'      => [
+                    'src'   => yuki_image( 'justify-end-v' ),
+                    'title' => __( 'End', 'yuki' ),
+                ],
+                    'space-between' => [
+                    'src'   => yuki_image( 'justify-space-between-v' ),
+                    'title' => __( 'Between', 'yuki' ),
+                ],
+                    'space-around'  => [
+                    'src'   => yuki_image( 'justify-space-around-v' ),
+                    'title' => __( 'Around', 'yuki' ),
+                ],
+                ] ) ] );
+            }
+            return $controls;
         }
         
         /**

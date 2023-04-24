@@ -42,7 +42,7 @@ class Ays_PopupBox_Settings_Actions {
             if($success > 0){
                 $tab = "";
                 if(isset($data['ays_pb_tab'])){
-                    $tab = "&ays_pb_tab=".$data['ays_pb_tab'];
+                    $tab = "&ays_pb_tab=". sanitize_text_field($data['ays_pb_tab']);
                 }
                 $url = admin_url('admin.php') . "?page=ays-pb-settings" . $tab . '&status=' . $message;
                 wp_redirect( $url );

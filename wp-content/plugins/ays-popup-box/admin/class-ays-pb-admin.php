@@ -96,7 +96,7 @@ class Ays_Pb_Admin {
         wp_enqueue_style( 'jquery-ui' );
 
         wp_enqueue_style( 'wp-color-picker' );
-        wp_enqueue_style( 'ays_pb_font_awesome', AYS_PB_PUBLIC_URL . '/css/ays-pb-font-awesome.min.css', array(), $this->version, 'all' );
+        // wp_enqueue_style( 'ays_pb_font_awesome', AYS_PB_PUBLIC_URL . '/css/ays-pb-font-awesome.min.css', array(), $this->version, 'all' );
 		wp_enqueue_style( 'ays_pb_bootstrap', 'https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css', array(), $this->version, 'all' );
 		wp_enqueue_style( 'pb_animate', plugin_dir_url( __FILE__ ) . 'css/animate.css', array(), $this->version, 'all' );
         wp_enqueue_style( 'ays-pb-select2', '//cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/css/select2.min.css', array(), $this->version, 'all' );
@@ -277,7 +277,7 @@ class Ays_Pb_Admin {
                 <a href="https://ays-pro.com/wordpress-popup-box-plugin-user-manual" target="_blank">' . __( 'Documentation: ', "ays-popup-box" ) . '</a>
             </p>' .
 			'<p>
-                <a href="https://ays-pro.com/wordpress/popup-box?src=45" target="_blank">' . __( 'Popup Box plugin Premium version:', "ays-popup-box" ) . '</a>
+                <a href="https://ays-pro.com/wordpress/popup-box" target="_blank">' . __( 'Popup Box plugin Premium version:', "ays-popup-box" ) . '</a>
             </p>'
 		);
 	}
@@ -439,7 +439,7 @@ class Ays_Pb_Admin {
         $settings_link = array(
             '<a href="' . admin_url( 'options-general.php?page=' . $this->plugin_name ) . '">' . __('Settings', "ays-popup-box") . '</a>',
             '<a href="https://ays-demo.com/popup-box-plugin-free-demo/" target="_blank">' . __('Demo', "ays-popup-box") . '</a>',
-            '<a href="https://ays-pro.com/wordpress/popup-box?src=44" target="_blank" style="color:red; font-weight: bold;">' . __('Buy Now', "ays-popup-box") . '</a>',
+            '<a href="https://ays-pro.com/wordpress/popup-box" target="_blank" style="color:red; font-weight: bold;">' . __('Buy Now', "ays-popup-box") . '</a>',
         );
         return array_merge(  $settings_link, $links );
 
@@ -743,10 +743,16 @@ class Ays_Pb_Admin {
             if(false !== strpos($_REQUEST['page'], $this->plugin_name)){
                 ?>
                 <p style="font-size:13px;text-align:center;font-style:italic;">
-                    <span style="margin-left:0px;margin-right:10px;" class="ays_heart_beat"><i class="ays_fa ays_fa_heart animated"></i></span>
-                    <span><?php echo __( "If you love our plugin, please do big favor and rate us on", "ays-popup-box"); ?></span> 
-                    <a target="_blank" href='https://wordpress.org/support/plugin/ays-popup-box/reviews/?rate=5#new-post'>WordPress.org</a>
-                    <span class="ays_heart_beat"><i class="ays_fa ays_fa_heart animated"></i></span>
+                    <span style="margin-left:0px;margin-right:10px;" class="ays_heart_beat"><img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/hearth.svg"?>"></span>
+                    <span><?php echo __( "If you love our plugin, please do big favor and rate us on WordPress.org", "ays-popup-box"); ?></span> 
+                    <a target="_blank" class="ays-rated-link" href='http://bit.ly/3kYanHL'>
+                        <span class="ays-dashicons ays-dashicons-star-empty"></span>
+                    	<span class="ays-dashicons ays-dashicons-star-empty"></span>
+                    	<span class="ays-dashicons ays-dashicons-star-empty"></span>
+                    	<span class="ays-dashicons ays-dashicons-star-empty"></span>
+                    	<span class="ays-dashicons ays-dashicons-star-empty"></span>
+                    </a>
+                    <span class="ays_heart_beat"><img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/hearth.svg"?>"></span>
                 </p>
             <?php
             }

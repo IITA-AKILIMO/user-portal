@@ -17,7 +17,7 @@
                 <div>
                     <p>
                         <?php echo __("This feature is available only in ", "ays-popup-box"); ?>
-                        <a href="https://ays-pro.com/wordpress/popup-box?src=28" target="_blank" title="PRO feature"><?php echo __("PRO version!!!", "ays-popup-box"); ?></a>
+                        <a href="https://ays-pro.com/wordpress/popup-box" target="_blank" title="PRO feature"><?php echo __("PRO version!!!", "ays-popup-box"); ?></a>
                     </p>
                 </div>
             </div>
@@ -29,7 +29,7 @@
                             <label for="ays_pb_export_import">
                                 <?php echo __('Select popups', "ays-popup-box"); ?>
                                 <a class="ays_help ays-pb-help-pro" data-toggle="tooltip" title="<?php echo __('Specify the popup boxes which must be exported. If you want to export all popup boxes just leave blank.',"ays-popup-box")?>">
-                                    <i class="ays_fa ays_fa-info-circle"></i>
+                                    <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                                 </a>
                             </label>
                         </div>
@@ -53,7 +53,7 @@
                 <div>
                     <p>
                         <?php echo __("This feature is available only in ", $this->plugin_name); ?>
-                        <a href="https://ays-pro.com/wordpress/popup-box?src=29" target="_blank" title="PRO feature"><?php echo __("PRO version!!!", $this->plugin_name); ?></a>
+                        <a href="https://ays-pro.com/wordpress/popup-box" target="_blank" title="PRO feature"><?php echo __("PRO version!!!", $this->plugin_name); ?></a>
                     </p>
                 </div>
             </div>

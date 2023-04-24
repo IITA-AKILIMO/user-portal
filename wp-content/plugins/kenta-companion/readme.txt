@@ -1,7 +1,7 @@
 === Kenta Companion ===
 Contributors: ibllex
 Tags: widget, widgets
-Stable tag: 1.1.5
+Stable tag: 1.1.7
 Requires at least: 5.4
 Tested up to: 6.1
 Requires PHP: 7.2
@@ -13,6 +13,16 @@ License URI: https://www.gnu.org/licenses/gpl-3.0.html
 Kenta Companion is an extension to the Kenta theme. It provides a lot of features and one-click demo import for Kenta Theme. Learn more: https://kentatheme.com/
 
 == Changelog ==
+
+= v1.1.7 =
+
+* Fix: wp_insert_category function undefined error
+* Add: Deactivate classic editor notice
+
+= v1.1.6 =
+
+* Add: Refresh starter sites list after update
+* Ref: Kenta v1.1.9 compatible
 
 = v1.1.5 =
 

@@ -43,7 +43,11 @@ if ( ! function_exists( 'yuki_upsell_info' ) ) {
 	 * @return string
 	 */
 	function yuki_upsell_info( $info ) {
-		$upsell_url = admin_url( 'themes.php?page=yuki-pricing' );
+		if ( yuki_fs()->is_anonymous() ) {
+			$upsell_url = admin_url( 'themes.php?page=yuki-pricing' );
+		} else {
+			$upsell_url = admin_url( 'themes.php?page=yuki' );
+		}
 
 		return sprintf(
 			$info, '<a href="' . esc_url( $upsell_url ) . '">', '</a>'
@@ -63,5 +67,16 @@ if ( ! function_exists( 'yuki_upsell_info_control' ) ) {
 			->alignCenter()
 			->hideBackground()
 			->setInfo( yuki_upsell_info( $info ) );
+	}
+}
+
+if ( ! function_exists( 'yuki_is_woo_shop' ) ) {
+	/**
+	 * Is products or product detail page
+	 *
+	 * @return bool
+	 */
+	function yuki_is_woo_shop() {
+		return YUKI_WOOCOMMERCE_ACTIVE && is_woocommerce();
 	}
 }

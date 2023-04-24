@@ -145,7 +145,7 @@ class Popup_Box_Integrations
                     $content .= '<div>';
                         $content .= '<p>';
                             $content .= __("This feature is available only in ", "ays-popup-box");
-                            $content .= '<a href="https://ays-pro.com/wordpress/popup-box?src=16" target="_blank" title="PRO feature"> ' .__("PRO version!!!", "ays-popup-box") .'</a>';
+                            $content .= '<a href="https://ays-pro.com/wordpress/popup-box" target="_blank" title="PRO feature"> ' .__("PRO version!!!", "ays-popup-box") .'</a>';
                         $content .= '</p>';
                     $content .= '</div>';
                 $content .= '</div>';
@@ -204,7 +204,7 @@ class Popup_Box_Integrations
                     $content .= '<div>';
                         $content .= '<p>';
                             $content .= __("This feature is available only in ", "ays-popup-box");
-                            $content .= '<a href="https://ays-pro.com/wordpress/popup-box?src=31" target="_blank" title="PRO feature"> ' .__("PRO version!!!", "ays-popup-box") .'</a>';
+                            $content .= '<a href="https://ays-pro.com/wordpress/popup-box" target="_blank" title="PRO feature"> ' .__("PRO version!!!", "ays-popup-box") .'</a>';
                         $content .= '</p>';
                     $content .= '</div>';
                 $content .= '</div>';
@@ -276,7 +276,7 @@ class Popup_Box_Integrations
                     $content .= '<div>';
                         $content .= '<p>';
                             $content .= __("This feature is available only in ", "ays-popup-box");
-                            $content .= '<a href="https://ays-pro.com/wordpress/popup-box?src=17" target="_blank" title="PRO feature"> ' .__("PRO version!!!", "ays-popup-box") .'</a>';
+                            $content .= '<a href="https://ays-pro.com/wordpress/popup-box" target="_blank" title="PRO feature"> ' .__("PRO version!!!", "ays-popup-box") .'</a>';
                         $content .= '</p>';
                     $content .= '</div>';
                 $content .= '</div>';
@@ -333,7 +333,7 @@ class Popup_Box_Integrations
                     $content .= '<div>';
                         $content .= '<p>';
                             $content .= __("This feature is available only in ", "ays-popup-box");
-                            $content .= '<a href="https://ays-pro.com/wordpress/popup-box?src=32" target="_blank" title="PRO feature"> ' .__("PRO version!!!", "ays-popup-box") .'</a>';
+                            $content .= '<a href="https://ays-pro.com/wordpress/popup-box" target="_blank" title="PRO feature"> ' .__("PRO version!!!", "ays-popup-box") .'</a>';
                         $content .= '</p>';
                     $content .= '</div>';
                 $content .= '</div>';
@@ -407,7 +407,7 @@ class Popup_Box_Integrations
                     $content .= '<div>';
                         $content .= '<p>';
                             $content .= __("This feature is available only in ", "ays-popup-box");
-                            $content .= '<a href="https://ays-pro.com/wordpress/popup-box?src=18" target="_blank" title="PRO feature"> ' .__("PRO version!!!", "ays-popup-box") .'</a>';
+                            $content .= '<a href="https://ays-pro.com/wordpress/popup-box" target="_blank" title="PRO feature"> ' .__("PRO version!!!", "ays-popup-box") .'</a>';
                         $content .= '</p>';
                     $content .= '</div>';
                 $content .= '</div>';
@@ -475,7 +475,7 @@ class Popup_Box_Integrations
                     $content .= '<div>';
                         $content .= '<p>';
                             $content .= __("This feature is available only in ", "ays-popup-box");
-                            $content .= '<a href="https://ays-pro.com/wordpress/popup-box?src=33" target="_blank" title="PRO feature"> ' .__("PRO version!!!", "ays-popup-box") .'</a>';
+                            $content .= '<a href="https://ays-pro.com/wordpress/popup-box" target="_blank" title="PRO feature"> ' .__("PRO version!!!", "ays-popup-box") .'</a>';
                         $content .= '</p>';
                     $content .= '</div>';
                 $content .= '</div>';
@@ -548,7 +548,7 @@ class Popup_Box_Integrations
                         $content .= '<div>';
                             $content .= '<p>';
                                 $content .= __("This feature is available only in ", "ays-popup-box");
-                                $content .= '<a href="https://ays-pro.com/wordpress/popup-box?src=34" target="_blank" title="PRO feature"> ' .__("PRO version!!!", "ays-popup-box") .'</a>';
+                                $content .= '<a href="https://ays-pro.com/wordpress/popup-box" target="_blank" title="PRO feature"> ' .__("PRO version!!!", "ays-popup-box") .'</a>';
                             $content .= '</p>';
                         $content .= '</div>';
                     $content .= '</div>';
@@ -596,7 +596,7 @@ class Popup_Box_Integrations
                         $content .= '<div>';
                             $content .= '<p>';
                                 $content .= __("This feature is available only in ", "ays-popup-box");
-                                $content .= '<a href="https://ays-pro.com/wordpress/popup-box?src=19" target="_blank" title="PRO feature"> ' .__("PRO version!!!", "ays-popup-box") .'</a>';
+                                $content .= '<a href="https://ays-pro.com/wordpress/popup-box" target="_blank" title="PRO feature"> ' .__("PRO version!!!", "ays-popup-box") .'</a>';
                             $content .= '</p>';
                         $content .= '</div>';
                     $content .= '</div>';
@@ -655,7 +655,7 @@ class Popup_Box_Integrations
                         $content .= '<div>';
                             $content .= '<p>';
                                 $content .= __("This feature is available only in ", "ays-popup-box");
-                                $content .= '<a href="https://ays-pro.com/wordpress/popup-box?src=35" target="_blank" title="PRO feature"> ' .__("PRO version!!!", "ays-popup-box") .'</a>';
+                                $content .= '<a href="https://ays-pro.com/wordpress/popup-box" target="_blank" title="PRO feature"> ' .__("PRO version!!!", "ays-popup-box") .'</a>';
                             $content .= '</p>';
                         $content .= '</div>';
                     $content .= '</div>';
@@ -701,7 +701,7 @@ class Popup_Box_Integrations
                         $content .= '<div>';
                             $content .= '<p>';
                                 $content .= __("This feature is available only in ", "ays-popup-box");
-                                $content .= '<a href="https://ays-pro.com/wordpress/popup-box?src=20" target="_blank" title="PRO feature"> ' .__("PRO version!!!", "ays-popup-box") .'</a>';
+                                $content .= '<a href="https://ays-pro.com/wordpress/popup-box" target="_blank" title="PRO feature"> ' .__("PRO version!!!", "ays-popup-box") .'</a>';
                             $content .= '</p>';
                         $content .= '</div>';
                     $content .= '</div>';
@@ -764,7 +764,7 @@ class Popup_Box_Integrations
                         $content .= '<div>';
                             $content .= '<p>';
                                 $content .= __("This feature is available only in ", "ays-popup-box");
-                                $content .= '<a href="https://ays-pro.com/wordpress/popup-box?src=21" target="_blank" title="PRO feature"> ' .__("PRO version!!!", "ays-popup-box") .'</a>';
+                                $content .= '<a href="https://ays-pro.com/wordpress/popup-box" target="_blank" title="PRO feature"> ' .__("PRO version!!!", "ays-popup-box") .'</a>';
                             $content .= '</p>';
                         $content .= '</div>';
                     $content .= '</div>';
@@ -814,7 +814,7 @@ class Popup_Box_Integrations
                         $content .= '<div>';
                             $content .= '<p>';
                                 $content .= __("This feature is available only in ", "ays-popup-box");
-                                $content .= '<a href="https://ays-pro.com/wordpress/popup-box?src=36" target="_blank" title="PRO feature"> ' .__("PRO version!!!", "ays-popup-box") .'</a>';
+                                $content .= '<a href="https://ays-pro.com/wordpress/popup-box" target="_blank" title="PRO feature"> ' .__("PRO version!!!", "ays-popup-box") .'</a>';
                             $content .= '</p>';
                         $content .= '</div>';
                     $content .= '</div>';
@@ -870,7 +870,7 @@ class Popup_Box_Integrations
                         $content .= '<div>';
                             $content .= '<p>';
                                 $content .= __("This feature is available only in ", "ays-popup-box");
-                                $content .= '<a href="https://ays-pro.com/wordpress/popup-box?src=22" target="_blank" title="PRO feature"> ' .__("PRO version!!!", "ays-popup-box") .'</a>';
+                                $content .= '<a href="https://ays-pro.com/wordpress/popup-box" target="_blank" title="PRO feature"> ' .__("PRO version!!!", "ays-popup-box") .'</a>';
                             $content .= '</p>';
                         $content .= '</div>';
                     $content .= '</div>';
@@ -928,7 +928,7 @@ class Popup_Box_Integrations
                     $content .= '<div>';
                         $content .= '<p>';
                             $content .= __("This feature is available only in ", "ays-popup-box");
-                            $content .= '<a href="https://ays-pro.com/wordpress/popup-box?src=37" target="_blank" title="PRO feature"> ' .__("PRO version!!!", "ays-popup-box") .'</a>';
+                            $content .= '<a href="https://ays-pro.com/wordpress/popup-box" target="_blank" title="PRO feature"> ' .__("PRO version!!!", "ays-popup-box") .'</a>';
                         $content .= '</p>';
                     $content .= '</div>';
                 $content .= '</div>';

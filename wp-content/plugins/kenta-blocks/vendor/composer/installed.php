@@ -1,9 +1,9 @@
 <?php return array(
     'root' => array(
         'name' => 'ibllex/kenta-blocks',
-        'pretty_version' => 'v1.2.2',
-        'version' => '1.2.2.0',
-        'reference' => '8db628c8b149a61f44ef7ec9738eef5820d9e281',
+        'pretty_version' => 'v1.2.3',
+        'version' => '1.2.3.0',
+        'reference' => 'e30c3bdb02278b44ebb3c945e6c4e82cfa502180',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -11,9 +11,9 @@
     ),
     'versions' => array(
         'ibllex/kenta-blocks' => array(
-            'pretty_version' => 'v1.2.2',
-            'version' => '1.2.2.0',
-            'reference' => '8db628c8b149a61f44ef7ec9738eef5820d9e281',
+            'pretty_version' => 'v1.2.3',
+            'version' => '1.2.3.0',
+            'reference' => 'e30c3bdb02278b44ebb3c945e6c4e82cfa502180',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

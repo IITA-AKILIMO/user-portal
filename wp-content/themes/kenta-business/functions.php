@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 if ( ! defined( 'KENTA_BUSINESS_VERSION' ) ) {
 	// Replace the version number of the theme on each release.
-	define( 'KENTA_BUSINESS_VERSION', '1.0.2' );
+	define( 'KENTA_BUSINESS_VERSION', '1.0.3' );
 }
 
 if ( ! defined( 'KENTA_BUSINESS_PATH' ) ) {
@@ -71,7 +71,7 @@ if ( ! function_exists( 'kenta_business_starter_content' ) ) {
 				'post_title'   => esc_html__( 'Home', 'exs' ),
 				'thumbnail'    => '{{image-cup}}',
 				'post_content' => kenta_business_starter_template( 'home' ),
-				'template'     => 'page-templates/homepage.php',
+				'template'     => 'page-templates/boxed-trans-header-page-builder.php',
 			),
 			'about',
 			'contact',
@@ -88,3 +88,17 @@ if ( ! function_exists( 'kenta_business_starter_content' ) ) {
 	}
 }
 add_filter( 'kenta_filter_starter_content', 'kenta_business_starter_content' );
+
+if ( ! function_exists('kenta_business_demo_screenshot') ) {
+	function kenta_business_demo_screenshot() {
+		return '';
+	}
+}
+add_filter( 'kenta_welcome_demo_screenshot', 'kenta_business_demo_screenshot' );
+
+if ( ! function_exists('kenta_business_demo_slug') ) {
+	function kenta_business_demo_slug() {
+		return '';
+	}
+}
+add_filter( 'kenta_welcome_demo_slug', 'kenta_business_demo_slug' );

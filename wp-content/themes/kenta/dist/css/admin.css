@@ -146,10 +146,22 @@
   width: 100%;
   margin-top: 24px;
 }
+.kenta-theme-notice .kenta-welcome-content .mb-gutter {
+  margin-bottom: 24px;
+}
 .kenta-theme-notice .kenta-welcome-content .kenta-demo-screenshot {
+  display: inline-block;
+  text-align: center;
+}
+.kenta-theme-notice .kenta-welcome-content .kenta-demo-screenshot img {
+  display: block;
   max-width: 280px;
   box-shadow: 0 0 10px 1px #d3d3d3;
   border: 1px solid #e2e8f0;
+  margin-bottom: 8px;
+}
+.kenta-theme-notice .kenta-welcome-content .kenta-demo-screenshot span {
+  font-size: 14px;
 }
 .kenta-theme-notice .kenta-welcome-content .kenta-welcome-section {
   display: flex;

@@ -1,6 +1,6 @@
 <?php
 if(isset($_GET['ays_pb_tab'])){
-    $ays_pb_tab = $_GET['ays_pb_tab'];
+    $ays_pb_tab = sanitize_text_field($_GET['ays_pb_tab']);
 }else{
     $ays_pb_tab = 'tab1';
 }
@@ -228,6 +228,9 @@ $ays_pb_mobile = (isset($options['pb_mobile']) && $options['pb_mobile'] == 'on')
 //Close button text
 $close_button_text = (isset($options['close_button_text']) && $options['close_button_text'] != '') ? $options['close_button_text'] : 'x';
 
+//Close button hover text
+$close_button_hover_text = (isset($options['close_button_hover_text']) && $options['close_button_hover_text'] != '') ? $options['close_button_hover_text'] : '';
+
 // PopupBox width for mobile option
 $mobile_width = (isset($options['mobile_width']) && $options['mobile_width'] != '') ? abs(intval($options['mobile_width'])) : '';
 
@@ -276,6 +279,27 @@ $cookie             = (isset($popupbox['cookie']) && $popupbox['cookie'] != "") 
 $view_type          = (isset($popupbox['view_type']) && $popupbox['view_type'] != "") ? $popupbox['view_type'] : "";
 $bgcolor            = (isset($popupbox['bgcolor']) && $popupbox['bgcolor'] != "") ? esc_attr( stripslashes(  $popupbox['bgcolor'] )) : "";
 
+//popup padding size by percentage
+$popup_padding_by_percentage_px = (isset($options['popup_padding_by_percentage_px']) && $options['popup_padding_by_percentage_px'] != '') ? $options['popup_padding_by_percentage_px'] : 'pixels';
+
+//popup content padding
+if (isset($options["popup_content_padding"]) && ($options["popup_content_padding"]) >= 0) {
+    $padding = ($options["popup_content_padding"]);
+} else {
+    if (($view_type == 'minimal')) {
+        $padding = 0;        
+    } else {
+        $padding = 20;
+    }
+}
+
+//popup content padding default value 
+if (($view_type == 'minimal')) {
+    $default_padding_value = 0;        
+} else {
+    $default_padding_value = 20;
+}
+
 switch ($view_type) {
     case "image":
         $ays_pb_themes_bg_images = AYS_PB_ADMIN_URL."/images/elefante.jpg";
@@ -303,7 +327,7 @@ $bordercolor        = (isset($popupbox['bordercolor']) && $popupbox['bordercolor
 $border_radius      = (isset($popupbox['border_radius']) && $popupbox['border_radius'] != "") ? abs(intval(round($popupbox['border_radius']))) : "";
 $animate_in         = (isset($popupbox['animate_in']) && $popupbox['animate_in'] != "") ? $popupbox['animate_in'] : "";
 $animate_out        = (isset($popupbox['animate_out']) && $popupbox['animate_out'] != "") ? $popupbox['animate_out'] : "";
-$width              = (isset($popupbox['width']) && $popupbox['width'] != "") ? $popupbox['width'] : "";
+$width              = (isset($popupbox['width']) && $popupbox['width'] != 0) ? $popupbox['width'] : "";
 $height             = (isset($popupbox['height']) && $popupbox['height'] != "") ? $popupbox['height'] : "";
 $custom_css         = (isset($popupbox['custom_css']) && $popupbox['custom_css'] != "") ? stripslashes ( esc_attr($popupbox['custom_css'] ) ) : "";
 
@@ -377,6 +401,8 @@ if($ays_pb_hide_timer == 'on'){
 }else{
     $ays_pb_timer_desc = "<p class='ays_pb_timer' style='visibility:visible'>".__('This will close in',"ays-popup-box")." <span data-seconds='20'>20</span> ".__('seconds',"ays-popup-box")."</p>";
 }
+
+$ays_pb_autoclose_on_completion = (isset($options['enable_autoclose_on_completion']) && $options['enable_autoclose_on_completion'] == 'on') ? 'on' : 'off';
 
 // Social Media links
 $enable_social_links = (isset($options['enable_social_links']) && $options['enable_social_links'] == "on") ? true : false;
@@ -694,7 +720,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
 <div class="wrap">
     <div class="container-fluid">
         <form method="post" name="popup_attributes" id="ays_pb_form">
-            <input type="hidden" name="ays_pb_tab" value="<?php echo $ays_pb_tab; ?>">
+            <input type="hidden" name="ays_pb_tab" value="<?php echo esc_attr($ays_pb_tab); ?>">
             <input type="hidden" class="pb_wp_editor_height" value="<?php echo $pb_wp_editor_height; ?>">
             <input type="hidden" name="ays_pb_create_date" value="<?php echo $pb_create_date; ?>">
             <input type="hidden" name="ays_pb_author" value="<?php echo esc_attr(json_encode($pb_author, JSON_UNESCAPED_SLASHES)); ?>">
@@ -726,7 +752,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                 <div class="ays-pb-subtitle-main-box">
                     <p class="ays_pb_subtitle">
                         <?php if(isset($id) && count($get_all_popups) > 1):?>
-                        <i class="ays_fa ays_fa_angle_down ays-pb-open-popups-list" style="font-size: 15px;"></i>   
+                        <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/angle-down.svg"?>" class="ays-pb-open-popups-list">
                         <?php endif; ?>
                         <strong class="ays_pb_title_in_top"><?php echo esc_html( $title ); ?></strong>
                     </p>
@@ -746,6 +772,9 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                 </div>
                 <p class="ays-pb-type-name">
                     <span style="display:block;" class="ays-pb-small-hint-text"><?php echo esc_html( $modal_content_name ); ?></span>
+                    <?php if(isset($id)): ?> 
+                    <span style="display:block;" class="ays-pb-small-hint-text"><?php echo "id: " . esc_html( $id ); ?></span>
+                    <?php endif; ?>
                 </p>
                 <p class="ays-pb-type-video">
                    <?php echo $video_tutorial;?>
@@ -753,7 +782,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
             </div>  
             <hr>
             <div class="ays-pb-top-menu-wrapper">
-                <div class="ays_pb_menu_left" data-scroll="0"><i class="ays_fa ays_fa_angle_left"></i></div>
+                <div class="ays_pb_menu_left" data-scroll="0"><img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/angle-left.svg"?>"></div>
                 <div class="ays-pb-top-menu">
                     <div class="nav-tab-wrapper ays-pb-top-tab-wrapper">
                         <a href="#tab1" data-tab="tab1" class="nav-tab <?php echo ($ays_pb_tab == 'tab1') ? 'nav-tab-active' : ''; ?>"><?php echo __("General", "ays-popup-box"); ?></a>
@@ -763,7 +792,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                         <a href="#tab5" data-tab="tab5" class="nav-tab <?php echo ($ays_pb_tab == 'tab5') ? 'nav-tab-active' : ''; ?>"><?php echo __("Integrations", "ays-popup-box"); ?></a>
                     </div>
                 </div>
-                <div class="ays_pb_menu_right" data-scroll="-1"><i class="ays_fa ays_fa_angle_right"></i></div>
+                <div class="ays_pb_menu_right" data-scroll="-1"><img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/angle-right.svg"?>"></div>
             </div>
             <div id="tab1" class="ays-pb-tab-content  <?php echo ($ays_pb_tab == 'tab1') ? 'ays-pb-tab-content-active' : ''; ?>">
                 <p class="ays-subtitle"><?php echo  __('General Settings', "ays-popup-box") ?></p>
@@ -775,7 +804,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                             <span><?php echo __('Enable popup', "ays-popup-box"); ?></span>
                             <a class="ays_help" data-toggle="tooltip"
                                 title="<?php echo __('Turn on the popup for the website based on your configured options.', "ays-popup-box") ?>">
-                                <i class="ays_fa ays_fa-info-circle"></i>
+                                <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                             </a>
                         </label>
                     </div>
@@ -799,7 +828,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                         <label for="ays_pb_show_popup_only_for_author">
                             <span><?php echo __('Enable popup only for author', "ays-popup-box"); ?></span>
                             <a class="ays_help" data-toggle="tooltip" title="<?php echo __('If this option is enabled only the author of the popup will be able to see it.', "ays-popup-box") ?>"> 
-                                <i class="ays_fa ays_fa-info-circle"></i>
+                                <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                             </a>
                         </label>
                     </div>
@@ -815,7 +844,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                             <span><?php echo __('Popup title', "ays-popup-box"); ?></span>
                             <a class="ays_help" data-toggle="tooltip"
                                title="<?php echo __('The option is not being displayed on the front-end by default. Please activate it from the Styles tab.', "ays-popup-box") ?>">
-                                <i class="ays_fa ays_fa-info-circle"></i>
+                               <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                             </a>
                         </label>
                     </div>
@@ -828,7 +857,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                         <label for="<?php echo $this->plugin_name; ?>-shortcode">
                             <span><?php echo __('Shortcode ', "ays-popup-box"); ?></span>
                             <a class="ays_help" data-toggle="tooltip" title="<?php echo __('You can pop up any form by inserting its shortcode. Please copy and paste the shortcode from another plugin to display it in a popup. For example, Contact forms, surveys, polls, quizzes, Google map, etc.', "ays-popup-box"); ?>">
-                               <i class="ays_fa ays_fa-info-circle"></i>
+                                <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                             </a>
                         </label>
                     </div>
@@ -842,7 +871,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                             <span>
                                 <span><?php echo __('Custom Content', "ays-popup-box"); ?></span>
                                 <a class="ays_help" data-toggle="tooltip" title="<?php echo __("Create fully customized popup content with the help of HTML.", "ays-popup-box"); ?>">
-                                    <i class="ays_fa ays_fa-info-circle"></i>
+                                    <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                                 </a>
                             </span>
                         </label>
@@ -866,7 +895,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                             <?php echo __('Video', "ays-popup-box"); ?>
                             <a class="ays_help" data-toggle="tooltip" data-placement="top"
                                 title="<?php echo __("Add video to the popup.", "ays-popup-box"); ?>">
-                                <i class="ays_fa ays_fa-info-circle"></i>
+                                    <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                             </a>
                         </label>
                     </div>
@@ -874,22 +903,22 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                         <a href="javascript:void(0)" class="button ays-pb-add-bg-video">
                             <?php echo $video_text_bg; ?>
                         </a>
-                    </div>
-                </div>
-                <div class="col-sm-8" style="<?php echo $style_video_bg; ?>">
-                    <div class="ays-pb-bg-video-container">
-                        <span class="ays-remove-bg-video"></span>
-                        <video src="<?php echo $ays_video_theme_bg?>" id="ays_pb_video_theme_video"></video>
-                        <input type="hidden" name="ays_video_theme_url" id="ays_pb_video_theme" value="<?php echo $ays_video_theme_bg ; ?>"/>
+                        <div class="col-sm-8" style="<?php echo $style_video_bg; ?>">
+                            <div class="ays-pb-bg-video-container">
+                            <span class="ays-remove-bg-video"></span>
+                            <video src="<?php echo $ays_video_theme_bg?>" id="ays_pb_video_theme_video"></video>
+                            <input type="hidden" name="ays_video_theme_url" id="ays_pb_video_theme" value="<?php echo $ays_video_theme_bg ; ?>"/>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <hr>
-                <div class="form-group row ays-field">
+                <div class="form-group row ays-field" id="ays-popup-box-description">
                     <div class="col-sm-3">
                         <label for="<?php echo $this->plugin_name; ?>-popup_description">
                             <span><?php echo __('Popup description', "ays-popup-box"); ?></span>
                             <a class="ays_help" data-toggle="tooltip" title="<?php echo __("The option is not being displayed on the front-end by default. Please activate it from the Styles tab.", "ays-popup-box"); ?>">
-                                <i class="ays_fa ays_fa-info-circle"></i>
+                                <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                             </a>
                         </label>
                     </div>
@@ -911,7 +940,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                                 title="<?php
                                     echo __('Define the pages your popup will be loaded on.',"ays-popup-box");
                                 ?>">
-                                <i class="ays_fa ays_fa-info-circle"></i>
+                                <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                             </a>
                         </label>
                     </div>
@@ -934,7 +963,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                                     "<li>". __('Include - Choose the post/page and post/page types including the popup.',"ays-popup-box") ."</li>".
                                 "</ul>";
                             ?>">
-                            <i class="ays_fa ays_fa-info-circle"></i>
+                            <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                         </a>
                     </div>
                 </div>
@@ -945,7 +974,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                             <label for="ays_pb_post_types"><?php echo __("Post type", "ays-popup-box"); ?></label>
                             <a class="ays_help" data-toggle="tooltip"
                                title="<?php echo __('Select post types.', "ays-popup-box") ?>">
-                                <i class="ays_fa ays_fa-info-circle"></i>
+                               <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                             </a>
                         </div>
                         <div class="col-sm-9">
@@ -970,7 +999,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                             <label for="ays_pb_posts"><?php echo __("Posts", "ays-popup-box"); ?></label>
                             <a class="ays_help" data-toggle="tooltip"
                                title="<?php echo __('Select posts.', "ays-popup-box") ?>">
-                                <i class="ays_fa ays_fa-info-circle"></i>
+                               <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                             </a>
                         </div>
                         <div class="col-sm-9">
@@ -1012,7 +1041,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                             <label for="ays_pb_show_on_home_page" style="margin-bottom:0px;">
                                 <span><?php echo __('Show on Home page', "ays-popup-box"); ?></span>
                                 <a class="ays_help" data-toggle="tooltip" title="<?php echo __('If the checkbox is ticked, then the popup will be loaded on the Home page too, in addition to the values given above.', "ays-popup-box"); ?>">
-                                    <i class="ays_fa ays_fa-info-circle"></i>
+                                    <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                                 </a>
                             </label>
                         </div>
@@ -1048,7 +1077,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                                     "</ul>"
                                     );
                                 ?>">
-                                <i class="ays_fa ays_fa-info-circle"></i>
+                                <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                             </a>
                         </label>
                     </div>
@@ -1070,7 +1099,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                                 }
                             }
                         ?>">
-                            <i class="ays_fa ays_fa-info-circle"></i>
+                            <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                         </a>
                         <div class="ays-pb-youtube-video-link">
                             <!-- <div class="ays-pb-youtube-video-play-icon">
@@ -1091,7 +1120,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                     <span>
                         <?php echo __('CSS selector(s) for trigger click', "ays-popup-box"); ?>
                         <a class="ays_help" data-toggle="tooltip" title="<?php echo __("Add your preferred CSS selector(s) if you have given “On click” or “Both” value to the “Popup trigger” option. For example #mybutton or .mybutton.", "ays-popup-box"); ?>">
-                            <i class="ays_fa ays_fa-info-circle"></i>
+                            <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                         </a>
                     </span>
                         </label>
@@ -1108,7 +1137,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                             <label for="<?php echo $this->plugin_name; ?>-position">
                                 <span><?php echo __('Popup position', "ays-popup-box"); ?></span>
                                 <a class="ays_help" data-toggle="tooltip" title="<?php echo __("Specify the position of the popup on the screen. ", "ays-popup-box"); ?>">
-                                    <i class="ays_fa ays_fa-info-circle"></i>
+                                    <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                                 </a>
                             </label>
                         </div>
@@ -1139,7 +1168,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                             <label for="<?php echo $this->plugin_name; ?>-pb_margin">
                                 <span><?php echo __('Popup margin(px)', "ays-popup-box"); ?></span>
                                 <a class="ays_help" data-toggle="tooltip" title="<?php echo __("Specify the popup margin in pixels. It accepts only numerical values.", "ays-popup-box"); ?>">
-                                    <i class="ays_fa ays_fa-info-circle"></i>
+                                    <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                                 </a>
                             </label>
                         </div>
@@ -1158,7 +1187,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                         <label for="<?php echo $this->plugin_name; ?>-delay" style="margin-bottom:0px;">
                             <span><?php echo __('Open Delay (in milliseconds) ', "ays-popup-box"); ?></span>
                             <a class="ays_help" data-toggle="tooltip" title="<?php echo __("Open the popup when a visitor has viewed your website content for a specified period of time (in milliseconds). To disable the option leave it blank or set it to 0.", "ays-popup-box"); ?>">
-                                <i class="ays_fa ays_fa-info-circle"></i>
+                                <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                             </a>
                         </label>
                     </div>
@@ -1185,7 +1214,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                         <label for="<?php echo $this->plugin_name; ?>-scroll_top">
                             <span><?php echo __('Open by Scrolling Down', "ays-popup-box"); ?></span>
                              <a class="ays_help" data-toggle="tooltip" title="<?php echo __("Define the scroll length by pixels to open the popup when scrolling. To disable the option leave it blank or set it to 0.", "ays-popup-box"); ?>">
-                                <i class="ays_fa ays_fa-info-circle"></i>
+                                <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                             </a>
                         </label>
                     </div>
@@ -1213,7 +1242,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                         <label for="ays_close_popup_esc">
                             <span><?php echo __('Close by pressing ESC', "ays-popup-box"); ?></span>
                             <a class="ays_help" data-toggle="tooltip" title="<?php echo __("If the option is enabled, the user can close the popup by pressing the ESC button from the keyboard.", "ays-popup-box"); ?>">
-                                <i class="ays_fa ays_fa-info-circle"></i>
+                                <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                             </a>
                         </label>
                     </div>
@@ -1231,7 +1260,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                         <label for="ays_close_popup_overlay" style="margin-bottom:0px;">
                             <span><?php echo __('Close by clicking outside the box', "ays-popup-box"); ?></span>
                             <a class="ays_help" data-toggle="tooltip" title="<?php echo __("If the option is enabled, the user can close the popup by clicking outside the box.  Notice: This option works only if the “Enable Overlay”option is ticked.", "ays-popup-box"); ?>">
-                                <i class="ays_fa ays_fa-info-circle"></i>
+                                <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                             </a>
                         </label>
                     </div>
@@ -1259,7 +1288,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                         <label for="<?php echo $this->plugin_name; ?>-close-button">
                             <span> <?php echo __('Hide close button', "ays-popup-box"); ?></span>
                             <a class="ays_help" data-toggle="tooltip" title="<?php echo __("If the option is enabled, the close button of the popup will be disappeared. ", "ays-popup-box"); ?>">
-                                <i class="ays_fa ays_fa-info-circle"></i>
+                                <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                             </a>
                         </label>
                     </div>
@@ -1275,7 +1304,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                         <label for="ays_pb_show_close_btn_hover_container">
                             <span> <?php echo __('Activate Close button while hovering on popup', "ays-popup-box"); ?></span>
                             <a class="ays_help" data-toggle="tooltip" title="<?php echo __("Enable this option to close the popup by hovering over the popup container.", "ays-popup-box"); ?>">
-                                <i class="ays_fa ays_fa-info-circle"></i>
+                                <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                             </a>
                         </label>
                     </div>
@@ -1291,7 +1320,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                         <label for="ays-pb-close-button-position">
                             <span> <?php echo __('Close button position', "ays-popup-box"); ?></span>
                             <a class="ays_help" data-toggle="tooltip" title="<?php echo __("Select the place of the popup close button. ", "ays-popup-box"); ?>">
-                                <i class="ays_fa ays_fa-info-circle"></i>
+                                <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                             </a>
                         </label>
                     </div>
@@ -1313,7 +1342,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                         <label for="ays-pb-close-button-text">
                             <span><?php echo __('Close button text', "ays-popup-box"); ?></span>
                             <a class="ays_help" data-toggle="tooltip" title="<?php echo __("Define the close button text. The default value is “x”.", "ays-popup-box"); ?>">
-                                <i class="ays_fa ays_fa-info-circle"></i>
+                                <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                             </a>
                         </label>
                     </div>
@@ -1327,13 +1356,33 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                 </div>
                 <!-- Close button text end -->
                 <hr>
+                <!-- Close button hover text start -->
+                <div class="form-group row">
+                    <div class="col-sm-3">
+                        <label for="ays-pb-close-button-hover-text">
+                            <span><?php echo __('Close button hover text', "ays-popup-box"); ?></span>
+                            <a class="ays_help" data-toggle="tooltip" title="<?php echo __("Displays text when cursor is placed over the close button", "ays-popup-box"); ?>">
+                                <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
+                            </a>
+                        </label>
+                    </div>
+                    <div class="col-sm-9">
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <input type="text" id="ays-pb-close-button-hover-text" name="ays_pb_close_button_hover_text" class="ays-pb-text-input ays-pb-text-input-short" value="<?php echo $close_button_hover_text; ?>" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Close button hover text end -->
+                <hr>
                 <!-- Autoclose Delay (in seconds) start -->
                 <div class="form-group row">
                     <div class="col-sm-3">
                         <label for="<?php echo $this->plugin_name; ?>-autoclose">
                             <span><?php echo __('Autoclose Delay (in seconds)', "ays-popup-box"); ?></span>
                             <a class="ays_help" data-toggle="tooltip" title="<?php echo __("Close the popup after a specified time delay (in seconds). To disable the option leave it blank or set it to 0.", "ays-popup-box"); ?>">
-                                <i class="ays_fa ays_fa-info-circle"></i>
+                                <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                             </a>
                         </label>
                     </div>
@@ -1351,7 +1400,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                             <?php echo __('Hide timer', "ays-popup-box"); ?>
                             <a class="ays_help" data-toggle="tooltip"
                                title="<?php echo __('Hide the timer when the Autoclose Delay option is enabled.', "ays-popup-box") ?>">
-                                <i class="ays_fa ays_fa-info-circle"></i>
+                                <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                             </a>
                         </label>
                     </div>
@@ -1360,13 +1409,30 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                     </div>
                 </div>
                 <!-- hide timer -->
+                <hr style="<?php echo ($view_type == 'video') ? '' : 'display:none;'; ?>">
+                <!-- Autoclose on video completion -->
+                <div class="form-group row ays_pb_autoclose_on_completion_container" style="<?php echo ($view_type == 'video') ? '' : 'display:none;'; ?>">
+                    <div class="col-sm-3">
+                        <label for="ays_pb_autoclose_on_completion">
+                            <?php echo __('Autoclose on video completion', "ays-popup-box"); ?>
+                            <a class="ays_help" data-toggle="tooltip"
+                               title="<?php echo __('Automatically close the popup after a video completion.', "ays-popup-box") ?>">
+                                <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
+                            </a>
+                        </label>
+                    </div>
+                    <div class="col-sm-9">
+                        <input id="ays_pb_autoclose_on_completion" type="checkbox" name="ays_pb_autoclose_on_completion" <?php echo ($ays_pb_autoclose_on_completion == 'on' )? 'checked' : '' ?> value="on"/>
+                    </div>
+                </div>
+                <!-- Autoclose on video completion -->
                 <hr>
                 <div class="form-group row">
                     <div class="col-sm-3">
                         <label for="<?php echo $this->plugin_name; ?>-close_button_delay">
                             <span><?php echo __('Close button delay (milliseconds)', "ays-popup-box"); ?></span>
                             <a class="ays_help" data-toggle="tooltip" title="<?php echo __(" Set delay in milliseconds for displaying the popup close button. To disable the option leave it blank or set it to 0.", "ays-popup-box"); ?>">
-                                <i class="ays_fa ays_fa-info-circle"></i>
+                                <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                             </a>
                         </label>
                     </div>
@@ -1382,7 +1448,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                         <div>
                             <p>
                                 <?php echo __("This feature is available only in ", "ays-popup-box"); ?>
-                                <a href="https://ays-pro.com/wordpress/popup-box?src=1" target="_blank" title="PRO feature"><?php echo __("PRO version!!!", "ays-popup-box"); ?></a>
+                                <a href="https://ays-pro.com/wordpress/popup-box" target="_blank" title="PRO feature"><?php echo __("PRO version!!!", "ays-popup-box"); ?></a>
                             </p>
                         </div>
                     </div>
@@ -1391,7 +1457,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                             <label for="ays_close_popup_scroll" style="line-height: 50px;">
                                 <span><?php echo __('Close the popup on scroll', "ays-popup-box"); ?></span>
                                 <a class="ays_help" data-toggle="tooltip" title="<?php echo __("Define the scroll length by pixels to close the popup when scrolling.", "ays-popup-box"); ?>">
-                                    <i class="ays_fa ays_fa-info-circle"></i>
+                                    <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                                 </a>
                             </label>
                         </div>
@@ -1418,7 +1484,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                             <div>
                                 <p>
                                     <?php echo __("This feature is available only in ", "ays-popup-box"); ?>
-                                    <a href="https://ays-pro.com/wordpress/popup-box?src=2" target="_blank" title="PRO feature"><?php echo __("PRO version!!!", "ays-popup-box"); ?></a>
+                                    <a href="https://ays-pro.com/wordpress/popup-box" target="_blank" title="PRO feature"><?php echo __("PRO version!!!", "ays-popup-box"); ?></a>
                                 </p>
                             </div>
                         </div>
@@ -1427,7 +1493,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                             <label for="ays_close_popup_by_classname">
                                 <?php echo __('Close by classname (onclick)', "ays-popup-box")?>
                                 <a class="ays_help" data-toggle="tooltip" title="<?php echo __('Copy the given classname, assign it to any tag in the content as well as inside the popup. And the popup will close when the user clicks on the classname.Note: Save your popup before copying the given classname.',"ays-popup-box")?>">
-                                    <i class="ays_fa ays_fa-info-circle"></i>
+                                    <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                                 </a>
                             </label>
                         </div>
@@ -1462,7 +1528,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                         <label for="ays_pb_popup_name">
                             <?php echo __('Popup name', "ays-popup-box"); ?>
                             <a class="ays_help ays-pb-help-pro" data-toggle="tooltip" title="<?php echo __('Write the name of the particular Popup. The name will be shown in the Popup list table.',"ays-popup-box");?>">
-                                <i class="ays_fa ays_fa-info-circle"></i>
+                                <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                             </a>
                         </label>
                     </div>
@@ -1476,7 +1542,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                         <label for="ays-category">
                             <?php echo __('Popup category', "ays-popup-box"); ?>
                             <a class="ays_help" data-toggle="tooltip" title="<?php echo __('Categorize your popup selecting from the premade categories.',"ays-popup-box")?>">
-                                <i class="ays_fa ays_fa-info-circle"></i>
+                                <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                             </a>
                         </label>
                     </div>
@@ -1503,7 +1569,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                         <label for="<?php echo $this->plugin_name; ?>-onoffoverlay">
                             <span><?php echo __('Enable Overlay', "ays-popup-box"); ?></span>
                             <a class="ays_help" data-toggle="tooltip" title="<?php echo __("Enable to show the overlay outside the popup.", "ays-popup-box"); ?>">
-                                <i class="ays_fa ays_fa-info-circle"></i>
+                                <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                             </a>
                         </label>
                     </div>
@@ -1537,7 +1603,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                         <label for="ays_pb_blured_overlay">
                             <span><?php echo __('Enable blured overlay', "ays-popup-box"); ?></span>
                             <a class="ays_help" data-toggle="tooltip" title="<?php echo __("Enable blurred overlay of the popup.", "ays-popup-box"); ?>">
-                                <i class="ays_fa ays_fa-info-circle"></i>
+                                <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                             </a>
                         </label>
                     </div>
@@ -1553,7 +1619,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                         <label for="<?php echo $this->plugin_name; ?>-ays_pb_cookie">
                             <span style="font-size: 15px;"><?php echo __("Display once per session", "ays-popup-box"); ?></span>
                             <a class="ays_help" data-toggle="tooltip" title="<?php echo __('Define the interval between the popup sessions in minutes. To disable the option, set 0. E.g. set it to 1440 to show the popup once a day to each user.', "ays-popup-box"); ?>">
-                                <i class="ays_fa ays_fa-info-circle"></i>
+                                <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                             </a>
                         </label>
                     </div>
@@ -1567,7 +1633,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                         <label for="ays_enable_pb_sound">
                             <?php echo __('Enable popup sound',"ays-popup-box")?>
                             <a class="ays_help" data-toggle="tooltip" title="<?php echo __('In case of enabling this option, insert and select the sound from the General Settings of Popup Box navigation menu. Note: This function only works with “On Click” or “Both” trigger types.',"ays-popup-box")?>">
-                                <i class="ays_fa ays_fa-info-circle"></i>
+                                <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                             </a>
                         </label>
                     </div>
@@ -1591,7 +1657,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                         <label for="ays_pb_enable_social_links">
                             <?php echo __('Enable Social Media links',"ays-popup-box")?>
                             <a class="ays_help" data-toggle="tooltip" title="<?php echo __('Display social media links at the bottom of your popup container.',"ays-popup-box")?>">
-                                <i class="ays_fa ays_fa-info-circle"></i>
+                                <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                             </a>
                         </label>
                     </div>
@@ -1606,7 +1672,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                                 <label>
                                     <?php echo __('Heading for share buttons',"ays-popup-box")?>
                                     <a class="ays_help" data-toggle="tooltip" title="<?php echo __('Text that will be displayed over share buttons.',"ays-popup-box"); ?>">
-                                        <i class="ays_fa ays_fa-info-circle"></i>
+                                        <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                                     </a>
                                 </label>
                             </div>
@@ -1623,10 +1689,9 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                         <div class="form-group row">
                             <div class="col-sm-4">
                                 <label for="ays_pb_linkedin_link">
-                                    <i class="ays_fa ays_fa_linkedin_square"></i>
                                     <?php echo __('Linkedin link',"ays-popup-box")?>
                                     <a class="ays_help" data-toggle="tooltip" title="<?php echo __('Linkedin profile or page link for showing at the end of the popup.',"ays-popup-box")?>">
-                                        <i class="ays_fa ays_fa-info-circle"></i>
+                                        <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                                     </a>
                                 </label>
                             </div>
@@ -1639,10 +1704,9 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                         <div class="form-group row">
                             <div class="col-sm-4">
                                 <label for="ays_pb_facebook_link">
-                                    <i class="ays_fa ays_fa_facebook_square"></i>
                                     <?php echo __('Facebook link',"ays-popup-box")?>
                                     <a class="ays_help" data-toggle="tooltip" title="<?php echo __('Facebook profile or page link for showing at the end of the popup.',"ays-popup-box")?>">
-                                        <i class="ays_fa ays_fa-info-circle"></i>
+                                        <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                                     </a>
                                 </label>
                             </div>
@@ -1655,10 +1719,9 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                         <div class="form-group row">
                             <div class="col-sm-4">
                                 <label for="ays_pb_twitter_link">
-                                    <i class="ays_fa ays_fa_twitter_square"></i>
                                     <?php echo __('Twitter link',"ays-popup-box")?>
                                     <a class="ays_help" data-toggle="tooltip" title="<?php echo __('Twitter profile or page link for showing at the end of the popup.',"ays-popup-box")?>">
-                                        <i class="ays_fa ays_fa-info-circle"></i>
+                                        <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                                     </a>
                                 </label>
                             </div>
@@ -1671,10 +1734,9 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                         <div class="form-group row">
                             <div class="col-sm-4">
                                 <label for="ays_pb_vkontakte_link">
-                                    <i class="ays_fa ays_fa_vk"></i>
                                     <?php echo __('VKontakte link',"ays-popup-box")?>
                                     <a class="ays_help" data-toggle="tooltip" title="<?php echo __('VKontakte profile or page link for showing at the end of the popup.',"ays-popup-box")?>">
-                                        <i class="ays_fa ays_fa-info-circle"></i>
+                                        <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                                     </a>
                                 </label>
                             </div>
@@ -1687,10 +1749,9 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                         <div class="form-group row">
                             <div class="col-sm-4">
                                 <label for="ays_pb_youtube_link">
-                                    <i class="ays_fa ays_fa_vk"></i>
                                     <?php echo __('Youtube link',"ays-popup-box")?>
                                     <a class="ays_help" data-toggle="tooltip" title="<?php echo __('Youtube page link for showing at the end of the popup.',"ays-popup-box")?>">
-                                        <i class="ays_fa ays_fa-info-circle"></i>
+                                        <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                                     </a>
                                 </label>
                             </div>
@@ -1703,10 +1764,9 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                         <div class="form-group row">
                             <div class="col-sm-4">
                                 <label for="ays_pb_instagram_link">
-                                    <i class="ays_fa ays_fa_vk"></i>
                                     <?php echo __('Instagram link',"ays-popup-box")?>
                                     <a class="ays_help" data-toggle="tooltip" title="<?php echo __('Instagram page link for showing at the end of the popup.',"ays-popup-box")?>">
-                                        <i class="ays_fa ays_fa-info-circle"></i>
+                                        <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                                     </a>
                                 </label>
                             </div>
@@ -1719,10 +1779,9 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                         <div class="form-group row">
                             <div class="col-sm-4">
                                 <label for="ays_pb_behance_link">
-                                    <i class="ays_fa ays_fa_vk"></i>
                                     <?php echo __('Behance link',"ays-popup-box")?>
                                     <a class="ays_help" data-toggle="tooltip" title="<?php echo __('Behance page link for showing at the end of the popup.',"ays-popup-box")?>">
-                                        <i class="ays_fa ays_fa-info-circle"></i>
+                                        <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                                     </a>
                                 </label>
                             </div>
@@ -1742,7 +1801,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                             <?php echo __('Schedule the popup', "ays-popup-box"); ?>
                             <a class="ays_help" data-toggle="tooltip"
                                title="<?php echo __('Define the period of time when the popup will be active.', "ays-popup-box") ?>">
-                                <i class="ays_fa ays_fa-info-circle"></i>
+                                <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                             </a>
                         </label>
                     </div>
@@ -1766,7 +1825,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                                                    value="<?php echo $activePopup; ?>" placeholder="<?php echo current_time( 'mysql' ); ?>">
                                                 <div class="input-group-append">
                                                     <label for="ays-active" class="input-group-text">
-                                                        <span><i class="ays_fa ays_fa_calendar"></i></span>
+                                                        <span><img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/calendar.svg"?>"></span>
                                                     </label>
                                                 </div>
                                             </div>
@@ -1785,7 +1844,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                                                    value="<?php echo $deactivePopup; ?>" placeholder="<?php echo current_time( 'mysql' ); ?>">
                                                 <div class="input-group-append">
                                                     <label for="ays-deactive" class="input-group-text">
-                                                        <span><i class="ays_fa ays_fa_calendar"></i></span>
+                                                        <span><img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/calendar.svg"?>"></span>
                                                     </label>
                                                 </div>
                                             </div>
@@ -1804,7 +1863,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                         <label>
                             <?php echo __('Change the popup creation date',"ays-popup-box"); ?>
                             <a class="ays_help" data-toggle="tooltip" title="<?php echo __('Change the popup creation date to the preferred date.',"ays-popup-box"); ?>">
-                                <i class="ays_fa ays_fa-info-circle"></i>
+                                <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                             </a>
                         </label>
                     </div>
@@ -1813,7 +1872,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                             <input type="text" class="ays-text-input ays-pb-text-input ays-pb-text-input-short ays-pb-date-create" id="ays_pb_change_creation_date" name="ays_pb_change_creation_date" value="<?php echo $pb_create_date; ?>" placeholder="<?php echo current_time( 'mysql' ); ?>">
                             <div class="input-group-append">
                                 <label for="ays_pb_change_creation_date" class="input-group-text">
-                                    <span><i class="ays_fa ays_fa_calendar"></i></span>
+                                    <span><img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/calendar.svg"?>"></span>
                                 </label>
                             </div>
                         </div>
@@ -1825,7 +1884,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                         <label for="ays_pb_create_author">
                             <?php echo __('Change the popup author',"ays-popup-box"); ?>
                             <a class="ays_help" data-toggle="tooltip" title="<?php echo __("Change the popup author to the preferred one.Write the User ID in the field. To find the ID, go to the WordPress User's section and hover on the user. You can find the user ID in the link below. Please note, that in case you write an ID, by which there are no users found, the changes will not be applied and the previous author will remain the same.","ays-popup-box"); ?>">
-                                <i class="ays_fa ays_fa-info-circle"></i>
+                                <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                             </a>
                         </label>
                     </div>
@@ -1855,8 +1914,8 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                     <div class="col-sm-3">
                          <label for="ays_pb_disable_scroll">
                             <span><?php echo __('Disable page scrolling', "ays-popup-box"); ?></span>
-                            <a class="ays_help" data-toggle="tooltip" title="<?php echo __("The page will not be scrolled while the popup is displaying.", "ays-popup-box"); ?>">
-                                <i class="ays_fa ays_fa-info-circle"></i>
+                            <a class="ays_help" data-toggle="tooltip" title="<?php echo __("The page will not be scrolled while the popup is displaying. Note: When the option is enabled, the system hides the scrolling of the HTML tag. As the scrolling is hidden, it is automatically scrolling the popup to the top and the plugin doesn't have a connection to this. ", "ays-popup-box"); ?>">
+                                <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                             </a>
                         </label>
                     </div>
@@ -1872,7 +1931,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                          <label for="ays_pb_enable_dismiss">
                             <span><?php echo __('Enable dismiss ad', "ays-popup-box"); ?></span>
                             <a class="ays_help" data-toggle="tooltip" title="<?php echo __("After enabling this option the dismiss ad button will be displayed in the popup. After clicking on the button the ads will be dismissed for 1 month.", "ays-popup-box"); ?>">
-                                <i class="ays_fa ays_fa-info-circle"></i>
+                                <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                             </a>
                         </label>
                     </div>
@@ -1885,7 +1944,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                                 <label for="ays_pb_enable_dismiss_text">
                                     <span><?php echo __('Dismiss ad text', "ays-popup-box"); ?></span>
                                     <a class="ays_help" data-toggle="tooltip" title="<?php echo __("Write the text that you want to be displayed on the dismiss ad button.", "ays-popup-box"); ?>">
-                                        <i class="ays_fa ays_fa-info-circle"></i>
+                                        <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                                     </a>
                                 </label>
                             </div>
@@ -1901,7 +1960,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                          <label for="ays_pb_disable_scroll_on_popup">
                             <span><?php echo __('Disable popup scrolling', "ays-popup-box"); ?></span>
                             <a class="ays_help" data-toggle="tooltip" title="<?php echo __("After enabling this option the content in the popup will not be scrolled.", "ays-popup-box"); ?>">
-                                <i class="ays_fa ays_fa-info-circle"></i>
+                                <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                             </a>
                         </label>
                     </div>
@@ -1915,7 +1974,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                         <div>
                             <p>
                                 <?php echo __("This feature is available only in ", "ays-popup-box"); ?>
-                                <a href="https://ays-pro.com/wordpress/popup-box?src=3" target="_blank" title="PRO feature"><?php echo __("PRO version!!!", "ays-popup-box"); ?></a>
+                                <a href="https://ays-pro.com/wordpress/popup-box" target="_blank" title="PRO feature"><?php echo __("PRO version!!!", "ays-popup-box"); ?></a>
                             </p>
                         </div>
                     </div>
@@ -1925,7 +1984,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                                 <?php echo __('Multiple Scheduling', "ays-popup-box"); ?>
                                 <a class="ays_help ays-pb-help-pro" data-toggle="tooltip"
                                 title="<?php echo __('The period of time when Popup will be active', "ays-popup-box") ?>">
-                                    <i class="ays_fa ays_fa-info-circle"></i>
+                                    <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                                 </a>
                             </label>
                         </div>
@@ -1933,7 +1992,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                             <div class="active_date_check_header">
                                 <input id="" type="checkbox" class="active_date_check ays_toggle_checkbox" checked>
                                 <a href="javascript:void(0)" class="ays_pb_plus_schedule ays_toggle_target ays_divider_left active_date">
-                                    <i class="ays_fa ays_fa_plus_square" aria-hidden="true"></i>
+                                    <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/plus-square.svg"?>">
                                 </a>
                            </div>
                             <div class="form-group ays_toggle_target ays_divider_left active_date">
@@ -1945,7 +2004,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                                                 <div class="input-group-append">
                                                     <input type="text"class="ays_pb_act_dect">           
                                                     <label style="padding: 0 12px;" class="input-group-text">
-                                                        <span><i class="ays_fa ays_fa_calendar"></i></span>
+                                                        <span><img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/calendar.svg"?>"></span>
                                                     </label>
                                                 </div>
                                             </label>
@@ -1954,12 +2013,12 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                                                 <div class="input-group-append">
                                                     <input type="text" class="ays_pb_act_dect">
                                                     <label style="padding: 0 12px;" class="input-group-text">
-                                                        <span><i class="ays_fa ays_fa_calendar"></i></span>
+                                                        <span><img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/calendar.svg"?>"></span>
                                                     </label>
                                                 </div>
                                             </label>
                                             <a href="javascript:void(0)" class="ays_pb_delete_schedule">
-                                                <i class="ays_fa ays_fa_times" aria-hidden="true"></i>
+                                                <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/times.svg"?>">
                                             </a>                                        
                                         </div>
                                         <div class="form-group ays_schedule_form">
@@ -1968,7 +2027,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                                                 <div class="input-group-append">
                                                     <input type="text"class="ays_pb_act_dect">           
                                                     <label style="padding: 0 12px;" class="input-group-text">
-                                                        <span><i class="ays_fa ays_fa_calendar"></i></span>
+                                                        <span><img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/calendar.svg"?>"></span>
                                                     </label>
                                                 </div>
                                             </label>
@@ -1977,12 +2036,12 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                                                 <div class="input-group-append">
                                                     <input type="text" class="ays_pb_act_dect">
                                                     <label style="padding: 0 12px;" class="input-group-text">
-                                                        <span><i class="ays_fa ays_fa_calendar"></i></span>
+                                                        <span><img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/calendar.svg"?>"></span>
                                                     </label>
                                                 </div>
                                             </label>
                                             <a href="javascript:void(0)" class="ays_pb_delete_schedule">
-                                                <i class="ays_fa ays_fa_times" aria-hidden="true"></i>
+                                                <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/times.svg"?>">
                                             </a>                                        
                                         </div>
                                     </div>
@@ -2008,7 +2067,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                         <div>
                             <p>
                                 <?php echo __("This feature is available only in ", "ays-popup-box"); ?>
-                                <a href="https://ays-pro.com/wordpress/popup-box?src=4" target="_blank" title="PRO feature"><?php echo __("PRO version!!!", "ays-popup-box"); ?></a>
+                                <a href="https://ays-pro.com/wordpress/popup-box" target="_blank" title="PRO feature"><?php echo __("PRO version!!!", "ays-popup-box"); ?></a>
                             </p>
                         </div>
                     </div>
@@ -2017,7 +2076,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                             <label for="ays_content_click">
                                 <?php echo __(' Actions while clicking on the popup',"ays-popup-box")?>
                                 <a class="ays_help" data-toggle="tooltip" title="<?php echo __('Enable closing the popup and/or redirecting to the custom URL in case of clicking on any area of the popup container.',"ays-popup-box")?>">
-                                    <i class="ays_fa ays_fa-info-circle"></i>
+                                    <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                                 </a>
                             </label>
                         </div>
@@ -2034,7 +2093,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                                         <label for="ays_close_pb_content_click">
                                             <?php echo __('Enable closing',"ays-popup-box")?>
                                             <a class="ays_help" data-toggle="tooltip" title="<?php echo __('If the option is enabled, then the popup will be closed if the user clicks on any area inside it.',"ays-popup-box")?>">
-                                                <i class="ays_fa ays_fa-info-circle"></i>
+                                                <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                                             </a>
                                         </label>
                                     </div>
@@ -2052,7 +2111,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                                         <label for="ays_redirect_content_click">
                                             <?php echo __('Enable redirection',"ays-popup-box")?>
                                             <a class="ays_help" data-toggle="tooltip" title="<?php echo __('Enable redirection to the custom URL when the user clicks on any area inside the popup.',"ays-popup-box")?>">
-                                                <i class="ays_fa ays_fa-info-circle"></i>
+                                                <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                                             </a>
                                         </label>
                                     </div>
@@ -2064,7 +2123,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                                             <div class="col-sm-6">
                                                 <label for="ays_redirect_url_content_click"> <?php echo __('Redirection URL',"ays-popup-box")?>
                                                     <a class="ays_help" data-toggle="tooltip" title="<?php echo __('Provide the redirection URL.',"ays-popup-box")?>">
-                                                        <i class="ays_fa ays_fa-info-circle"></i>
+                                                        <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                                                     </a>
                                                 </label>
                                             </div>
@@ -2076,7 +2135,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                                             <div class="col-sm-6">
                                                 <label for="ays_new_tab_content_click"> <?php echo __('Open in new tab',"ays-popup-box")?>
                                                     <a class="ays_help" data-toggle="tooltip" title="<?php echo __('If the option is enabled, then the system will redirect the URL in a separate new tab.',"ays-popup-box")?>">
-                                                        <i class="ays_fa ays_fa-info-circle"></i>
+                                                        <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                                                     </a>
                                                 </label>
                                             </div>
@@ -2104,7 +2163,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                 <!-- </div> -->
             </div>
             <div id="tab3" class="ays-pb-tab-content  <?php echo ($ays_pb_tab == 'tab3') ? 'ays-pb-tab-content-active' : ''; ?>">
-                <p class="ays-subtitle"><?php echo  __('Popup Styles', "ays-popup-box") ?></p>
+                <!-- <p class="ays-subtitle"><?php echo  __('Popup Styles', "ays-popup-box") ?></p> -->
                 <hr/>
                 <div class="ays_pb_themes <?php echo ('video' == $view_type) ? 'display_none_inp' : ''; ?>" >
                     <!-- <div class="row">
@@ -2115,7 +2174,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                                     <span>
                                         <?php echo __('Template', "ays-popup-box"); ?>
                                         <a class="ays_help" data-toggle="tooltip" title="<?php echo __("Choose a pre-made popup template and customize it using options below.", "ays-popup-box"); ?>">
-                                            <i class="ays_fa ays_fa-info-circle"></i>
+                                            <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                                         </a>
                                     </span>
                                     </label>
@@ -2289,7 +2348,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                                                     <p><?php echo __('Peachy', "ays-popup-box") ?></p>
                                                     <p>
                                                         <a href="https://bit.ly/3If66Hm" target="_blank" style="background:#d06b46;border: 1px solid #d06b46;">Demo</a>
-                                                        <a href="https://ays-pro.com/wordpress/popup-box?src=5" target="_blank">Pro</a>
+                                                        <a href="https://ays-pro.com/wordpress/popup-box" target="_blank">Pro</a>
                                                     </p>
                                                 </div>
                                             </div>
@@ -2305,7 +2364,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                                                         <p><?php echo __('Yellowish', "ays-popup-box") ?></p>
                                                         <p>
                                                             <a href="https://bit.ly/3Iafmwy" target="_blank" style="background:#d06b46;border: 1px solid #d06b46;">Demo</a>
-                                                            <a href="https://ays-pro.com/wordpress/popup-box?src=6" target="_blank">Pro</a>
+                                                            <a href="https://ays-pro.com/wordpress/popup-box" target="_blank">Pro</a>
                                                         </p>
                                                 </div>
                                             </div>
@@ -2321,7 +2380,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                                                     <p><?php echo __('Coral', "ays-popup-box") ?></p>
                                                     <p>
                                                         <a href="https://bit.ly/3AqvPLg" target="_blank" style="background:#d06b46;border: 1px solid #d06b46;">Demo</a>
-                                                        <a href="https://ays-pro.com/wordpress/popup-box?src=7" target="_blank">Pro</a>
+                                                        <a href="https://ays-pro.com/wordpress/popup-box" target="_blank">Pro</a>
                                                     </p>
                                                 </div>
                                             </div>
@@ -2338,7 +2397,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                                                     <p><?php echo __('Frozen', "ays-popup-box") ?></p>
                                                     <p>
                                                         <a href="https://bit.ly/3R5szuB" target="_blank" style="background:#d06b46;border: 1px solid #d06b46;">Demo</a>
-                                                        <a href="https://ays-pro.com/wordpress/popup-box?src=8" target="_blank">Pro</a>
+                                                        <a href="https://ays-pro.com/wordpress/popup-box" target="_blank">Pro</a>
                                                     </p>
                                                 </div>
                                             </div>
@@ -2354,7 +2413,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                                                         <p><?php echo __('Food', "ays-popup-box") ?></p>
                                                         <p>
                                                             <a href="https://bit.ly/3Al4qKI" target="_blank" style="background:#d06b46;">Demo</a>
-                                                            <a href="https://ays-pro.com/wordpress/popup-box?src=9" target="_blank">Pro</a>
+                                                            <a href="https://ays-pro.com/wordpress/popup-box" target="_blank">Pro</a>
                                                         </p>
                                                 </div>
                                             </div>
@@ -2370,7 +2429,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                                                     <p><?php echo __('Forest', "ays-popup-box") ?></p>
                                                     <p>
                                                         <a href="https://bit.ly/3acggfr" target="_blank" style="background:#d06b46; border: 1px solid #d06b46;">Demo</a>
-                                                        <a href="https://ays-pro.com/wordpress/popup-box?src=10" target="_blank">Pro</a>
+                                                        <a href="https://ays-pro.com/wordpress/popup-box" target="_blank">Pro</a>
                                                     </p>
                                                 </div>
                                             </div>
@@ -2561,15 +2620,15 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                         <!-- </div>
                     </div> -->
                 </div>
-                <hr class="video_hr">                
+                <hr class="video_hr">
                 <div class="row">
                     <div class="col-sm-12 col-md-6">
-                        <div class="form-group row ">
-                            <div class="col-sm-6">
+                        <div class="form-group row" id="ays-pb-show-title-description-box">
+                            <div class="col-sm-4">
                                 <label>
                                     <?php echo __("Display Content", "ays-popup-box");?>
                                     <a class="ays_help" data-toggle="tooltip" title="<?php echo __("Show Popup head information- Enable to show the title and(or) the description inside the popup.", "ays-popup-box"); ?>">
-                                        <i class="ays_fa ays_fa-info-circle"></i>
+                                        <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                                     </a>
                                 </label>
                             </div>
@@ -2590,7 +2649,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                                 <label for='<?php echo $this->plugin_name; ?>-width'>
                                     <?php echo __('Width', "ays-popup-box"); ?>
                                     <a class="ays_help" data-toggle="tooltip" title="<?php echo __('Specify the width of the popup in pixels. If you put 0 or leave it blank, the width will be 100%. It accepts only numerical values and you can choose whether to define the value by percentage or in pixels.',"ays-popup-box")?>">
-                                        <i class="ays_fa ays_fa-info-circle"></i>
+                                        <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                                     </a>
                                 </label>
                             </div>
@@ -2619,7 +2678,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                                 <label for="ays-pb-mobile-width">
                                     <?php echo  __('Mobile width',"ays-popup-box") ?>
                                     <a class="ays_help" data-toggle="tooltip" title="<?php echo __("Specify popup width for mobile in percentage. Note: This option works for the screens with less than 768 pixels width.", "ays-popup-box"); ?>">
-                                        <i class="ays_fa ays_fa-info-circle"></i>
+                                        <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                                     </a>
                                 </label>
                             </div>
@@ -2635,7 +2694,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                                 <label for="ays-pb-mobile-max-width">
                                     <?php echo  __('Max-width for mobile',"ays-popup-box") ?>
                                     <a class="ays_help" data-toggle="tooltip" title="<?php echo __("Specify the max-width of the popup for mobile in percentage. Note: This option works for screens with less than 768 pixels width.", "ays-popup-box"); ?>">
-                                        <i class="ays_fa ays_fa-info-circle"></i>
+                                        <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                                     </a>
                                 </label>
                             </div>
@@ -2650,7 +2709,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                                 <label for="<?php echo $this->plugin_name; ?>-height">
                                     <span><?php echo __('Height', "ays-popup-box"); ?></span>
                                     <a class="ays_help" data-toggle="tooltip" title="<?php echo __('Specify the height of the popup in pixels. Leave it blank or put 0 to select the default theme value.',"ays-popup-box")?>">
-                                        <i class="ays_fa ays_fa-info-circle"></i>
+                                        <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                                     </a>
                                 </label>
                             </div>
@@ -2665,7 +2724,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                                 <label for="ays_pb_mobile_height">
                                     <span><?php echo __('Mobile height', "ays-popup-box"); ?></span>
                                     <a class="ays_help" data-toggle="tooltip" title="<?php echo __('Specify popup height for mobile in pixels. Note: This option works for the screens with less than 768 pixels width.',"ays-popup-box")?>">
-                                        <i class="ays_fa ays_fa-info-circle"></i>
+                                        <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                                     </a>
                                 </label>
                             </div>
@@ -2680,7 +2739,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                                 <label for='ays_pb_min_height'>
                                     <?php echo __('Popup min-height', "ays-popup-box"); ?>
                                     <a class="ays_help" data-toggle="tooltip" title="<?php echo __("Define the popup's minimal height in pixels.","ays-popup-box")?>">
-                                        <i class="ays_fa ays_fa-info-circle"></i>
+                                        <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                                     </a>
                                 </label>
                             </div>
@@ -2696,7 +2755,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                                 <label for="open_pb_fullscreen">
                                     <span><?php echo __('Full-screen mode', "ays-popup-box"); ?></span>
                                     <a class="ays_help" data-toggle="tooltip" title="<?php echo __('Enable this option to display the popup on a full screen.',"ays-popup-box")?>">
-                                        <i class="ays_fa ays_fa-info-circle"></i>
+                                        <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                                     </a>
                                 </label>
                             </div>
@@ -2705,15 +2764,46 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                             </div>
                         </div>
                         <hr>
+                        <div class="form-group row ays_pb_content_padding_option">
+                            <div class="col-sm-4">
+                                <label for='ays_popup_content_padding'>
+                                    <?php echo __('Content padding', "ays-popup-box"); ?>
+                                    <a class="ays_help" data-toggle="tooltip" title="<?php echo __('Specify the padding of the popup in pixels. It accepts only numerical values and you can choose whether to define the value by percentage or in pixels.',"ays-popup-box")?>">
+                                        <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
+                                    </a>
+                                </label>
+                            </div>
+                            <div class="col-sm-6 ays-pb-padding-content ays_divider_left ays-pb-padding-content-default">
+                                <div>   
+                                    <input type="number" id="ays_popup_content_padding"  class="ays-pb-text-input ays-pb-text-input-short ays_pb_padding"  name="ays_popup_content_padding" value="<?php echo $padding; ?>"/>
+                                    <p style="font-weight: 600;" class="ays-pb-small-hint-text">
+                                        <?php echo __("Default value = ", "ays-popup-box");?>
+                                        <span style="font-weight: 800;"><?php echo __($default_padding_value, "ays-popup-box");?></span>
+                                    </p>
+                                </div>
+                                <div class="ays_pb_padding_by_percentage_px_box">
+                                    <select name="ays_popup_padding_by_percentage_px" id="ays_popup_padding_by_percentage_px" class="ays_pb_aysDropdown ays-pb-percent">
+                                        <option value="pixels" <?php echo $popup_padding_by_percentage_px == "pixels" ? "selected" : ""; ?>>
+                                            <?php echo __( "px", "ays-popup-box" ); ?>
+                                        </option>
+                                        <option value="percentage" <?php echo $popup_padding_by_percentage_px == "percentage" ? "selected" : ""; ?>>
+                                            <?php echo __( "%", "ays-popup-box" ); ?>
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
                         <p class="ays-subtitle"><?php echo  __('Text style', "ays-popup-box") ?></p>
                         <hr>
+                        <!-- Popup Text Color End -->
                         <div class="form-group row">
                             <div class="col-sm-4">
                                 <label for="<?php echo $this->plugin_name; ?>-ays_pb_textcolor">
                                     <span>
                                         <?php echo  __('Text color',"ays-popup-box") ?>
                                         <a class="ays_help" data-toggle="tooltip" title="<?php echo __("Specify the text color written inside the popup.", "ays-popup-box"); ?>">
-                                            <i class="ays_fa ays_fa-info-circle"></i>
+                                            <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                                         </a>
                                     </span>
                                 </label>
@@ -2722,14 +2812,15 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                                 <input id="<?php echo $this->plugin_name; ?>-ays_pb_textcolor" type="text" class="ays_pb_color_input ays_pb_textcolor_change" name="<?php echo $this->plugin_name; ?>[ays_pb_textcolor]" value="<?php echo wp_unslash($textcolor); ?>" data-default-color="#000000" data-alpha="true">
                             </div>
                         </div>
+                        <!-- Popup Text Color End -->
                         <hr>
-                        <!-- popup width with percentage -->
+                        <!-- Popup Font Family Start -->
                         <div class="form-group row">
                             <div class="col-sm-4">
                                 <label for="ays_pb_font_family">
                                     <?php echo  __('Font family',"ays-popup-box") ?>
                                     <a class="ays_help" data-toggle="tooltip" title="<?php echo __("Choose the popup text font family.", "ays-popup-box"); ?>">
-                                       <i class="ays_fa ays_fa-info-circle"></i>
+                                       <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                                     </a>
                                 </label>
                             </div>
@@ -2764,6 +2855,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                                 </select>
                             </div>
                         </div>
+                        <!-- Popup Font Family End -->
                         <hr>
                         <!-- Font Size start -->
                         <div class="form-group row">
@@ -2771,7 +2863,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                                 <label for="ays_pb_font_size">
                                     <?php echo  __('Description font size',"ays-popup-box") ?>
                                     <a class="ays_help" data-toggle="tooltip" title="<?php echo __("Define the font size of the popup description in pixels.", "ays-popup-box"); ?>">
-                                       <i class="ays_fa ays_fa-info-circle"></i>
+                                       <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                                     </a>
                                 </label>
                             </div>
@@ -2781,7 +2873,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                                         <label for="ays_pb_font_size_for_pc">
                                             <?php echo  __('On PC',"ays-popup-box") ?>  
                                                 <a class="ays_help" data-toggle="tooltip" title="" data-original-title="Define the font size for PC devices.">
-                                                    <i class="ays_fa ays_fa-info-circle"></i>
+                                                    <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                                                 </a>
                                             </label>
                                         </label>
@@ -2796,7 +2888,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                                         <label for="ays_pb_font_size_for_mobile">
                                             <?php echo  __('On mobile',"ays-popup-box") ?>  
                                                 <a class="ays_help" data-toggle="tooltip" title="" data-original-title="Define the font size for mobile devices.">
-                                                    <i class="ays_fa ays_fa-info-circle"></i>
+                                                    <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                                                 </a>
                                             </label>
                                         </label>
@@ -2816,7 +2908,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                                 <label for="ays_enable_title_text_shadow">
                                     <?php echo __('Title text shadow',"ays-popup-box")?>
                                     <a class="ays_help" data-toggle="tooltip" title="<?php echo __('Add text shadow to the popup title.',"ays-popup-box")?>">
-                                        <i class="ays_fa ays_fa-info-circle"></i>
+                                        <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                                     </a>
                                     <span style="<?php if($show_popup_title == 'On'){ echo 'display:none';} else { echo '';} ?>" class="ays-pb-small-hint-text ays-pb-title-shadow-small-hint"><?php echo __("This option is not available currently as the Show title Option is disable.", "ays-popup-box");?></span>
                                 </label>
@@ -2829,7 +2921,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                                         <label for='ays_title_text_shadow_color'>
                                             <?php echo __('Color', "ays-popup-box"); ?>
                                             <a class="ays_help" data-toggle="tooltip" title="<?php echo __('Specify text shadow color.',"ays-popup-box")?>">
-                                                <i class="ays_fa ays_fa-info-circle"></i>
+                                                <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                                             </a>
                                         </label>
                                         <input type="text" class="ays-text-input" id='ays_title_text_shadow_color' data-alpha="true" name='ays_title_text_shadow_color' value="<?php echo $pb_title_text_shadow; ?>"/>
@@ -2863,7 +2955,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                                 <div>
                                     <p>
                                         <?php echo __("This feature is available only in ", "ays-popup-box"); ?>
-                                        <a href="https://ays-pro.com/wordpress/popup-box?src=11" target="_blank" title="PRO feature"><?php echo __("PRO version!!!", "ays-popup-box"); ?></a>
+                                        <a href="https://ays-pro.com/wordpress/popup-box" target="_blank" title="PRO feature"><?php echo __("PRO version!!!", "ays-popup-box"); ?></a>
                                     </p>
                                 </div>
                             </div>
@@ -2872,7 +2964,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                                     <label for="ays_enable_title_styles">
                                         <?php echo __('Title style',"ays-popup-box")?>
                                         <a class="ays_help" data-toggle="tooltip" title="<?php echo __('Enable the option to customize the style of the popup title.',"ays-popup-box");?>">
-                                            <i class="ays_fa ays_fa-info-circle"></i>
+                                            <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                                         </a>
                                     </label>
                                 </div>
@@ -2886,7 +2978,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                                                 <label for='ays_title_font_family'>
                                                     <?php echo __('Font family', "ays-popup-box"); ?>
                                                     <a class="ays_help ays-pb-help-pro" data-toggle="tooltip" title="<?php echo __('Choose your preferred font family from the suggested variants for the popup title.',"ays-popup-box")?>">
-                                                        <i class="ays_fa ays_fa-info-circle"></i>
+                                                        <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                                                     </a>
                                                 </label>
                                             </div>
@@ -2903,7 +2995,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                                                 <label for='ays_title_font_weight'>
                                                     <?php echo __('Font weight', "ays-popup-box"); ?>
                                                     <a class="ays_help ays-pb-help-pro" data-toggle="tooltip" title="<?php echo __('Define the boldness of the popup title.',"ays-popup-box")?>">
-                                                        <i class="ays_fa ays_fa-info-circle"></i>
+                                                        <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                                                     </a>
                                                 </label>
                                             </div>
@@ -2920,7 +3012,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                                                 <label for='ays_title_font_size'>
                                                     <?php echo __('Font size(px)', "ays-popup-box"); ?>
                                                     <a class="ays_help ays-pb-help-pro" data-toggle="tooltip" title="<?php echo __('Define the font size of the popup title in pixels.',"ays-popup-box")?>">
-                                                        <i class="ays_fa ays_fa-info-circle"></i>
+                                                        <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                                                     </a>
                                                 </label>
                                             </div>
@@ -2933,7 +3025,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                                                 <label for='ays_title_letter_spacing'>
                                                     <?php echo __('Letter spacing(px)', "ays-popup-box"); ?>
                                                     <a class="ays_help ays-pb-help-pro" data-toggle="tooltip" title="<?php echo __('Define the space between characters in a text of the popup title in pixels.',"ays-popup-box")?>">
-                                                        <i class="ays_fa ays_fa-info-circle"></i>
+                                                        <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                                                     </a>
                                                 </label>
                                             </div>
@@ -2946,7 +3038,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                                                 <label for='ays_title_line_height'>
                                                     <?php echo __('Line height', "ays-popup-box"); ?>
                                                     <a class="ays_help ays-pb-help-pro" data-toggle="tooltip" title="<?php echo __('Define the height of a line of the popup title.',"ays-popup-box")?>">
-                                                        <i class="ays_fa ays_fa-info-circle"></i>
+                                                        <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                                                     </a>
                                                 </label>
                                             </div>
@@ -2959,7 +3051,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                                                 <label for='ays_title_text_alignment'>
                                                     <?php echo __('Text alignment', "ays-popup-box"); ?>
                                                     <a class="ays_help ays-pb-help-pro" data-toggle="tooltip" title="<?php echo __('Choose the horizontal alignment of the text of the popup title.',"ays-popup-box")?>">
-                                                        <i class="ays_fa ays_fa-info-circle"></i>
+                                                        <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                                                     </a>
                                                 </label>
                                             </div>
@@ -2987,7 +3079,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                                                     __(' Lowercase - Transforms all characters to lowercase.    ',"ays-popup-box"). "</p>" ?>" 
             
                                                     >
-                                                        <i class="ays_fa ays_fa-info-circle"></i>
+                                                        <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                                                     </a>
                                                 </label>
                                             </div>
@@ -3004,7 +3096,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                                                 <label for='ays_title_text_transform'>
                                                     <?php echo __('Text decoration', "ays-popup-box"); ?>
                                                     <a class="ays_help ays-pb-help-pro" data-toggle="tooltip" title="<?php echo __('Choose the kind of decoration added to text of the popup title.',"ays-popup-box")?>">
-                                                        <i class="ays_fa ays_fa-info-circle"></i>
+                                                        <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                                                     </a>
                                                 </label>
                                             </div>
@@ -3040,7 +3132,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                                     <span>
                                         <?php echo  __('Opening animation speed',"ays-popup-box") ?>
                                         <a class="ays_help" data-toggle="tooltip" title="<?php echo __("Specify the entry effect speed of the popup in seconds.", "ays-popup-box"); ?>">
-                                            <i class="ays_fa ays_fa-info-circle"></i>
+                                            <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                                         </a>
                                     </span>
                                 </label>
@@ -3056,7 +3148,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                                     <span>
                                         <?php echo  __('Closing animation speed',"ays-popup-box") ?>
                                         <a class="ays_help" data-toggle="tooltip" title="<?php echo __("Specify the ending animation speed of the popup in seconds.", "ays-popup-box"); ?>">
-                                            <i class="ays_fa ays_fa-info-circle"></i>
+                                            <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                                         </a>
                                     </span>
                                 </label>
@@ -3072,7 +3164,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                                     <span>
                                         <?php echo  __('Closing animation',"ays-popup-box") ?>
                                         <a class="ays_help" data-toggle="tooltip" title="<?php echo __("Choose the exit effect for the popup closing.", "ays-popup-box"); ?>">
-                                            <i class="ays_fa ays_fa-info-circle"></i>
+                                            <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                                         </a>
                                     </span>
                                 </label>
@@ -3132,7 +3224,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                                     <span>
                                         <?php echo  __('Opening animation',"ays-popup-box") ?>
                                         <a class="ays_help" data-toggle="tooltip" title="<?php echo __("Choose the entry effect for the popup opening.", "ays-popup-box"); ?>">
-                                            <i class="ays_fa ays_fa-info-circle"></i>
+                                            <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                                         </a>
                                     </span>
                                 </label>
@@ -3194,7 +3286,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                                     <span>
                                         <?php echo __('Background color', "ays-popup-box"); ?>
                                         <a class="ays_help" data-toggle="tooltip" title="<?php echo __("Specify the background color of the popup.", "ays-popup-box"); ?>">
-                                            <i class="ays_fa ays_fa-info-circle"></i>
+                                            <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                                         </a>
                                     </span>
                                 </label>
@@ -3210,7 +3302,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                                     <?php echo __('Background Image', "ays-popup-box"); ?>
                                     <a class="ays_help" data-toggle="tooltip" data-placement="top"
                                        title="<?php echo __("Add a background image to the popup. Note: If you want to apply background color, remove the image or don't add it.", "ays-popup-box"); ?>">
-                                        <i class="ays_fa ays_fa-info-circle"></i>
+                                        <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                                     </a>
                                 </label>
                             </div>
@@ -3235,7 +3327,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                                 <label for="ays_pb_bg_image_position">
                                     <?php echo __( "Background image position", "ays-popup-box" ); ?>
                                     <a class="ays_help" data-toggle="tooltip" title="<?php echo __('Select the position of the background image of the popup.',"ays-popup-box")?>">
-                                        <i class="ays_fa ays_fa-info-circle"></i>
+                                        <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                                     </a>
                                 </label>
                             </div>
@@ -3266,7 +3358,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                                 <label for="ays_pb_bg_image_sizing">
                                     <?php echo __('Background image sizing', "ays-popup-box" ); ?>
                                     <a class="ays_help" data-toggle="tooltip" title="<?php echo __('Define the background image size if needed.',"ays-popup-box")?>">
-                                        <i class="ays_fa ays_fa-info-circle"></i>
+                                        <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                                     </a>
                                 </label>
                             </div>
@@ -3287,7 +3379,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                                 <label for="ays-enable-background-gradient">
                                     <?php echo __('Background gradient',"ays-popup-box")?>
                                     <a class="ays_help" data-toggle="tooltip" title="<?php echo __('Add background gradient for the popup, choose gradient color stops and direction.',"ays-popup-box")?>">
-                                        <i class="ays_fa ays_fa-info-circle"></i>
+                                        <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                                     </a>
                                 </label>
                             </div>
@@ -3302,7 +3394,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                                         <label for='ays-background-gradient-color-1'>
                                             <?php echo __('Color 1', "ays-popup-box"); ?>
                                             <a class="ays_help" data-toggle="tooltip" title="<?php echo __('Select the first color stop.',"ays-popup-box")?>">
-                                                <i class="ays_fa ays_fa-info-circle"></i>
+                                                <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                                             </a>
                                         </label>
                                         <input type="text" class="ays-text-input" id='ays-background-gradient-color-1' data-alpha="true" name='ays_background_gradient_color_1' value="<?php echo $background_gradient_color_1; ?>"/>
@@ -3311,7 +3403,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                                         <label for='ays-background-gradient-color-2'>
                                             <?php echo __('Color 2', "ays-popup-box"); ?>
                                             <a class="ays_help" data-toggle="tooltip" title="<?php echo __('Select the second color stop.',"ays-popup-box")?>">
-                                                <i class="ays_fa ays_fa-info-circle"></i>
+                                                <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                                             </a>
                                         </label>
                                         <input type="text" class="ays-text-input" id='ays-background-gradient-color-2' data-alpha="true" name='ays_background_gradient_color_2' value="<?php echo $background_gradient_color_2; ?>"/>
@@ -3320,7 +3412,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                                         <label for="ays_pb_gradient_direction">
                                             <?php echo __('Gradient direction',"ays-popup-box")?>
                                             <a class="ays_help" data-toggle="tooltip" title="<?php echo __('The direction of the color gradient',"ays-popup-box")?>">
-                                                <i class="ays_fa ays_fa-info-circle"></i>
+                                                <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                                             </a>
                                         </label>
                                         <select id="ays_pb_gradient_direction" name="ays_pb_gradient_direction" class="ays-text-input ays_pb_aysDropdown">
@@ -3341,7 +3433,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                                     <span>
                                         <?php echo __('Header background color', "ays-popup-box"); ?>
                                         <a class="ays_help" data-toggle="tooltip" title="<?php echo __("Specify the background color of the box's header. Note: It works with the following themes: Red, Sale.", "ays-popup-box"); ?>">
-                                            <i class="ays_fa ays_fa-info-circle"></i>
+                                            <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                                         </a>
                                     </span>
                                 </label>
@@ -3357,7 +3449,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                                     <span>
                                         <?php echo  __('Overlay color',"ays-popup-box") ?>
                                         <a class="ays_help" data-toggle="tooltip" title="<?php echo __("Specify the overlay color.", "ays-popup-box"); ?>">
-                                            <i class="ays_fa ays_fa-info-circle"></i>
+                                            <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                                         </a>
                                     </span>
                                 </label>
@@ -3375,7 +3467,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                                     <span>
                                         <?php echo  __('Border Width',"ays-popup-box") ?>
                                         <a class="ays_help" data-toggle="tooltip" title="<?php echo __("Specify the border size of the popup in pixels.", "ays-popup-box"); ?>">
-                                            <i class="ays_fa ays_fa-info-circle"></i>
+                                            <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                                         </a>
                                     </span>
                                 </label>
@@ -3391,7 +3483,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                                     <span>
                                         <?php echo  __('Border style',"ays-popup-box") ?>
                                         <a class="ays_help" data-toggle="tooltip" title="<?php echo __("Choose your preferred style of the border.", "ays-popup-box"); ?>">
-                                            <i class="ays_fa ays_fa-info-circle"></i>
+                                            <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                                         </a>
                                     </span>
                                 </label>
@@ -3434,7 +3526,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                                     <span>
                                         <?php echo  __('Border color',"ays-popup-box") ?>
                                         <a class="ays_help" data-toggle="tooltip" title="<?php echo __("Specify the border color of the popup.", "ays-popup-box"); ?>">
-                                            <i class="ays_fa ays_fa-info-circle"></i>
+                                            <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                                         </a>
                                     </span>
                                 </label>
@@ -3450,7 +3542,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                                     <span>
                                         <?php echo  __('Border radius',"ays-popup-box") ?>
                                         <a class="ays_help" data-toggle="tooltip" title="<?php echo __("Specify the radius of the border. Allows adding rounded corners to the popup. ", "ays-popup-box"); ?>">
-                                            <i class="ays_fa ays_fa-info-circle"></i>
+                                            <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                                         </a>
                                     </span>
                                 </label>
@@ -3467,7 +3559,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                                 <div>
                                     <p>
                                         <?php echo __("This feature is available only in ", "ays-popup-box"); ?>
-                                        <a href="https://ays-pro.com/wordpress/popup-box?src=12" target="_blank" title="PRO feature"><?php echo __("PRO version!!!", "ays-popup-box"); ?></a>
+                                        <a href="https://ays-pro.com/wordpress/popup-box" target="_blank" title="PRO feature"><?php echo __("PRO version!!!", "ays-popup-box"); ?></a>
                                     </p>
                                 </div>
                             </div>
@@ -3478,7 +3570,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                                         <label for="ays_pb_buttons_size">
                                             <?php echo __('Button size',"ays-popup-box")?>
                                             <a class="ays_help ays-pb-help-pro" data-toggle="tooltip" title="<?php echo __('The default sizes of buttons.',"ays-popup-box")?>">
-                                                <i class="ays_fa ays_fa-info-circle"></i>
+                                                <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                                             </a>
                                         </label>
                                     </div>
@@ -3502,7 +3594,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                                         <label for='ays_pb_button_text_color'>
                                             <?php echo __('Button text color', "ays-popup-box"); ?>
                                             <a class="ays_help ays-pb-help-pro" data-toggle="tooltip" title="<?php echo __('Specify the text color of buttons inside the popup.',"ays-popup-box")?>">
-                                                <i class="ays_fa ays_fa-info-circle"></i>
+                                                <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                                             </a>
                                         </label>
                                     </div>
@@ -3516,7 +3608,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                                         <label for='ays_pb_button_background_color'>
                                             <?php echo __('Button background color', "ays-popup-box"); ?>
                                             <a class="ays_help ays-pb-help-pro" data-toggle="tooltip" title="<?php echo __('Specify the backgound color of buttons inside the popup.',"ays-popup-box")?>">
-                                                <i class="ays_fa ays_fa-info-circle"></i>
+                                                <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                                             </a>
                                         </label>
                                     </div>
@@ -3529,7 +3621,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                                         <label for='ays_pb_buttons_font_size'>
                                             <?php echo __('Button font-size', "ays-popup-box"); ?> (px)
                                             <a class="ays_help ays-pb-help-pro" data-toggle="tooltip" title="<?php echo __('The font size of the buttons in pixels in the popup. It accepts only numeric values.',"ays-popup-box")?>">
-                                                <i class="ays_fa ays_fa-info-circle"></i>
+                                                <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                                             </a>
                                         </label>
                                     </div>
@@ -3543,7 +3635,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                                         <label for='ays_pb_buttons_width'>
                                             <?php echo __('Button width', "ays-popup-box"); ?> (px)
                                             <a class="ays_help ays-pb-help-pro" data-toggle="tooltip" title="<?php echo __('Set the button width in pixels. For an initial width, leave the field blank.', "ays-popup-box"); ?>">
-                                                <i class="ays_fa ays_fa-info-circle"></i>
+                                                <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                                             </a>
                                         </label>
                                     </div>
@@ -3558,7 +3650,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                                         <label for="ays_pb_buttons_padding">
                                             <?php echo __('Button padding',"ays-popup-box")?> (px)
                                             <a class="ays_help ays-pb-help-pro" data-toggle="tooltip" title="<?php echo __('Padding of buttons.',"ays-popup-box")?>">
-                                                <i class="ays_fa ays_fa-info-circle"></i>
+                                                <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                                             </a>
                                         </label>
                                     </div>
@@ -3579,7 +3671,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                                         <label for="ays_pb_buttons_border_radius">
                                             <?php echo __('Button border-radius', "ays-popup-box"); ?> (px)
                                             <a class="ays_help ays-pb-help-pro" data-toggle="tooltip" title="<?php echo __('Popup buttons border-radius in pixels. It accepts only numeric values.',"ays-popup-box")?>">
-                                                <i class="ays_fa ays_fa-info-circle"></i>
+                                                <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                                             </a>
                                         </label>
                                     </div>
@@ -3608,7 +3700,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                                     <span>
                                         <?php echo  __('Close button image',"ays-popup-box") ?>
                                         <a class="ays_help" data-toggle="tooltip" title="<?php echo __("Add an image which will be displayed instead of the close button.", "ays-popup-box"); ?>">
-                                            <i class="ays_fa ays_fa-info-circle"></i>
+                                            <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                                         </a>
                                     </span>
                                 </label>
@@ -3636,7 +3728,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                                     <span>
                                         <?php echo  __('Close button color',"ays-popup-box") ?>
                                         <a class="ays_help" data-toggle="tooltip" title="<?php echo __("Define the close button color.", "ays-popup-box"); ?>">
-                                            <i class="ays_fa ays_fa-info-circle"></i>
+                                            <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                                         </a>
                                     </span>
                                 </label>
@@ -3654,7 +3746,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                                     <span>
                                         <?php echo  __('Close button hover color',"ays-popup-box") ?>
                                         <a class="ays_help" data-toggle="tooltip" title="<?php echo __("Define the close button color on hover.", "ays-popup-box"); ?>">
-                                            <i class="ays_fa ays_fa-info-circle"></i>
+                                            <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                                         </a>
                                     </span>
                                 </label>
@@ -3672,7 +3764,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                                     <span>
                                         <?php echo  __('Close button size',"ays-popup-box") ?>
                                         <a class="ays_help" data-toggle="tooltip" title="<?php echo __("Define the close button size in pixels.", "ays-popup-box"); ?>">
-                                            <i class="ays_fa ays_fa-info-circle"></i>
+                                            <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                                         </a>
                                     </span>
                                 </label>
@@ -3690,7 +3782,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                                 <label for="ays_pb_enable_box_shadow">
                                     <?php echo __('Box shadow',"ays-popup-box"); ?>
                                     <a class="ays_help" data-toggle="tooltip" title="<?php echo __('Allow popup container box shadow.',"ays-popup-box")?>">
-                                        <i class="ays_fa ays_fa-info-circle"></i>
+                                        <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                                     </a>
                                 </label>
                             </div>
@@ -3703,7 +3795,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                                             <label for="ays_pb_box_shadow_color">
                                                 <?php echo __('Box shadow color',"ays-popup-box")?>
                                                 <a class="ays_help" data-toggle="tooltip" title="<?php echo __('The color of the shadow of the popup container',"ays-popup-box" ); ?>">
-                                                    <i class="ays_fa ays_fa_info_circle"></i>
+                                                    <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                                                 </a>
                                             </label>
                                             <input type="text" class="ays-text-input" id='ays_pb_box_shadow_color' name='ays_pb_box_shadow_color' data-alpha="true" data-default-color="#000000" value="<?php echo $box_shadow_color; ?>"/>
@@ -3733,7 +3825,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                                 <label for="ays_pb_bg_image_direction_on_mobile">
                                     <?php echo __('Background image style on mobile',"ays-popup-box"); ?>
                                     <a class="ays_help" data-toggle="tooltip" title="<?php echo __('On mobile mode the background image will change it style and it will be displayed at the top of the text. Note: It will work only for the Sale template.',"ays-popup-box")?>">
-                                        <i class="ays_fa ays_fa-info-circle"></i>
+                                        <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                                     </a>
                                 </label>
                             </div>
@@ -3747,7 +3839,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                                 <label for="custom_class">
                                     <?php echo __('Custom class for Popup container ',"ays-popup-box")?>
                                     <a class="ays_help" data-toggle="tooltip" title="<?php echo __('Use your custom HTML class for adding your custom styles to popup container.',"ays-popup-box")?>">
-                                        <i class="ays_fa ays_fa-info-circle"></i>
+                                        <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                                     </a>
                                 </label>
                             </div>
@@ -3762,7 +3854,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                             <label for="<?php echo $this->plugin_name; ?>-custom-css">
                                 <span><?php echo __('Custom CSS', "ays-popup-box"); ?></span>
                                 <a class="ays_help" data-toggle="tooltip" title="<?php echo __('Field for entering your own CSS code.',  "ays-popup-box")?>">
-                                    <i class="ays_fa ays_fa-info-circle"></i>
+                                    <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                                 </a>
                             </label>
                             <textarea id="<?php echo $this->plugin_name; ?>-custom-css"  class="ays-textarea" name="<?php echo  $this->plugin_name; ?>[custom-css]"><?php echo $custom_css; ?></textarea>
@@ -3773,7 +3865,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                                 <label for="custom_class">
                                     <?php echo __('Reset styles',"ays-popup-box")?>
                                     <a class="ays_help" data-toggle="tooltip" title="<?php echo __('Reset popup styles to default values',"ays-popup-box")?>">
-                                        <i class="ays_fa ays_fa-info-circle"></i>
+                                        <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                                     </a>
                                 </label>
                             </div>
@@ -3794,7 +3886,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                                         <img class='close_btn_img' src='<?php echo $close_btn_background_img; ?>' width='30' height='30' style='<?php echo $close_btn_img_display; ?>'>
                                         <?php
                                                 if ($close_button_text === 'x') {
-                                                    echo " <i class='fa fa-times fa-2x  close_btn_text' style='".$close_btn_text_display."'></i>";
+                                                    echo "<img src='" . AYS_PB_ADMIN_URL . "./images/icons/times-2x.svg' class='close_btn_text fa-2x' style='".$close_btn_text_display."'>";
                                                 }else{
                                                    echo $close_button_text;
                                                 }
@@ -3809,7 +3901,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                                 </div>
                                 <div class='ays-pb-live-container ays_window ays_bg_image_box'>
                                     <div class='ays_topBar'>
-                                        <label class='ays-pb-modal-close ays_close ays-close-button-on-off' style='<?php echo $hide_close_btn; ?>'><i class='fa fa-times fa-2x'></i></label>
+                                        <label class='ays-pb-modal-close ays_close ays-close-button-on-off' style='<?php echo $hide_close_btn; ?>'><img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/times-2x.svg"?>" class="fa-2x"></label>
                                         <a class='ays_hide'></a>
                                         <a class='ays_fullScreen'></a>
                                         <h2 class="ays_title" style='<?php echo $hide_title ;?>'></h2>
@@ -3953,7 +4045,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                                                 <a class='close-image-btn ays-close-button-on-off ays-close-button-text ays-close-button-take-text-color close_btn_text' style='<?php echo $close_btn_text_display;?>'>
                                                      <?php
                                                 if ($close_button_text === 'x') {
-                                                    echo " <i class='far fa-times-circle ays-close-button-text'></i>";
+                                                    echo "<img src='" . AYS_PB_ADMIN_URL . "./images/icons/times-circle.svg'>";
                                                 }else{
                                                     echo $close_button_text;
                                                 }
@@ -4018,7 +4110,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                         <label for="ays_pb_show_only_once">
                             <span><?php echo __('Display popup once per user', "ays-popup-box"); ?></span>
                             <a class="ays_help" data-toggle="tooltip" title="<?php echo __('Enable this option to display the popup once per visitor.', "ays-popup-box"); ?>">
-                                <i class="ays_fa ays_fa-info-circle"></i>
+                                <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                             </a>
                         </label>
                     </div>
@@ -4035,7 +4127,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                             <span><?php echo __('Display for logged-in users', "ays-popup-box"); ?></span>
                             <a class="ays_help" data-toggle="tooltip"
                                title="<?php echo __('Enable this option to display the popup for logged-in users.', "ays-popup-box") ?>">
-                                <i class="ays_fa ays_fa-info-circle"></i>
+                                <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                             </a>
                         </label>
                     </div>
@@ -4052,7 +4144,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                             <span><?php echo __('Display for guests', "ays-popup-box"); ?></span>
                             <a class="ays_help" data-toggle="tooltip"
                                title="<?php echo __('Enable this option to display the popup for guest visitors.', "ays-popup-box") ?>">
-                                <i class="ays_fa ays_fa-info-circle"></i>
+                                <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                             </a>
                         </label>
                     </div>
@@ -4069,7 +4161,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                             <span><?php echo __('Hide popup on mobile', "ays-popup-box"); ?></span>
                             <a class="ays_help" data-toggle="tooltip"
                                title="<?php echo __('Disable the popup on mobile devices.', "ays-popup-box") ?>">
-                                <i class="ays_fa ays_fa-info-circle"></i>
+                                <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                             </a>
                         </label>
                     </div>
@@ -4086,7 +4178,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                             <span><?php echo __('Hide popup on PC', "ays-popup-box"); ?></span>
                             <a class="ays_help" data-toggle="tooltip"
                                title="<?php echo __('Disable the popup on pc.', "ays-popup-box") ?>">
-                                <i class="ays_fa ays_fa-info-circle"></i>
+                                <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                             </a>
                         </label>
                     </div>
@@ -4103,7 +4195,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                             <span><?php echo __('Hide popup on tablets', "ays-popup-box"); ?></span>
                             <a class="ays_help" data-toggle="tooltip"
                                title="<?php echo __('Disable the popup on tablets.', "ays-popup-box") ?>">
-                                <i class="ays_fa ays_fa-info-circle"></i>
+                                <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                             </a>
                         </label>
                     </div>
@@ -4120,7 +4212,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                             <div>
                                 <p>
                                     <?php echo __("This feature is available only in ", "ays-popup-box"); ?>
-                                    <a href="https://ays-pro.com/wordpress/popup-box?src=13" target="_blank" title="PRO feature"><?php echo __("PRO version!!!", "ays-popup-box"); ?></a>
+                                    <a href="https://ays-pro.com/wordpress/popup-box" target="_blank" title="PRO feature"><?php echo __("PRO version!!!", "ays-popup-box"); ?></a>
                                 </p>
                             </div>
                         </div>
@@ -4129,7 +4221,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                                 <label for="ays_enable_tackers_count">
                                     <?php echo __('Disable by view count', "ays-popup-box")?>
                                     <a class="ays_help" data-toggle="tooltip" title="<?php echo __('Disable the popup after certain views.',"ays-popup-box")?>">
-                                        <i class="ays_fa ays_fa-info-circle"></i>
+                                        <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                                     </a>
                                 </label>
                             </div>
@@ -4142,7 +4234,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                                         <label for="ays_tackers_count">
                                             <?php echo __('Count',"ays-popup-box")?>
                                             <a class="ays_help" data-toggle="tooltip" title="<?php echo __('Specify the count of views.',"ays-popup-box")?>">
-                                                <i class="ays_fa ays_fa-info-circle"></i>
+                                                <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                                             </a>
                                         </label>
                                     </div>
@@ -4172,7 +4264,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                             <span><?php echo __('Display for certain user roles', "ays-popup-box"); ?></span>
                             <a class="ays_help" data-toggle="tooltip"
                                title="<?php echo __('Show the popup only to certain user role(s) mentioned in the list. Leave it blank for showing the popup to all user roles.', "ays-popup-box") ?>">
-                                <i class="ays_fa ays_fa-info-circle"></i>
+                                <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                             </a>
                         </label>
                     </div>
@@ -4209,7 +4301,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                             <div>
                                 <p>
                                     <?php echo __("This feature is available only in ", "ays-popup-box"); ?>
-                                    <a href="https://ays-pro.com/wordpress/popup-box?src=14" target="_blank" title="PRO feature"><?php echo __("PRO version!!!", "ays-popup-box"); ?></a>
+                                    <a href="https://ays-pro.com/wordpress/popup-box" target="_blank" title="PRO feature"><?php echo __("PRO version!!!", "ays-popup-box"); ?></a>
                                 </p>
                             </div>
                         </div>
@@ -4219,7 +4311,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                                     <span><?php echo __('Display for certain OS', "ays-popup-box"); ?></span>
                                     <a class="ays_help" data-toggle="tooltip"
                                        title="<?php echo __('Set on which operating systems your popup will be displayed.', "ays-popup-box") ?>">
-                                        <i class="ays_fa ays_fa-info-circle"></i>
+                                        <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                                     </a>
                                 </label>
                             </div>
@@ -4240,7 +4332,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                                     <span><?php echo __('Display for certain browser', "ays-popup-box"); ?></span>
                                     <a class="ays_help ays-pb-help-pro" data-toggle="tooltip"
                                        title="<?php echo __('Show the popup only to visitors using certain browser(s) mentioned in the list. Leave it blank for showing the popup to all browsers users.', "ays-popup-box") ?>">
-                                        <i class="ays_fa ays_fa-info-circle"></i>
+                                        <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                                     </a>
                                 </label>
                             </div>
@@ -4273,7 +4365,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                                 <div>
                                     <p>
                                         <?php echo __("This feature is available only in ", "ays-popup-box"); ?>
-                                        <a href="https://ays-pro.com/wordpress/popup-box?src=15" target="_blank" title="PRO feature"><?php echo __("PRO version!!!", "ays-popup-box"); ?></a>
+                                        <a href="https://ays-pro.com/wordpress/popup-box" target="_blank" title="PRO feature"><?php echo __("PRO version!!!", "ays-popup-box"); ?></a>
                                     </p>
                                 </div>
                             </div>
@@ -4283,7 +4375,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                                     <?php echo __('Limit by country', "ays-popup-box"); ?> 
                                         <a class="ays_help" data-toggle="tooltip"
                                             title="<?php echo __('Show the popup only to visitors using certain browser(s) mentioned in the list. Leave it blank for showing the popup to all browsers users.', "ays-popup-box") ?>">
-                                            <i class="ays_fa ays_fa-info-circle"></i>
+                                            <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/info-circle.svg"?>">
                                         </a>
                                 </label>
                             </div>
@@ -4415,7 +4507,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                                     <div class="ays_pb_layer_item">
                                         <div class="ays_pb_layer_item_logo">
                                             <div class="ays_pb_layer_item_logo_overlay">
-                                            <i class="ays_far ays_fa-file-code ays_pb_layer_icons"></i>
+                                                <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/file-code.svg"?>">
                                             </div>
                                         </div>
                                         <div class="ays_pb_layer_item_title">
@@ -4463,7 +4555,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                                     <div class="ays_pb_layer_item">
                                         <div class="ays_pb_layer_item_logo">
                                              <div class="ays_pb_layer_item_logo_overlay">
-                                            <i class="ays_fa ays_fa_video ays_pb_layer_icons"></i>
+                                                <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/video.svg"?>">
                                             </div>
                                         </div>
                                         <div class="ays_pb_layer_item_title">
@@ -4502,7 +4594,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                                     <div class="ays_pb_layer_item">
                                         <div class="ays_pb_layer_item_logo">
                                             <div class="ays_pb_layer_item_logo_overlay">
-                                                <i class="ays_far ays_fa-envelope ays_pb_layer_icons"></i>
+                                                <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/envelope.svg"?>">
                                             </div>
                                         </div>
                                         <div class="ays_pb_layer_item_description"></div>  
@@ -4533,7 +4625,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                                     <div class="ays_pb_layer_item">
                                         <div class="ays_pb_layer_item_logo">
                                              <div class="ays_pb_layer_item_logo_overlay">
-                                            <i class="ays_fa ays_fa-check ays_pb_layer_icons"></i>
+                                                <img src="<?php echo AYS_PB_ADMIN_URL . "./images/icons/check.svg"?>">
                                             </div>
                                         </div>
                                         <div class="ays_pb_layer_item_description"></div>  
@@ -4591,8 +4683,8 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                                     </div>
                                     <div class="ays_pb_layer_item">
                                         <div class="ays_pb_layer_item_logo">
-                                             <div class="ays_pb_layer_item_logo_overlay">
-                                            <i class="ays_fa ays_fa_comments ays_pb_layer_icons"></i>
+                                            <div class="ays_pb_layer_item_logo_overlay">
+                                                <img src="<?php echo AYS_PB_ADMIN_URL; ?>/images/icons/comments.svg">
                                             </div>
                                         </div>
                                         <div class="ays_pb_layer_item_description"></div>  
@@ -4620,8 +4712,8 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                                     </div>
                                     <div class="ays_pb_layer_item">
                                         <div class="ays_pb_layer_item_logo">
-                                             <div class="ays_pb_layer_item_logo_overlay">
-                                            <i class="ays_fa ays_fa_file_upload ays_pb_layer_icons"></i>
+                                            <div class="ays_pb_layer_item_logo_overlay">
+                                                <img src="<?php echo AYS_PB_ADMIN_URL; ?>/images/icons/file-upload.svg">
                                             </div>
                                         </div>
                                         <div class="ays_pb_layer_item_description"></div>  
@@ -4679,7 +4771,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                                     <div class="ays_pb_layer_item">
                                         <div class="ays_pb_layer_item_logo">
                                             <div class="ays_pb_layer_item_logo_overlay">
-                                                <i class="ays_fa ays_fa_countdown ays_pb_layer_icons"></i>
+                                                <img src= "<?php echo AYS_PB_ADMIN_URL ;?>/images/icons/countdown.svg">
                                             </div>
                                         </div>
                                         <div class="ays_pb_layer_item_description"></div>  
@@ -4707,7 +4799,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                                     <div class="ays_pb_layer_item">
                                         <div class="ays_pb_layer_item_logo">
                                             <div class="ays_pb_layer_item_logo_overlay">
-                                                <i class="ays_fas ays-fa-cookie-bite ays_pb_layer_icons"></i>
+                                                <img src= "<?php echo AYS_PB_ADMIN_URL ;?>/images/icons/cookie.svg">
                                             </div>
                                         </div>
                                         <div class="ays_pb_layer_item_description"></div>  
@@ -4735,7 +4827,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                                     <div class="ays_pb_layer_item">
                                         <div class="ays_pb_layer_item_logo">
                                             <div class="ays_pb_layer_item_logo_overlay">
-                                                <i class="ays_fa ays_fa_download ays_pb_layer_icons"></i>
+                                                <img src= "<?php echo AYS_PB_ADMIN_URL ;?>/images/icons/download.svg">
                                             </div>
                                         </div>
                                         <div class="ays_pb_layer_item_description"></div>  
@@ -4765,7 +4857,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                                     <div class="ays_pb_layer_item">
                                         <div class="ays_pb_layer_item_logo">
                                             <div class="ays_pb_layer_item_logo_overlay">
-                                                <i class="ays_fas ays_fa_woo ays_pb_layer_icons"></i>
+                                                <img src= "<?php echo AYS_PB_ADMIN_URL ;?>/images/icons/woo.svg">
                                             </div>
                                         </div>
                                         <div class="ays_pb_layer_item_description"></div>  
@@ -4793,7 +4885,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                                     <div class="ays_pb_layer_item">
                                         <div class="ays_pb_layer_item_logo">
                                             <div class="ays_pb_layer_item_logo_overlay">
-                                                <i class="ays_fa ays_fa_sign_in ays_pb_layer_icons"></i>
+                                                <img src= "<?php echo AYS_PB_ADMIN_URL ;?>/images/icons/sign-in.svg">
                                             </div>
                                         </div>
                                         <div class="ays_pb_layer_item_description"></div>  
@@ -4821,7 +4913,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                                     <div class="ays_pb_layer_item">
                                         <div class="ays_pb_layer_item_logo">
                                             <div class="ays_pb_layer_item_logo_overlay">
-                                                <i class="ays_fa ays_fa_map_marker ays_pb_layer_icons"></i>
+                                                <img src= "<?php echo AYS_PB_ADMIN_URL ;?>/images/icons/map-marker.svg">
                                             </div>
                                         </div>
                                         <div class="ays_pb_layer_item_description"></div>  
@@ -5219,6 +5311,10 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                             $(document).find(".ays_yellowish_window").css('display', 'none');
                             $(document).find(".ays_coral_window").css('display', 'none');
                             $(document).find(".ays_peachy_window").css('display', 'none');
+                            $(document).find('#ays-popup-box-description').hide();
+                            $(document).find('#ays-popup-box-description').prev('hr').hide();
+                            $(document).find('#ays-pb-show-title-description-box').hide();
+                            $(document).find('#ays-pb-show-title-description-box').next('hr').hide();
                             ays_pb_view_type = '.ays_video_window';
                             $(document).find('.ays_bg_image_box').css({
                                 bg_img_val,
@@ -5316,7 +5412,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                                 // $(ays_pb_view_type + ' .ays-close-button-text').html($("#ays-pb-close-button-text").val());
 
                                 if($("#ays-pb-close-button-text").val() == 'x'){
-                                     $(ays_pb_view_type + ' .ays-close-button-text').html("<i class='fa fa-times fa-2x '></i>");
+                                     $(ays_pb_view_type + ' .ays-close-button-text').html("<img src='<?php echo AYS_PB_ADMIN_URL ?>" + "/images/icons/times-2x.svg' class='fa-2x'>");
                                 }else{
                                     $(ays_pb_view_type + ' .ays-close-button-text').html($("#ays-pb-close-button-text").val());
                                 }
@@ -5681,7 +5777,7 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
 
                             $(document).find("#ays-pb-close-button-text").on('change', function () {
                                 if($("#ays-pb-close-button-text").val() == 'x'){
-                                     $(ays_pb_view_type + ' .ays-close-button-text').html("<i class='far fa-times-circle'></i>");
+                                     $(ays_pb_view_type + ' .ays-close-button-text').html("<img src='<?php echo AYS_PB_ADMIN_URL ?>" + "/images/icons/times-circle.svg'>");
                                 }else{
                                     $(ays_pb_view_type + ' .ays-close-button-text').html($("#ays-pb-close-button-text").val());
                                 }
@@ -5895,9 +5991,9 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                             setTimeout(function(){
                                 $(document).find('.ays-pb-modal .ays-close-button-text').html('');
                             },500);
-                            $this.addClass('fa-times');
+                            $this.html("<img src='<?php echo AYS_PB_ADMIN_URL ?>" + "/images/icons/times-2x.svg' class='fa-2x'>");
                         }else{
-                            $this.removeClass('ays_fa-close-button fa-times');
+                            $this.removeClass('ays_fa-close-button');
                         }
                     }
                     if ((buttonText == 'x' || buttonText == '') && $(document).find('a.close-lil-btn').hasClass('close-lil-btn-text')) {
@@ -5909,13 +6005,13 @@ $ays_pb_page_url = sprintf('?page=%s', 'ays-pb');
                         }
                     }
                     if($("#ays-pb-close-button-text").val() == 'x'){
-                          $(document).find('.ays_minimal_window .ays-close-button-text').html("<i class='far fa-times-circle'></i>");
+                          $(document).find('.ays_minimal_window .ays-close-button-text').html("<img src='<?php echo AYS_PB_ADMIN_URL ?>" + "/images/icons/times-circle.svg'>");
                     }else{
                          $(document).find('.ays_minimal_window .ays-close-button-text').html($("#ays-pb-close-button-text").val());
                     }
 
                     if($("#ays-pb-close-button-text").val() == 'x'){
-                         $(document).find('.ays-pb-modal .ays-close-button-text').html("<i class='fa fa-times fa-2x '></i>");
+                         $(document).find('.ays-pb-modal .ays-close-button-text').html("<img src='<?php echo AYS_PB_ADMIN_URL ?>" + "/images/icons/times-2x.svg' class='fa-2x'>");
                     }else{
                          $(document).find('.ays-pb-modal .ays-close-button-text').html($("#ays-pb-close-button-text").val());
                     }

@@ -64,6 +64,9 @@ $this->popupbox_obj->publish_unpublish_popupbox($id,$action);
     <!-- </h1> -->
     <?php if($popup_max_id <= 1): ?>
             <div class="ays-pb-create-pb-video-box" style="">
+                <div class="ays-pb-create-pb-youtube-video-button-box ays-pb-create-pb-youtube-video-button-box-top">
+                    <?php echo sprintf(  '<a href="?page=%s&action=%s" class="page-title-action ays-pb-add-new-button-video">'. __( "Add New", "ays-popup-box" ) .'</a>', esc_attr( $_REQUEST['page'] ), 'add');?>
+                </div>
                 <div class="ays-pb-create-pb-title">
                     <h4><?php echo __( "Create Your First Popup in Under One Minute", "ays-popup-box" ); ?></h4>
                 </div>
@@ -71,19 +74,20 @@ $this->popupbox_obj->publish_unpublish_popupbox($id,$action);
                     <iframe width="560" height="315" src="https://www.youtube.com/embed/_VEAGGzKe_g" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                 </div>
                 <div class="ays-pb-create-pb-youtube-video-button-box">
-                    <!-- <button class="ays-pb-add-new-button-video">Add new</button> -->
                     <?php echo sprintf(  '<a href="?page=%s&action=%s" class="page-title-action ays-pb-add-new-button-video">'. __( "Add New", "ays-popup-box" ) .'</a>', esc_attr( $_REQUEST['page'] ), 'add');?>
                 </div>
             </div>
         <?php else: ?>
             <div class="ays-pb-create-pb-video-box" style="height: 83px;margin:0;">
-                
-                <div class="ays-pb-create-pb-youtube-video">
-                    <a href="https://www.youtube.com/watch?v=_VEAGGzKe_g" target="_blank" title="YouTube video player" >How to create Popup in Under One Minute</a>
-                </div>
                 <div class="ays-pb-create-pb-youtube-video">
                     <?php echo sprintf(  '<a href="?page=%s&action=%s" class="page-title-action ays-pb-add-new-button-video">'. __( "Add New", "ays-popup-box" ) .'</a>', esc_attr( $_REQUEST['page'] ), 'add');?>
                 </div>
+                <div class="ays-pb-create-pb-youtube-video">
+                    <a href="https://www.youtube.com/watch?v=_VEAGGzKe_g" target="_blank" title="YouTube video player" >How to create Popup in Under One Minute</a>
+                </div>
+                <!-- <div class="ays-pb-create-pb-youtube-video">
+                    <?php echo sprintf(  '<a href="?page=%s&action=%s" class="page-title-action ays-pb-add-new-button-video">'. __( "Add New", "ays-popup-box" ) .'</a>', esc_attr( $_REQUEST['page'] ), 'add');?>
+                </div> -->
             </div>
         <?php endif ?>
 </div>
