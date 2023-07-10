@@ -7,7 +7,7 @@ if ( ! class_exists( 'BravePop_Webhook' ) ) {
 
       }
 
-      public function post($url, $hooktype, $contentType, $fieldSettings, $current_user, $visitor_country, $visitor_ip){
+      public function post($url, $hooktype, $contentType, $fieldSettings, $current_user, $visitor_country, $visitor_ip ,$pageURL){
          if(!$url || !$fieldSettings){ return null; }
          $finalData = array();
 
@@ -48,7 +48,10 @@ if ( ! class_exists( 'BravePop_Webhook' ) ) {
          if(!empty($visitor_country)){
             $finalData['sender_country'] = $visitor_country;
          }
-      
+         if(!empty($pageURL)){
+            $finalData['page_url'] = $pageURL;
+         }
+
          $args = array(
             'method' => 'POST',
             'timeout' => 10,

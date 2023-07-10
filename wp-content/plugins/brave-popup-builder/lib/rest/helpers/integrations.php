@@ -126,7 +126,11 @@ function bravepop_get_integration_lists($service='', $apiKey='', $secretKey='', 
       $lists = $the_newsletter_plugin->get_lists();
       return $lists;
    }
-
+   if($service === 'omnisend')   { 
+      $omnisend =   new BravePop_Omnisend();
+      $lists = $omnisend->get_lists($apiKey);
+      return $lists;
+   }
    if(function_exists('bravepop_external_integration_get_list')){
       return bravepop_get_external_integration_list($service, $apiKey, $secretKey, $accessToken, $apiURL);
    }
@@ -331,6 +335,7 @@ function bravepop_add_to_newsletter($actionType='form', $type='', $emailValue=''
       if($type === 'mailster'){      $service = new BravePop_Mailster();   }
       if($type === 'fluentcrm'){      $service = new BravePop_FluentCRM();   }
       if($type === 'sendy'){      $service = new BravePop_Sendy();   }
+      if($type === 'omnisend'){      $service = new BravePop_Omnisend();   }
 
       if(function_exists('bravepop_external_integration_add_contact')){
          $service =  bravepop_external_integration_add_contact($type);

@@ -2,6 +2,29 @@
 
 $logs = [
 
+	'v.1.1.94' => [
+		'date' => '19 April, 2023',
+
+		'new'         => [
+			'Added Tutor LMS integration.',
+			'Added Divi builder integration.',
+			'Added Private Files support for embed module.',
+			'Added file size field show/hide option for the file browser module.',
+			'Added download support for search box module.',
+			'Added Embed iFrame height and width customization options.',
+		],
+		'fix'         => [
+			'Fixed scrolling to the search box issue.',
+			'Fixed multiple ACF filed issue.',
+			'Fixed embed documents popout issue.',
+			'Fixed WooCommerce product edit page issue.',
+			'Fixed Contact Form 7 email notification file list issue.'
+		],
+		'enhancement' => [
+			'Improved plugin performance.',
+		],
+	],
+
 	'v.1.1.93' => [
 		'date' => '04 April, 2023',
 
@@ -215,27 +238,27 @@ $logs = [
 ?>
 
 <div id="what-new" class="getting-started-content content-what-new">
-    <div class="content-heading">
-        <h2>What's new in the latest changes</h2>
-        <p>Check out the latest change logs.</p>
-    </div>
+	<div class="content-heading">
+		<h2>What's new in the latest changes</h2>
+		<p>Check out the latest change logs.</p>
+	</div>
 
 	<?php
 	$i = 0;
 	foreach ( $logs as $v => $log ) { ?>
-        <div class="log <?php echo $i == 0 ? 'active' : ''; ?>">
-            <div class="log-header">
-                <span class="log-version"><?php echo $v; ?></span>
-                <span class="log-date">(<?php echo $log['date']; ?>)</span>
+		<div class="log <?php echo esc_attr($i == 0 ? 'active' : ''); ?>">
+			<div class="log-header">
+				<span class="log-version"><?php echo esc_html($v); ?></span>
+				<span class="log-date">(<?php echo esc_html($log['date']); ?>)</span>
 
-                <i class="<?php echo $i == 0 ? 'dashicons-arrow-up-alt2' : 'dashicons-arrow-down-alt2'; ?> dashicons "></i>
-            </div>
+				<i class="<?php echo esc_attr($i == 0 ? 'dashicons-arrow-up-alt2' : 'dashicons-arrow-down-alt2'); ?> dashicons "></i>
+			</div>
 
-            <div class="log-body">
+			<div class="log-body">
 				<?php
 
 				if ( ! empty( $log['new'] ) ) {
-					echo '<div class="log-section new"><h3>New Features</h3>';
+					printf('<div class="log-section new"><h3>%s</h3>', __('New Features', 'integrate-google-drive'));
 					foreach ( $log['new'] as $item ) {
 						echo '<div class="log-item log-item-new"><i class="dashicons dashicons-plus-alt2"></i> <span>' . $item . '</span></div>';
 					}
@@ -244,7 +267,7 @@ $logs = [
 
 
 				if ( ! empty( $log['fix'] ) ) {
-					echo '<div class="log-section fix"><h3>Fixes</h3>';
+					printf('<div class="log-section fix"><h3>%s</h3>', __('Fixes', 'integrate-google-drive'));
 					foreach ( $log['fix'] as $item ) {
 						echo '<div class="log-item log-item-fix"><i class="dashicons dashicons-saved"></i> <span>' . $item . '</span></div>';
 					}
@@ -252,7 +275,7 @@ $logs = [
 				}
 
 				if ( ! empty( $log['enhancement'] ) ) {
-					echo '<div class="log-section enhancement"><h3>Enhancements</h3>';
+					printf('<div class="log-section enhancement"><h3>%s</h3>', __('Enhancements', 'integrate-google-drive'));
 					foreach ( $log['enhancement'] as $item ) {
 						echo '<div class="log-item log-item-enhancement"><i class="dashicons dashicons-star-filled"></i> <span>' . $item . '</span></div>';
 					}
@@ -260,7 +283,7 @@ $logs = [
 				}
 
 				if ( ! empty( $log['remove'] ) ) {
-					echo '<div class="log-section remove"><h3>Removes</h3>';
+					printf( '<div class="log-section remove"><h3>%s</h3>', __('Removes', 'integrate-google-drive'));
 					foreach ( $log['remove'] as $item ) {
 						echo '<div class="log-item log-item-remove"><i class="dashicons dashicons-trash"></i> <span>' . $item . '</span></div>';
 					}
@@ -269,9 +292,9 @@ $logs = [
 
 
 				?>
-            </div>
+			</div>
 
-        </div>
+		</div>
 		<?php
 		$i ++;
 	} ?>

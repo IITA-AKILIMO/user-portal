@@ -26,7 +26,7 @@ class TinyMCE {
 		}
 
 		$screen = get_current_screen();
-		if ( $screen->base !== 'post' ) {
+		if ( ! empty( $screen ) && $screen->base !== 'post' ) {
 			return;
 		}
 

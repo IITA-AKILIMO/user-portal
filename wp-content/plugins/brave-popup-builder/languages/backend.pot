@@ -277,7 +277,7 @@ msgstr ""
 
 #: src/admin/popups/AllPopups.js:582
 #: src/admin/popups/Analytics.js:382
-#: src/admin/popups/FormBuilder/settings/FormActionNewsletter.js:304
+#: src/admin/popups/FormBuilder/settings/FormActionNewsletter.js:306
 #: src/admin/popups/Integrations/CaptchaIntegration.js:91
 #: src/admin/popups/Integrations/SocialIntegrations.js:119
 #: src/admin/popups/Integrations/ValidationIntegrations.js:165
@@ -987,7 +987,7 @@ msgid "This Field is shown based on conditions"
 msgstr ""
 
 #: src/admin/popups/FormBuilder/FormFieldsEditor.js:952
-#: src/admin/popups/FormBuilder/settings/FormActionNewsletter.js:206
+#: src/admin/popups/FormBuilder/settings/FormActionNewsletter.js:208
 #: src/admin/popups/FormBuilder/settings/FormActionRecievemail.js:103
 #: src/admin/popups/FormBuilder/settings/FormActionSendmail.js:206
 #: src/admin/popups/FormBuilder/settings/FormActionSettings.js:347
@@ -1310,104 +1310,104 @@ msgstr ""
 msgid "Other"
 msgstr ""
 
-#: src/admin/popups/FormBuilder/settings/FormActionNewsletter.js:147
+#: src/admin/popups/FormBuilder/settings/FormActionNewsletter.js:149
 msgid "Add User to Newsletter"
 msgstr ""
 
-#: src/admin/popups/FormBuilder/settings/FormActionNewsletter.js:157
+#: src/admin/popups/FormBuilder/settings/FormActionNewsletter.js:159
 msgid ""
 "You have not Integrated a Newsletter Service Yet. Please do so, from Brave "
 "> Integrations and then refresh this page."
 msgstr ""
 
-#: src/admin/popups/FormBuilder/settings/FormActionNewsletter.js:162
+#: src/admin/popups/FormBuilder/settings/FormActionNewsletter.js:164
 #: src/admin/popups/FormBuilder/settings/FormActionSendmail.js:198
 msgid ""
 "Your Form Does not have an Email Input Field. To activate this Option, "
 "Please add an Input Field and then set the Field type Option to \"Email\"."
 msgstr ""
 
-#: src/admin/popups/FormBuilder/settings/FormActionNewsletter.js:170
+#: src/admin/popups/FormBuilder/settings/FormActionNewsletter.js:172
 msgid "Newsletter Service"
 msgstr ""
 
-#: src/admin/popups/FormBuilder/settings/FormActionNewsletter.js:179
+#: src/admin/popups/FormBuilder/settings/FormActionNewsletter.js:181
 msgid "Loading Lists.. "
 msgstr ""
 
-#: src/admin/popups/FormBuilder/settings/FormActionNewsletter.js:182
+#: src/admin/popups/FormBuilder/settings/FormActionNewsletter.js:184
 msgid "Error Loading Lists!"
 msgstr ""
 
-#: src/admin/popups/FormBuilder/settings/FormActionNewsletter.js:189
+#: src/admin/popups/FormBuilder/settings/FormActionNewsletter.js:191
 msgid "Newsletter List"
 msgstr ""
 
-#: src/admin/popups/FormBuilder/settings/FormActionNewsletter.js:191
+#: src/admin/popups/FormBuilder/settings/FormActionNewsletter.js:193
 msgid "Newsletter Lists"
 msgstr ""
 
-#: src/admin/popups/FormBuilder/settings/FormActionNewsletter.js:200
+#: src/admin/popups/FormBuilder/settings/FormActionNewsletter.js:202
 msgid "Sendy List ID"
 msgstr ""
 
-#: src/admin/popups/FormBuilder/settings/FormActionNewsletter.js:206
+#: src/admin/popups/FormBuilder/settings/FormActionNewsletter.js:208
 msgid "Get Email From"
 msgstr ""
 
-#: src/admin/popups/FormBuilder/settings/FormActionNewsletter.js:208
+#: src/admin/popups/FormBuilder/settings/FormActionNewsletter.js:210
 msgid "Email Fields"
 msgstr ""
 
-#: src/admin/popups/FormBuilder/settings/FormActionNewsletter.js:218
+#: src/admin/popups/FormBuilder/settings/FormActionNewsletter.js:220
 msgid "Get Name From"
 msgstr ""
 
-#: src/admin/popups/FormBuilder/settings/FormActionNewsletter.js:230
+#: src/admin/popups/FormBuilder/settings/FormActionNewsletter.js:232
 msgid "Get Phone Number From"
 msgstr ""
 
-#: src/admin/popups/FormBuilder/settings/FormActionNewsletter.js:232
+#: src/admin/popups/FormBuilder/settings/FormActionNewsletter.js:234
 msgid "All Input Fields"
 msgstr ""
 
-#: src/admin/popups/FormBuilder/settings/FormActionNewsletter.js:244
+#: src/admin/popups/FormBuilder/settings/FormActionNewsletter.js:246
 msgid "Only Add if a Checkbox is Checked"
 msgstr ""
 
-#: src/admin/popups/FormBuilder/settings/FormActionNewsletter.js:253
+#: src/admin/popups/FormBuilder/settings/FormActionNewsletter.js:255
 msgid "Select Checkbox"
 msgstr ""
 
-#: src/admin/popups/FormBuilder/settings/FormActionNewsletter.js:255
+#: src/admin/popups/FormBuilder/settings/FormActionNewsletter.js:257
 msgid "All Checkbox Fields"
 msgstr ""
 
-#: src/admin/popups/FormBuilder/settings/FormActionNewsletter.js:263
+#: src/admin/popups/FormBuilder/settings/FormActionNewsletter.js:265
 msgid "No Checkbox Fields Found in your Form!"
 msgstr ""
 
-#: src/admin/popups/FormBuilder/settings/FormActionNewsletter.js:278
+#: src/admin/popups/FormBuilder/settings/FormActionNewsletter.js:280
 msgid "Email Template ID*"
 msgstr ""
 
-#: src/admin/popups/FormBuilder/settings/FormActionNewsletter.js:282
+#: src/admin/popups/FormBuilder/settings/FormActionNewsletter.js:284
 msgid "Redirect URL After Optin*"
 msgstr ""
 
-#: src/admin/popups/FormBuilder/settings/FormActionNewsletter.js:289
+#: src/admin/popups/FormBuilder/settings/FormActionNewsletter.js:291
 msgid "Advanced Mode"
 msgstr ""
 
-#: src/admin/popups/FormBuilder/settings/FormActionNewsletter.js:298
+#: src/admin/popups/FormBuilder/settings/FormActionNewsletter.js:300
 msgid "Newsletter Signup Settings"
 msgstr ""
 
-#: src/admin/popups/FormBuilder/settings/FormActionNewsletter.js:298
+#: src/admin/popups/FormBuilder/settings/FormActionNewsletter.js:300
 msgid "(Locked! Activate License)"
 msgstr ""
 
-#: src/admin/popups/FormBuilder/settings/FormActionNewsletter.js:304
+#: src/admin/popups/FormBuilder/settings/FormActionNewsletter.js:306
 msgid ""
 "to Save Subscribers in Database, Sync More Fields, Tag Subscriber, "
 "Subscribe visitors to different lists based on conditions & Prevent "
@@ -1824,32 +1824,32 @@ msgstr ""
 msgid "Send Sample Data"
 msgstr ""
 
-#: src/admin/popups/Integrations.js:220
+#: src/admin/popups/Integrations.js:222
 msgid "Integrations"
 msgstr ""
 
-#: src/admin/popups/Integrations.js:224
+#: src/admin/popups/Integrations.js:226
 msgid "EMS"
 msgstr ""
 
-#: src/admin/popups/Integrations.js:225
+#: src/admin/popups/Integrations.js:227
 #: src/admin/popups/utils/elementlist.js:22
 msgid "Social"
 msgstr ""
 
-#: src/admin/popups/Integrations.js:226
+#: src/admin/popups/Integrations.js:228
 msgid "reCAPTCHA"
 msgstr ""
 
-#: src/admin/popups/Integrations.js:227
+#: src/admin/popups/Integrations.js:229
 msgid "Email Validation"
 msgstr ""
 
-#: src/admin/popups/Integrations.js:280
+#: src/admin/popups/Integrations.js:282
 msgid "Remove This Integraion"
 msgstr ""
 
-#: src/admin/popups/Integrations.js:281
+#: src/admin/popups/Integrations.js:283
 msgid "Are you sure you want to remove this Integraion?"
 msgstr ""
 
@@ -3375,7 +3375,7 @@ msgstr ""
 #: src/admin/popups/editor/builder/Sidebar/Settings/ButtonSettings.js:251
 #: src/admin/popups/editor/builder/Sidebar/Settings/GroupSettings.js:86
 #: src/admin/popups/editor/builder/Sidebar/Settings/ShapeSettings.js:263
-#: src/admin/popups/editor/fields/ClickActionsField.js:313
+#: src/admin/popups/editor/fields/ClickActionsField.js:345
 msgid "Hover Animation"
 msgstr ""
 
@@ -4337,7 +4337,7 @@ msgid "Enable"
 msgstr ""
 
 #: src/admin/popups/editor/fields/AnimationField.js:373
-#: src/admin/popups/editor/fields/ClickActionsField.js:355
+#: src/admin/popups/editor/fields/ClickActionsField.js:387
 msgid "Animation Type"
 msgstr ""
 
@@ -4361,71 +4361,71 @@ msgstr ""
 msgid "Image Zoom"
 msgstr ""
 
-#: src/admin/popups/editor/fields/ClickActionsField.js:162
+#: src/admin/popups/editor/fields/ClickActionsField.js:179
 msgid "Select a Step"
 msgstr ""
 
-#: src/admin/popups/editor/fields/ClickActionsField.js:165
+#: src/admin/popups/editor/fields/ClickActionsField.js:182
 msgid "Step "
 msgstr ""
 
-#: src/admin/popups/editor/fields/ClickActionsField.js:170
+#: src/admin/popups/editor/fields/ClickActionsField.js:187
 msgid "Select a Product"
 msgstr ""
 
-#: src/admin/popups/editor/fields/ClickActionsField.js:190
+#: src/admin/popups/editor/fields/ClickActionsField.js:209
 msgid "Click Action"
 msgstr ""
 
-#: src/admin/popups/editor/fields/ClickActionsField.js:200
+#: src/admin/popups/editor/fields/ClickActionsField.js:219
 msgid "Custom URL:"
 msgstr ""
 
-#: src/admin/popups/editor/fields/ClickActionsField.js:210
+#: src/admin/popups/editor/fields/ClickActionsField.js:229
 msgid "Phone Number"
 msgstr ""
 
-#: src/admin/popups/editor/fields/ClickActionsField.js:220
-msgid "Make Link Nofollow"
+#: src/admin/popups/editor/fields/ClickActionsField.js:243
+msgid "Link Rel Attribute"
 msgstr ""
 
-#: src/admin/popups/editor/fields/ClickActionsField.js:238
+#: src/admin/popups/editor/fields/ClickActionsField.js:270
 msgid "Download on Click"
 msgstr ""
 
-#: src/admin/popups/editor/fields/ClickActionsField.js:262
+#: src/admin/popups/editor/fields/ClickActionsField.js:294
 msgid "Select Product"
 msgstr ""
 
-#: src/admin/popups/editor/fields/ClickActionsField.js:271
+#: src/admin/popups/editor/fields/ClickActionsField.js:303
 msgid "Open in New Window"
 msgstr ""
 
-#: src/admin/popups/editor/fields/ClickActionsField.js:281
+#: src/admin/popups/editor/fields/ClickActionsField.js:313
 msgid "Step:"
 msgstr ""
 
-#: src/admin/popups/editor/fields/ClickActionsField.js:285
+#: src/admin/popups/editor/fields/ClickActionsField.js:317
 msgid "Select Step"
 msgstr ""
 
-#: src/admin/popups/editor/fields/ClickActionsField.js:294
+#: src/admin/popups/editor/fields/ClickActionsField.js:326
 msgid "You only have One Step. Please add More steps to link to them."
 msgstr ""
 
-#: src/admin/popups/editor/fields/ClickActionsField.js:301
+#: src/admin/popups/editor/fields/ClickActionsField.js:333
 msgid "Javascript Function:"
 msgstr ""
 
-#: src/admin/popups/editor/fields/ClickActionsField.js:324
+#: src/admin/popups/editor/fields/ClickActionsField.js:356
 msgid "Coupon Code:"
 msgstr ""
 
-#: src/admin/popups/editor/fields/ClickActionsField.js:335
+#: src/admin/popups/editor/fields/ClickActionsField.js:367
 msgid "After Applying Coupon: "
 msgstr ""
 
-#: src/admin/popups/editor/fields/ClickActionsField.js:344
+#: src/admin/popups/editor/fields/ClickActionsField.js:376
 msgid "Play Animation on Click"
 msgstr ""
 
@@ -5063,57 +5063,65 @@ msgstr ""
 msgid "60 minutes"
 msgstr ""
 
-#: src/admin/popups/editor/visibility/FrequencySettings.js:38
+#: src/admin/popups/editor/visibility/FrequencySettings.js:30
+msgid "90 minutes"
+msgstr ""
+
+#: src/admin/popups/editor/visibility/FrequencySettings.js:31
+msgid "120 minutes"
+msgstr ""
+
+#: src/admin/popups/editor/visibility/FrequencySettings.js:40
 msgid "Frequency"
 msgstr ""
 
-#: src/admin/popups/editor/visibility/FrequencySettings.js:42
+#: src/admin/popups/editor/visibility/FrequencySettings.js:44
 msgid "Do Not Show More Than"
 msgstr ""
 
-#: src/admin/popups/editor/visibility/FrequencySettings.js:44
+#: src/admin/popups/editor/visibility/FrequencySettings.js:46
 msgid "times per"
 msgstr ""
 
-#: src/admin/popups/editor/visibility/FrequencySettings.js:50
+#: src/admin/popups/editor/visibility/FrequencySettings.js:52
 msgid "Do Not Show if the Visitor Completed the Campaign Goal."
 msgstr ""
 
-#: src/admin/popups/editor/visibility/FrequencySettings.js:55
+#: src/admin/popups/editor/visibility/FrequencySettings.js:57
 msgid "Do Not Show if the Visitor submitted a Form in this "
 msgstr ""
 
-#: src/admin/popups/editor/visibility/FrequencySettings.js:61
+#: src/admin/popups/editor/visibility/FrequencySettings.js:63
 msgid "Do Not Show again for "
 msgstr ""
 
-#: src/admin/popups/editor/visibility/FrequencySettings.js:63
+#: src/admin/popups/editor/visibility/FrequencySettings.js:65
 msgid "days, If user closed the "
 msgstr ""
 
-#: src/admin/popups/editor/visibility/FrequencySettings.js:65
+#: src/admin/popups/editor/visibility/FrequencySettings.js:67
 msgid "times."
 msgstr ""
 
-#: src/admin/popups/editor/visibility/FrequencySettings.js:71
+#: src/admin/popups/editor/visibility/FrequencySettings.js:73
 msgid "Wait "
 msgstr ""
 
-#: src/admin/popups/editor/visibility/FrequencySettings.js:73
+#: src/admin/popups/editor/visibility/FrequencySettings.js:75
 msgid " before subsequent displays."
 msgstr ""
 
-#: src/admin/popups/editor/visibility/FrequencySettings.js:80
+#: src/admin/popups/editor/visibility/FrequencySettings.js:82
 msgid "Do not Show if the Countdown Timer has Ended."
 msgstr ""
 
-#: src/admin/popups/editor/visibility/FrequencySettings.js:87
+#: src/admin/popups/editor/visibility/FrequencySettings.js:89
 msgid ""
 "Remember visitor's last viewed Step and display it as the first Step on "
 "subsequent Pages."
 msgstr ""
 
-#: src/admin/popups/editor/visibility/FrequencySettings.js:91
+#: src/admin/popups/editor/visibility/FrequencySettings.js:93
 msgid ""
 "Frequency settings do not apply to administrators. If you want to test "
 "these settings, logout first."

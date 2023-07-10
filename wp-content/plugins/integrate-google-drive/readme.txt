@@ -4,7 +4,7 @@ Tags: google, google drive, embed, drive, cloud, audio, video, gallery, download
 Requires at least: 5.0
 Tested up to: 6.2
 Requires PHP: 7.0
-Stable tag: 1.1.93
+Stable tag: 1.1.94
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -155,62 +155,72 @@ You can use the plugin with the Gravity Forms, WPForms, Ninja Forms, Formidable 
 
 == 🧩 RICH INTEGRATION WITH POPULAR PLUGINS ==
 
-**🔀 Classic Editor Integration**
+**🔀 [Classic Editor](https://wordpress.org/plugins/classic-editor/) Integration**
 You can easily integrate your Google Drive files into your WordPress content created using the classic editor. By using the Google Drive button on the editor, you can add modules, embed documents, and insert file download and view links, making it a seamless and efficient process.
 
 🎬 [Watch Video](https://youtu.be/yfg7_JLsIUQ)
 
-**🔀 Gutenberg Integration**
+**🔀 [Gutenberg Editor](https://wordpress.org/plugins/gutenberg/) Integration**
 This plugin provides 9+ blocks to use the File Browser, Gallery, Media Player, File Search Box, File Uploader, File Download Links, File View Links, and File Embed modules in the Gutenberg editor.
 
 🎬 [Watch Video](https://youtu.be/qR01fo_LHoM)
 
-**🔀 Elementor Integration**
+**🔀 [Elementor Website Builder](https://wordpress.org/plugins/elementor/) Integration**
 This plugin integrates with the Elementor page builder, offering 9+ widgets to utilize the File Browser, Gallery, Media Player, File Search Box, File Uploader, File Download Links, File View Links, and File Embed modules within your posts and pages.
 
 🎬 [Watch Video](https://youtu.be/swjiLPm4k-Q)
 
-**🔀 Advanced Custom Fields (ACF) Integration**
+**🔀 [Divi Builder](https://www.elegantthemes.com/gallery/divi/) Integration**
+This plugin integrates with the Divi Builder, offering 9+ modules to utilize the File Browser, Gallery, Media Player, File Search Box, File Uploader, File Download Links, File View Links, and File Embed modules within your posts and pages.
+
+🎬 [Watch Video](https://www.youtube.com/watch?v=Iz_Md-oiRhs)
+
+**🔀 [Advanced Custom Fields (ACF)](https://wordpress.org/plugins/advanced-custom-fields/) Integration**
 Allows you to select Google Drive files and folders using ACF field and display in theme template file.
 
 🎬 [Watch Video](https://www.youtube.com/watch?v=CiiNR26_DLc)
 
-**🔀️ WooCommerce Integration**
+**🔀️ [WooCommerce](https://wordpress.org/plugins/woocommerce/) Integration**
 You can serve your downloadable product's files directly from Google Drive, and also you can let your customers upload files to your Google Drive account when they purchase your products.
 
 🎬 [Watch Video](https://youtu.be/RLdOqLQLixk)
 
-**🔀 Dokan Multi-vendor Integration**
+**🔀 [Dokan](https://wordpress.org/plugins/dokan-lite/) Multi-vendor Marketplace Integration**
 You can allow your vendors to serve their downloadable product's files directly from Google Drive, and also vendors can let their customers upload files for their products to the vendor's Google Drive account when any customer purchase  any products.
 
 🎬 [Watch Video](https://youtu.be/S7sc-qqEnUY)
 
-**🔀 Easy Digital Downloads Google Drive Files  Integration**
+**🔀 [Easy Digital Downloads](https://wordpress.org/plugins/easy-digital-downloads/) Google Drive Files  Integration**
 You can integrate your Google Drive files with EDD, and it allows you to serve your Digital Downloads directly from Google Drive.
 
 🎬 [Watch Video](https://youtu.be/ZvkPsRn5-QQ)
 
-**🔀 Gravity Forms Google Drive Upload Integration**
+**🔀 [Gravity Forms](https://www.gravityforms.com/) Google Drive Upload Integration**
 You can use a File Upload field in Gravity Forms that allows users to upload files directly to your Google Drive account.
 
 🎬 [Watch Video](https://youtu.be/ZHdPFeWG3FI)
 
-**🔀 WPForms Google Drive Upload Integration**
+**🔀 [Tutor LMS](https://wordpress.org/plugins/tutor/) Integration**
+Allows you to serve your Tutor LMS course videos and attachment files directly from Google Drive.
+
+🎬 [Watch Video](https://www.youtube.com/watch?v=UTFgIKS64zA)
+
+**🔀 [WPForms](https://wordpress.org/plugins/wpforms-lite/) Google Drive Upload Integration**
 You can use a File Upload field in WPForms that allows users to upload files directly to your Google Drive account.
 
 🎬 [Watch Video](https://youtu.be/QvRuNCcUjic)
 
-**🔀 Ninja Forms Google Drive Upload Integration**
+**🔀 [Ninja Forms](https://wordpress.org/plugins/ninja-forms/) Google Drive Upload Integration**
 You can use a File Upload field in Ninja Forms that allows users to upload files directly to your Google Drive account.
 
 🎬 [Watch Video](https://youtu.be/D687aswuMW8)
 
-**🔀 Fluent Forms Google Drive Upload Integration**
+**🔀 [Fluent Forms](https://wordpress.org/plugins/fluentform/) Google Drive Upload Integration**
 You can use a File Upload field in Fluent Forms that allows users to upload files directly to your Google Drive account.
 
 🎬 [Watch Video](https://youtu.be/lE7i66t_7Wc)
 
-**🔀 Formidable Forms Google Drive Upload Integration**
+**🔀 [Formidable Forms](https://wordpress.org/plugins/formidable/) Google Drive Upload Integration**
 You can use a File Upload field in Formidable Forms that allows users to upload files directly to your Google Drive account.
 
 🎬 [Watch Video](https://youtu.be/BmqRNXnFTLo)
@@ -334,6 +344,20 @@ Yes, you can let your customers upload files to your Google Drive account when t
 
 
 == Changelog ==
+
+= 1.1.94 =
+New: Added Tutor LMS integration.
+New: Added Divi builder integration.
+New: Added Private Files support for embed module.
+New: Added file size field show/hide option for the file browser module.
+New: Added download support for search box module.
+New: Added Embed iFrame height and width customization options.
+Fix: Fixed scrolling to the search box issue.
+Fix: Fixed multiple ACF filed issue.
+Fix: Fixed embed documents popout issue.
+Fix: Fixed WooCommerce product edit page issue.
+Fix: Fixed Contact Form 7 email notification file list issue.
+Update: Improved plugin performance.
 
 = 1.1.93 =
 **New:** Added access denied message for the shortcode module when user is not allowed to access the module'

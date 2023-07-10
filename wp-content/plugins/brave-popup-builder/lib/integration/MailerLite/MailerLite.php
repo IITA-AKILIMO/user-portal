@@ -7,24 +7,31 @@ if ( ! class_exists( 'BravePop_MailerLite' ) ) {
          $braveSettings = get_option('_bravepopup_settings');
          $integrations = $braveSettings && isset($braveSettings['integrations']) ? $braveSettings['integrations'] : array() ;
          $this->api_key = isset($integrations['mailerlite']->api)  ? $integrations['mailerlite']->api  : '';
+         $this->versionTwo = isset($integrations['mailerlite']->api) && strlen($integrations['mailerlite']->api) > 50 ? true  : false;
+         $this->apiURL = $this->versionTwo ? 'https://connect.mailerlite.com/api/' : 'https://api.mailerlite.com/api/v2/';
       }
 
       public function get_lists($apiKey=''){
          $apiKey  = $apiKey ? $apiKey : $this->api_key;
 
          $args = array(
-            'headers' => array(
-               'X-MailerLite-ApiKey' => $apiKey
-            )
+            'method' => 'GET',
+            'headers' => $this->versionTwo ? array( 'Authorization' => 'Bearer '.$apiKey ) : array( 'X-MailerLite-ApiKey' => $apiKey )
          );
-         $response = wp_remote_get( 'https://api.mailerlite.com/api/v2/groups?limit=300', $args );
+
+         if($this->versionTwo){ 
+            $args['user-agent'] = 'Mozilla/5.0 (Windows; U; MSIE 6.0; Windows NT 5.1; SV1; .NET CLR 2.0.50727)';
+         }
+         
+         $response = wp_remote_get( $this->apiURL.'groups?limit=300', $args );
+
          if( is_wp_error( $response ) ) {
             return false; // Bail early
          }
 
          $body = wp_remote_retrieve_body( $response );
          $data = json_decode( $body );
-         $lists = $data;
+         $lists = isset($data->data) && $this->versionTwo ? $data->data : $data;
          $finalLists = array();
 
          if($lists && is_array($lists)){
@@ -33,7 +40,11 @@ if ( ! class_exists( 'BravePop_MailerLite' ) ) {
                $listItem = new stdClass();
                $listItem->id = isset($list->id) ? $list->id : '';
                $listItem->name = isset($list->name) ? $list->name : '';
-               $listItem->count = isset($list->total)  ? $list->total : 0;
+               if($this->versionTwo && isset($list->active_count)){
+                  $listItem->count = isset($list->active_count)  ? $list->active_count : 0;
+               }elseif (isset($list->total)){
+                  $listItem->count = isset($list->total)  ? $list->total : 0;
+               }
                $finalLists[] = $listItem;
             }
 
@@ -71,24 +82,32 @@ if ( ! class_exists( 'BravePop_MailerLite' ) ) {
             }
          }
 
-         $args = array(
-            'method' => 'POST',
-            'headers' => array(
-               'content-type' => 'application/json',
-               'X-MailerLite-ApiKey' => $this->api_key
-            ),
-            'body'=> json_encode($contact)
-         );
 
-         $response = wp_remote_post( 'https://api.mailerlite.com/api/v2/groups/'.$list_id.'/subscribers', $args );
+         $args = array( 'method' => 'POST', 'headers' => array( 'content-type' => 'application/json' ) );
+         
+         if($this->versionTwo){ 
+            //IF version TWO, change the headers and the payload
+            $args['headers']['Authorization'] = 'Bearer '.$this->api_key;
+            $args['user-agent'] = 'Mozilla/5.0 (Windows; U; MSIE 6.0; Windows NT 5.1; SV1; .NET CLR 2.0.50727)';
+            $contact['groups'] = array($list_id);
+            if($fullname){  $contact['fields']['name'] = trim($fullname);  }
+         }else{
+            $args['headers']['X-MailerLite-ApiKey'] = $this->api_key;
+         }
+
+         $args['body'] = json_encode($contact);
+
+         // Send the Add Request
+         $response = wp_remote_post( $this->versionTwo ? $this->apiURL.'subscribers' : $this->apiURL.'groups/'.$list_id.'/subscribers', $args );
                   
          $body = wp_remote_retrieve_body( $response );
          $data = json_decode( $body );
+         $addData = isset($data->data) && $this->versionTwo ? $data->data : $data;
 
-         //error_log('### Add to Group Response: '. json_encode($data));
+         // error_log('### Add to Group Response: '. json_encode(isset($addData->id)).' ==> '. json_encode($addData));
 
-         if($data && isset($data->id)){
-            $userID = $data->id;
+         if($addData && isset($addData->id)){
+            $userID = $addData->id;
             $addedData = array(
                'action'=> isset($userData['action']) ? $userData['action'] : 'visitor_added',  
                'user_id'=> isset($userData['userData']['ID']) ? $userData['userData']['ID'] : false,

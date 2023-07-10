@@ -34,7 +34,7 @@ class Install {
 
 	public static function add_settings() {
 		$settings                 = igd_get_settings();
-		$settings['integrations'] = [ 'classic-editor', 'gutenberg-editor', 'elementor', 'cf7' ];
+		$settings['integrations'] = [ 'classic-editor', 'gutenberg-editor', 'elementor','divi', 'cf7' ];
 
 		update_option( 'igd_settings', $settings );
 	}

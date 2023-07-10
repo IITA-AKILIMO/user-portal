@@ -14,6 +14,7 @@ function bravepop_enqueue_front_scripts() {
          'goalSecurity' => wp_create_nonce('brave-ajax-goal-nonce'),
          'couponSecurity' => wp_create_nonce('apply-coupon'),
          'cartURL' => function_exists('wc_get_cart_url') ? wc_get_cart_url() : '',
+         'checkoutURL' => function_exists('wc_get_checkout_url') ? wc_get_checkout_url() : '',
          'ajaxURL' => esc_url(admin_url( 'admin-ajax.php' )),
          'field_required' => __( 'Required', 'bravepop' ),
          'no_html_allowed' => __( 'No Html Allowed', 'bravepop' ),

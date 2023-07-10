@@ -89,24 +89,31 @@ class Elementor
     
     public function register_widgets( $widgets_manager )
     {
+        include_once IGD_INCLUDES . '/elementor/class-elementor-shortcodes-widget.php';
+        
+        if ( method_exists( $widgets_manager, 'register' ) ) {
+            $widgets_manager->register( new Shortcodes_Widget() );
+        } else {
+            $widgets_manager->register_widget_type( new Shortcodes_Widget() );
+        }
+        
         include_once IGD_INCLUDES . '/elementor/class-elementor-gallery-widget.php';
         include_once IGD_INCLUDES . '/elementor/class-elementor-embed-widget.php';
         include_once IGD_INCLUDES . '/elementor/class-elementor-download-widget.php';
         include_once IGD_INCLUDES . '/elementor/class-elementor-view-widget.php';
-        include_once IGD_INCLUDES . '/elementor/class-elementor-shortcodes-widget.php';
         
         if ( method_exists( $widgets_manager, 'register' ) ) {
+            $widgets_manager->register( new Shortcodes_Widget() );
             $widgets_manager->register( new Gallery_Widget() );
             $widgets_manager->register( new Embed_Widget() );
             $widgets_manager->register( new Download_Widget() );
             $widgets_manager->register( new View_Widget() );
-            $widgets_manager->register( new Shortcodes_Widget() );
         } else {
+            $widgets_manager->register_widget_type( new Shortcodes_Widget() );
             $widgets_manager->register_widget_type( new Gallery_Widget() );
             $widgets_manager->register_widget_type( new Embed_Widget() );
             $widgets_manager->register_widget_type( new Download_Widget() );
             $widgets_manager->register_widget_type( new View_Widget() );
-            $widgets_manager->register_widget_type( new Shortcodes_Widget() );
         }
     
     }

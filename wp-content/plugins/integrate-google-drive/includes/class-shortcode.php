@@ -128,7 +128,7 @@ class Shortcode {
 		wp_enqueue_script( 'igd-frontend' );
 
 		// Check if usePrivate folders
-		if ( in_array( $type, [ 'browser', 'uploader', 'gallery', 'media', 'search', 'slider' ] ) ) {
+		if ( in_array( $type, [ 'browser', 'uploader', 'gallery', 'media', 'search', 'slider', 'embed' ] ) ) {
 			$all_folders     = ! empty( $data['allFolders'] );
 			$private_folders = ! empty( $data['privateFolders'] );
 
@@ -245,14 +245,9 @@ class Shortcode {
 
 		$width  = ! empty( $data['moduleWidth'] ) ? $data['moduleWidth'] : '100%';
 		$height = ! empty( $data['moduleHeight'] ) ? $data['moduleHeight'] : '';
-
+		
 		if ( 'embed' == $type ) {
-			$show_file_name = ! empty( $data['showFileName'] );
-			$embed_type     = ! empty( $data['embedType'] ) ? $data['embedType'] : 'readOnly';
-			$direct_image   = ! empty( $data['directImage'] );
-			$allow_popout   = ! empty( $data['allowEmbedPopout'] );
-
-			$html = igd_get_embed_content( $data['folders'], $show_file_name, $embed_type, $direct_image, $allow_popout );
+			$html = igd_get_embed_content( $data );
 		} elseif ( 'download' == $type ) {
 			$html = igd_get_download_links( $data['folders'] );
 		} elseif ( 'view' == $type ) {

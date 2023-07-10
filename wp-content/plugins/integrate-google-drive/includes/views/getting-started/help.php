@@ -70,7 +70,7 @@ However, in some case the plugin isn\'t able to manage the sharing permissions e
     <div class="section-wrap">
         <section class="section-documentation section-half">
             <div class="col-image">
-                <img src="<?php echo IGD_ASSETS . '/images/getting-started/documentation.png' ?>"
+                <img src="<?php echo esc_url(IGD_ASSETS . '/images/getting-started/documentation.png'); ?>"
                      alt="<?php esc_attr_e( 'Documentation', 'integrate-google-drive' ); ?>">
             </div>
             <div class="col-description">
@@ -86,7 +86,7 @@ However, in some case the plugin isn\'t able to manage the sharing permissions e
 
         <section class="section-contact section-half">
             <div class="col-image">
-                <img src="<?php echo IGD_ASSETS . '/images/getting-started/contact.png' ?>"
+                <img src="<?php echo esc_url(IGD_ASSETS . '/images/getting-started/contact.png'); ?>"
                      alt="<?php esc_attr_e( 'Contact', 'integrate-google-drive' ); ?>">
             </div>
             <div class="col-description">

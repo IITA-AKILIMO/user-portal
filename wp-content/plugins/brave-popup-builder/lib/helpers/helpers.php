@@ -115,6 +115,16 @@ function bravepopup_rocket_exclude_inline_js( $inline_js ) {
 }
 add_filter( 'rocket_excluded_inline_js_content', 'bravepopup_rocket_exclude_inline_js' );
 
+function bravepop_get_curent_lang() {
+   if(function_exists('weglot_get_current_language')){
+      return weglot_get_current_language();
+   }elseif(class_exists( 'SitePress' )){
+      apply_filters( 'wpml_current_language', NULL );
+   }else{
+      return substr( get_bloginfo ( 'language' ), 0, 2 );
+   }
+}
+
 include __DIR__ . '/login.php';
 include __DIR__ . '/notifications.php';
 include __DIR__ . '/stats.php';

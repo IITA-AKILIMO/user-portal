@@ -411,16 +411,8 @@ class Rest_Api_Controller {
 	}
 
 	public function get_embed_content( $request ) {
-		$posted = $request->get_json_params();
-
-		$folders = ! empty( $posted['folders'] ) ? $posted['folders'] : [];
-
-		$embed_type     = ! empty( $posted['embedType'] ) ? $posted['embedType'] : 'readOnly';
-		$show_file_name = ! empty( $posted['showFileName'] );
-		$direct_image   = ! empty( $posted['directImage'] );
-		$allow_popout   = ! empty( $posted['allowEmbedPopout'] );
-
-		$content = igd_get_embed_content( $folders, $show_file_name, $embed_type, $direct_image, $allow_popout );
+		$posted  = $request->get_json_params();
+		$content = igd_get_embed_content( $posted );
 		wp_send_json_success( $content );
 	}
 

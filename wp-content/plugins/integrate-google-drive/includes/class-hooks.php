@@ -27,6 +27,13 @@ class Hooks
             } );
         }
         
+        // IGD render form upload field data
+        add_filter(
+            'igd_render_form_field_data',
+            [ $this, 'render_form_field_data' ],
+            10,
+            2
+        );
         add_action( 'template_redirect', [ $this, 'direct_content' ] );
     }
     
@@ -73,19 +80,19 @@ class Hooks
             $type = ( $is_dir ? 'browser' : 'embed' );
             ?>
 
-            <!doctype html>
-            <html lang="<?php 
+			<!doctype html>
+			<html lang="<?php 
             language_attributes();
             ?>">
-            <head>
-                <meta charset="<?php 
+			<head>
+				<meta charset="<?php 
             bloginfo( 'charset' );
             ?>">
-                <meta name="viewport"
-                      content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-                <meta http-equiv="X-UA-Compatible" content="ie=edge">
-                <title><?php 
-            echo  $file['name'] ;
+				<meta name="viewport"
+				      content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+				<meta http-equiv="X-UA-Compatible" content="ie=edge">
+				<title><?php 
+            echo  esc_html( $file['name'] ) ;
             ?></title>
 
 				<?php 
@@ -95,7 +102,7 @@ class Hooks
 				<?php 
             if ( 'embed' == $type ) {
                 ?>
-                    <style>
+					<style>
                         html, body {
                             margin: 0;
                             padding: 0;
@@ -128,15 +135,15 @@ class Hooks
                             height: 100%;
                             border: none;
                         }
-                    </style>
+					</style>
 				<?php 
             }
             ?>
 
-            </head>
-            <body>
+			</head>
+			<body>
 
-            <div id="igd-direct-content">
+			<div id="igd-direct-content">
 				<?php 
             $data = [
                 'folders'            => [ $file ],
@@ -145,19 +152,65 @@ class Hooks
             ];
             echo  Shortcode::instance()->render_shortcode( [], $data ) ;
             ?>
-            </div>
+			</div>
 
 			<?php 
             do_action( 'wp_footer' );
             ?>
 
-            </body>
-            </html>
+			</body>
+			</html>
 
 			<?php 
             exit;
         }
     
+    }
+    
+    public function render_form_field_data( $data, $as_html )
+    {
+        $uploaded_files = json_decode( $data, 1 );
+        if ( empty($uploaded_files) ) {
+            return $data;
+        }
+        $first_file = $uploaded_files[0];
+        $parent_id = $first_file['parents'][0];
+        // Render TEXT only
+        
+        if ( !$as_html ) {
+            $formatted_value = sprintf( '%d file(s) uploaded to Google Drive:', count( $uploaded_files ) );
+            $formatted_value .= "\r\n";
+            foreach ( $uploaded_files as $file ) {
+                $formatted_value .= $file['name'] . "\r\n";
+            }
+            return $formatted_value;
+        }
+        
+        $folder_location = sprintf( '<a style="text-decoration: none; font-weight: bold; color: #15c" href="https://drive.google.com/drive/folders/%1$s"><strong>Google Drive</strong></a>', $parent_id );
+        $heading = sprintf( '<h3 style="margin-bottom: 15px;">%1$d file(s) uploaded to %2$s</h3>', count( $uploaded_files ), $folder_location );
+        // Render HTML
+        ob_start();
+        echo  $heading ;
+        foreach ( $uploaded_files as $file ) {
+            ?>
+			<div
+				style="display: block; margin-bottom: 10px; padding: 10px; border: 1px solid #ddd;background-color: #FAFAFA;">
+				<img alt="File Icon" height="16" src="<?php 
+            echo  esc_url( $file['iconLink'] ) ;
+            ?>"
+				     style="margin-right:7px;height:auto;width:16px;max-width:16px;vertical-align: middle;" width="16">
+				<a style="text-decoration: none; font-weight: 500; color: #15c;vertical-align: middle;"
+				   href="<?php 
+            printf( 'https://drive.google.com/file/d/%1$s/view?usp=drivesdk', $file['id'] );
+            ?>"
+				   target="_blank"><?php 
+            echo  esc_html( $file['name'] ) ;
+            ?></a>
+			</div>
+		<?php 
+        }
+        //Remove any newlines
+        return trim( preg_replace( '/\\s+/', ' ', ob_get_clean() ) );
     }
     
     public function uninstall()

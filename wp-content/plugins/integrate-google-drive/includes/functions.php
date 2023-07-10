@@ -357,7 +357,16 @@ function igd_get_export_as( $type ) {
 	return $export_as;
 }
 
-function igd_get_embed_content( $items = [], $show_file_name = false, $embed_type = 'readOnly', $direct_image = true, $allow_popout = true ) {
+function igd_get_embed_content( $data ) {
+
+	$items          = ! empty( $data['folders'] ) ? $data['folders'] : [];
+	$show_file_name = ! empty( $data['showFileName'] );
+	$embed_type     = ! empty( $data['embedType'] ) ? $data['embedType'] : 'readOnly';
+	$direct_image   = ! empty( $data['directImage'] );
+	$allow_popout   = ! empty( $data['allowEmbedPopout'] );
+	$embed_width    = ! empty( $data['embedWidth'] ) ? $data['embedWidth'] : '100%';
+	$embed_height   = ! empty( $data['embedHeight'] ) ? $data['embedHeight'] : '480px';
+
 
 	$files = [];
 	foreach ( $items as $item ) {
@@ -397,7 +406,7 @@ function igd_get_embed_content( $items = [], $show_file_name = false, $embed_typ
 		] );
 
 		if ( $show_file_name ) { ?>
-            <h4 class="igd-embed-name"><?php echo esc_html( $name ); ?></h4>
+			<h4 class="igd-embed-name"><?php echo esc_html( $name ); ?></h4>
 		<?php }
 
 		if ( $is_image ) {
@@ -415,11 +424,13 @@ function igd_get_embed_content( $items = [], $show_file_name = false, $embed_typ
 		} else {
 			$sandbox_attrs = '';
 
-			if ( $allow_popout && $embed_type = 'readOnly' ) {
+			if ( ! $allow_popout && $embed_type = 'readOnly' ) {
 				$sandbox_attrs = 'sandbox="allow-same-origin allow-scripts"';
 			}
 
-			printf( '<iframe class="igd-embed" src="%s" style="width: 100%%" frameborder="0" scrolling="no" width="100%%" height="480" allow="autoplay" allowfullscreen="allowfullscreen" %s></iframe>', $url, $sandbox_attrs );
+			printf( '<iframe class="igd-embed" src="%1$s" frameborder="0" scrolling="no" width="%2$s" height="%3$s" allow="autoplay" allowfullscreen="allowfullscreen" %4$s></iframe>',
+				$url, $embed_width, $embed_height, $sandbox_attrs
+			);
 		}
 	}
 
@@ -1266,6 +1277,51 @@ function igd_get_user_ip() {
 	return $ip;
 }
 
+if ( ! function_exists( 'tutor_get_template' ) ) {
+	function tutor_get_template( $template = null, $tutor_pro = false ) {
+		if ( ! $template ) {
+			return false;
+		}
 
+		$template = str_replace( '.', DIRECTORY_SEPARATOR, $template );
+
+		/**
+		 * Get template first from child-theme if exists
+		 * If child theme not exists, then get template from parent theme
+		 */
+		$template_location = trailingslashit( get_stylesheet_directory() ) . "tutor/{$template}.php";
+		if ( ! file_exists( $template_location ) ) {
+			$template_location = trailingslashit( get_template_directory() ) . "tutor/{$template}.php";
+		}
+		$file_in_theme = $template_location;
+		if ( ! file_exists( $template_location ) ) {
+			$template_location = trailingslashit( tutor()->path ) . "templates/{$template}.php";
+
+			if ( $tutor_pro && function_exists( 'tutor_pro' ) ) {
+				$pro_template_location = trailingslashit( tutor_pro()->path ) . "templates/{$template}.php";
+				if ( file_exists( $pro_template_location ) ) {
+					$template_location = trailingslashit( tutor_pro()->path ) . "templates/{$template}.php";
+				}
+			}
+
+			//Integrate Google Drive Templates
+			if ( ! file_exists( $template_location ) ) {
+				$template_location = trailingslashit( IGD_INCLUDES ) . "integrations/templates__premium_only/tutor/{$template}.php";
+			}
+
+			if ( ! file_exists( $template_location ) ) {
+				$warning_msg = __( 'The file you are trying to load does not exist in your theme or Tutor LMS plugin location. If you are extending the Tutor LMS plugin, please create a php file here: ', 'integrate-google-drive' );
+				$warning_msg = $warning_msg . "<code>$file_in_theme</code>";
+				$warning_msg = apply_filters( 'tutor_not_found_template_warning_msg', $warning_msg );
+				echo wp_kses( $warning_msg, array( 'code' => true ) );
+				?>
+				<?php
+			}
+		}
+
+		return apply_filters( 'tutor_get_template_path', $template_location, $template );
+	}
+
+}
 
 

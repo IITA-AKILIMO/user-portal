@@ -60,7 +60,8 @@ class Download {
 	 * @throws \IGDGoogle_IO_Exception
 	 */
 	private function process_download() {
-		if ( 'proxy' === $this->get_download_method() ) {
+
+		if ( 'proxy' === $this->download_method ) {
 
 			if ( 'default' === $this->mimetype ) {
 				if ( $this->is_stream ) {
@@ -75,7 +76,7 @@ class Download {
 				$this->export_content();
 			}
 
-		} elseif ( 'redirect' === $this->get_download_method() ) {
+		} elseif ( 'redirect' === $this->download_method ) {
 			if ( 'default' === $this->mimetype ) {
 				$this->redirect_to_content();
 			} else {
@@ -215,7 +216,7 @@ class Download {
 
 		$export_link = $this->get_export_url();
 
-		if ( ( $this->file['size'] <= 10485760 ) && ( empty( $export_link ) || ! $this->app->has_permission( $this->file ) || 'proxy' == $this->get_download_method() ) ) {
+		if ( ( $this->file['size'] <= 10485760 ) && ( empty( $export_link ) || ! $this->app->has_permission( $this->file ) || 'proxy' == $this->download_method ) ) {
 			// Only use export link if publicly accessible
 			$export_link = $this->get_api_url();
 		} else {
@@ -276,6 +277,7 @@ class Download {
 		}
 
 		$copy_disabled = $this->file['copyRequiresWriterPermission'];
+
 		if ( $copy_disabled ) {
 			return $this->download_method = 'proxy';
 		}
@@ -291,7 +293,8 @@ class Download {
 		$file_permissions = (array) $this->file['permissions'];
 
 		// Can the sharing permissions of the file be updated via the plugin?
-		$can_update_permissions = ( $manage_permissions = true && $file_permissions['canShare'] );
+		$manage_permissions     = igd_get_settings( 'manageSharing', true );
+		$can_update_permissions = $manage_permissions && $file_permissions['canShare'];
 
 		if ( ! $can_update_permissions ) {
 			return $this->download_method = 'proxy';
@@ -306,15 +309,6 @@ class Download {
 
 		return $this->download_method = 'redirect';
 
-	}
-
-	/**
-	 * Get Download Method
-	 *
-	 * @return mixed
-	 */
-	public function get_download_method() {
-		return $this->download_method;
 	}
 
 	/**

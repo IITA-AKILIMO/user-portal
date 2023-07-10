@@ -256,7 +256,6 @@ class Enqueue
             "jquery",
             "wp-element",
             "wp-components",
-            "wp-block-editor",
             "wp-api-fetch",
             "wp-i18n",
             "wp-util",
@@ -267,10 +266,22 @@ class Enqueue
             IGD_VERSION,
             true
         );
-        // Code Editor Scrips
+        // Private Folders page scripts
+        if ( !empty($admin_pages['private_files_page']) && $admin_pages['private_files_page'] === $hook ) {
+            wp_enqueue_script(
+                'igd-private-folders',
+                IGD_ASSETS . '/js/private-folders.js',
+                [ 'igd-admin' ],
+                IGD_VERSION,
+                true
+            );
+        }
+        // Settings Page Scrips
         
         if ( isset( $admin_pages['settings_page'] ) && $admin_pages['settings_page'] === $hook ) {
+            // Uploader scripts
             wp_enqueue_media();
+            // Code Editor
             wp_enqueue_script( 'wp-theme-plugin-editor' );
             wp_enqueue_style( 'wp-codemirror' );
             $cm_settings = [
@@ -280,6 +291,14 @@ class Enqueue
             ) ),
             ];
             wp_localize_script( 'igd-admin', 'cm_settings', $cm_settings );
+            // Enqueue settings page scripts
+            wp_enqueue_script(
+                'igd-settings',
+                IGD_ASSETS . '/js/settings.js',
+                [ 'igd-admin' ],
+                IGD_VERSION,
+                true
+            );
         }
         
         wp_enqueue_script( 'igd-admin' );
@@ -332,26 +351,26 @@ class Enqueue
         $primary_color = igd_get_settings( 'primaryColor', '#2FB44B' );
         ob_start();
         ?>
-        :root {
-        --color-primary: <?php 
+		:root {
+		--color-primary: <?php 
         echo  $primary_color ;
         ?>;
-        --color-primary-dark: <?php 
+		--color-primary-dark: <?php 
         echo  igd_hex2rgba( $primary_color, 1 ) ;
         ?>;
-        --color-primary-light: <?php 
+		--color-primary-light: <?php 
         echo  igd_hex2rgba( $primary_color, '.5' ) ;
         ?>;
-        --color-primary-light-alt: <?php 
+		--color-primary-light-alt: <?php 
         echo  igd_color_brightness( $primary_color, 30 ) ;
         ?>;
-        --color-primary-lighter: <?php 
+		--color-primary-lighter: <?php 
         echo  igd_hex2rgba( $primary_color, '.1' ) ;
         ?>;
-        --color-primary-lighter-alt: <?php 
+		--color-primary-lighter-alt: <?php 
         echo  igd_color_brightness( $primary_color, 50 ) ;
         ?>;
-        }
+		}
 		<?php 
         $css .= ob_get_clean();
         return $css;
@@ -378,7 +397,8 @@ class Enqueue
                 return true;
             }
         }
-    
+        
+        return false;
     }
     
     public function is_block_editor()
@@ -390,7 +410,18 @@ class Enqueue
                 return true;
             }
         }
+        
+        return false;
+    }
     
+    public function is_divi_builder()
+    {
+        if ( function_exists( 'et_fb_is_enabled' ) ) {
+            if ( et_fb_is_enabled() ) {
+                return true;
+            }
+        }
+        return false;
     }
     
     public function should_enqueue_admin_scripts( $hook )
@@ -399,6 +430,11 @@ class Enqueue
         $integration = Integration::instance();
         if ( $integration->is_active( 'gutenberg-editor' ) ) {
             if ( $this->is_block_editor() ) {
+                return true;
+            }
+        }
+        if ( $integration->is_active( 'divi' ) ) {
+            if ( $this->is_divi_builder() ) {
                 return true;
             }
         }

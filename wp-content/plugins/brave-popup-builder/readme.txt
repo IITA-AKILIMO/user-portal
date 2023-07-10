@@ -3,7 +3,7 @@ Contributors: getbrave
 Tags: popup, wordpress popup, popups, woocommerce popup, lead generation, lead capture, modal, optin
 Requires at least: 5.2
 Tested up to: 6.1.1
-Stable tag: 0.6.0
+Stable tag: 0.6.1
 Requires PHP: 5.6.20
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -38,7 +38,7 @@ https://www.youtube.com/watch?v=sBvZR7P8Ml0
 * **Animate Popups** - Add Animations to your Popups from list of ready-made animation list. 
 * **Insert Custom Code** - You can display your favorite plugin's content by adding shortcodes or Custom Codes inside a Code element.
 * **15 Started Presets** - The free version comes with 15 free presets that you can import and customize to build popups within seconds.
-* **23 Newsletter Service Integrations** - Creating eye-catching optin-forms by connecting your Forms to Mailchimp, Mailjet, MailPoet, SendGrid, SendinBlue, Hubspot, Active Campaign, AWeber, ConvertKit, Constant Contact, Campaign Monitor, GetResponse, Mailer Lite, Ontraport, SendPulse, Moosend, Zapier, The Newsletter Plugin, Pabbly, Klaviyo, FluentCRM, Sendy and Mailster.
+* **23 Newsletter Service Integrations** - Creating eye-catching optin-forms by connecting your Forms to Mailchimp, Mailjet, MailPoet, SendGrid, SendinBlue, Hubspot, Active Campaign, AWeber, ConvertKit, Constant Contact, Campaign Monitor, GetResponse, Mailer Lite, Ontraport, SendPulse, Moosend, Zapier, The Newsletter Plugin, Pabbly, Klaviyo, FluentCRM, Sendy, OmniSend and Mailster.
 * **Great Performance** - Unlike other popup's Brave does not load bunch of scripts to your site. It was built with Performance in mind. Brave Popups are very lightweight and only loads assets after the page is fully loaded. 
 * **Analytics** -  Easily find out which popups are bringing in the most conversions. Brave tracks how many times a Popup is viewed and how many times the Popup is clicked or Form is submitted. 
 
@@ -118,6 +118,17 @@ The PRO version lets you create unlimited steps that you can link to each other 
 
 
 == Changelog ==
+= 0.6.1 - 20 Apr 2023. =
+* Added: OmniSend Integration.
+* Added: Upgraded Mailerlite Integration with version 2.
+* Added: Ability to delay campaign frequency to upto 2 hours.
+* Added: Ability to chanage text/button element rel type to sponsored/ugc/nofollow.
+* Fixed: Form Button Alignment was not working.
+* Fixed: Hubspot Multi Checkbox field data was not being sent.
+* Fixed: From Submission Custom Message were showing unwanted scrollbar.
+* Fixed: Image Element's Hover Change Image option was not working.
+
+
 = 0.6.0 - 14 Jan 2023. =
 * Fixed: Form Scrollbar was not showing up. 
 * Fixed: Fatal Error in Author pages.

@@ -79,7 +79,8 @@ class Shortcode_Builder {
 			$shortcode['title']      = 'Copy of ' . $shortcode['title'];
 			$shortcode['created_at'] = current_time( 'mysql' );
 			$shortcode['updated_at'] = current_time( 'mysql' );
-			$insert_id               = $this->update_shortcode( $shortcode, true );
+			$shortcode['locations']  = serialize( [] );
+			$insert_id = $this->update_shortcode( $shortcode, true );
 
 			$data = array_merge( $shortcode, [
 				'id'     => $insert_id,
@@ -105,7 +106,7 @@ class Shortcode_Builder {
 	}
 
 	public static function view() { ?>
-        <div id="igd-shortcode-builder"></div>
+		<div id="igd-shortcode-builder"></div>
 	<?php }
 
 	/**

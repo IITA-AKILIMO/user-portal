@@ -20,6 +20,10 @@ class Integration
         if ( $this->is_active( 'elementor' ) ) {
             require_once IGD_INCLUDES . '/elementor/class-elementor.php';
         }
+        // Divi
+        if ( $this->is_active( 'divi' ) ) {
+            require_once IGD_INCLUDES . '/divi/divi.php';
+        }
         add_action( 'plugins_loaded', function () {
             // Load CF7 integration
             if ( $this->is_active( 'cf7' ) && defined( 'WPCF7_VERSION' ) && version_compare( WPCF7_VERSION, '5.0', '>=' ) ) {
@@ -41,6 +45,7 @@ class Integration
             'classic-editor',
             'gutenberg-editor',
             'elementor',
+            'divi',
             'cf7'
         ] );
         return in_array( $key, $integrations );

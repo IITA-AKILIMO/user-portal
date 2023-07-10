@@ -408,7 +408,7 @@ if ( ! class_exists( 'BravePop_Element_Form' ) ) {
          if(isset($field->defaultType) && $field->defaultType === 'ip' && $userIP ){ $defaultValue = 'value="'.$userIP.'"';  }
          if(isset($field->defaultType) && $field->defaultType === 'user_email' && !empty($this->currentUser['email']) ){ $defaultValue = 'value="'.$this->currentUser['email'].'"';  }
          if(isset($field->defaultType) && $field->defaultType === 'user_name' && !empty($this->currentUser['name']) ){ $defaultValue = 'value="'.$this->currentUser['name'].'"';  }
-         if(isset($field->defaultType) && $field->defaultType === 'language' ){ $defaultValue = 'value="'.substr( get_bloginfo ( 'language' ), 0, 2 ).'"';  }
+         if(isset($field->defaultType) && $field->defaultType === 'language' ){ $defaultValue = 'value="'.bravepop_get_curent_lang().'"';  }
 
          $fieldHTML = '<div id="brave_form_field'.$field->id.'" class="brave_form_field brave_form_field--hidden">';
             $fieldHTML .= '<input type="hidden"  name="'.esc_attr($field->id).'" '.($defaultValue).' />';
@@ -787,6 +787,7 @@ if ( ! class_exists( 'BravePop_Element_Form' ) ) {
          $stepColor = $buttonFull ? (isset($buttonStyle->fontColor) && isset($buttonStyle->fontColor->rgb) ? 'rgb('.$buttonStyle->fontColor->rgb.')' :'#fff' ) : (isset($formStyle->fontColor)&& isset($formStyle->fontColor->rgb) ? 'rgb('.$formStyle->fontColor->rgb.')' : '#fff');
          $buttonAlign =  isset($buttonStyle->align) ?  $buttonStyle->align : 'right';
          $stepButtonRight = $buttonAlign==='left' ? 'brave_form_stepBack--right': '';
+         $centerButtonAlign = $buttonAlign==='center' ? ' brave_form_button--center': '';
 
          $stepHideClass = $this->totalSteps > 0 ? 'brave_form_button--hide' : '';
          $loadingIcon = '<span id="brave_form_loading_'.$this->data->id.'" class="brave_form_loading">'.bravepop_renderIcon('reload', $buttonIconColor).'</span>';
@@ -799,7 +800,7 @@ if ( ! class_exists( 'BravePop_Element_Form' ) ) {
             $iconHTML = '<span class="brave_element-icon"><svg viewBox="0 0 '.$this->formData->settings->button->icon->width.' '.$this->formData->settings->button->icon->height.'" width="1em" height="1em" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">'.str_replace('currentColor', $buttonIconColor ,html_entity_decode($this->formData->settings->button->icon->body)).'</svg></span>';
          }
 
-         return '<div class="brave_form_button '.$buttonFull.' '.$stepHideClass.'">'.$stepBackButton.$socialBackButton.'<button id="brave_form_button-'.esc_attr($this->data->id).'">'.$loadingIcon.$iconHTML.$buttonText.'</button></div>';
+         return '<div class="brave_form_button '.$buttonFull.$centerButtonAlign.' '.$stepHideClass.'">'.$stepBackButton.$socialBackButton.'<button id="brave_form_button-'.esc_attr($this->data->id).'">'.$loadingIcon.$iconHTML.$buttonText.'</button></div>';
       }
 
       protected function renderFields(){

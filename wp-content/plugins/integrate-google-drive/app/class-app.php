@@ -7,7 +7,6 @@ defined( 'ABSPATH' ) || exit();
 
 class App {
 
-
 	protected static $instance = null;
 
 	public $client;
@@ -598,18 +597,6 @@ class App {
 
 		// Check if folder has files
 		$files = $this->get_files( [], $folder_id );
-
-//		// Parent files
-//		$parent_files = $this->get_files( [], $parent_id );
-
-//		// Filter files that are not in parent folder by name and type
-//		$files = array_filter( $files, function ( $file ) use ( $parent_files ) {
-//			$parent_file = array_filter( $parent_files, function ( $parent_file ) use ( $file ) {
-//				return $parent_file['name'] == $file['name'] && $parent_file['type'] == $file['type'];
-//			} );
-//
-//			return empty( $parent_file );
-//		} );
 
 		if ( empty( $files ) ) {
 			return false;

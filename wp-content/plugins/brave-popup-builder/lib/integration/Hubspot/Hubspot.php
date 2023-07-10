@@ -76,7 +76,7 @@ if ( ! class_exists( 'BravePop_Hubspot' ) ) {
          //Add Custom Field Values
          if(count($customFields) > 0){
             foreach ($customFields as $key => $value) {
-               $contact[] = array( "property"=> $key,  "value"=> !empty($value) && is_array($value) ?  implode(',', $value) : $value );
+               $contact[] = array( "property"=> $key,  "value"=> !empty($value) && is_array($value) ?  implode(';', $value) : $value );
             }
          }
 

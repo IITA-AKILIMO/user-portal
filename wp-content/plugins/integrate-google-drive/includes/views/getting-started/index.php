@@ -8,7 +8,7 @@ defined( 'ABSPATH' ) || exit;
 
         <div class="header-logo">
             <img src="<?php 
-echo  IGD_ASSETS . '/images/integrate-google-drive-logo.png' ;
+echo  esc_url( IGD_ASSETS . '/images/integrate-google-drive-logo.png' ) ;
 ?>" alt="Integrate Google Drive">
             <span><?php 
 esc_html_e( 'Integrate Google Drive', 'integrate-google-drive' );

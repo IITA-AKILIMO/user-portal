@@ -16,6 +16,12 @@ $integrations = [
 		'description' => __( 'Add Google Drive modules, embed documents and insert file view links and download links using the Google Drive Elementor widgets.', 'integrate-google-drive' ),
 	],
 
+
+	'divi' => [
+		'title'       => __( 'Divi', 'integrate-google-drive' ),
+		'description' => __( 'Add Google Drive modules, embed documents and insert file view links and download links using the Google Drive Divi Page Builder modules.', 'integrate-google-drive' ),
+	],
+
 	'acf' => [
 		'title'       => __( 'Advanced Custom Fields', 'integrate-google-drive' ),
 		'description' => __( 'Allows you to select Google Drive files and folders using ACF field and display in theme template file.', 'integrate-google-drive' ),
@@ -32,6 +38,10 @@ $integrations = [
 	'edd'             => [
 		'title'       => __( 'Easy Digital Downloads', 'integrate-google-drive' ),
 		'description' => __( 'Allows you to serve your Easy Digital Downloads files directly from Google Drive.', 'integrate-google-drive' ),
+	],
+	'tutor'             => [
+		'title'       => __( 'Tutor LMS', 'integrate-google-drive' ),
+		'description' => __( 'Allows you to serve your course videos and attachment files directly from Google Drive.', 'integrate-google-drive' ),
 	],
 	'cf7'             => [
 		'title'       => __( 'Contact Form 7', 'integrate-google-drive' ),
@@ -112,7 +122,7 @@ $integrations = [
             </div>
 
             <div class="col-image">
-                <img src="<?php echo IGD_ASSETS . '/images/getting-started/file-browser.png' ?>"
+                <img src="<?php echo esc_url(IGD_ASSETS . '/images/getting-started/file-browser.png'); ?>"
                      alt="<?php esc_attr_e( 'File Browser', 'integrate-google-drive' ); ?>">
             </div>
         </section>
@@ -131,7 +141,7 @@ $integrations = [
             </div>
 
             <div class="col-image">
-                <img src="<?php echo IGD_ASSETS . '/images/getting-started/file-uploader.png' ?>"
+                <img src="<?php echo esc_url(IGD_ASSETS . '/images/getting-started/file-uploader.png'); ?>"
                      alt="<?php esc_attr_e( 'File Uploader', 'integrate-google-drive' ); ?>">
             </div>
         </section>
@@ -147,7 +157,7 @@ $integrations = [
         </div>
 
         <div class="col-image">
-            <img src="<?php echo IGD_ASSETS . '/images/getting-started/media-player.png' ?>"/>
+            <img src="<?php echo esc_url(IGD_ASSETS . '/images/getting-started/media-player.png'); ?>"/>
         </div>
     </section>
 
@@ -163,7 +173,7 @@ $integrations = [
             </div>
 
             <div class="col-image">
-                <img src="<?php echo IGD_ASSETS . '/images/getting-started/photo-gallery.png' ?>"/>
+                <img src="<?php echo esc_url(IGD_ASSETS . '/images/getting-started/photo-gallery.png'); ?>"/>
             </div>
         </section>
 
@@ -176,7 +186,7 @@ $integrations = [
             </div>
 
             <div class="col-image">
-                <img src="<?php echo IGD_ASSETS . '/images/getting-started/slider-carousel.png' ?>"/>
+                <img src="<?php echo esc_url(IGD_ASSETS . '/images/getting-started/slider-carousel.png'); ?>"/>
             </div>
         </section>
 
@@ -191,7 +201,7 @@ $integrations = [
             </div>
 
             <div class="col-image">
-                <img src="<?php echo IGD_ASSETS . '/images/getting-started/file-search.png' ?>"/>
+                <img src="<?php echo esc_url(IGD_ASSETS . '/images/getting-started/file-search.png'); ?>"/>
             </div>
         </section>
 
@@ -207,7 +217,7 @@ $integrations = [
             </div>
 
             <div class="col-image">
-                <img src="<?php echo IGD_ASSETS . '/images/getting-started/embed.png' ?>"/>
+                <img src="<?php echo esc_url(IGD_ASSETS . '/images/getting-started/embed.png'); ?>"/>
             </div>
 
         </section>
@@ -224,7 +234,7 @@ $integrations = [
             </div>
 
             <div class="col-image">
-                <img src="<?php echo IGD_ASSETS . '/images/getting-started/file-importer.png' ?>"/>
+                <img src="<?php echo esc_url(IGD_ASSETS . '/images/getting-started/file-importer.png'); ?>"/>
             </div>
         </section>
 
@@ -236,7 +246,7 @@ $integrations = [
             </div>
 
             <div class="col-image">
-                <img src="<?php echo IGD_ASSETS . '/images/getting-started/links.png' ?>"/>
+                <img src="<?php echo esc_url(IGD_ASSETS . '/images/getting-started/links.png'); ?>"/>
             </div>
         </section>
     </div>
@@ -253,7 +263,7 @@ $integrations = [
             </div>
 
             <div class="col-image">
-                <img src="<?php echo IGD_ASSETS . '/images/getting-started/private-folders.png' ?>"/>
+                <img src="<?php echo esc_url(IGD_ASSETS . '/images/getting-started/private-folders.png'); ?>"/>
             </div>
         </section>
 
@@ -264,7 +274,7 @@ $integrations = [
             </div>
 
             <div class="col-image">
-                <img src="<?php echo IGD_ASSETS . '/images/getting-started/multiple-accounts.png' ?>"/>
+                <img src="<?php echo esc_url(IGD_ASSETS . '/images/getting-started/multiple-accounts.png'); ?>"/>
             </div>
         </section>
     </div>
@@ -279,11 +289,11 @@ $integrations = [
 		<?php foreach ( $integrations as $key => $integration ) { ?>
             <div class="integration">
                 <div class="integration-logo">
-                    <img src="<?php echo IGD_ASSETS . '/images/settings/' . $key . '.png'; ?>"
-                         alt="<?php echo $integration['title'] ?>">
+                    <img src="<?php echo esc_url(IGD_ASSETS . '/images/settings/' . $key . '.png'); ?>"
+                         alt="<?php echo esc_attr($integration['title']); ?>">
                 </div>
-                <h3 class="integration-title"><?php echo $integration['title'] ?></h3>
-                <p><?php echo $integration['description']; ?></p>
+                <h3 class="integration-title"><?php echo esc_html($integration['title']); ?></h3>
+                <p><?php echo esc_html($integration['description']); ?></p>
             </div>
 		<?php } ?>
     </section>

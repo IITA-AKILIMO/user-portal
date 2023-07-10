@@ -321,7 +321,8 @@ function bravepop_form_submission(){
 
          //Newsletter Miscellaneous Settings
          $miscSettings = function_exists('bravepop_newsletter_misc_settings') ? bravepop_newsletter_misc_settings($type, $actionSettings->newsletter, $fieldSettings) : array();
-
+         $miscSettings['formID'] =  $elementID;
+         $miscSettings['popupID'] =  $popupID;
          //Conditional Subscription
          if(!empty($actionSettings->newsletter->advanced) && function_exists('bravepop_get_conditional_list')){
             if( !empty($actionSettings->newsletter->advancedSettings->conditional) && !empty($actionSettings->newsletter->advancedSettings->conditions)){
@@ -367,7 +368,7 @@ function bravepop_form_submission(){
       //error_log('PUSH to WebHook');
       $webhook = new BravePop_Webhook();
       $contentType = isset($actionSettings->webhook->content) ? $actionSettings->webhook->content : '';
-      $webhook->post($actionSettings->webhook->url, $actionSettings->webhook->type, $contentType, $fieldSettings, $current_user, $visitor_country, $visitor_ip);
+      $webhook->post($actionSettings->webhook->url, $actionSettings->webhook->type, $contentType, $fieldSettings, $current_user, $visitor_country, $visitor_ip, $pageURL);
       $completed_actions['webhook'] = $actionSettings->webhook->type;
    }
 
@@ -415,7 +416,7 @@ function bravepop_form_submission(){
          $response['redirectAfter'] = isset($actionSettings->primaryActionData->redirectAfter) ? $actionSettings->primaryActionData->redirectAfter : '';
          $response['redirectMessage'] = isset($actionSettings->primaryActionData->redirectMessage) ? nl2br(bravepop_replace_emailShortcodes(html_entity_decode($actionSettings->primaryActionData->redirectMessage), $fieldSettings, $userQuizData)) : '';
          if(!empty($actionSettings->primaryActionData->conditionalRedirect) && isset($actionSettings->primaryActionData->redirectConditions) && function_exists('bravepop_get_conditional_redirection_data')){
-            $response['redirectURL'] = bravepop_get_conditional_redirection_data('redirect',$actionSettings->primaryActionData->redirect, $actionSettings->primaryActionData->redirectConditions, $fieldSettings, $userQuizData);
+            $response['redirectURL'] = bravepop_replace_emailShortcodes(bravepop_get_conditional_redirection_data('redirect',$actionSettings->primaryActionData->redirect, $actionSettings->primaryActionData->redirectConditions, $fieldSettings, $userQuizData));
          }
       }
 

@@ -47,14 +47,15 @@ if ( ! class_exists( 'BravePop_Element_Shape' ) ) {
          $actionPhone  = !empty($this->data->action->actionData->phone) ? $this->data->action->actionData->phone : '';
          $actionDownload = !empty($this->data->action->actionData->download) ? 'download': '';
          $actionNewWindow  = isset($this->data->action->actionData->new_window) ? $this->data->action->actionData->new_window : '';
-         $actionNoFollow  = isset($this->data->action->actionData->nofollow) ? $this->data->action->actionData->nofollow : '';
+         $actionNoFollow  = !empty($this->data->action->actionData->nofollow) ? 'nofollow' : '';
+         $relType = isset($this->data->action->actionData->rel_type) ? $this->data->action->actionData->rel_type : $actionNoFollow;
          $actionStepNum  = isset($this->data->action->actionData->step) ? (Int)$this->data->action->actionData->step  - 1 : false;
          if(isset($this->data->action->actionData->dynamicURL)){
             $dynamicURL  = bravepopup_dynamicLink_data($this->data->action->actionData, $this->dynamicData, $this->data->id);
             if(isset($dynamicURL->link)){   $actionURL  =  $dynamicURL->link;   }
          }
 
-         $actionLink = $clickable && ($actionType === 'url' || $actionType === 'dynamic') && $actionURL ? 'onclick="'.$goalAction.''.$customAnim.'" href="'.$actionURL.'" '.($actionNewWindow ? 'target="_blank"' : '').' '.($actionNoFollow ? 'rel="nofollow"' : '').'':'';
+         $actionLink = $clickable && ($actionType === 'url' || $actionType === 'dynamic') && $actionURL ? 'onclick="'.$goalAction.''.$customAnim.'" href="'.$actionURL.'" '.($actionNewWindow ? 'target="_blank"' : '').' '.($relType ? 'rel="'.$relType.'"' : '').'':'';
          $actionCall = ($actionType === 'call') && $actionPhone ? 'onclick="'.$goalAction.'" href="tel:'.$actionPhone.'"':'';
          $actionStep = $clickable && $actionType === 'step' && $actionStepNum >=0 ? 'onclick="brave_action_step('.$this->popupID.', '.$this->stepIndex.', '.$actionStepNum.'); '.$actionInlineTrack.' '.$goalAction.' "':'';
          $actionClose = $clickable && $actionType === 'close' ? 'onclick="brave_close_popup(\''.$this->popupID.'\', \''.$this->stepIndex.'\'); '.$actionInlineTrack.' '.$goalAction.'"':'';
