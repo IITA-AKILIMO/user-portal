@@ -1,2 +1,10 @@
-/vendor
+.user.ini
+wp-content/wflogs/*
 .env
+/vendor
+
+wp-content/cache/
+wp-content/uploads/cache/
+wp-content/upgrade/
+wp-content/backups/
+*.log
