@@ -1,16 +1,9 @@
 /******/ (function() { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
-/***/ 101:
+/***/ 795:
 /***/ (function() {
 
-function _instanceof(left, right) {
-    if (right != null && typeof Symbol !== "undefined" && right[Symbol.hasInstance]) {
-        return !!right[Symbol.hasInstance](left);
-    } else {
-        return left instanceof right;
-    }
-}
 //region TWEEN.js required for animation
 /**
  * Tween.js - Licensed under the MIT license
@@ -22,9 +15,12 @@ function _instanceof(left, right) {
             getAll: function getAll() {
                 return _tweens;
             },
-            removeAll: function removeAll() {
-                _tweens = [];
-            },
+            //
+            // removeAll: function () {
+            //
+            //   _tweens = [];
+            //
+            // },
             add: function add(tween) {
                 _tweens.push(tween);
             },
@@ -58,15 +54,15 @@ function _instanceof(left, right) {
         var _valuesEnd = {};
         var _valuesStartRepeat = {};
         var _duration = 1000;
-        var _repeat = 0;
-        var _yoyo = false;
+        // var _repeat = 0;
+        // var _yoyo = false;
         var _isPlaying = false;
-        var _reversed = false;
+        // var _reversed = false;
         var _delayTime = 0;
         var _startTime = null;
         var _easingFunction = TWEEN.Easing.Linear.None;
         var _interpolationFunction = TWEEN.Interpolation.Linear;
-        var _chainedTweens = [];
+        // var _chainedTweens = [];
         var _onStartCallback = null;
         var _onStartCallbackFired = false;
         var _onUpdateCallback = null;
@@ -92,7 +88,7 @@ function _instanceof(left, right) {
             _startTime += _delayTime;
             for(var property in _valuesEnd){
                 // Check if an Array was provided as property value
-                if (_instanceof(_valuesEnd[property], Array)) {
+                if (_valuesEnd[property] instanceof Array) {
                     if (_valuesEnd[property].length === 0) {
                         continue;
                     }
@@ -107,7 +103,7 @@ function _instanceof(left, right) {
                     continue;
                 }
                 _valuesStart[property] = _object[property];
-                if (_instanceof(_valuesStart[property], Array) === false) {
+                if (_valuesStart[property] instanceof Array === false) {
                     _valuesStart[property] *= 1.0; // Ensures we're using numbers, not strings
                 }
                 _valuesStartRepeat[property] = _valuesStart[property] || 0;
@@ -123,14 +119,16 @@ function _instanceof(left, right) {
             if (_onStopCallback != null) {
                 _onStopCallback.call(_object);
             }
-            this.stopChainedTweens();
+            // this.stopChainedTweens();
             return this;
         };
-        this.stopChainedTweens = function() {
-            for(var i = 0, numChainedTweens = _chainedTweens.length; i < numChainedTweens; i++){
-                _chainedTweens[i].stop();
-            }
-        };
+        // this.stopChainedTweens = function () {
+        //
+        //   for (var i = 0, numChainedTweens = _chainedTweens.length; i < numChainedTweens; i++) {
+        //     _chainedTweens[i].stop();
+        //   }
+        //
+        // };
         this.complete = function() {
             if (!_isPlaying) {
                 return this;
@@ -140,40 +138,51 @@ function _instanceof(left, right) {
             if (_onCompleteCallback != null) {
                 _onCompleteCallback.call(_object);
             }
-            this.completeChainedTweens();
+            // this.completeChainedTweens();
             return this;
         };
-        this.completeChainedTweens = function() {
-            for(var i = 0, numChainedTweens = _chainedTweens.length; i < numChainedTweens; i++){
-                _chainedTweens[i].complete();
-            }
-        };
+        // this.completeChainedTweens = function () {
+        //
+        //   for (var i = 0, numChainedTweens = _chainedTweens.length; i < numChainedTweens; i++) {
+        //     _chainedTweens[i].complete();
+        //   }
+        //
+        // };
         this.delay = function(amount) {
             _delayTime = amount;
             return this;
         };
-        this.repeat = function(times) {
-            _repeat = times;
-            return this;
-        };
-        //noinspection JSUnusedGlobalSymbols
-        this.yoyo = function(yoyo) {
-            _yoyo = yoyo;
-            return this;
-        };
+        //
+        // this.repeat = function (times) {
+        //
+        //   _repeat = times;
+        //   return this;
+        //
+        // };
+        //
+        // this.yoyo = function (yoyo) {
+        //
+        //   _yoyo = yoyo;
+        //   return this;
+        //
+        // };
         this.easing = function(easing) {
             _easingFunction = easing == null ? _easingFunction : easing;
             return this;
         };
-        this.interpolation = function(interpolation) {
-            _interpolationFunction = interpolation;
-            return this;
-        };
-        //noinspection JSUnusedGlobalSymbols
-        this.chain = function() {
-            _chainedTweens = arguments;
-            return this;
-        };
+        // this.interpolation = function (interpolation) {
+        //
+        //   _interpolationFunction = interpolation;
+        //   return this;
+        //
+        // };
+        //
+        // this.chain = function () {
+        //
+        //   _chainedTweens = arguments;
+        //   return this;
+        //
+        // };
         this.onStart = function(callback) {
             _onStartCallback = callback;
             return this;
@@ -186,7 +195,6 @@ function _instanceof(left, right) {
             _onCompleteCallback = callback;
             return this;
         };
-        //noinspection JSUnusedGlobalSymbols
         this.onStop = function(callback) {
             _onStopCallback = callback;
             return this;
@@ -214,7 +222,7 @@ function _instanceof(left, right) {
                 }
                 var start = _valuesStart[property] || 0;
                 var end = _valuesEnd[property];
-                if (_instanceof(end, Array)) {
+                if (end instanceof Array) {
                     _object[property] = _interpolationFunction(end, value);
                 } else {
                     // Parses relative end values with start as base (e.g.: +10, -3)
@@ -235,38 +243,48 @@ function _instanceof(left, right) {
                 _onUpdateCallback.call(_object, value);
             }
             if (elapsed === 1) {
-                if (_repeat > 0) {
-                    if (isFinite(_repeat)) {
-                        _repeat--;
-                    }
-                    // Reassign starting values, restart by making startTime = now
-                    for(property in _valuesStartRepeat){
-                        if (typeof _valuesEnd[property] === 'string') {
-                            _valuesStartRepeat[property] = _valuesStartRepeat[property] + parseFloat(_valuesEnd[property], 10);
-                        }
-                        if (_yoyo) {
-                            var tmp = _valuesStartRepeat[property];
-                            _valuesStartRepeat[property] = _valuesEnd[property];
-                            _valuesEnd[property] = tmp;
-                        }
-                        _valuesStart[property] = _valuesStartRepeat[property];
-                    }
-                    if (_yoyo) {
-                        _reversed = !_reversed;
-                    }
-                    _startTime = time + _delayTime;
-                    return true;
-                } else {
-                    if (_onCompleteCallback != null) {
-                        _onCompleteCallback.call(_object);
-                    }
-                    for(var i = 0, numChainedTweens = _chainedTweens.length; i < numChainedTweens; i++){
-                        // Make the chained tweens start exactly at the time they should,
-                        // even if the `update()` method was called way past the duration of the tween
-                        _chainedTweens[i].start(_startTime + _duration);
-                    }
-                    return false;
+                // if (_repeat > 0) {
+                //
+                // if (isFinite(_repeat)) {
+                //   _repeat--;
+                // }
+                //
+                // // Reassign starting values, restart by making startTime = now
+                // for (property in _valuesStartRepeat) {
+                //
+                //   if (typeof (_valuesEnd[property]) === 'string') {
+                //     _valuesStartRepeat[property] = _valuesStartRepeat[property] + parseFloat(_valuesEnd[property], 10);
+                //   }
+                //
+                // if (_yoyo) {
+                //   var tmp = _valuesStartRepeat[property];
+                //
+                //   _valuesStartRepeat[property] = _valuesEnd[property];
+                //   _valuesEnd[property] = tmp;
+                // }
+                //
+                //   _valuesStart[property] = _valuesStartRepeat[property];
+                //
+                // }
+                //
+                // if (_yoyo) {
+                //   _reversed = !_reversed;
+                // }
+                //
+                // _startTime = time + _delayTime;
+                //
+                // return true;
+                // } else {
+                if (_onCompleteCallback != null) {
+                    _onCompleteCallback.call(_object);
                 }
+                // for (var i = 0, numChainedTweens = _chainedTweens.length; i < numChainedTweens; i++) {
+                //   // Make the chained tweens start exactly at the time they should,
+                //   // even if the `update()` method was called way past the duration of the tween
+                //   _chainedTweens[i].start(_startTime + _duration);
+                // }
+                return false;
+            // }
             }
             return true;
         };
@@ -278,12 +296,17 @@ function _instanceof(left, right) {
             }
         },
         Quadratic: {
-            In: function In(k) {
-                return k * k;
-            },
-            Out: function Out(k) {
-                return k * (2 - k);
-            },
+            // In: function (k) {
+            //
+            //   return k * k;
+            //
+            // },
+            //
+            // Out: function (k) {
+            //
+            //   return k * (2 - k);
+            //
+            // },
             InOut: function InOut(k) {
                 if ((k *= 2) < 1) {
                     return 0.5 * k * k;
@@ -291,38 +314,51 @@ function _instanceof(left, right) {
                 return -0.5 * (--k * (k - 2) - 1);
             }
         },
-        Quartic: {
-            In: function In(k) {
-                return k * k * k * k;
-            },
-            Out: function Out(k) {
-                return 1 - --k * k * k * k;
-            },
-            InOut: function InOut(k) {
-                if ((k *= 2) < 1) {
-                    return 0.5 * k * k * k * k;
-                }
-                return -0.5 * ((k -= 2) * k * k * k - 2);
-            }
-        },
+        // Quartic: {
+        //
+        //   In: function (k) {
+        //
+        //     return k * k * k * k;
+        //
+        //   },
+        //
+        //   Out: function (k) {
+        //
+        //     return 1 - (--k * k * k * k);
+        //
+        //   },
+        //
+        //   InOut: function (k) {
+        //
+        //     if ((k *= 2) < 1) {
+        //       return 0.5 * k * k * k * k;
+        //     }
+        //
+        //     return -0.5 * ((k -= 2) * k * k * k - 2);
+        //
+        //   }
+        //
+        // },
         Sinusoidal: {
             In: function In(k) {
                 return 1 - Math.cos(k * Math.PI / 2);
             },
             Out: function Out(k) {
                 return Math.sin(k * Math.PI / 2);
-            },
-            InOut: function InOut(k) {
-                return 0.5 * (1 - Math.cos(Math.PI * k));
             }
         },
         Cubic: {
-            In: function In(k) {
-                return k * k * k;
-            },
-            Out: function Out(k) {
-                return --k * k * k + 1;
-            },
+            // In: function (k) {
+            //
+            //   return k * k * k;
+            //
+            // },
+            //
+            // Out: function (k) {
+            //
+            //   return --k * k * k + 1;
+            //
+            // },
             InOut: function InOut(k) {
                 if ((k *= 2) < 1) {
                     return 0.5 * k * k * k;
@@ -346,46 +382,23 @@ function _instanceof(left, right) {
             }
             return fn(v[i], v[i + 1 > m ? m : i + 1], f - i);
         },
-        Bezier: function Bezier(v, k) {
-            var b = 0;
-            var n = v.length - 1;
-            var pw = Math.pow;
-            var bn = TWEEN.Interpolation.Utils.Bernstein;
-            for(var i = 0; i <= n; i++){
-                b += pw(1 - k, n - i) * pw(k, i) * v[i] * bn(n, i);
-            }
-            return b;
-        },
+        // Bezier: function (v, k) {
+        //
+        //   var b = 0;
+        //   var n = v.length - 1;
+        //   var pw = Math.pow;
+        //   var bn = TWEEN.Interpolation.Utils.Bernstein;
+        //
+        //   for (var i = 0; i <= n; i++) {
+        //     b += pw(1 - k, n - i) * pw(k, i) * v[i] * bn(n, i);
+        //   }
+        //
+        //   return b;
+        //
+        // },
         Utils: {
             Linear: function Linear(p0, p1, t) {
                 return (p1 - p0) * t + p0;
-            },
-            Bernstein: function Bernstein(n, i) {
-                var fc = TWEEN.Interpolation.Utils.Factorial;
-                return fc(n) / fc(i) / fc(n - i);
-            },
-            Factorial: function() {
-                var a = [
-                    1
-                ];
-                return function(n) {
-                    var s = 1;
-                    if (a[n]) {
-                        return a[n];
-                    }
-                    for(var i = n; i > 1; i--){
-                        s *= i;
-                    }
-                    a[n] = s;
-                    return s;
-                };
-            }(),
-            CatmullRom: function CatmullRom(p0, p1, p2, p3, t) {
-                var v0 = (p2 - p0) * 0.5;
-                var v1 = (p3 - p1) * 0.5;
-                var t2 = t * t;
-                var t3 = t * t2;
-                return (2 * p1 - 2 * p2 + v0 + v1) * t3 + (-3 * p1 + 3 * p2 - 2 * v0 - v1) * t2 + v0 * t + p1;
             }
         }
     };
@@ -434,11 +447,999 @@ function _instanceof(left, right) {
 
 // UNUSED EXPORTS: default
 
+;// CONCATENATED MODULE: ./src/js/dearviewer/utils/query.js
+// Query - Lightweight DOM manipulation library
+// Private WeakMap to store elements data
+function _array_like_to_array(arr, len) {
+    if (len == null || len > arr.length) len = arr.length;
+    for(var i = 0, arr2 = new Array(len); i < len; i++)arr2[i] = arr[i];
+    return arr2;
+}
+function _array_with_holes(arr) {
+    if (Array.isArray(arr)) return arr;
+}
+function _array_without_holes(arr) {
+    if (Array.isArray(arr)) return _array_like_to_array(arr);
+}
+function _iterable_to_array(iter) {
+    if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter);
+}
+function _iterable_to_array_limit(arr, i) {
+    var _i = arr == null ? null : typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"];
+    if (_i == null) return;
+    var _arr = [];
+    var _n = true;
+    var _d = false;
+    var _s, _e;
+    try {
+        for(_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true){
+            _arr.push(_s.value);
+            if (i && _arr.length === i) break;
+        }
+    } catch (err) {
+        _d = true;
+        _e = err;
+    } finally{
+        try {
+            if (!_n && _i["return"] != null) _i["return"]();
+        } finally{
+            if (_d) throw _e;
+        }
+    }
+    return _arr;
+}
+function _non_iterable_rest() {
+    throw new TypeError("Invalid attempt to destructure non-iterable instance.\\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+}
+function _non_iterable_spread() {
+    throw new TypeError("Invalid attempt to spread non-iterable instance.\\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+}
+function _sliced_to_array(arr, i) {
+    return _array_with_holes(arr) || _iterable_to_array_limit(arr, i) || _unsupported_iterable_to_array(arr, i) || _non_iterable_rest();
+}
+function _to_consumable_array(arr) {
+    return _array_without_holes(arr) || _iterable_to_array(arr) || _unsupported_iterable_to_array(arr) || _non_iterable_spread();
+}
+function _type_of(obj) {
+    "@swc/helpers - typeof";
+    return obj && typeof Symbol !== "undefined" && obj.constructor === Symbol ? "symbol" : typeof obj;
+}
+function _unsupported_iterable_to_array(o, minLen) {
+    if (!o) return;
+    if (typeof o === "string") return _array_like_to_array(o, minLen);
+    var n = Object.prototype.toString.call(o).slice(8, -1);
+    if (n === "Object" && o.constructor) n = o.constructor.name;
+    if (n === "Map" || n === "Set") return Array.from(n);
+    if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _array_like_to_array(o, minLen);
+}
+var privateElements = new WeakMap();
+// Private WeakMap to store object data for elements
+var privateData = new WeakMap();
+function Query(selector) {
+    var props = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : {};
+    if (selector instanceof Query) {
+        return selector;
+    }
+    if (!(this instanceof Query)) {
+        return new Query(selector, props);
+    }
+    // Initialize private elements array
+    privateElements.set(this, []);
+    this.length = 0;
+    if (!selector) {
+        return this;
+    }
+    var elements = [];
+    if (typeof selector === 'string') {
+        if (selector.trim().startsWith('<') && selector.trim().endsWith('>')) {
+            // Create element from HTML string using document fragment
+            var fragment = document.createRange().createContextualFragment(selector.trim());
+            // Get elements from the fragment
+            elements = Array.from(fragment.children);
+            // Create a true copy of each element to ensure they're detached
+            elements = elements.map(function(el) {
+                return el.cloneNode(true);
+            });
+        } else {
+            // Query selector
+            var nodeList = document.querySelectorAll(selector);
+            elements = Array.from(nodeList);
+        }
+    } else if (selector.nodeType || selector === window || selector === document) {
+        // Single element
+        elements = [
+            selector
+        ];
+    } else if (selector.length !== undefined) {
+        // Array-like object
+        elements = Array.from(selector);
+    }
+    // Store elements privately and update indexed access
+    this._setElements(elements, props);
+    return this;
+}
+// Internal getter for elements (private to Query)
+Query.prototype._getElements = function() {
+    return privateElements.get(this) || [];
+};
+// Internal method to update elements and indexed access
+Query.prototype._setElements = function(elements, props) {
+    var _this = this;
+    privateElements.set(this, elements);
+    this.length = elements.length;
+    // Clear existing indexed properties
+    Object.keys(this).forEach(function(key) {
+        if (!isNaN(key)) {
+            delete _this[key];
+        }
+    });
+    // Set up new indexed access
+    elements.forEach(function(el, index) {
+        if (props.hasOwnProperty('class')) {
+            var _el_classList;
+            (_el_classList = el.classList).add.apply(_el_classList, _to_consumable_array(props["class"].trim().split(' ')));
+        }
+        if (props.hasOwnProperty('id')) {
+            el.id = props.id;
+        }
+        if (props.hasOwnProperty('title')) {
+            el.title = props.title;
+        }
+        if (props.hasOwnProperty('html')) {
+            el.innerHTML = props.html;
+        }
+        _this[index] = el;
+    });
+    return this;
+};
+// Event handling methods
+Query.prototype.on = function(eventName, selectorOrHandler, handlerOrUndefined) {
+    // Determine if this is element.on(eventName, callback) or element.on(eventName, selector, callback)
+    var handler, selector;
+    if (typeof selectorOrHandler === 'string' && typeof handlerOrUndefined === 'function') {
+        // Format: on(eventName, selector, callback)
+        selector = selectorOrHandler;
+        handler = handlerOrUndefined;
+    } else {
+        // Format: on(eventName, callback)
+        handler = selectorOrHandler;
+        selector = null;
+    }
+    this._getElements().forEach(function(el) {
+        if (selector) {
+            var wrappedHandler = function(e) {
+                if (!e.target) return;
+                var targetEl = e.target.closest(selector);
+                if (targetEl) {
+                    e.originalEvent = e;
+                    handler.call(targetEl, e);
+                }
+            };
+            el.addEventListener(eventName, wrappedHandler);
+            // Store reference for off method
+            if (!el._queryHandlers) el._queryHandlers = {};
+            if (!el._queryHandlers[eventName]) el._queryHandlers[eventName] = [];
+            el._queryHandlers[eventName].push({
+                original: handler,
+                wrapped: wrappedHandler,
+                selector: selector
+            });
+        } else {
+            var wrappedHandler1 = function(e) {
+                e.originalEvent = e;
+                handler.call(el, e);
+            };
+            el.addEventListener(eventName, wrappedHandler1);
+            // Store reference for off method
+            if (!el._queryHandlers) el._queryHandlers = {};
+            if (!el._queryHandlers[eventName]) el._queryHandlers[eventName] = [];
+            el._queryHandlers[eventName].push({
+                original: handler,
+                wrapped: wrappedHandler1
+            });
+        }
+    });
+    return this;
+};
+Query.prototype.off = function() {
+    this._getElements().forEach(function(el) {
+        if (!el._queryHandlers) return;
+        // Remove all events
+        Object.keys(el._queryHandlers).forEach(function(event) {
+            el._queryHandlers[event].forEach(function(handler) {
+                el.removeEventListener(event, handler.wrapped);
+            });
+        });
+        el._queryHandlers = {};
+    });
+    return this;
+};
+Query.prototype.trigger = function(eventName) {
+    this._getElements().forEach(function(el) {
+        if (typeof eventName === 'string' && typeof el[eventName] === 'function') {
+            el[eventName]();
+        } else {
+            var event = new Event(eventName, {
+                bubbles: true
+            });
+            el.dispatchEvent(event);
+        }
+    });
+    return this;
+};
+/**
+ * Normalize an event object across older browsers.
+ * @param {Event|undefined} evt
+ * @returns {Event}
+ */ // Query.fixEvent = function (evt) {
+//     const e = evt || window.event;
+//
+//     // target normalization
+//     if (!e.target) {
+//       e.target = e.srcElement || document;
+//     }
+//     // text node -> element
+//     if (e.target.nodeType === 3) {
+//       e.target = e.target.parentNode;
+//     }
+//
+//     // preventDefault / stopPropagation
+//     if (!e.preventDefault) {
+//       e.preventDefault = function() { this.returnValue = false; };
+//     }
+//     if (!e.stopPropagation) {
+//       e.stopPropagation = function() { this.cancelBubble = true; };
+//     }
+//
+//     // pageX/Y (IE < 9)
+//     if (e.pageX == null && e.clientX != null) {
+//       const doc = document.documentElement;
+//       const body = document.body;
+//       e.pageX = e.clientX +
+//         (doc.scrollLeft || body.scrollLeft || 0) -
+//         (doc.clientLeft || body.clientLeft || 0);
+//       e.pageY = e.clientY +
+//         (doc.scrollTop  || body.scrollTop  || 0) -
+//         (doc.clientTop  || body.clientTop  || 0);
+//     }
+//
+//     // which for mouse buttons (IE)
+//     if (e.which == null && e.button != null) {
+//       e.which = (e.button & 1 ? 1 :
+//                  (e.button & 2 ? 3 :
+//                  (e.button & 4 ? 2 : 0)));
+//     }
+//
+//     return e;
+// };
+// DOM manipulation methods
+Query.prototype.addClass = function(className) {
+    if (!className) return this;
+    this._getElements().forEach(function(el) {
+        if (el.classList) {
+            var _el_classList;
+            (_el_classList = el.classList).add.apply(_el_classList, _to_consumable_array(className.trim().split(' ')));
+        }
+    });
+    return this;
+};
+Query.prototype.removeClass = function(className) {
+    if (!className) return this;
+    this._getElements().forEach(function(el) {
+        if (el.classList) {
+            var _el_classList;
+            (_el_classList = el.classList).remove.apply(_el_classList, _to_consumable_array(className.trim().split(' ')));
+        }
+    });
+    return this;
+};
+Query.prototype.hasClass = function(className) {
+    return this._getElements().some(function(el) {
+        return el.classList && el.classList.contains(className);
+    });
+};
+Query.prototype.toggleClass = function(className, force) {
+    this._getElements().forEach(function(el) {
+        if (force === undefined) {
+            // Toggle class based on current presence
+            el.classList.toggle(className);
+        } else if (force) {
+            // Force add class
+            el.classList.add(className);
+        } else {
+            // Force remove class
+            el.classList.remove(className);
+        }
+    });
+    return this;
+};
+Query.prototype.css = function(content) {
+    // Properties that should have 'px' appended when numeric values are provided
+    var pxProperties = [
+        'width',
+        'height',
+        'min-width',
+        'min-height',
+        'max-width',
+        'max-height',
+        'margin',
+        'marginTop',
+        'marginRight',
+        'marginBottom',
+        'marginLeft',
+        'padding',
+        'paddingTop',
+        'paddingRight',
+        'paddingBottom',
+        'paddingLeft',
+        'top',
+        'right',
+        'bottom',
+        'left',
+        'border-width',
+        'border-top-width',
+        'border-right-width',
+        'border-bottom-width',
+        'border-left-width',
+        'fontSize',
+        'lineHeight'
+    ];
+    this._getElements().forEach(function(el) {
+        Object.keys(content).forEach(function(key) {
+            var value = content[key];
+            // If the value is a number (or numeric string) and the property should have px unit
+            if (value !== null && value !== undefined && value !== '' && !isNaN(parseFloat(value)) && isFinite(value) && pxProperties.includes(key)) {
+                // Don't add px if it's 0 or already has a unit
+                if (value !== 0 && value !== '0' && typeof value === 'number') {
+                    value = value + 'px';
+                }
+            }
+            el.style[key] = value;
+        });
+    });
+    return this;
+};
+Query.prototype.prepend = function(content) {
+    if (!content) return this;
+    this._getElements().forEach(function(el) {
+        if (typeof content === 'string') {
+            el.insertAdjacentHTML('afterbegin', content);
+        } else if (content instanceof Query) {
+            content._getElements().forEach(function(child) {
+                el.insertBefore(child, el.firstChild);
+            });
+        } else if (content.nodeType) {
+            el.insertBefore(content, el.firstChild);
+        }
+    });
+    return this;
+};
+Query.prototype.append = function(content) {
+    if (!content) return this;
+    this._getElements().forEach(function(el) {
+        if (typeof content === 'string') {
+            el.insertAdjacentHTML('beforeend', content);
+        } else if (content instanceof Query) {
+            content._getElements().forEach(function(child) {
+                if (!el.contains(child)) {
+                    el.appendChild(child);
+                }
+            });
+        } else if (content.nodeType) {
+            // Check if the node is already a child of this element
+            if (!el.contains(content)) {
+                el.appendChild(content);
+            }
+        }
+    });
+    return this;
+};
+Query.prototype.appendTo = function(target) {
+    var targetEl = target instanceof Query ? target._getElements()[0] : typeof target === 'string' ? document.querySelector(target) : target;
+    if (targetEl) {
+        this._getElements().forEach(function(el) {
+            // Check if the node is already a child of the target element
+            if (!targetEl.contains(el)) {
+                targetEl.appendChild(el);
+            }
+        });
+    }
+    return this;
+};
+Query.prototype.after = function(content) {
+    this._getElements().forEach(function(el) {
+        if (typeof content === 'string') {
+            el.insertAdjacentHTML('afterend', content);
+        } else if (content instanceof Query) {
+            content._getElements().forEach(function(child) {
+                el.parentNode.insertBefore(child, el.nextSibling);
+            });
+        } else if (content.nodeType) {
+            el.parentNode.insertBefore(content, el.nextSibling);
+        }
+    });
+    return this;
+};
+Query.prototype.html = function(content) {
+    if (content === undefined) {
+        return this._getElements()[0] ? this._getElements()[0].innerHTML : '';
+    }
+    this._getElements().forEach(function(el) {
+        el.innerHTML = content;
+    });
+    return this;
+};
+Query.prototype.text = function(content) {
+    if (content === undefined) {
+        return this._getElements()[0] ? this._getElements()[0].textContent : '';
+    }
+    this._getElements().forEach(function(el) {
+        el.textContent = content;
+    });
+    return this;
+};
+Query.prototype.find = function(selector) {
+    var found = [];
+    this._getElements().forEach(function(el) {
+        var _found;
+        var elements = el.querySelectorAll(selector);
+        (_found = found).push.apply(_found, _to_consumable_array(Array.from(elements)));
+    });
+    return new Query(found);
+};
+Query.prototype.children = function(selector) {
+    var children = [];
+    this._getElements().forEach(function(el) {
+        Array.from(el.children).forEach(function(child) {
+            if (!selector || child.matches(selector)) {
+                children.push(child);
+            }
+        });
+    });
+    return new Query(children);
+};
+Query.prototype.is = function(selector) {
+    return this._getElements().some(function(el) {
+        return el.matches(selector);
+    });
+};
+Query.prototype.closest = function(selector) {
+    var found = [];
+    this._getElements().forEach(function(el) {
+        var closest = el.closest(selector);
+        if (closest && !found.includes(closest)) {
+            found.push(closest);
+        }
+    });
+    return new Query(found);
+};
+Query.prototype.contains = function(element) {
+    var targetEl = element instanceof Query ? element._getElements()[0] : element;
+    return this._getElements().some(function(el) {
+        return el.contains(targetEl);
+    });
+};
+Query.prototype.siblings = function(selector) {
+    var siblings = [];
+    this._getElements().forEach(function(el) {
+        var _siblings;
+        var _siblings1 = Array.from(el.parentElement.children).filter(function(child) {
+            return child !== el;
+        });
+        if (selector) {
+            _siblings1 = _siblings1.filter(function(sibling) {
+                return sibling.matches(selector);
+            });
+        }
+        (_siblings = siblings).push.apply(_siblings, _to_consumable_array(_siblings1));
+    });
+    return new Query(siblings);
+};
+Query.prototype.parent = function(selector) {
+    // Get all parent elements
+    var parents = this._getElements().map(function(el) {
+        return el.parentElement;
+    }).filter(function(parent) {
+        return parent !== null;
+    }); // Filter out null parents
+    // If a selector is provided, filter parents matching that selector
+    if (selector) {
+        parents = parents.filter(function(parent) {
+            return parent.matches(selector);
+        });
+    }
+    return new Query(parents);
+};
+Query.prototype.each = function(callback) {
+    this._getElements().forEach(function(el, index) {
+        callback.call(el, index, el);
+    });
+    return this;
+};
+Query.prototype.map = function(callback) {
+    this._getElements().map(function(el, index) {
+        return callback.call(el, index, el);
+    });
+    return this;
+};
+Query.prototype.get = function() {
+    return this._getElements();
+};
+Query.prototype.attr = function(name, value) {
+    if (arguments.length === 1) {
+        // Getter: return attribute value of first element
+        return this._getElements()[0] ? this._getElements()[0].getAttribute(name) : undefined;
+    }
+    if (value === void 0) {
+        this._getElements().forEach(function(el) {
+            el.removeAttribute(name);
+        });
+        return this;
+    }
+    // Setter: set attribute on all elements
+    this._getElements().forEach(function(el) {
+        el.setAttribute(name, value);
+    });
+    return this;
+};
+Query.prototype.removeAttr = function(name) {
+    this._getElements().forEach(function(el) {
+        el.removeAttribute(name);
+    });
+    return this;
+};
+Query.prototype.data = function(key, value) {
+    if (value === undefined) {
+        var el = this._getElements()[0];
+        if (!el) return undefined;
+        // First check internal storage for object values
+        var elementData = privateData.get(el) || {};
+        if (elementData[key] !== undefined) {
+            return elementData[key];
+        }
+        // If not in internal storage, check the dataset
+        var camelKey = key.replace(/-([a-z])/g, function(_, letter) {
+            return letter.toUpperCase();
+        });
+        return el.dataset[camelKey];
+    }
+    this._getElements().forEach(function(el) {
+        if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') {
+            el.setAttribute("data-".concat(key), value);
+        } else if (value === null) {
+            // Remove the data attribute if value is null
+            el.removeAttribute("data-".concat(key));
+            // Also remove from internal storage if exists
+            var elementData = privateData.get(el);
+            if (elementData && elementData[key] !== undefined) {
+                delete elementData[key];
+                privateData.set(el, elementData);
+            }
+        } else if ((typeof value === "undefined" ? "undefined" : _type_of(value)) === 'object') {
+            // For objects, store internally
+            var elementData1 = privateData.get(el) || {};
+            elementData1[key] = value;
+            privateData.set(el, elementData1);
+        }
+    });
+    return this;
+};
+//
+// // Helper function to get document dimensions
+// Query.getDocumentHeight = function() {
+//     return Math.max(
+//         document.body.scrollHeight,
+//         document.documentElement.scrollHeight,
+//         document.body.offsetHeight,
+//         document.documentElement.offsetHeight,
+//         document.documentElement.clientHeight
+//     );
+// };
+//
+// Query.getDocumentWidth = function() {
+//     return Math.max(
+//         document.body.scrollWidth,
+//         document.documentElement.scrollWidth,
+//         document.body.offsetWidth,
+//         document.documentElement.offsetWidth,
+//         document.documentElement.clientWidth
+//     );
+// };
+Query.prototype.height = function(value) {
+    if (value === undefined) {
+        // Getter - return height
+        if (this._getElements().length === 0) return 0;
+        var el = this._getElements()[0];
+        // Special handling for window element
+        if (el === window) {
+            return window.innerHeight;
+        // } else if (el.nodeType === 9) { // Document node
+        //     return Query.getDocumentHeight();
+        } else {
+            return el.offsetHeight;
+        }
+    }
+    // Setter - set height
+    this._getElements().forEach(function(el) {
+        // Don't try to set height style on window or document
+        // if (el === window) {
+        //     // Cannot directly set window height
+        //     console.warn('Cannot set height on window element');
+        // } else if (el.nodeType === 9) {
+        //     // Cannot directly set document height
+        //     console.warn('Cannot set height on document element');
+        // } else {
+        el.style.height = typeof value === 'number' ? value + 'px' : value;
+    // }
+    });
+    return this;
+};
+// Query.prototype.outerHeight = function(includeMargin) {
+//     if (this._getElements().length === 0) return 0;
+//
+//     const el = this._getElements()[0];
+//
+//     // Handle window element
+//     if (el === window) {
+//         return window.outerHeight;
+//     }
+//
+//     // Handle document element
+//     if (el.nodeType === 9) {
+//         return Query.getDocumentHeight();
+//     }
+//
+//     // Regular DOM element
+//     let height = el.offsetHeight;
+//
+//     // Add margins if requested
+//     if (includeMargin === true) {
+//         const style = getComputedStyle(el);
+//         height += parseInt(style.marginTop, 10) + parseInt(style.marginBottom, 10);
+//     }
+//
+//     return height;
+// }
+Query.prototype.width = function(value) {
+    if (value === undefined) {
+        // Getter - return width
+        if (this._getElements().length === 0) return 0;
+        var el = this._getElements()[0];
+        // Special handling for window element
+        if (el === window) {
+            return window.innerWidth;
+        // } else if (el.nodeType === 9) { // Document node
+        //     return Query.getDocumentWidth();
+        } else {
+            return el.offsetWidth;
+        }
+    }
+    // Setter - set width
+    this._getElements().forEach(function(el) {
+        // Don't try to set width style on window or document
+        // if (el === window) {
+        //     // Cannot directly set window width
+        //     console.warn('Cannot set width on window element');
+        // } else if (el.nodeType === 9) {
+        //     // Cannot directly set document width
+        //     console.warn('Cannot set width on document element');
+        // } else {
+        el.style.width = typeof value === 'number' ? value + 'px' : value;
+    // }
+    });
+    return this;
+};
+Query.prototype.offset = function() {
+    return {
+        top: this[0].offsetTop,
+        left: this[0].offsetLeft
+    };
+};
+Query.prototype.remove = function() {
+    this._getElements().forEach(function(el) {
+        if (el.parentNode) {
+            el.parentNode.removeChild(el);
+        }
+    });
+    // Clear the elements array since they're no longer in the DOM
+    this._setElements([]);
+    return this;
+};
+//
+// Query.prototype.focus = function () {
+//     this._getElements().forEach(el => {
+//         el.focus();
+//     });
+//     return this;
+// }
+Query.prototype.val = function(value) {
+    if (value === undefined) {
+        return this._getElements()[0] ? this._getElements()[0].value : '';
+    }
+    this._getElements().forEach(function(el) {
+        el.value = value;
+    });
+    return this;
+};
+// Query.prototype.select = function () {
+//     this._getElements().forEach(el => {
+//         el.select();
+//     });
+//     return this;
+// }
+//
+// Query.prototype.fadeIn = function (duration = 300) {
+//     this._getElements().forEach(el => {
+//         // Set initial opacity and display
+//         el.style.opacity = 0;
+//         el.style.display = 'block';
+//
+//         // Get start timestamp
+//         let start = null;
+//
+//         // Define animation function
+//         const animate = (timestamp) => {
+//             if (!start) start = timestamp;
+//             // Calculate progress
+//             const progress = timestamp - start;
+//             // Calculate opacity based on progress
+//             const opacity = Math.min(progress / duration, 1);
+//             // Set opacity
+//             el.style.opacity = opacity;
+//
+//             // Continue animation if not completed
+//             if (progress < duration) {
+//                 window.requestAnimationFrame(animate);
+//             }
+//         };
+//
+//         // Start animation
+//         window.requestAnimationFrame(animate);
+//     });
+//     return this;
+// }
+//
+// Query.prototype.fadeOut = function (duration = 300) {
+//     this._getElements().forEach(el => {
+//         // Set initial opacity
+//         el.style.opacity = 1;
+//
+//         // Get start timestamp
+//         let start = null;
+//
+//         // Define animation function
+//         const animate = (timestamp) => {
+//             if (!start) start = timestamp;
+//             // Calculate progress
+//             const progress = timestamp - start;
+//             // Calculate opacity based on progress (decreasing)
+//             const opacity = Math.max(1 - (progress / duration), 0);
+//             // Set opacity
+//             el.style.opacity = opacity;
+//
+//             // Continue animation if not completed
+//             if (progress < duration) {
+//                 window.requestAnimationFrame(animate);
+//             } else {
+//                 // Hide element completely when animation is done
+//                 el.style.display = 'none';
+//             }
+//         };
+//
+//         // Start animation
+//         window.requestAnimationFrame(animate);
+//     });
+//     return this;
+// }
+Query.prototype.hide = function() {
+    this._getElements().forEach(function(el) {
+        el.style.display = 'none';
+    });
+    return this;
+};
+Query.prototype.show = function() {
+    this._getElements().forEach(function(el) {
+        el.style.display = 'block';
+    });
+    return this;
+};
+Query.prototype.ready = function(callback) {
+    document.addEventListener('DOMContentLoaded', callback);
+};
+Query.prototype.scrollTop = function(value) {
+    if (value === undefined) {
+        return this._getElements()[0] ? this._getElements()[0].scrollTop : 0;
+    }
+    this._getElements().forEach(function(el) {
+        el.scrollTop = value;
+    });
+    return this;
+};
+Query.prototype.change = function(handler) {
+    this._getElements().forEach(function(el) {
+        el.addEventListener('change', handler);
+    });
+    return this;
+};
+Query.prototype.click = function() {
+    this._getElements().forEach(function(el) {
+        if (typeof el.click === 'function') {
+            el.click();
+        }
+    });
+    return this;
+};
+/**
+ *
+ * @param {boolean} deepMerge Not utilized here/ Just for compatibility with jQuery
+ * @param {Object} out
+ * @param  {...Object} arguments_
+ * @returns {Object}
+ */ Query.extend = function(deepMerge, out) {
+    for(var _len = arguments.length, arguments_ = new Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++){
+        arguments_[_key - 2] = arguments[_key];
+    }
+    if (!out) {
+        return {};
+    }
+    var _iteratorNormalCompletion = true, _didIteratorError = false, _iteratorError = undefined;
+    try {
+        for(var _iterator = arguments_[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true){
+            var obj = _step.value;
+            if (!obj) {
+                continue;
+            }
+            var _iteratorNormalCompletion1 = true, _didIteratorError1 = false, _iteratorError1 = undefined;
+            try {
+                for(var _iterator1 = Object.entries(obj)[Symbol.iterator](), _step1; !(_iteratorNormalCompletion1 = (_step1 = _iterator1.next()).done); _iteratorNormalCompletion1 = true){
+                    var _step_value = _sliced_to_array(_step1.value, 2), key = _step_value[0], value = _step_value[1];
+                    // Special handling for Query instances - preserve them as-is
+                    if (value instanceof Query) {
+                        out[key] = value;
+                    } else {
+                        switch(Object.prototype.toString.call(value)){
+                            case '[object Object]':
+                                // Only create nested object if current value is also an object
+                                if (Object.prototype.toString.call(out[key]) === '[object Object]') {
+                                    out[key] = Query.extend(out[key], value);
+                                } else {
+                                    out[key] = Query.extend({}, value);
+                                }
+                                break;
+                            case '[object Array]':
+                                out[key] = Query.extend(new Array(value.length), value);
+                                break;
+                            default:
+                                out[key] = value;
+                        }
+                    }
+                }
+            } catch (err) {
+                _didIteratorError1 = true;
+                _iteratorError1 = err;
+            } finally{
+                try {
+                    if (!_iteratorNormalCompletion1 && _iterator1["return"] != null) {
+                        _iterator1["return"]();
+                    }
+                } finally{
+                    if (_didIteratorError1) {
+                        throw _iteratorError1;
+                    }
+                }
+            }
+        }
+    } catch (err) {
+        _didIteratorError = true;
+        _iteratorError = err;
+    } finally{
+        try {
+            if (!_iteratorNormalCompletion && _iterator["return"] != null) {
+                _iterator["return"]();
+            }
+        } finally{
+            if (_didIteratorError) {
+                throw _iteratorError;
+            }
+        }
+    }
+    return out;
+};
+//
+// // Add fn property to Query, similar to jQuery.fn which points to prototype
+// Query.fn = Query.prototype;
+//
+// // Add extend method to Query.fn (prototype) to match jQuery.fn.extend functionality
+// Query.fn.extend = function(obj) {
+//     for (const [prop, value] of Object.entries(obj)) {
+//         Query.prototype[prop] = value;
+//     }
+//     return this;
+// };
+function returnTrue() {
+    return true;
+}
+function returnFalse() {
+    return false;
+}
+Query.Event = function(src, props) {
+    // Allow instantiation without the 'new' keyword
+    if (!(this instanceof Query.Event)) {
+        return new Query.Event(src, props);
+    }
+    // Event object
+    if (src && src.type) {
+        this.originalEvent = src;
+        this.type = src.type;
+        // Events bubbling up the document may have been marked as prevented
+        // by a handler lower down the tree; reflect the correct value.
+        this.isDefaultPrevented = src.defaultPrevented || src.defaultPrevented === undefined && // Support: Android <=2.3 only
+        src.returnValue === false ? returnTrue : returnFalse;
+        // Create target properties
+        // Support: Safari <=6 - 7 only
+        // Target should not be a text node (trac-504, trac-13143)
+        this.target = src.target && src.target.nodeType === 3 ? src.target.parentNode : src.target;
+        this.currentTarget = src.currentTarget;
+        this.relatedTarget = src.relatedTarget;
+    // Event type
+    } else {
+        this.type = src;
+    }
+    // Put explicitly provided properties onto the event object
+    if (props) {
+        Query.extend(this, props);
+    }
+    // Create a timestamp if incoming event doesn't have one
+    this.timeStamp = src && src.timeStamp || Date.now();
+    // Mark it as fixed
+    this._eventFixed = true;
+};
+// jQuery.Event is based on DOM3 Events as specified by the ECMAScript Language Binding
+// https://www.w3.org/TR/2003/WD-DOM-Level-3-Events-20030331/ecma-script-binding.html
+Query.Event.prototype = {
+    constructor: Query.Event,
+    isDefaultPrevented: returnFalse,
+    isPropagationStopped: returnFalse,
+    isImmediatePropagationStopped: returnFalse,
+    isSimulated: false,
+    preventDefault: function preventDefault() {
+        var e = this.originalEvent;
+        this.isDefaultPrevented = returnTrue;
+        if (e && !this.isSimulated) {
+            e.preventDefault();
+        }
+    },
+    stopPropagation: function stopPropagation() {
+        var e = this.originalEvent;
+        this.isPropagationStopped = returnTrue;
+        if (e && !this.isSimulated) {
+            e.stopPropagation();
+        }
+    },
+    stopImmediatePropagation: function stopImmediatePropagation() {
+        var e = this.originalEvent;
+        this.isImmediatePropagationStopped = returnTrue;
+        if (e && !this.isSimulated) {
+            e.stopImmediatePropagation();
+        }
+        this.stopPropagation();
+    }
+};
+Query.event = {
+    fix: function fix(originalEvent) {
+        return originalEvent._eventFixed ? originalEvent : new Query.Event(originalEvent);
+    }
+};
+
+/* harmony default export */ var query = (Query);
+
 ;// CONCATENATED MODULE: ./src/js/dearviewer/defaults.js
+
 /* globals jQuery */ var defaults_DEARVIEWER = {
-    jQuery: jQuery,
-    version: '2.3.57',
+    jQuery: null,
+    version: '2.4.30',
     autoDetectLocation: true,
+    _isHashTriggered: false,
     slug: undefined,
     locationVar: "dearViewerLocation",
     locationFile: undefined,
@@ -540,6 +1541,13 @@ function _instanceof(left, right) {
         RIDGE: "ridge"
     }
 };
+defaults_DEARVIEWER.fakejQuery = false;
+if (typeof jQuery === "undefined") {
+    defaults_DEARVIEWER.fakejQuery = true;
+    defaults_DEARVIEWER.jQuery = query;
+} else {
+    defaults_DEARVIEWER.jQuery = jQuery;
+}
 //_defaults that can be referenced but should not be changed
 defaults_DEARVIEWER._defaults = {
     // When viewer is set to flipbook
@@ -590,44 +1598,45 @@ defaults_DEARVIEWER._defaults = {
     disableAutoFetch: true,
     disableStream: true,
     disableFontFace: false,
+    calendarMode: false,
     // icons for the buttons
     icons: {
-        'altnext': 'df-icon-arrow-right1',
-        'altprev': 'df-icon-arrow-left1',
-        'next': 'df-icon-arrow-right1',
-        'prev': 'df-icon-arrow-left1',
-        'end': 'df-icon-last-page',
-        'start': 'df-icon-first-page',
-        'share': 'df-icon-share',
+        altnext: 'df-icon-arrow-right1',
+        altprev: 'df-icon-arrow-left1',
+        next: 'df-icon-arrow-right1',
+        prev: 'df-icon-arrow-left1',
+        end: 'df-icon-last-page',
+        start: 'df-icon-first-page',
+        share: 'df-icon-share',
         'outline-open': 'df-icon-arrow-right',
         'outline-close': 'df-icon-arrow-down',
-        'help': 'df-icon-help',
-        'more': 'df-icon-more',
-        'download': 'df-icon-download',
-        'zoomin': 'df-icon-add-circle',
-        'zoomout': 'df-icon-minus-circle',
-        'resetzoom': 'df-icon-minus-circle',
-        'fullscreen': 'df-icon-fullscreen',
+        help: 'df-icon-help',
+        more: 'df-icon-more',
+        download: 'df-icon-download',
+        zoomin: 'df-icon-add-circle',
+        zoomout: 'df-icon-minus-circle',
+        resetzoom: 'df-icon-minus-circle',
+        fullscreen: 'df-icon-fullscreen',
         'fullscreen-off': 'df-icon-fit-screen',
-        'fitscreen': 'df-icon-fit-screen',
-        'thumbnail': 'df-icon-grid-view',
-        'outline': 'df-icon-list',
-        'close': 'df-icon-close',
-        'doublepage': 'df-icon-double-page',
-        'singlepage': 'df-icon-file',
-        'print': 'df-icon-print',
-        'play': 'df-icon-play',
-        'pause': 'df-icon-pause',
-        'search': 'df-icon-search',
-        'sound': 'df-icon-volume',
+        fitscreen: 'df-icon-fit-screen',
+        thumbnail: 'df-icon-grid-view',
+        outline: 'df-icon-list',
+        close: 'df-icon-close',
+        doublepage: 'df-icon-double-page',
+        singlepage: 'df-icon-file',
+        print: 'df-icon-print',
+        play: 'df-icon-play',
+        pause: 'df-icon-pause',
+        search: 'df-icon-search',
+        sound: 'df-icon-volume',
         'sound-off': 'df-icon-volume',
-        'facebook': 'df-icon-facebook',
-        'google': 'df-icon-google',
-        'twitter': 'df-icon-twitter',
-        'whatsapp': 'df-icon-whatsapp',
-        'linkedin': 'df-icon-linkedin',
-        'pinterest': 'df-icon-pinterest',
-        'mail': 'df-icon-mail'
+        facebook: 'df-icon-facebook',
+        google: 'df-icon-google',
+        twitter: 'df-icon-twitter',
+        whatsapp: 'df-icon-whatsapp',
+        linkedin: 'df-icon-linkedin',
+        pinterest: 'df-icon-pinterest',
+        mail: 'df-icon-mail'
     },
     // TRANSLATION text to be displayed
     text: {
@@ -661,6 +1670,14 @@ defaults_DEARVIEWER._defaults = {
         outlineTitle: "Table of Contents",
         searchTitle: "Search",
         searchPlaceHolder: "Search",
+        searchClear: "Clear",
+        searchSearchingInfo: "Searching Page:",
+        searchResultsFound: "results found",
+        searchResultsNotFound: "No results Found!",
+        searchResultPage: "Page",
+        searchResult: "result",
+        searchResults: "results",
+        searchMinimum: "Minimum 3 letters required!",
         analyticsEventCategory: "DearFlip",
         analyticsViewerReady: "Document Ready",
         analyticsViewerOpen: "Document Opened",
@@ -668,12 +1685,12 @@ defaults_DEARVIEWER._defaults = {
         analyticsFirstPageChange: "First Page Changed"
     },
     share: {
-        'facebook': 'https://www.facebook.com/sharer/sharer.php?u={{url}}&t={{mailsubject}}',
-        'twitter': 'https://twitter.com/share?url={{url}}&text={{mailsubject}}',
-        'mail': undefined,
-        'whatsapp': 'https://api.whatsapp.com/send/?text={{mailsubject}}+{{url}}&type=custom_url&app_absent=0',
-        'linkedin': 'https://www.linkedin.com/shareArticle?url={{url}}&title={{mailsubject}}',
-        'pinterest': 'https://www.pinterest.com/pin/create/button/?url={{url}}&media=&description={{mailsubject}}'
+        facebook: 'https://www.facebook.com/sharer/sharer.php?u={{url}}&t={{mailsubject}}',
+        twitter: 'https://twitter.com/share?url={{url}}&text={{mailsubject}}',
+        mail: undefined,
+        whatsapp: 'https://api.whatsapp.com/send/?text={{mailsubject}}+{{url}}&app_absent=0',
+        linkedin: 'https://www.linkedin.com/shareArticle?url={{url}}&title={{mailsubject}}',
+        pinterest: 'https://www.pinterest.com/pin/create/button/?url={{url}}&media=&description={{mailsubject}}'
     },
     //valid control-names:
     //altPrev,pageNumber,altNext,outline,thumbnail,zoomIn,zoomOut,fullScreen,share
@@ -690,9 +1707,11 @@ defaults_DEARVIEWER._defaults = {
     paddingRight: 15,
     paddingBottom: 20,
     enableAnalytics: false,
+    hashNavigationEnabled: false,
     zoomRatio: 2,
     maxDPI: 2,
     fakeZoom: 1,
+    progressiveZoom: false,
     pageScale: defaults_DEARVIEWER.PAGE_SCALE.PAGE_FIT,
     controlsFloating: true,
     sideMenuOverlay: true,
@@ -773,41 +1792,34 @@ defaults_DEARVIEWER.executeCallback = function() {};
 
 
 ;// CONCATENATED MODULE: ./src/js/dearviewer/utils/utils.js
-/* globals requirejs, jQuery*/ function _array_like_to_array(arr, len) {
+/* globals requirejs, jQuery*/ function utils_array_like_to_array(arr, len) {
     if (len == null || len > arr.length) len = arr.length;
     for(var i = 0, arr2 = new Array(len); i < len; i++)arr2[i] = arr[i];
     return arr2;
 }
-function _array_without_holes(arr) {
-    if (Array.isArray(arr)) return _array_like_to_array(arr);
+function utils_array_without_holes(arr) {
+    if (Array.isArray(arr)) return utils_array_like_to_array(arr);
 }
-function _instanceof(left, right) {
-    if (right != null && typeof Symbol !== "undefined" && right[Symbol.hasInstance]) {
-        return !!right[Symbol.hasInstance](left);
-    } else {
-        return left instanceof right;
-    }
-}
-function _iterable_to_array(iter) {
+function utils_iterable_to_array(iter) {
     if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter);
 }
-function _non_iterable_spread() {
+function utils_non_iterable_spread() {
     throw new TypeError("Invalid attempt to spread non-iterable instance.\\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
 }
-function _to_consumable_array(arr) {
-    return _array_without_holes(arr) || _iterable_to_array(arr) || _unsupported_iterable_to_array(arr) || _non_iterable_spread();
+function utils_to_consumable_array(arr) {
+    return utils_array_without_holes(arr) || utils_iterable_to_array(arr) || utils_unsupported_iterable_to_array(arr) || utils_non_iterable_spread();
 }
-function _type_of(obj) {
+function utils_type_of(obj) {
     "@swc/helpers - typeof";
     return obj && typeof Symbol !== "undefined" && obj.constructor === Symbol ? "symbol" : typeof obj;
 }
-function _unsupported_iterable_to_array(o, minLen) {
+function utils_unsupported_iterable_to_array(o, minLen) {
     if (!o) return;
-    if (typeof o === "string") return _array_like_to_array(o, minLen);
+    if (typeof o === "string") return utils_array_like_to_array(o, minLen);
     var n = Object.prototype.toString.call(o).slice(8, -1);
     if (n === "Object" && o.constructor) n = o.constructor.name;
     if (n === "Map" || n === "Set") return Array.from(n);
-    if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _array_like_to_array(o, minLen);
+    if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return utils_array_like_to_array(o, minLen);
 }
 
 var DV = defaults_DEARVIEWER;
@@ -867,7 +1879,7 @@ var utils = DV.utils = {
         // text = options.text[text];
         // noinspection CheckTagEmptyBody
         var btn = utils_jQuery(utils.html.div, {
-            class: "df-ui-btn df-ui-" + name,
+            "class": "df-ui-btn df-ui-" + name,
             title: text,
             html: text !== void 0 ? '<span>' + text + '</span>' : ''
         });
@@ -1072,6 +2084,27 @@ var utils = DV.utils = {
             _callbacks.push(callback);
         }
     },
+    /**
+   * @param {string} src
+   * @param {boolean} [removeScriptElement]
+   * @returns {Promise<void>}
+   */ loadScript: function loadScript(src) {
+        var removeScriptElement = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : false;
+        return new Promise(function(resolve, reject) {
+            var script = document.createElement("script");
+            script.src = src;
+            script.onload = function(evt) {
+                if (removeScriptElement) {
+                    script.remove();
+                }
+                resolve(evt);
+            };
+            script.onerror = function() {
+                reject(new Error("Cannot load script at: ".concat(script.src)));
+            };
+            (document.head || document.documentElement).append(script);
+        });
+    },
     detectScriptLocation: function detectScriptLocation() {
         //Auto-detection if the folder structure is copied properly
         if (typeof window[defaults_DEARVIEWER.locationVar] == 'undefined') {
@@ -1096,7 +2129,7 @@ var utils = DV.utils = {
             }
         }
     },
-    disposeObject: function disposeObject(object) {
+    disposeObject: function(object) {
         if (object && object.dispose) {
             object.dispose();
         }
@@ -1108,7 +2141,7 @@ var utils = DV.utils = {
             args[_key] = arguments[_key];
         }
         var _console;
-        if (DV.defaults.enableDebugLog === true && window.console) (_console = console).log.apply(_console, _to_consumable_array(args));
+        if (DV.defaults.enableDebugLog === true && window.console) (_console = console).log.apply(_console, utils_to_consumable_array(args));
     },
     color: {
         getBrightness: function getBrightness(hex) {
@@ -1228,7 +2261,7 @@ var utils = DV.utils = {
         }
         return visible;
     },
-    getMouseDelta: function getMouseDelta(event) {
+    getMouseDelta: function(event) {
         var delta = 0;
         if (event['wheelDelta'] != null) {
             delta = event['wheelDelta'];
@@ -1237,7 +2270,7 @@ var utils = DV.utils = {
         }
         return delta;
     },
-    pan: function pan(viewer, point) {
+    pan: function(viewer, point) {
         var reset = arguments.length > 2 && arguments[2] !== void 0 ? arguments[2] : false;
         var origin = viewer.startPoint;
         var scale = viewer.app.zoomValue;
@@ -1253,6 +2286,38 @@ var utils = DV.utils = {
             viewer.startPoint = point;
         }
     //requires updatePan to update in DOM
+    },
+    //used in ProgressiveZoom
+    elementIntersection: function(parent, child) {
+        var refToChild = arguments.length > 2 && arguments[2] !== void 0 ? arguments[2] : false;
+        // Get bounding rectangles of the elements
+        var parentRect = parent[0].getBoundingClientRect();
+        var childRect = child[0].getBoundingClientRect();
+        // Calculate intersection coordinates
+        var left = Math.max(parentRect.left, Math.floor(childRect.left));
+        var top = Math.max(parentRect.top, Math.floor(childRect.top));
+        var right = Math.min(parentRect.right, childRect.right);
+        var bottom = Math.min(parentRect.bottom, childRect.bottom);
+        // Compute intersection width and height
+        var width = Math.max(right - left, 0);
+        var height = Math.max(bottom - top, 0);
+        if (refToChild) {
+            return {
+                left: Math.max(parentRect.left - childRect.left, 0),
+                top: Math.max(parentRect.top - childRect.top, 0),
+                width: width,
+                height: height
+            };
+        } else {
+            return {
+                left: left,
+                top: top,
+                right: right,
+                bottom: bottom,
+                width: width,
+                height: height
+            };
+        }
     }
 };
 utils.isChromeExtension = function() {
@@ -1281,48 +2346,55 @@ utils.detectHash = function() {
     if (prefixes.indexOf("") == -1) prefixes.push("");
     Array.prototype.forEach.call(prefixes, function(prefix) {
         var hash = defaults_DEARVIEWER.preParseHash;
-        if (hash && hash.indexOf(prefix) >= 0 && defaults_DEARVIEWER.hashFocusBookFound === false) {
-            if (prefix.length > 0) {
-                hash = hash.split(prefix)[1];
+        var hashedPrefix = "#" + prefix;
+        if (hash && hash.indexOf(hashedPrefix) >= 0 && defaults_DEARVIEWER.hashFocusBookFound === false) {
+            if (hashedPrefix.length > 1) {
+                hash = hash.split(hashedPrefix)[1];
             }
             var id = hash.split('/')[0].replace("#", "");
             if (id.length > 0) {
-                var page = hash.split('/')[1];
-                if (page != null) {
-                    page = page.split('/')[0];
-                }
-                var book;
-                //first check for slug pattern
-                book = utils_jQuery("[data-df-slug=" + id + "]");
-                //then check for old slug pattern
-                if (book.length === 0) book = utils_jQuery("[data-slug=" + id + "]");
-                //then id pattern
-                if (book.length === 0) book = utils_jQuery('#df-' + id + ",#" + id);
-                //then _slug pattern
-                if (book.length === 0) book = utils_jQuery("[data-_slug=" + id + "]");
-                if (book.length > 0 && book.is("._df_thumb,._df_button,._df_custom,._df_link,._df_book,.df-element,.dp-element")) {
-                    book = utils_jQuery(book[0]);
-                    defaults_DEARVIEWER.hashFocusBookFound = true;
-                    page = parseInt(page, 10);
-                    utils.focusHash(book);
-                    //case : flipbook is already created, in-page links are clicked, thus link moves the page
-                    var app = defaults_DEARVIEWER.activeLightBox && defaults_DEARVIEWER.activeLightBox.app || book.data("df-app");
-                    if (app != null) {
-                        app.gotoPage(page);
-                        app.hashNavigationEnabled = true;
-                        utils.focusHash(app.element);
-                        return false;
-                    } else if (page != null) {
-                        book.attr("data-hash-page", page); //data-has-page shall be removed after it is used
-                    //data added attribues cannot be searched or fetched using selectors annd attr()
-                    //when shortcode specifies page 1, but url says page 5, page 1 is added using attr data-df-page
+                try {
+                    var page = hash.split('/')[1];
+                    if (page != null) {
+                        page = page.split('/')[0];
                     }
-                    book.addClass("df-hash-focused", true);
-                    if (book.data('lightbox') != null || book.data('df-lightbox') != null) {
-                        book.trigger("click");
-                    } else if (book.attr("href") != null && book.attr("href").indexOf(".pdf") > -1) {
-                        book.trigger("click");
+                    var book;
+                    //first check for slug pattern
+                    book = utils_jQuery("[data-df-slug=" + id + "]");
+                    //then check for old slug pattern
+                    if (book.length === 0) book = utils_jQuery("[data-slug=" + id + "]");
+                    //then id pattern
+                    if (book.length === 0) book = utils_jQuery('#df-' + id + ",#" + id);
+                    //then _slug pattern
+                    if (book.length === 0) book = utils_jQuery("[data-_slug=" + id + "]");
+                    if (book.length > 0 && book.is("._df_thumb,._df_button,._df_custom,._df_link,._df_book,.df-element,.dp-element")) {
+                        book = utils_jQuery(book[0]);
+                        defaults_DEARVIEWER.hashFocusBookFound = true;
+                        page = parseInt(page, 10);
+                        utils.focusHash(book);
+                        //case : flipbook is already created, in-page links are clicked, thus link moves the page
+                        var app = defaults_DEARVIEWER.activeLightBox && defaults_DEARVIEWER.activeLightBox.app || book.data("df-app");
+                        if (app != null) {
+                            app.gotoPage(page);
+                            // app.hashNavigationEnabled = true;
+                            utils.focusHash(app.element);
+                            return false;
+                        } else if (page != null) {
+                            book.attr("data-hash-page", page); //data-has-page shall be removed after it is used
+                        //data added attribues cannot be searched or fetched using selectors annd attr()
+                        //when shortcode specifies page 1, but url says page 5, page 1 is added using attr data-df-page
+                        }
+                        book.addClass("df-hash-focused", true);
+                        if (book.data('lightbox') != null || book.data('df-lightbox') != null) {
+                            defaults_DEARVIEWER._isHashTriggered = true;
+                            book.trigger("click");
+                            defaults_DEARVIEWER._isHashTriggered = false;
+                        } else if (book.attr("href") != null && book.attr("href").indexOf(".pdf") > -1) {
+                            book.trigger("click");
+                        }
                     }
+                } catch (error) {
+                    console.log(error);
                 }
             }
         }
@@ -1372,16 +2444,16 @@ utils.fallbackOptions = function(options) {
 var getAttributes = function getAttributes(element) {
     var attrOptions = {};
     var attrKeys = {
-        'id': '',
-        'thumb': '',
-        'openPage': 'data-hash-page,df-page,data-df-page,data-page,page',
-        'target': '',
-        'height': '',
-        'showDownloadControl': 'data-download',
-        'source': 'pdf-source,df-source,source',
-        'is3D': 'webgl,is3d',
-        'viewerType': 'viewertype,viewer-type',
-        'pagemode': ''
+        id: '',
+        thumb: '',
+        openPage: 'data-hash-page,df-page,data-df-page,data-page,page',
+        target: '',
+        height: '',
+        showDownloadControl: 'data-download',
+        source: 'pdf-source,df-source,source',
+        is3D: 'webgl,is3d',
+        viewerType: 'viewertype,viewer-type',
+        pageMode: 'pagemode'
     };
     for(var key in attrKeys){
         var aliases = (key + "," + attrKeys[key]).split(",");
@@ -1417,7 +2489,7 @@ utils.getOptions = function(element) {
     //GetOption Variable
     var optionVar = element.data("df-option") || element.data("option");
     var options = void 0;
-    if ((typeof optionVar === "undefined" ? "undefined" : _type_of(optionVar)) === "object") {
+    if ((typeof optionVar === "undefined" ? "undefined" : utils_type_of(optionVar)) === "object") {
         options = optionVar;
     } else {
         options = optionVar == null || optionVar === "" || window[optionVar] == null ? {} : window[optionVar];
@@ -1495,7 +2567,7 @@ utils.sanitizeOptions = function(options) {
         options.loadMoreCount = utils.parseInt(options.loadMoreCount);
         if (isNaN(options.loadMoreCount) || options.loadMoreCount === 0) options.loadMoreCount = -1;
     }
-    if (options.source != null && (Array === options.source.constructor || Array.isArray(options.source) || _instanceof(options.source, Array))) {
+    if (options.source != null && (Array === options.source.constructor || Array.isArray(options.source) || options.source instanceof Array)) {
         for(var _correct = 0; _correct < options.source.length; _correct++){
             options.source[_correct] = utils.httpsCorrection(options.source[_correct]);
         }
@@ -1642,11 +2714,17 @@ defaults_DEARVIEWER.parseThumbs = function(args) {
     wrapperElement.append(utils_jQuery("<div class='df-book-page1'>"));
     wrapperElement.append(utils_jQuery("<div class='df-book-page2'>"));
     var coverElement = utils_jQuery("<div class='df-book-cover'>").append(titleElement).appendTo(wrapperElement);
+    var skipLazy = args.element.hasClass("df-skip-lazy");
     var image = utils_jQuery('<img width="210px" height="297px" class="df-lazy" alt="' + args.title + '"/>');
-    image.attr('data-src', args.thumbURL);
-    image.attr('src', defaults_DEARVIEWER.defaults.popupThumbPlaceholder);
     coverElement.prepend(image);
-    defaults_DEARVIEWER.addLazyElement(image[0]);
+    if (skipLazy) {
+        image.attr('src', args.thumbURL);
+        image.removeClass("df-lazy");
+    } else {
+        image.attr('data-src', args.thumbURL);
+        image.attr('src', defaults_DEARVIEWER.defaults.popupThumbPlaceholder);
+        defaults_DEARVIEWER.addLazyElement(image[0]);
+    }
     if (defaults_DEARVIEWER.defaults.displayLightboxPlayIcon === true) coverElement.addClass("df-icon-play-popup");
     if (args.thumbLayout === "book-title-top") {
         titleElement.prependTo(args.element);
@@ -1781,7 +2859,9 @@ defaults_DEARVIEWER.parseNormalElements = function() {
                 } else {
                     var app1 = element1.data("df-app");
                     if (app1 == null) {
-                        element1.dearviewer();
+                        new defaults_DEARVIEWER.Application({
+                            element: element1
+                        });
                     } else {
                         app1.softInit();
                     }
@@ -1805,7 +2885,9 @@ defaults_DEARVIEWER.parseNormalElements = function() {
                 element.removeClass("df-lazy");
             }
         } else {
-            element.dearviewer();
+            new defaults_DEARVIEWER.Application({
+                element: element
+            });
         }
     }
 };
@@ -1927,6 +3009,7 @@ function _create_class(Constructor, protoProps, staticProps) {
     return Constructor;
 }
 
+var base_viewer_jQuery = defaults_DEARVIEWER.jQuery;
 var base_viewer_DV = defaults_DEARVIEWER;
 var base_viewer_utils = defaults_DEARVIEWER.utils;
 var BaseViewer = /*#__PURE__*/ function() {
@@ -1937,12 +3020,12 @@ var BaseViewer = /*#__PURE__*/ function() {
         this.app = appContext;
         this.parentElement = this.app.viewerContainer;
         var viewerClass = "df-viewer " + (options.viewerClass || "");
-        this.element = jQuery('<div>', {
-            class: viewerClass
+        this.element = base_viewer_jQuery('<div>', {
+            "class": viewerClass
         });
         this.parentElement.append(this.element);
-        this.wrapper = jQuery('<div>', {
-            class: 'df-viewer-wrapper'
+        this.wrapper = base_viewer_jQuery('<div>', {
+            "class": 'df-viewer-wrapper'
         });
         this.element.append(this.wrapper);
         this.oldBasePageNumber = 0;
@@ -1958,8 +3041,13 @@ var BaseViewer = /*#__PURE__*/ function() {
         this.dblClickAction = options.dblClickAction;
         this.pageBuffer = [];
         this.pageBufferSize = 10;
+        this.afterConstructor();
     }
     _create_class(BaseViewer, [
+        {
+            key: "afterConstructor",
+            value: function afterConstructor() {}
+        },
         {
             key: "init",
             value: function init() {}
@@ -2116,7 +3204,9 @@ var BaseViewer = /*#__PURE__*/ function() {
         },
         {
             key: "pagesReady",
-            value: function pagesReady() {}
+            value: function pagesReady() {
+                this.app.executeCallback('onPagesReady');
+            }
         },
         {
             key: "onReady",
@@ -2470,7 +3560,7 @@ var BaseViewer = /*#__PURE__*/ function() {
                 var page = this.getPageByNumber(pageNumber);
                 if (page === undefined) return undefined;
                 if (page.annotationElement === undefined) {
-                    page.annotationElement = jQuery("<div class='df-link-content'>");
+                    page.annotationElement = base_viewer_jQuery("<div class='df-link-content'>");
                     page.contentLayer.append(page.annotationElement);
                 }
                 if (clean === true) {
@@ -2486,7 +3576,7 @@ var BaseViewer = /*#__PURE__*/ function() {
                 var page = this.getPageByNumber(pageNumber);
                 if (page === undefined) return undefined;
                 if (page.textElement === undefined) {
-                    page.textElement = jQuery("<div class='df-text-content'>");
+                    page.textElement = base_viewer_jQuery("<div class='df-text-content'>");
                     page.contentLayer.append(page.textElement);
                 }
                 if (clean === true) {
@@ -2499,6 +3589,24 @@ var BaseViewer = /*#__PURE__*/ function() {
         {
             key: "render",
             value: function render() {}
+        },
+        {
+            key: "checkPageLoading",
+            value: function checkPageLoading() {
+                var all = arguments.length > 0 && arguments[0] !== void 0 ? arguments[0] : false;
+                var isLoaded = true;
+                var pages = this.getVisiblePages().main;
+                var checkCount = all === true ? pages.length : this.isBooklet ? 1 : 2;
+                checkCount = Math.min(checkCount, pages.length);
+                for(var index = 0; index < checkCount; index++){
+                    var page = this.getPageByNumber(pages[index]);
+                    if (page) {
+                        isLoaded = page.textureLoaded && isLoaded;
+                    }
+                }
+                this.element.toggleClass("df-loading", !isLoaded);
+                return isLoaded;
+            }
         },
         {
             key: "textureLoadedCallback",
@@ -2665,6 +3773,7 @@ function _create_super(Derived) {
 
 var page_DV = (/* unused pure expression or super */ null && (DEARVIEWER));
 var page_utils = defaults_DEARVIEWER.utils;
+var page_jQuery = defaults_DEARVIEWER.jQuery;
 var Page = /*#__PURE__*/ function() {
     "use strict";
     function Page() {
@@ -2675,8 +3784,8 @@ var Page = /*#__PURE__*/ function() {
         this.texture = "blank";
         this.textureSrc = "blank";
         this.pageNumber = undefined;
-        this.contentLayer = jQuery('<div>', {
-            class: "df-page-content"
+        this.contentLayer = page_jQuery('<div>', {
+            "class": "df-page-content"
         });
     }
     page_create_class(Page, [
@@ -2780,8 +3889,8 @@ var Page2D = /*#__PURE__*/ function(Page) {
         {
             key: "init",
             value: function init() {
-                var element = this.element = jQuery('<div>', {
-                    class: 'df-page'
+                var element = this.element = page_jQuery('<div>', {
+                    "class": 'df-page'
                 });
                 element[0].appendChild(this.contentLayer[0]);
                 this.texture = new Image();
@@ -2815,10 +3924,10 @@ var Page2D = /*#__PURE__*/ function(Page) {
                 }
                 if (page.canvasMode === null && texture && texture.nodeName === "CANVAS") page.canvasMode = true;
                 if (page.canvasMode === true) {
-                    page.element.find(">canvas").remove();
+                    page.element.find("canvas").remove();
                     if (texture !== page.textureLoadFallback) {
                         page.textureSrc = texture;
-                        page.element.append(jQuery(texture));
+                        page.element.append(page_jQuery(texture));
                     // page.element.width(texture.width).height(texture.height);
                     }
                     page.updateTextureLoadStatus(true);
@@ -2968,6 +4077,7 @@ function reader_create_super(Derived) {
 
 
 
+var reader_jQuery = defaults_DEARVIEWER.jQuery;
 var reader_utils = defaults_DEARVIEWER.utils;
 var Reader = /*#__PURE__*/ function(BaseViewer) {
     "use strict";
@@ -3031,22 +4141,27 @@ var Reader = /*#__PURE__*/ function(BaseViewer) {
         {
             key: "initScrollBar",
             value: function initScrollBar() {
-                this.scrollBar = jQuery("<div class='df-reader-scrollbar'>");
+                this.scrollBar = reader_jQuery("<div class='df-reader-scrollbar'>");
                 //adding scrollbar to viewer.wrapper doesn't fit properly with mobile momentum scroll, shaky movement is detected
                 this.scrollBar.appendTo(this.app.container);
                 //solved #237
-                this.scrollPageNumber = jQuery("<div class='df-reader-scroll-page-number'>").appendTo(this.app.container);
+                this.scrollPageNumber = reader_jQuery("<div class='df-reader-scroll-page-number'>").appendTo(this.app.container);
+                this.scrollPageNumberCurrent = reader_jQuery("<div>").appendTo(this.scrollPageNumber);
+                this.scrollPageNumberTotal = reader_jQuery("<div class='df-reader-scroll-page-number-total'>").appendTo(this.scrollPageNumber);
             }
         },
         {
             key: "afterControlUpdate",
             value: function afterControlUpdate() {
                 if (this.scrollBar === void 0) return;
-                this.scrollBar[0].innerHTML = this.app.getCurrentLabel();
+                var currentLabel = this.app.getCurrentLabel();
+                this.scrollBar.text(currentLabel);
                 if (this.app.provider.pageLabels) {
-                    this.scrollPageNumber[0].innerHTML = this.app.getCurrentLabel() + "<div>(" + this.app.currentPageNumber + " of " + this.app.pageCount + ")</div>";
+                    this.scrollPageNumberCurrent.text(currentLabel);
+                    this.scrollPageNumberTotal.text("(" + this.app.currentPageNumber + " of " + this.app.pageCount + ")");
                 } else {
-                    this.scrollPageNumber[0].innerHTML = this.app.getCurrentLabel() + "<div>of " + this.app.pageCount + "</div>";
+                    this.scrollPageNumberCurrent.text(currentLabel);
+                    this.scrollPageNumberTotal.text("of " + this.app.pageCount);
                 }
             }
         },
@@ -3355,6 +4470,7 @@ var Reader = /*#__PURE__*/ function(BaseViewer) {
                 var page = this.getPageByNumber(param.pageNumber), app = this.app;
                 var viewPort = this.getViewPort(param.pageNumber, true);
                 page.element.height(Math.floor(viewPort.height * app.pageScaleValue * app.zoomValue)).width(Math.floor(viewPort.width * app.pageScaleValue * app.zoomValue));
+                this.pagesReady();
             }
         },
         {
@@ -3539,6 +4655,7 @@ function flipbook_create_super(Derived) {
 
 
 
+var flipbook_jQuery = defaults_DEARVIEWER.jQuery;
 var flipbook_utils = defaults_DEARVIEWER.utils;
 var BaseFlipBookViewer = /*#__PURE__*/ function(BaseViewer) {
     "use strict";
@@ -3552,13 +4669,14 @@ var BaseFlipBookViewer = /*#__PURE__*/ function(BaseViewer) {
         _this.isFlipBook = true;
         _this.sheets = [];
         _this.isRTL = _this.app.isRTL;
-        _this.foldSense = 50;
+        _this.foldSense = _this.isVertical() ? 0 : 50;
         _this.isOneSided = false;
         var _options_stackCount;
         _this.stackCount = (_options_stackCount = options.stackCount) !== null && _options_stackCount !== void 0 ? _options_stackCount : 6;
         _this.annotedPage = null;
         _this.pendingAnnotations = [];
-        _this.seamPosition = 0;
+        _this.seamPositionX = 0;
+        _this.seamPositionY = 0;
         _this.dragSheet = null;
         _this.drag = null;
         _this.soundOn = options.enableSound === true;
@@ -3589,6 +4707,7 @@ var BaseFlipBookViewer = /*#__PURE__*/ function(BaseViewer) {
                 this.rightSheetHeight = this.leftSheetHeight = this._defaultPageSize.height;
                 this.leftSheetWidth = this.rightSheetWidth = this._defaultPageSize.width;
                 this.leftSheetTop = this.rightSheetTop = (this.availablePageHeight() - this._defaultPageSize.height) / 2;
+                this.topSheetLeft = this.bottomSheetLeft = (this.availablePageWidth() - this._defaultPageSize.width) / 2;
                 this.zoomViewer.rightSheetHeight = this.zoomViewer.leftSheetHeight = this._defaultPageSize.height;
                 this.zoomViewer.leftSheetWidth = this.zoomViewer.rightSheetWidth = this._defaultPageSize.width;
             }
@@ -3847,7 +4966,10 @@ var BaseFlipBookViewer = /*#__PURE__*/ function(BaseViewer) {
                 var viewer = this;
                 if (viewer.pinchZoomDirty === true) return;
                 if (viewer.app.zoomValue === 1 && viewer.canSwipe === true) {
-                    var swipe_dist = viewer.orientation == 'vertical' ? point.y - viewer.lastPosY : point.x - viewer.lastPosX;
+                    var swipe_dist = viewer.isVertical() ? point.y - viewer.lastPosY : point.x - viewer.lastPosX;
+                    if (event.touches != null && viewer.isVertical() && swipe_dist > 5) {
+                        event.preventDefault(); //prevent browser refresh when swiping down
+                    }
                     if (Math.abs(swipe_dist) > viewer.swipeThreshold) {
                         //swipe has triggered
                         if (swipe_dist < 0) {
@@ -4130,7 +5252,12 @@ var BaseFlipBookViewer = /*#__PURE__*/ function(BaseViewer) {
                 var viewer = this;
                 //callback for before flip
                 viewer.app.executeCallback('beforeFlip');
-                if (viewer.app.zoomValue === 1) viewer.playSound();
+                if (viewer.app.zoomValue === 1) {
+                    //only if the basePage has changed
+                    if (viewer.getBasePage() !== viewer.oldBasePageNumber) {
+                        viewer.playSound();
+                    }
+                }
             }
         },
         {
@@ -4215,23 +5342,26 @@ var BaseFlipBookViewer = /*#__PURE__*/ function(BaseViewer) {
                 this.pageMode = isSingle ? defaults_DEARVIEWER.FLIPBOOK_PAGE_MODE.SINGLE : defaults_DEARVIEWER.FLIPBOOK_PAGE_MODE.DOUBLE;
                 this.updatePageMode();
                 app.resizeRequestStart();
-                // this.requestRefresh();
-                if (app.viewer.pageMode === defaults_DEARVIEWER.FLIPBOOK_PAGE_MODE.DOUBLE && app.ui.controls.pageMode) {
-                    app.ui.controls.pageMode.removeClass(app.options.icons['doublepage']).addClass(app.options.icons['singlepage']).attr('title', app.options.text.singlePageMode).html('<span>' + app.options.text.singlePageMode + '</span>');
-                } else {
-                    app.ui.controls.pageMode.addClass(app.options.icons['doublepage']).removeClass(app.options.icons['singlepage']).attr('title', app.options.text.doublePageMode).html('<span>' + app.options.text.doublePageMode + '</span>');
-                }
+            // this.requestRefresh();
             }
         },
         {
             key: "updatePageMode",
             value: function updatePageMode() {
+                var app = this.app;
                 if (this.app.pageCount < 3) this.pageMode = defaults_DEARVIEWER.FLIPBOOK_PAGE_MODE.SINGLE;
                 this.isSingle = this.pageMode === defaults_DEARVIEWER.FLIPBOOK_PAGE_MODE.SINGLE;
                 this.isBooklet = this.isSingle && this.singlePageMode === defaults_DEARVIEWER.FLIPBOOK_SINGLE_PAGE_MODE.BOOKLET;
                 this.app.jumpStep = this.isSingle ? 1 : 2;
                 this.totalSheets = Math.ceil(this.app.pageCount / (this.isBooklet ? 1 : 2));
                 if (this.sheets.length > 0) this.reset();
+                if (app.ui.controls.pageMode) {
+                    if (app.viewer.pageMode === defaults_DEARVIEWER.FLIPBOOK_PAGE_MODE.DOUBLE) {
+                        app.ui.controls.pageMode.removeClass(app.options.icons['doublepage']).addClass(app.options.icons['singlepage']).attr('title', app.options.text.singlePageMode).html('<span>' + app.options.text.singlePageMode + '</span>');
+                    } else {
+                        app.ui.controls.pageMode.addClass(app.options.icons['doublepage']).removeClass(app.options.icons['singlepage']).attr('title', app.options.text.doublePageMode).html('<span>' + app.options.text.doublePageMode + '</span>');
+                    }
+                }
             }
         },
         {
@@ -4253,10 +5383,8 @@ var BaseFlipBookViewer = /*#__PURE__*/ function(BaseViewer) {
                 }
                 var viewPort = this.app.dimensions.defaultPage.viewPort;
                 var appWidth = this.availablePageWidth(false, true, singleMode), appHeightMax = this.app.dimensions.maxHeight - this.app.dimensions.padding.height;
-                if (this.orientation == 'vertical' && singleMode == false) {
-                    appHeightMax /= 2;
-                }
-                this._defaultPageSize = flipbook_utils.contain(viewPort.width, viewPort.height, appWidth, appHeightMax);
+                var pageHeightMax = this.isVertical() && singleMode == false ? appHeightMax / 2 : appHeightMax, pageWidthMax = appWidth;
+                this._defaultPageSize = flipbook_utils.contain(viewPort.width, viewPort.height, pageWidthMax, pageHeightMax);
                 this._pageFitArea = {
                     width: appWidth,
                     height: appHeightMax
@@ -4292,7 +5420,7 @@ var BaseFlipBookViewer = /*#__PURE__*/ function(BaseViewer) {
                 }
                 var extraWidth = ignoreSidemenuOverlay === true ? this.app.dimensions.offset.width : 0;
                 var pageWidth = this.app.dimensions.stage.innerWidth + extraWidth;
-                pageWidth /= singleMode === true || this.orientation == 'vertical' ? 1 : 2;
+                pageWidth /= singleMode === true || this.isVertical() ? 1 : 2;
                 return Math.floor(pageWidth * (zoom ? this.app.zoomValue : 1));
             }
         },
@@ -4304,7 +5432,7 @@ var BaseFlipBookViewer = /*#__PURE__*/ function(BaseViewer) {
                     singleMode = this.pageMode === defaults_DEARVIEWER.FLIPBOOK_PAGE_MODE.SINGLE;
                 }
                 var pageHeight = this.app.dimensions.stage.innerHeight;
-                if (singleMode === false && this.orientation == 'vertical') {
+                if (singleMode === false && this.isVertical()) {
                     pageHeight /= 2;
                 }
                 return Math.floor(pageHeight * (zoom ? this.app.zoomValue : 1));
@@ -4315,8 +5443,9 @@ var BaseFlipBookViewer = /*#__PURE__*/ function(BaseViewer) {
             value: function getTextureSize(param) {
                 var viewport = this.getViewPort(param.pageNumber, true);
                 var pixelRatio = this.app.options.pixelRatio;
-                var dimen = flipbook_utils.contain(viewport.width, viewport.height, pixelRatio * this.availablePageWidth(param.zoom), pixelRatio * this.availablePageHeight(param.zoom));
-                dimen = flipbook_utils.containUnStretched(dimen.width, dimen.height, this.app.options.maxTextureSize, this.app.options.maxTextureSize);
+                //restrictedSize is not true when the Progressive Zoom requests higher size than maxTextureSize
+                var restrictedSize = param.isRestricted === false ? 99999 : this.app.options.maxTextureSize;
+                var dimen = flipbook_utils.contain(viewport.width, viewport.height, Math.min(pixelRatio * this.availablePageWidth(param.zoom), restrictedSize), Math.min(pixelRatio * this.availablePageHeight(param.zoom), restrictedSize));
                 return {
                     height: dimen.height,
                     width: dimen.width
@@ -4403,10 +5532,49 @@ var BaseFlipBookViewer = /*#__PURE__*/ function(BaseViewer) {
                     label: this.app.provider.getLabelforPage(pageNumber) + (this.isDoubleInternalPage(pageNumber) ? "-" + this.app.provider.getLabelforPage(pageNumber + 1) : "")
                 };
             }
+        },
+        {
+            //Vertical or Horizontal Orientation of Flipbook
+            key: "isVertical",
+            value: function isVertical() {
+                return false;
+            }
         }
     ]);
     return BaseFlipBookViewer;
 }(BaseViewer);
+var ZoomPage = /*#__PURE__*/ function(Page2D) {
+    "use strict";
+    flipbook_inherits(ZoomPage, Page2D);
+    var _super = flipbook_create_super(ZoomPage);
+    function ZoomPage(options) {
+        flipbook_class_call_check(this, ZoomPage);
+        var _this;
+        _this = _super.call(this);
+        _this.zoomStamp = "";
+        _this.pendingZoomScale = 1;
+        return _this;
+    }
+    flipbook_create_class(ZoomPage, [
+        {
+            key: "resetZoomTexture",
+            value: function resetZoomTexture() {
+                if (this.zoomElement) {
+                    this.zoomElement.html("");
+                }
+                this.zoomStamp = "";
+            }
+        },
+        {
+            key: "resetTexture",
+            value: function resetTexture() {
+                flipbook_get(flipbook_get_prototype_of(ZoomPage.prototype), "resetTexture", this).call(this);
+                this.resetZoomTexture();
+            }
+        }
+    ]);
+    return ZoomPage;
+}(Page2D);
 var ZoomViewer = /*#__PURE__*/ function(BaseViewer) {
     "use strict";
     flipbook_inherits(ZoomViewer, BaseViewer);
@@ -4422,22 +5590,23 @@ var ZoomViewer = /*#__PURE__*/ function(BaseViewer) {
         _this.initEvents();
         _this.left = 0;
         _this.top = 0;
+        _this.zoomUpdateCount = 0;
         return _this;
     }
     flipbook_create_class(ZoomViewer, [
         {
             key: "init",
             value: function init() {
-                this.leftPage = new Page2D();
-                this.rightPage = new Page2D();
+                this.leftPage = new ZoomPage();
+                this.rightPage = new ZoomPage();
                 this.pages.push(this.leftPage);
                 this.pages.push(this.rightPage);
                 this.leftPage.element.addClass('df-page-back');
                 this.rightPage.element.addClass('df-page-front');
                 this.wrapper.append(this.leftPage.element);
                 this.wrapper.append(this.rightPage.element);
-                this.bookShadow = jQuery('<div>', {
-                    class: 'df-book-shadow'
+                this.bookShadow = flipbook_jQuery('<div>', {
+                    "class": 'df-book-shadow'
                 });
                 this.wrapper.append(this.bookShadow);
                 this.wrapper.addClass("df-sheet");
@@ -4462,8 +5631,8 @@ var ZoomViewer = /*#__PURE__*/ function(BaseViewer) {
                 var viewer = this;
                 var dimensions = viewer.app.dimensions;
                 var padding = dimensions.padding;
-                var zoomHeight = this.app.viewer.availablePageHeight(), zoomWidth = this.app.viewer.availablePageWidth(), zoomFullWidth = viewer.fullWidth = zoomWidth * (this.app.viewer.pageMode === defaults_DEARVIEWER.FLIPBOOK_PAGE_MODE.SINGLE ? 1 : 2), stageWidth = dimensions.stage.innerWidth, stageHeight = dimensions.stage.innerHeight;
-                var shiftHeight = viewer.shiftHeight = Math.ceil(flipbook_utils.limitAt((zoomHeight - stageHeight) / 2, 0, zoomHeight)), shiftWidth = viewer.shiftWidth = Math.ceil(flipbook_utils.limitAt((zoomFullWidth - stageWidth) / 2, 0, zoomFullWidth));
+                var zoomHeight = this.app.viewer.availablePageHeight(), zoomWidth = this.app.viewer.availablePageWidth(), zoomFullWidth = viewer.fullWidth = zoomWidth * (this.app.viewer.pageMode === defaults_DEARVIEWER.FLIPBOOK_PAGE_MODE.SINGLE || this.app.viewer.isVertical() ? 1 : 2), zoomFullHeight = viewer.fullHeight = zoomHeight * (this.app.viewer.isVertical() && this.app.viewer.pageMode !== defaults_DEARVIEWER.FLIPBOOK_PAGE_MODE.SINGLE ? 2 : 1), stageWidth = dimensions.stage.innerWidth, stageHeight = dimensions.stage.innerHeight;
+                var shiftHeight = viewer.shiftHeight = Math.ceil(flipbook_utils.limitAt((zoomFullHeight - stageHeight) / 2, 0, zoomFullHeight)), shiftWidth = viewer.shiftWidth = Math.ceil(flipbook_utils.limitAt((zoomFullWidth - stageWidth) / 2, 0, zoomFullWidth));
                 if (viewer.app.zoomValue === 1) {
                     viewer.left = 0;
                     viewer.top = 0;
@@ -4481,16 +5650,47 @@ var ZoomViewer = /*#__PURE__*/ function(BaseViewer) {
                 });
                 viewer.wrapper.css({
                     width: zoomFullWidth,
-                    height: zoomHeight,
+                    height: zoomFullHeight,
                     //marginTop when the flipbook is smaller than the ViewArea it has to center align vertically
-                    marginTop: dimensions.height - zoomHeight - padding.height > 0 ? (dimensions.height - padding.height - zoomHeight) / 2 : 0
+                    marginTop: dimensions.height - zoomFullHeight - padding.height > 0 ? (dimensions.height - padding.height - zoomFullHeight) / 2 : 0
                 });
-                this.wrapper.height(zoomHeight).width(zoomFullWidth - zoomFullWidth % 2);
+                this.wrapper.height(zoomFullHeight).width(zoomFullWidth - zoomFullWidth % 2);
                 if (viewer.app.pendingZoom === true) {
                     viewer.zoom();
                 }
                 this.app.viewer.annotedPage = null;
                 this.pagesReady();
+                //progressive zoom
+                if (this.app.options.progressiveZoom === true) {
+                    if (this.app.zoomValue > this.app.viewer.pureMaxZoom) {
+                        this.startZoomUpdateRequest();
+                        if (this.leftPage.zoomElement && this.leftPage.zoomStamp != "") {
+                            var inter = this.leftPage.zoomIntersection;
+                            var zoomScale = this.leftSheetHeight / this.leftPage.zoomParentHeight;
+                            this.leftPage.zoomElement.css({
+                                left: inter.left * zoomScale,
+                                top: inter.top * zoomScale,
+                                width: inter.width * zoomScale,
+                                height: inter.height * zoomScale
+                            });
+                            console.log("Left:" + zoomScale + " : " + this.leftPage.zoomElement[0].style.cssText);
+                        }
+                        if (this.rightPage.zoomElement && this.rightPage.zoomStamp != "") {
+                            var inter1 = this.rightPage.zoomIntersection;
+                            var zoomScale1 = this.rightSheetHeight / this.rightPage.zoomParentHeight;
+                            this.rightPage.zoomElement.css({
+                                left: inter1.left * zoomScale1,
+                                top: inter1.top * zoomScale1,
+                                width: inter1.width * zoomScale1,
+                                height: inter1.height * zoomScale1
+                            });
+                            console.log("Right:" + zoomScale1 + " : " + this.rightPage.zoomElement[0].style.cssText);
+                        }
+                    } else {
+                        this.leftPage.resetZoomTexture();
+                        this.rightPage.resetZoomTexture();
+                    }
+                }
             }
         },
         {
@@ -4525,6 +5725,7 @@ var ZoomViewer = /*#__PURE__*/ function(BaseViewer) {
                         viewer.startPoint = pointNew;
                         viewer.pan(pointOld);
                         viewer.startPoint = null;
+                        app.container.toggleClass("df-zoom-region-active", this.app.zoomValue > this.app.viewer.pureMaxZoom);
                     }
                 }
                 app.viewer.zoomCenter = null;
@@ -4556,10 +5757,15 @@ var ZoomViewer = /*#__PURE__*/ function(BaseViewer) {
             key: "updateCenter",
             value: function updateCenter() {
                 var viewer = this;
+                var isVertical = viewer.app.viewer.isVertical();
                 if (viewer === null || viewer.app.viewer === null) return;
-                var centerShift = viewer.app.viewer.centerShift, isRTL = viewer.app.viewer.isRTL, width = !isRTL && viewer.app.currentPageNumber > 1 || isRTL && viewer.app.currentPageNumber < viewer.app.pageCount ? viewer.leftSheetWidth : viewer.rightSheetWidth;
-                var end = centerShift * width / 2;
-                viewer.wrapper[0].style.left = end + "px";
+                var centerShift = (isVertical ? 1 : 1) * viewer.app.viewer.centerShift, isRTL = viewer.app.viewer.isRTL, length = viewer.app.viewer.isLeftPage() ? isVertical ? viewer.leftSheetHeight : viewer.leftSheetWidth : isVertical ? viewer.rightSheetHeight : viewer.rightSheetWidth;
+                var end = centerShift * length / 2;
+                if (isVertical) {
+                    viewer.wrapper[0].style.top = end + "px";
+                } else {
+                    viewer.wrapper[0].style.left = end + "px";
+                }
             }
         },
         {
@@ -4581,23 +5787,40 @@ var ZoomViewer = /*#__PURE__*/ function(BaseViewer) {
                         this.leftSheetWidth = Math.floor(leftDimen.width);
                         this.leftSheetHeight = Math.floor(leftDimen.height);
                         this.leftSheetTop = (this.app.viewer.availablePageHeight() - this.leftSheetHeight) / 2;
-                        if (this.app.zoomValue > this.app.viewer.pureMaxZoom) this.leftPage.contentLayer[0].style.setProperty('--scale-factor', this.leftSheetHeight / leftViewPort.height);
+                        this.topSheetLeft = (this.app.viewer.availablePageWidth() - this.leftSheetWidth) / 2;
+                        if (this.app.zoomValue > this.app.viewer.pureMaxZoom) {
+                            this.leftPage.contentLayer[0].style.setProperty('--scale-factor', this.leftSheetHeight / leftViewPort.height);
+                        }
                     }
                     if (rightViewPort) {
                         var rightDimen = flipbook_utils.contain(rightViewPort.width, rightViewPort.height, this.app.viewer.availablePageWidth(), this.app.viewer.availablePageHeight());
                         this.rightSheetWidth = Math.floor(rightDimen.width);
                         this.rightSheetHeight = Math.floor(rightDimen.height);
                         this.rightSheetTop = (this.app.viewer.availablePageHeight() - this.rightSheetHeight) / 2;
-                        if (this.app.zoomValue > this.app.viewer.pureMaxZoom) this.rightPage.contentLayer[0].style.setProperty('--scale-factor', this.rightSheetHeight / rightViewPort.height);
+                        this.bottomSheetLeft = (this.app.viewer.availablePageWidth() - this.rightSheetWidth) / 2;
+                        if (this.app.zoomValue > this.app.viewer.pureMaxZoom) {
+                            this.rightPage.contentLayer[0].style.setProperty('--scale-factor', this.rightSheetHeight / rightViewPort.height);
+                        }
                     }
                     if (leftViewPort != void 0 || rightViewPort != void 0) {
                         this.totalSheetsWidth = this.leftSheetWidth + this.rightSheetWidth;
-                        this.leftPage.element.height(Math.floor(this.leftSheetHeight)).width(Math.floor(this.leftSheetWidth)).css({
-                            transform: 'translateY(' + Math.floor(this.leftSheetTop) + 'px)'
-                        });
-                        this.rightPage.element.height(Math.floor(this.rightSheetHeight)).width(Math.floor(this.rightSheetWidth)).css({
-                            transform: 'translateY(' + Math.floor(this.rightSheetTop) + 'px)'
-                        });
+                        this.leftPage.element.height(Math.floor(this.leftSheetHeight)).width(Math.floor(this.leftSheetWidth));
+                        this.rightPage.element.height(Math.floor(this.rightSheetHeight)).width(Math.floor(this.rightSheetWidth));
+                        if (this.app.viewer.isVertical()) {
+                            this.leftPage.element.css({
+                                transform: 'translateX(' + Math.floor(this.topSheetLeft) + 'px)'
+                            });
+                            this.rightPage.element.css({
+                                transform: 'translateX(' + Math.floor(this.bottomSheetLeft) + 'px)'
+                            });
+                        } else {
+                            this.leftPage.element.css({
+                                transform: 'translateY(' + Math.floor(this.leftSheetTop) + 'px)'
+                            });
+                            this.rightPage.element.css({
+                                transform: 'translateY(' + Math.floor(this.rightSheetTop) + 'px)'
+                            });
+                        }
                     }
                 }
             }
@@ -4608,6 +5831,143 @@ var ZoomViewer = /*#__PURE__*/ function(BaseViewer) {
                 var page = this.getPageByNumber(param.pageNumber);
                 //page.element.toggleClass("df-odd", param.oddPage === true);
                 this.pagesReady();
+            }
+        },
+        {
+            key: "mouseUp",
+            value: function mouseUp(event) {
+                flipbook_get(flipbook_get_prototype_of(ZoomViewer.prototype), "mouseUp", this).call(this, event);
+                this.startZoomUpdateRequest();
+            }
+        },
+        {
+            key: "setPage",
+            value: function setPage(param) {
+                var app = this.app, zoomViewer = this, viewer = this.app.viewer;
+                return flipbook_get(flipbook_get_prototype_of(ZoomViewer.prototype), "setPage", this).call(this, param);
+            }
+        },
+        {
+            key: "startZoomUpdateRequest",
+            value: function startZoomUpdateRequest() {
+                this.zoomUpdateStatus = defaults_DEARVIEWER.REQUEST_STATUS.COUNT;
+            }
+        },
+        {
+            key: "checkRequestQueue",
+            value: function checkRequestQueue() {
+                flipbook_get(flipbook_get_prototype_of(ZoomViewer.prototype), "checkRequestQueue", this).call(this);
+                //progressive zoom
+                if (this.app.options.progressiveZoom === true) {
+                    if (this.zoomUpdateStatus === defaults_DEARVIEWER.REQUEST_STATUS.ON) {
+                        this.zoomUpdateStatus = defaults_DEARVIEWER.REQUEST_STATUS.OFF;
+                        this.zoomUpdate();
+                    } else if (this.zoomUpdateStatus === defaults_DEARVIEWER.REQUEST_STATUS.COUNT) {
+                        this.zoomUpdateCount++;
+                        if (this.zoomUpdateCount > 3) {
+                            this.zoomUpdateCount = 0;
+                            this.zoomUpdateStatus = defaults_DEARVIEWER.REQUEST_STATUS.ON;
+                        }
+                    }
+                }
+            }
+        },
+        {
+            key: "zoomUpdate",
+            value: function zoomUpdate() {
+                this.zoomUpdatePage({
+                    pageNumber: this.app.viewer.getRightPageNumber(),
+                    refHeight: this.rightSheetHeight
+                });
+                this.zoomUpdatePage({
+                    pageNumber: this.app.viewer.getLeftPageNumber(),
+                    refHeight: this.leftSheetHeight
+                });
+            }
+        },
+        {
+            key: "zoomUpdatePage",
+            value: function zoomUpdatePage(param) {
+                var app = this.app, zoomViewer = this, pixelRatio = this.app.options.pixelRatio, viewer = this.app.viewer, sizeStr = "", page = zoomViewer.getPageByNumber(param.pageNumber);
+                if (page === undefined) return;
+                var intersection = flipbook_utils.elementIntersection(app.element, page.element, true);
+                if (app.zoomValue > viewer.pureMaxZoom && intersection.width * intersection.height > 0) {
+                    if (DEARFLIP.skipZoom === true) return;
+                    var requestStamp = page.pageNumber + "|" + JSON.stringify(intersection);
+                    if (page.zoomStamp == requestStamp) {
+                        console.log("Rendered " + page.pageNumber + " Duplicate zoom request");
+                        return;
+                    }
+                    page.zoomStamp = requestStamp;
+                    var pdfPageNumberToRender = app.viewer.getDocumentPageNumber(param.pageNumber);
+                    var provider = app.provider, pageNumber = param.pageNumber, startTime = performance.now();
+                    provider.pdfDocument.getPage(pdfPageNumberToRender).then(function(pdfPage) {
+                        var offset = page.element.offset();
+                        param.isRestricted = false;
+                        var renderContext = app.viewer.getRenderContext(pdfPage, param);
+                        var providerViewPort = provider.viewPorts[pdfPageNumberToRender];
+                        renderContext.viewport = pdfPage.getViewport({
+                            scale: param.refHeight * pixelRatio / provider.viewPorts[pdfPageNumberToRender].height
+                        });
+                        renderContext.canvas.height = intersection.height * pixelRatio;
+                        renderContext.canvas.width = intersection.width * pixelRatio;
+                        sizeStr = renderContext.canvas.width + "x" + renderContext.canvas.height + " - of(" + renderContext.viewport.width.toFixed(2) + "x" + renderContext.viewport.height.toFixed(2) + ")";
+                        console.log("Page " + pageNumber + " rendering - " + renderContext.canvas.width + "x" + renderContext.canvas.height);
+                        renderContext.viewport.transform[4] -= intersection.left * pixelRatio;
+                        renderContext.viewport.transform[5] -= intersection.top * pixelRatio;
+                        provider.requestedPages += "," + param.trace + "[" + pdfPageNumberToRender + "|" + renderContext.canvas.height + "]";
+                        pdfPage.cleanupAfterRender = false; //needs to disable the cleanup after render code in pdf.js
+                        var pageRendering = pdfPage.render(renderContext);
+                        pageRendering.promise.then(function() {
+                            //intersection validation
+                            var valid_intersection = flipbook_utils.elementIntersection(app.element, page.element, true);
+                            if (page.zoomStamp !== requestStamp) {
+                                console.log("Faulty zoom texture detected");
+                                return;
+                            }
+                            if (page.zoomStamp !== page.pageNumber + "|" + JSON.stringify(valid_intersection)) {
+                                console.log("Faulty zoom texture detected - instant");
+                                return;
+                            }
+                            // app.applyTexture(renderContext.canvas, param);
+                            if (page.zoomElement === undefined) {
+                                page.zoomElement = flipbook_jQuery("<div class='zoom-element'></div>");
+                                page.element.append(page.zoomElement);
+                            }
+                            page.zoomElement.html("");
+                            page.zoomElement.append(renderContext.canvas);
+                            page.zoomElement.css({
+                                left: intersection.left,
+                                top: intersection.top,
+                                width: intersection.width,
+                                height: intersection.height
+                            });
+                            page.zoomIntersection = intersection;
+                            page.zoomParentHeight = page.element.height();
+                            if (app.options.cleanupAfterRender === true) {
+                                var checkString = "," + param.trace + "[" + pdfPageNumberToRender + "|" + renderContext.canvas.height + "]";
+                                // console.log("CleanUp Requesting for (" + pageNumber + ") actual " + pdfPageNumberToRender);
+                                if (provider.requestedPages.indexOf(checkString) > -1) {
+                                    provider.requestedPages = provider.requestedPages.replace(checkString, "");
+                                    if (provider.requestedPages.indexOf("[" + pdfPageNumberToRender + "|") == -1) {
+                                        // console.log("CleanUp Passed for (" + pageNumber + ") actual " + pdfPageNumberToRender);
+                                        provider.pagesToClean.push(pdfPage);
+                                        if (provider.pagesToClean.length > 0) provider.cleanUpPages();
+                                    } else {
+                                    // console.log("CleanUp Cancelled waiting for (" + pageNumber + ") actual " + pdfPageNumberToRender + " : " + provider.requestedPages);
+                                    }
+                                }
+                            }
+                            renderContext = null;
+                            console.log("Rendered " + pageNumber + " in " + Math.floor(performance.now() - startTime) + " ms : " + sizeStr + " for " + requestStamp);
+                        })["catch"](function(error) {
+                            console.log(error);
+                        });
+                    //endregion
+                    })["catch"](function(error) {
+                        console.log(error);
+                    });
+                }
             }
         }
     ]);
@@ -4794,6 +6154,7 @@ function flipbook_2d_create_super(Derived) {
 
 
 
+var flipbook_2d_jQuery = defaults_DEARVIEWER.jQuery;
 var flipbook_2d_DV = defaults_DEARVIEWER;
 var flipbook_2d_utils = flipbook_2d_DV.utils;
 var BookSheet2D = /*#__PURE__*/ function(BookSheet) {
@@ -4812,21 +6173,21 @@ var BookSheet2D = /*#__PURE__*/ function(BookSheet) {
             key: "init",
             value: function init() {
                 var sheet = this, div = '<div>';
-                var element = sheet.element = jQuery(div, {
-                    class: 'df-sheet'
+                var element = sheet.element = flipbook_2d_jQuery(div, {
+                    "class": 'df-sheet'
                 });
                 var frontPage = sheet.frontPage = new Page2D();
                 frontPage.element.addClass('df-page-front');
                 var backPage = sheet.backPage = new Page2D();
                 backPage.element.addClass('df-page-back');
-                var wrapper = sheet.wrapper = jQuery(div, {
-                    class: "df-sheet-wrapper"
+                var wrapper = sheet.wrapper = flipbook_2d_jQuery(div, {
+                    "class": "df-sheet-wrapper"
                 });
-                var foldInnerShadow = sheet.foldInnerShadow = jQuery(div, {
-                    class: "df-sheet-fold-inner-shadow"
+                var foldInnerShadow = sheet.foldInnerShadow = flipbook_2d_jQuery(div, {
+                    "class": "df-sheet-fold-inner-shadow"
                 });
-                var foldOuterShadow = sheet.foldOuterShadow = jQuery(div, {
-                    class: "df-sheet-fold-outer-shadow"
+                var foldOuterShadow = sheet.foldOuterShadow = flipbook_2d_jQuery(div, {
+                    "class": "df-sheet-fold-outer-shadow"
                 });
                 this.parentElement.append(element);
                 element.append(wrapper);
@@ -4856,14 +6217,19 @@ var BookSheet2D = /*#__PURE__*/ function(BookSheet) {
         },
         {
             key: "updateSize",
-            value: function updateSize(width, height, top) {
+            value: function updateSize(width, height, top, left) {
                 width = Math.floor(width);
                 height = Math.floor(height);
                 top = Math.floor(top);
+                left = Math.floor(left);
                 this.wrapper[0].style.height = this.wrapper[0].style.width = Math.ceil(flipbook_2d_utils.distOrigin(width, height) * this.viewer.app.zoomValue) + "px";
                 this.element[0].style.height = this.frontPage.element[0].style.height = this.backPage.element[0].style.height = this.foldInnerShadow[0].style.height = height + "px";
                 this.element[0].style.width = this.frontPage.element[0].style.width = this.backPage.element[0].style.width = this.foldInnerShadow[0].style.width = width + "px";
-                this.element[0].style.transform = 'translateY(' + top + 'px)';
+                if (this.viewer.isVertical()) {
+                    this.element[0].style.transform = 'translateX(' + left + 'px)';
+                } else {
+                    this.element[0].style.transform = 'translateY(' + top + 'px)';
+                }
             }
         },
         {
@@ -4877,13 +6243,13 @@ var BookSheet2D = /*#__PURE__*/ function(BookSheet) {
                 sheet.viewer.flipPage = sheet;
                 var isBooklet = sheet.viewer.isBooklet, isRight = sheet.side === defaults_DEARVIEWER.TURN_DIRECTION.RIGHT, isRTL = sheet.viewer.isRTL, isBottom = sheet.viewer.corner === defaults_DEARVIEWER.TURN_CORNER.BL || sheet.viewer.corner === defaults_DEARVIEWER.TURN_CORNER.BR;
                 var travelY = isBottom ? sheet.element.height() : 0;
-                var fullWidth = sheet.viewer.leftSheetWidth + sheet.viewer.rightSheetWidth;
+                var travelX = sheet.viewer.leftSheetWidth + sheet.viewer.rightSheetWidth;
                 var init, angle = 0, end; //stages of flip or fold cancel
                 end = sheet.end = sheet && sheet.animateToReset === true ? {
-                    x: isRight ? fullWidth : 0,
+                    x: isRight ? travelX : 0,
                     y: travelY
                 } : {
-                    x: isRight ? 0 : fullWidth,
+                    x: isRight ? 0 : travelX,
                     y: travelY
                 };
                 sheet.flipEasing = sheet.isHard ? TWEEN.Easing.Quadratic.InOut : TWEEN.Easing.Linear.None;
@@ -4903,10 +6269,10 @@ var BookSheet2D = /*#__PURE__*/ function(BookSheet) {
                 } else {
                     if (point == null) {
                         init = sheet.init = sheet && sheet.animateToReset === true ? {
-                            x: isRight ? 0 : fullWidth,
+                            x: isRight ? 0 : travelX,
                             y: 0
                         } : {
-                            x: isRight ? fullWidth : 0,
+                            x: isRight ? travelX : 0,
                             y: 0
                         };
                     } else {
@@ -4997,20 +6363,37 @@ var BookSheet2D = /*#__PURE__*/ function(BookSheet) {
             key: "updateAngle",
             value: function updateAngle(angle, isRight) {
                 var sheet = this;
-                var width = sheet.element.width() * 5;
-                sheet.wrapper.css({
-                    perspective: width,
-                    perspectiveOrigin: isRight === true ? "0% 50%" : "100% 50%"
-                });
-                sheet.element.addClass("df-folding");
-                sheet.backPage.updateCSS({
-                    display: isRight === true ? angle <= -90 ? 'block' : 'none' : angle < 90 ? 'block' : 'none',
-                    transform: (flipbook_2d_utils.prefix.dom !== 'MfS' ? "" : "perspective(" + width + "px) ") + (isRight === true ? "translateX(-100%) " : "") + "rotateY(" + ((isRight === true ? 180 : 0) + angle) + "deg)"
-                });
-                sheet.frontPage.updateCSS({
-                    display: isRight === true ? angle > -90 ? 'block' : 'none' : angle >= 90 ? 'block' : 'none',
-                    transform: (flipbook_2d_utils.prefix.dom !== 'MSd' ? "" : "perspective(" + width + "px) ") + (isRight === false ? "translateX(100%) " : "") + "rotateY(" + ((isRight === false ? -180 : 0) + angle) + "deg)"
-                });
+                if (sheet.viewer.isVertical()) {
+                    var width = sheet.element.height() * 5;
+                    sheet.wrapper.css({
+                        perspective: width,
+                        perspectiveOrigin: isRight === true ? "50% 0%" : "50% 100%"
+                    });
+                    sheet.element.addClass("df-folding");
+                    sheet.backPage.updateCSS({
+                        display: isRight === true ? angle <= -90 ? 'block' : 'none' : angle < 90 ? 'block' : 'none',
+                        transform: (flipbook_2d_utils.prefix.dom !== 'MfS' ? "" : "perspective(" + width + "px) ") + (isRight === true ? "translateY(-100%) " : "") + "rotateX(" + ((isRight === true ? 180 : 0) - angle) + "deg)"
+                    });
+                    sheet.frontPage.updateCSS({
+                        display: isRight === true ? angle > -90 ? 'block' : 'none' : angle >= 90 ? 'block' : 'none',
+                        transform: (flipbook_2d_utils.prefix.dom !== 'MSd' ? "" : "perspective(" + width + "px) ") + (isRight === false ? "translateY(100%) " : "") + "rotateX(" + ((isRight === false ? -180 : 0) - angle) + "deg)"
+                    });
+                } else {
+                    var width1 = sheet.element.width() * 5;
+                    sheet.wrapper.css({
+                        perspective: width1,
+                        perspectiveOrigin: isRight === true ? "0% 50%" : "100% 50%"
+                    });
+                    sheet.element.addClass("df-folding");
+                    sheet.backPage.updateCSS({
+                        display: isRight === true ? angle <= -90 ? 'block' : 'none' : angle < 90 ? 'block' : 'none',
+                        transform: (flipbook_2d_utils.prefix.dom !== 'MfS' ? "" : "perspective(" + width1 + "px) ") + (isRight === true ? "translateX(-100%) " : "") + "rotateY(" + ((isRight === true ? 180 : 0) + angle) + "deg)"
+                    });
+                    sheet.frontPage.updateCSS({
+                        display: isRight === true ? angle > -90 ? 'block' : 'none' : angle >= 90 ? 'block' : 'none',
+                        transform: (flipbook_2d_utils.prefix.dom !== 'MSd' ? "" : "perspective(" + width1 + "px) ") + (isRight === false ? "translateX(100%) " : "") + "rotateY(" + ((isRight === false ? -180 : 0) + angle) + "deg)"
+                    });
+                }
             }
         },
         {
@@ -5075,8 +6458,8 @@ var FlipBook2D = /*#__PURE__*/ function(BaseFlipBookViewer) {
         options.viewerClass = (_options_viewerClass = options.viewerClass) !== null && _options_viewerClass !== void 0 ? _options_viewerClass : "df-flipbook-2d";
         options.skipViewerLoaded = true;
         _this = _super.call(this, options, appContext);
-        _this.bookShadow = jQuery('<div>', {
-            class: 'df-book-shadow'
+        _this.bookShadow = flipbook_2d_jQuery('<div>', {
+            "class": 'df-book-shadow'
         });
         _this.wrapper.append(_this.bookShadow);
         _this.corner = defaults_DEARVIEWER.TURN_CORNER.NONE;
@@ -5128,8 +6511,8 @@ var FlipBook2D = /*#__PURE__*/ function(BaseFlipBookViewer) {
                 var viewer = this;
                 var dimensions = viewer.app.dimensions;
                 var padding = dimensions.padding;
-                var zoomHeight = this.availablePageHeight(), zoomWidth = this.availablePageWidth(), zoomFullWidth = viewer.fullWidth = zoomWidth * 2, stageWidth = dimensions.width, stageHeight = dimensions.height;
-                var shiftHeight = viewer.shiftHeight = Math.ceil(flipbook_2d_utils.limitAt((zoomHeight - stageHeight + padding.height) / 2, 0, zoomHeight)), shiftWidth = viewer.shiftWidth = Math.ceil(flipbook_2d_utils.limitAt((zoomFullWidth - stageWidth + padding.width) / 2, 0, zoomFullWidth));
+                var zoomHeight = this.availablePageHeight(), zoomWidth = this.availablePageWidth(), zoomFullWidth = viewer.fullWidth = zoomWidth * (this.app.viewer.pageMode === defaults_DEARVIEWER.FLIPBOOK_PAGE_MODE.SINGLE || this.app.viewer.isVertical() ? 1 : 2), zoomFullHeight = viewer.fullHeight = zoomHeight * (this.app.viewer.isVertical() && this.app.viewer.pageMode !== defaults_DEARVIEWER.FLIPBOOK_PAGE_MODE.SINGLE ? 2 : 1), stageWidth = dimensions.width, stageHeight = dimensions.height;
+                var shiftHeight = viewer.shiftHeight = Math.ceil(flipbook_2d_utils.limitAt((zoomFullHeight - stageHeight + padding.height) / 2, 0, zoomFullHeight)), shiftWidth = viewer.shiftWidth = Math.ceil(flipbook_2d_utils.limitAt((zoomFullWidth - stageWidth + padding.width) / 2, 0, zoomFullWidth));
                 if (viewer.app.zoomValue === 1) {
                     viewer.left = 0;
                     viewer.top = 0;
@@ -5147,9 +6530,9 @@ var FlipBook2D = /*#__PURE__*/ function(BaseFlipBookViewer) {
                 });
                 viewer.wrapper.css({
                     //marginTop when the flipbook is smaller than the ViewArea it has to center align vertically
-                    marginTop: Math.max(dimensions.height - zoomHeight - padding.height) / 2,
-                    height: zoomHeight,
-                    width: zoomFullWidth - zoomFullWidth % 2
+                    marginTop: Math.max(dimensions.height - zoomFullHeight - padding.height) / 2,
+                    width: zoomFullWidth - zoomFullWidth % 2,
+                    height: zoomFullHeight
                 });
                 viewer.zoomViewer.resize();
                 viewer.centerNeedsUpdate = true;
@@ -5162,11 +6545,19 @@ var FlipBook2D = /*#__PURE__*/ function(BaseFlipBookViewer) {
             value: function updateCenter() {
                 var skipTransition = arguments.length > 0 && arguments[0] !== void 0 ? arguments[0] : false;
                 var viewer = this;
-                var centerShift = viewer.centerShift, isRTL = viewer.isRTL, width = this.isLeftPage() ? this.leftSheetWidth : this.rightSheetWidth;
-                var end = centerShift * width / 2;
-                viewer.seamPosition = (-viewer.app.dimensions.offset.width + viewer.app.dimensions.containerWidth) / 2 + end;
-                viewer.wrapperShift = (viewer.isSingle ? -viewer.app.dimensions.stage.innerWidth / 2 : 0) + end;
-                viewer.wrapper[0].style.left = viewer.wrapperShift + "px";
+                var isVertical = viewer.isVertical();
+                var centerShift = viewer.centerShift, isRTL = viewer.isRTL, height = this.isLeftPage() ? viewer.leftSheetHeight : viewer.rightSheetHeight, width = this.isLeftPage() ? this.leftSheetWidth : this.rightSheetWidth;
+                var widthShift = isVertical ? 0 : centerShift * width / 2;
+                var heightShift = isVertical ? centerShift * height / 2 : 0;
+                viewer.wrapperShiftX = widthShift;
+                viewer.wrapperShiftY = heightShift;
+                viewer.seamPositionY = (viewer.app.dimensions.padding.heightDiff + viewer.app.dimensions.containerHeight) / 2 + heightShift;
+                viewer.seamPositionX = (-viewer.app.dimensions.offset.width + viewer.app.dimensions.containerWidth) / 2 + widthShift;
+                if (isVertical) {
+                    viewer.wrapper[0].style.top = viewer.wrapperShiftY + "px";
+                } else {
+                    viewer.wrapper[0].style.left = viewer.wrapperShiftX + "px";
+                }
                 viewer.wrapper[0].style.transition = skipTransition ? "none" : "";
                 this.zoomViewer.updateCenter();
             }
@@ -5187,7 +6578,19 @@ var FlipBook2D = /*#__PURE__*/ function(BaseFlipBookViewer) {
                         _sheet.element.removeClass("df-flipping df-quick-turn df-folding df-left-side df-right-side");
                         _sheet.element.addClass(_sheet.targetSide === flipbook_2d_DV.TURN_DIRECTION.LEFT ? "df-left-side" : "df-right-side");
                         _sheet.side = _sheet.targetSide;
-                        _sheet.targetSide === flipbook_2d_DV.TURN_DIRECTION.LEFT ? _sheet.updateSize(this.leftSheetWidth, this.leftSheetHeight, this.leftSheetTop) : _sheet.updateSize(this.rightSheetWidth, this.rightSheetHeight, this.rightSheetTop);
+                        if (_sheet.targetSide === flipbook_2d_DV.TURN_DIRECTION.LEFT) {
+                            if (this.isVertical()) {
+                                _sheet.updateSize(this.leftSheetWidth, this.leftSheetHeight, 0, this.topSheetLeft);
+                            } else {
+                                _sheet.updateSize(this.leftSheetWidth, this.leftSheetHeight, this.leftSheetTop, 0);
+                            }
+                        } else {
+                            if (this.isVertical()) {
+                                _sheet.updateSize(this.rightSheetWidth, this.rightSheetHeight, 0, this.bottomSheetLeft);
+                            } else {
+                                _sheet.updateSize(this.rightSheetWidth, this.rightSheetHeight, this.rightSheetTop, 0);
+                            }
+                        }
                     }
                 }
                 _sheet.visible = options.visible;
@@ -5220,11 +6623,12 @@ var FlipBook2D = /*#__PURE__*/ function(BaseFlipBookViewer) {
             key: "eventToPoint",
             value: function eventToPoint(event) {
                 var viewer = this;
+                var isVertical = this.isVertical();
                 event = flipbook_2d_utils.fixMouseEvent(event);
                 // if(event.type==="mouseup"){
                 //   let a = "mouseup";
                 // }
-                var wrapper = viewer.wrapper, bRect = wrapper[0].getBoundingClientRect(), webgl = viewer.is3D, sheets = viewer.sheets, dimen = viewer.app.dimensions, pageWidth, fullWidth, pageHeight, point = {
+                var wrapper = viewer.wrapper, bRect = wrapper[0].getBoundingClientRect(), webgl = viewer.is3D, sheets = viewer.sheets, dimen = viewer.app.dimensions, pageWidth, fullWidth, fullHeight, pageHeight, point = {
                     x: event.clientX,
                     y: event.clientY
                 }, left, top, distance, sheet, sheetDrag, isRight;
@@ -5234,20 +6638,21 @@ var FlipBook2D = /*#__PURE__*/ function(BaseFlipBookViewer) {
                 point.y = point.y - pRect.top;
                 if (viewer.dragSheet) isRight = viewer.dragSheet.side === flipbook_2d_DV.TURN_DIRECTION.RIGHT;
                 else {
-                    isRight = point.x > viewer.seamPosition;
+                    isRight = isVertical ? point.y > viewer.seamPositionY : point.x > viewer.seamPositionX;
                 }
                 pageWidth = isRight ? viewer.rightSheetWidth : viewer.leftSheetWidth;
                 pageHeight = isRight ? viewer.rightSheetHeight : viewer.leftSheetHeight;
-                fullWidth = viewer.rightSheetWidth + viewer.leftSheetWidth;
+                fullWidth = isVertical ? pageWidth : viewer.rightSheetWidth + viewer.leftSheetWidth;
+                fullHeight = isVertical ? viewer.leftSheetHeight + viewer.rightSheetHeight : pageHeight;
                 top = isRight ? viewer.rightSheetTop : viewer.leftSheetTop;
                 //region old
                 //calculate x and y relative to wrapper
-                left = point.x - (viewer.seamPosition - viewer.leftSheetWidth);
+                left = isVertical ? point.x - (viewer.seamPositionX - (isRight ? viewer.rightSheetWidth : viewer.leftSheetWidth) / 2) : point.x - (viewer.seamPositionX - viewer.leftSheetWidth);
                 top = point.y - (bRect.top - pRect.top) - top;
                 distance = viewer.drag === flipbook_2d_DV.TURN_DIRECTION.NONE ? left < pageWidth ? left : fullWidth - left : viewer.drag === flipbook_2d_DV.TURN_DIRECTION.LEFT ? left : fullWidth - left;
                 sheet = isRight ? sheets[viewer.stackCount / 2] : sheets[viewer.stackCount / 2 - 1];
                 sheetDrag = left < viewer.foldSense ? flipbook_2d_DV.TURN_DIRECTION.LEFT : left > fullWidth - viewer.foldSense ? flipbook_2d_DV.TURN_DIRECTION.RIGHT : flipbook_2d_DV.TURN_DIRECTION.NONE;
-                var x = left, y = top, h = pageHeight, w = fullWidth, delta = viewer.foldSense, corner;
+                var x = left, y = top, h = fullHeight, w = fullWidth, delta = viewer.foldSense, corner;
                 //determine the corner
                 if (x >= 0 && x < delta) {
                     if (y >= 0 && y <= delta) corner = flipbook_2d_DV.TURN_CORNER.TL;
@@ -5344,7 +6749,7 @@ var FlipBook2D = /*#__PURE__*/ function(BaseFlipBookViewer) {
    */ key: "mouseUp",
             value: function mouseUp(event) {
                 var viewer = this;
-                if (viewer.startPoint == null) return;
+                // if (viewer.startPoint == null) return; //fixes touch point when one finger is still in screen
                 if (!event.touches && event.button !== 0) return;
                 if (viewer.dragSheet == null && event.touches != null && event.touches.length == 0) {
                     this.pinchUp(event);
@@ -5460,25 +6865,36 @@ var FlipBook2D = /*#__PURE__*/ function(BaseFlipBookViewer) {
                         this.leftSheetWidth = Math.floor(leftDimen.width);
                         this.leftSheetHeight = Math.floor(leftDimen.height);
                         this.leftSheetTop = (this.availablePageHeight() - this.leftSheetHeight) / 2;
+                        this.topSheetLeft = (this.app.viewer.availablePageWidth() - this.leftSheetWidth) / 2;
                     }
                     if (rightViewPort) {
                         var rightDimen = flipbook_2d_utils.contain(rightViewPort.width, rightViewPort.height, this.availablePageWidth(), this.availablePageHeight());
                         this.rightSheetWidth = Math.floor(rightDimen.width);
                         this.rightSheetHeight = Math.floor(rightDimen.height);
                         this.rightSheetTop = (this.availablePageHeight() - this.rightSheetHeight) / 2;
+                        this.bottomSheetLeft = (this.app.viewer.availablePageWidth() - this.rightSheetWidth) / 2;
                     }
                     this.totalSheetsWidth = this.leftSheetWidth + this.rightSheetWidth;
                     for(var i = 0; i < this.sheets.length; i++){
                         var sheet = this.sheets[i];
                         if (sheet.side === flipbook_2d_DV.TURN_DIRECTION.LEFT) {
-                            sheet.updateSize(this.leftSheetWidth, this.leftSheetHeight, this.leftSheetTop);
+                            if (this.isVertical()) {
+                                sheet.updateSize(this.leftSheetWidth, this.leftSheetHeight, 0, this.topSheetLeft);
+                            } else {
+                                sheet.updateSize(this.leftSheetWidth, this.leftSheetHeight, this.leftSheetTop, 0);
+                            }
                         } else {
-                            sheet.updateSize(this.rightSheetWidth, this.rightSheetHeight, this.rightSheetTop);
+                            if (this.isVertical()) {
+                                sheet.updateSize(this.rightSheetWidth, this.rightSheetHeight, 0, this.bottomSheetLeft);
+                            } else {
+                                sheet.updateSize(this.rightSheetWidth, this.rightSheetHeight, this.rightSheetTop, 0);
+                            }
                         }
                     }
                 }
                 this.updateCenter();
                 this.updatePendingStatusClass();
+                this.app.executeCallback('onPagesReady');
             }
         },
         {
@@ -5486,6 +6902,15 @@ var FlipBook2D = /*#__PURE__*/ function(BaseFlipBookViewer) {
             value: function textureLoadedCallback(param) {
                 var page = this.getPageByNumber(param.pageNumber);
                 this.pagesReady();
+            }
+        },
+        {
+            key: "isSheetHard",
+            value: function isSheetHard(sheetNumber) {
+                if (this.isVertical()) {
+                    return true;
+                }
+                return flipbook_2d_get(flipbook_2d_get_prototype_of(FlipBook2D.prototype), "isSheetHard", this).call(this, sheetNumber);
             }
         }
     ]);
@@ -5605,6 +7030,7 @@ function slider_create_super(Derived) {
 
 
 
+var slider_jQuery = defaults_DEARVIEWER.jQuery;
 var slider_utils = defaults_DEARVIEWER.utils;
 var SliderPage = /*#__PURE__*/ function(BookSheet2D) {
     "use strict";
@@ -5619,8 +7045,8 @@ var SliderPage = /*#__PURE__*/ function(BookSheet2D) {
             key: "init",
             value: function init() {
                 var sheet = this, div = '<div>';
-                var element = sheet.element = jQuery(div, {
-                    class: 'df-sheet'
+                var element = sheet.element = slider_jQuery(div, {
+                    "class": 'df-sheet'
                 });
                 var frontPage = sheet.frontPage = new Page2D();
                 frontPage.element.addClass('df-page-front').appendTo(sheet.element);
@@ -5651,7 +7077,7 @@ var SliderPage = /*#__PURE__*/ function(BookSheet2D) {
         },
         {
             key: "updateSize",
-            value: function updateSize(width, height, top) {
+            value: function updateSize(width, height, top, left) {
                 width = Math.floor(width);
                 height = Math.floor(height);
                 top = Math.floor(top);
@@ -5745,7 +7171,7 @@ var Slider = /*#__PURE__*/ function(FlipBook2D) {
             value: function eventToPoint(event) {
                 var point = slider_get(slider_get_prototype_of(Slider.prototype), "eventToPoint", this).call(this, event);
                 //setting isInsideSheet == true call every other match as right page slide
-                point.isInsideSheet = jQuery(event.srcElement).closest(".df-page").length > 0;
+                point.isInsideSheet = slider_jQuery(event.srcElement).closest(".df-page").length > 0;
                 point.isInsideCorner = false;
                 return point;
             }
@@ -5802,6 +7228,13 @@ var Slider = /*#__PURE__*/ function(FlipBook2D) {
                 }
                 this.updateCenter();
                 this.updatePendingStatusClass();
+                this.app.executeCallback('onPagesReady');
+            }
+        },
+        {
+            key: "isVertical",
+            value: function isVertical() {
+                return false;
             }
         }
     ]);
@@ -5853,13 +7286,6 @@ function mockup_inherits(subClass, superClass) {
         }
     });
     if (superClass) mockup_set_prototype_of(subClass, superClass);
-}
-function mockup_instanceof(left, right) {
-    if (right != null && typeof Symbol !== "undefined" && right[Symbol.hasInstance]) {
-        return !!right[Symbol.hasInstance](left);
-    } else {
-        return left instanceof right;
-    }
 }
 function mockup_possible_constructor_return(self, call) {
     if (call && (mockup_type_of(call) === "object" || typeof call === "function")) {
@@ -6057,7 +7483,11 @@ MOCKUP.init = function() {
             if (texture) {
                 if (texture.image) {
                     if (texture.image.nodeName === "CANVAS") {
-                        if (texture.image.remove) texture.image.remove();
+                        if (texture.image.remove) try {
+                            texture.image.remove();
+                        } catch (e) {
+                            console.log(e);
+                        }
                         delete texture.image;
                     }
                 }
@@ -6169,10 +7599,10 @@ MOCKUP.init = function() {
             var stage = mockup_assert_this_initialized(_this);
             //currently canvas is compulsory
             stage.canvas = parameters.canvas || document.createElement('canvas');
-            stage.canvas = jQuery(_this.canvas);
+            stage.canvas = _this.canvas;
             stage.camera = new THREE.PerspectiveCamera(20, stage.width / stage.height, 4, 50000);
             stage.renderer = new THREE.WebGLRenderer({
-                canvas: stage.canvas[0],
+                canvas: stage.canvas,
                 antialias: true,
                 alpha: true
             });
@@ -6361,9 +7791,9 @@ MOCKUP.init = function() {
             return "translate3d(-50%,-50%,0) matrix3d(" + h(t[0]) + "," + h(t[1]) + "," + h(t[2]) + "," + h(t[3]) + "," + h(-t[4]) + "," + h(-t[5]) + "," + h(-t[6]) + "," + h(-t[7]) + "," + h(t[8]) + "," + h(t[9]) + "," + h(t[10]) + "," + h(t[11]) + "," + h(t[12]) + "," + h(t[13]) + "," + h(t[14]) + "," + h(t[15]) + ")";
         };
         var l = function l1(e, t) {
-            if (mockup_instanceof(e, THREE.CSS3DObject)) {
+            if (e instanceof THREE.CSS3DObject) {
                 var r;
-                if (mockup_instanceof(e, THREE.CSS3DSprite)) {
+                if (e instanceof THREE.CSS3DSprite) {
                     n.copy(t.matrixWorldInverse);
                     n.transpose();
                     n.copyPosition(e.matrixWorld);
@@ -6534,6 +7964,7 @@ function flipbook_3d_create_super(Derived) {
 
 
 
+var flipbook_3d_jQuery = defaults_DEARVIEWER.jQuery;
 var flipbook_3d_DV = defaults_DEARVIEWER;
 var flipbook_3d_utils = flipbook_3d_DV.utils;
 var BookSheet3D = /*#__PURE__*/ function(BookSheet) {
@@ -6635,8 +8066,8 @@ var BookSheet3D = /*#__PURE__*/ function(BookSheet) {
                 var sheet = this;
                 if (this.viewer === undefined || this.viewer === null) return;
                 var flexibility = sheet.isHard === true ? 0 : sheet.flexibility;
-                var width = (this.viewer.orientation === 'vertical' ? this.height : this.width) * (1 - Math.sin(flexibility / 2 * (flexibility / 2)) / 2 - flexibility / 20);
-                this.element.scale.y = (this.viewer.orientation === 'vertical' ? this.width : this.height) / this.element.geometry.parameters.height;
+                var width = (this.viewer.isVertical() ? this.height : this.width) * (1 - Math.sin(flexibility / 2 * (flexibility / 2)) / 2 - flexibility / 20);
+                this.element.scale.y = (this.viewer.isVertical() ? this.width : this.height) / this.element.geometry.parameters.height;
                 // this.element.scale.x = this.width / this.element.geometry.parameters.width;
                 // this.element.scale.z = 1;
                 var segments = sheet.segments;
@@ -6661,10 +8092,10 @@ var BookSheet3D = /*#__PURE__*/ function(BookSheet) {
                 pointsBack[0] = [];
                 var sheetAngle = sheet.sheetAngle * Math.PI / 180; // the angle at which the sheet will turn
                 // if (this.viewer.pageOffset && this.viewer.hasSpiral) {
-                if (this.viewer.orientation !== 'vertical') {
+                if (!this.viewer.isVertical()) {
                     this.element.position.x = -Math.cos(sheetAngle) * this.viewer.pageOffset;
                 }
-                if (this.viewer.orientation === 'vertical') {
+                if (this.viewer.isVertical()) {
                     this.element.position.y = Math.cos(sheetAngle) * this.viewer.pageOffset;
                 }
                 // }
@@ -7055,11 +8486,11 @@ var FlipBook3D = /*#__PURE__*/ function(BaseFlipBookViewer) {
                     app.updateInfo(app.options.text.loading + " WEBGL 3D ...");
                     if (typeof window.define === 'function' && window.define.amd && window.requirejs) {
                         window.requirejs.config({
-                            "paths": {
-                                "three": app.options.threejsSrc.replace(".js", "")
+                            paths: {
+                                three: app.options.threejsSrc.replace(".js", "")
                             },
                             shim: {
-                                'three': {
+                                three: {
                                     exports: 'THREE'
                                 }
                             }
@@ -7139,7 +8570,7 @@ var FlipBook3D = /*#__PURE__*/ function(BaseFlipBookViewer) {
                 var stage = viewer.stage = new MOCKUP.Stage({
                     pixelRatio: viewer.app.options.pixelRatio
                 });
-                var canvas = stage.canvas = jQuery(stage.renderer.domElement).addClass("df-3dcanvas");
+                var canvas = stage.canvas = flipbook_3d_jQuery(stage.renderer.domElement).addClass("df-3dcanvas");
                 canvas.appendTo(this.element);
                 stage.camera.position.set(0, 0, 600);
                 stage.camera.lookAt(new THREE.Vector3(0, 0, 0));
@@ -7160,7 +8591,7 @@ var FlipBook3D = /*#__PURE__*/ function(BaseFlipBookViewer) {
                 stage.ground.position.z = this.has3DCover ? -6 : -4;
                 stage.selectiveRendering = true;
                 var cssRenderer = stage.cssRenderer = new THREE.CSS3DRenderer();
-                jQuery(cssRenderer.domElement).css({
+                flipbook_3d_jQuery(cssRenderer.domElement).css({
                     position: "absolute",
                     top: 0,
                     pointerEvents: "none"
@@ -7230,11 +8661,11 @@ var FlipBook3D = /*#__PURE__*/ function(BaseFlipBookViewer) {
                 this.zoomViewer.rightPage.element.css({
                     backgroundColor: this.color3DSheets
                 });
-                if (this.orientation === 'vertical') {
+                if (this.isVertical()) {
                     this.bookWrapper.children.forEach(function(childPaper) {
                         childPaper.rotateZ(THREE.MathUtils.degToRad(-90));
-                        childPaper.textureCenter = new THREE.Vector2(0.5, 0.5);
-                        childPaper.textureRotation = 90;
+                        childPaper.textureCenter = new THREE.Vector2(0.5, 0.5); //required in MOCKUP.loadTexture
+                        childPaper.textureRotation = 90; //required in MOCKUP.loadTexture
                     });
                 }
                 this.initSpiral();
@@ -7274,7 +8705,7 @@ var FlipBook3D = /*#__PURE__*/ function(BaseFlipBookViewer) {
                     viewer.stage.cssRenderer = null;
                     viewer.stage.orbitControl = flipbook_3d_utils.disposeObject(viewer.stage.orbitControl);
                     viewer.stage.renderer = flipbook_3d_utils.disposeObject(viewer.stage.renderer);
-                    jQuery(viewer.stage.canvas).remove();
+                    flipbook_3d_jQuery(viewer.stage.canvas).remove();
                     viewer.stage.canvas = null;
                     viewer.stage = flipbook_3d_utils.disposeObject(viewer.stage);
                 }
@@ -7307,8 +8738,8 @@ var FlipBook3D = /*#__PURE__*/ function(BaseFlipBookViewer) {
                 });
                 app.refreshRequestStart();
                 var ref = this.refSize = Math.min(zoomHeight, zoomWidth);
-                this.coverExtraWidth = (viewer.orientation == 'vertical' ? 2 : 1) * ref * .025;
-                this.coverExtraHeight = (viewer.orientation == 'vertical' ? 1 : 2) * ref * .025;
+                this.coverExtraWidth = (viewer.isVertical() ? 2 : 1) * ref * .025;
+                this.coverExtraHeight = (viewer.isVertical() ? 1 : 2) * ref * .025;
                 if (this.has3DCover !== true) {
                     this.coverExtraWidth = 0;
                     this.coverExtraHeight = 0;
@@ -7525,7 +8956,7 @@ var FlipBook3D = /*#__PURE__*/ function(BaseFlipBookViewer) {
                         //Since book need to rotate upwward, rotate X later works
                         viewer.bookWrapper.rotateZ(THREE.Math.degToRad(-app.options.flipbook3DTiltAngleLeft)); //negative goes left
                         viewer.bookWrapper.rotateX(THREE.Math.degToRad(-app.options.flipbook3DTiltAngleUp)); //negative goes upward
-                        if (viewer.orientation == 'vertical') {
+                        if (viewer.isVertical()) {
                             viewer.bookWrapper.scale.y = 1 / (this.isSingle ? 2 : 1);
                         } else {
                             viewer.bookWrapper.scale.x = 1 / (this.isSingle ? 2 : 1);
@@ -7601,9 +9032,11 @@ var FlipBook3D = /*#__PURE__*/ function(BaseFlipBookViewer) {
             key: "updateCenter",
             value: function updateCenter() {
                 var viewer = this, app = this.app;
-                var init = this.orientation == 'vertical' ? viewer.wrapper.position.y : viewer.wrapper.position.x, centerShift = (this.orientation === 'vertical' ? -1 : 1) * viewer.centerShift, length = this.isLeftPage() ? this.orientation == 'vertical' ? this.leftSheetHeight : this.leftSheetWidth : this.orientation == 'vertical' ? this.rightSheetHeight : this.rightSheetWidth;
+                var isVertical = this.isVertical();
+                var init = isVertical ? viewer.wrapper.position.y : viewer.wrapper.position.x, centerShift = (this.isVertical() ? -1 : 1) * viewer.centerShift, length = this.isLeftPage() ? isVertical ? this.leftSheetHeight : this.leftSheetWidth : isVertical ? this.rightSheetHeight : this.rightSheetWidth;
                 var end = centerShift * length / 2;
-                viewer.seamPosition = (-app.dimensions.offset.width + app.dimensions.containerWidth) / 2 + end;
+                viewer.seamPositionY = (app.dimensions.padding.heightDiff + app.dimensions.containerHeight) / 2 - end;
+                viewer.seamPositionX = (-app.dimensions.offset.width + app.dimensions.containerWidth) / 2 + end;
                 //create a centerTween
                 if (end !== viewer.centerEnd) {
                     if (viewer.centerTween && viewer.centerTween.stop) viewer.centerTween.stop();
@@ -7631,7 +9064,7 @@ var FlipBook3D = /*#__PURE__*/ function(BaseFlipBookViewer) {
         {
             key: "onCenterUpdateAnimation",
             value: function onCenterUpdateAnimation(tween) {
-                if (this.orientation == 'vertical') {
+                if (this.isVertical()) {
                     this.wrapper.position.y = tween.x;
                     //noinspection JSUnresolvedVariable
                     if (this.stage && this.stage.cssScene) this.stage.cssScene.position.y = tween.x;
@@ -7740,6 +9173,7 @@ var FlipBook3D = /*#__PURE__*/ function(BaseFlipBookViewer) {
                 if (this.cameraPositionDirty === true) {
                     this.updateCameraPosition();
                 }
+                this.app.executeCallback('onPagesReady');
             }
         },
         {
@@ -7927,7 +9361,7 @@ var FlipBook3D = /*#__PURE__*/ function(BaseFlipBookViewer) {
                 point.x = point.x - viewer.parentElement[0].getBoundingClientRect().left;
                 point.y = point.y - viewer.parentElement[0].getBoundingClientRect().top;
                 var left = (-dimensions.offset.width + dimensions.containerWidth) / 2 - dimensions.stage.width / 2, right = (-dimensions.offset.width + dimensions.containerWidth) / 2 + dimensions.stage.width / 2, top = dimensions.padding.top, bottom = dimensions.padding.top + viewer.availablePageHeight();
-                var isLeftSheet = point.x < viewer.seamPosition;
+                var isLeftSheet = viewer.isVertical() ? point.y < viewer.seamPositionY : point.x < viewer.seamPositionX;
                 var pageNumber = viewer.getBasePage() + (isLeftSheet ? 0 : 1);
                 var sheet = this.getPageByNumber(pageNumber);
                 if (sheet) sheet = sheet.sheet;
@@ -7945,20 +9379,6 @@ var FlipBook3D = /*#__PURE__*/ function(BaseFlipBookViewer) {
                     isLeftSheet: isLeftSheet,
                     sheet: sheet
                 };
-            }
-        },
-        {
-            key: "checkPageLoading",
-            value: function checkPageLoading() {
-                var isLoaded = true;
-                var pages = this.getVisiblePages().main;
-                for(var index = 0; index < (this.isBooklet ? 1 : 2); index++){
-                    var page = this.getPageByNumber(pages[index]);
-                    if (page) {
-                        isLoaded = page.textureLoaded && isLoaded;
-                    }
-                }
-                this.element.toggleClass("df-loading", !isLoaded);
             }
         },
         {
@@ -8138,13 +9558,6 @@ function provider_inherits(subClass, superClass) {
     });
     if (superClass) provider_set_prototype_of(subClass, superClass);
 }
-function provider_instanceof(left, right) {
-    if (right != null && typeof Symbol !== "undefined" && right[Symbol.hasInstance]) {
-        return !!right[Symbol.hasInstance](left);
-    } else {
-        return left instanceof right;
-    }
-}
 function provider_possible_constructor_return(self, call) {
     if (call && (provider_type_of(call) === "object" || typeof call === "function")) {
         return call;
@@ -8187,6 +9600,7 @@ function provider_create_super(Derived) {
     };
 }
 
+var provider_jQuery = defaults_DEARVIEWER.jQuery;
 var provider_utils = defaults_DEARVIEWER.utils;
 /**
  * @typedef {Object} PDFDocument
@@ -8334,7 +9748,7 @@ var provider_utils = defaults_DEARVIEWER.utils;
                 var goToDestination = function goToDestination1(destRef) {
                     provider_utils.log("Requested: ", destRef);
                     // dest array looks like that: <page-ref> </XYZ|FitXXX> <args..>
-                    var pageNumber = provider_instanceof(destRef, Object) ? self._pagesRefCache[destRef.num + ' ' + destRef.gen + ' R'] : destRef + 1;
+                    var pageNumber = destRef instanceof Object ? self._pagesRefCache[destRef.num + ' ' + destRef.gen + ' R'] : destRef + 1;
                     if (pageNumber) {
                         pageNumber = self.pdfApp.viewer.getViewerPageNumber(pageNumber);
                         if (pageNumber > self.pdfApp.pageCount) {
@@ -8374,7 +9788,7 @@ var provider_utils = defaults_DEARVIEWER.utils;
                 destinationPromise.then(function(destination) {
                     provider_utils.log("Started:", destination);
                     dest = destination;
-                    if (!provider_instanceof(destination, Array)) {
+                    if (!(destination instanceof Array)) {
                         return; // invalid destination
                     }
                     self.pdfApp.requestDestRefKey = destination[0].num + ' ' + destination[0].gen + ' R';
@@ -8410,9 +9824,9 @@ var provider_utils = defaults_DEARVIEWER.utils;
                 if (typeof dest === 'string') {
                     return this.getAnchorUrl('#' + escape(dest));
                 }
-                if (provider_instanceof(dest, Array)) {
+                if (dest instanceof Array) {
                     var destRef = dest[0]; // see navigateTo method for dest format
-                    var pageNumber = provider_instanceof(destRef, Object) ? this._pagesRefCache[destRef.num + ' ' + destRef.gen + ' R'] : destRef + 1;
+                    var pageNumber = destRef instanceof Object ? this._pagesRefCache[destRef.num + ' ' + destRef.gen + ' R'] : destRef + 1;
                     if (pageNumber) {
                         var pdfOpenParams = this.getAnchorUrl('#page=' + pageNumber);
                         var destKind = dest[1];
@@ -8543,6 +9957,7 @@ var DocumentProvider = /*#__PURE__*/ function() {
         this.PDFLinkItemsCache = [];
         this.canPrint = true;
         this.textPostion = [];
+        this.renderTime = 0;
     }
     provider_create_class(DocumentProvider, [
         {
@@ -8682,65 +10097,72 @@ var PDFDocumentProvider = /*#__PURE__*/ function(DocumentProvider) {
     function PDFDocumentProvider(props, context) {
         provider_class_call_check(this, PDFDocumentProvider);
         var _this;
-        var getPDFScript = function getPDFScript(callback) {
-            if (typeof pdfjsLib === "undefined") {
-                app.updateInfo(app.options.text.loading + " PDF Service ...");
-                provider_utils.getScript(app.options.pdfjsSrc + provider.cacheBustParameters, function() {
-                    if (typeof define === 'function' && __webpack_require__.amdO && window.requirejs && window.require && window.require.config) {
-                        app.updateInfo(app.options.text.loading + " PDF Service (require) ...");
-                        window.require.config({
-                            paths: {
-                                'pdfjs-dist/build/pdf.worker': app.options.pdfjsWorkerSrc.replace(".js", "")
-                            }
-                        });
-                        window.require([
-                            'pdfjs-dist/build/pdf'
-                        ], function(pdfjsLib1) {
-                            window.pdfjsLib = pdfjsLib1;
-                            getWorkerScript(callback);
-                        });
-                    } else {
-                        getWorkerScript(callback);
-                    }
-                }, function() {
-                    app.updateInfo("Unable to load PDF service..");
-                    provider.dispose();
-                }, app.options.pdfjsSrc.indexOf("pdfjs-4") > 1);
-            } else {
-                if (typeof callback === "function") callback();
-            }
-        };
-        var getWorkerScript = function getWorkerScript(callback) {
-            app.updateInfo(app.options.text.loading + " PDF Worker ...");
-            var tmp = document.createElement('a');
-            tmp.href = app.options.pdfjsWorkerSrc + provider.cacheBustParameters;
-            if (tmp.hostname !== window.location.hostname && defaults_DEARVIEWER['loadCorsPdfjsWorker'] === true) {
-                app.updateInfo(app.options.text.loading + " PDF Worker CORS ...");
-                jQuery.ajax({
-                    url: app.options.pdfjsWorkerSrc + provider.cacheBustParameters,
-                    cache: true,
-                    success: function success(data) {
-                        app.options.pdfjsWorkerSrc = provider_utils.createObjectURL(data, "text/javascript");
-                        if (typeof callback === "function") callback();
-                    }
-                });
-            } else {
-                if (typeof callback === "function") callback();
-            }
-        };
         _this = _super.call(this, props, context);
         var app = _this.app, provider = provider_assert_this_initialized(_this);
         provider.pdfDocument = undefined;
         provider._page2Ratio = undefined;
         provider.cacheBustParameters = "?ver=" + defaults_DEARVIEWER.version + "&pdfver=" + app.options.pdfVersion;
-        getPDFScript(function() {
-            pdfjsLib.GlobalWorkerOptions.workerSrc = app.options.pdfjsWorkerSrc + provider.cacheBustParameters;
-            pdfjsLib.canvasWillReadFrequently = defaults_DEARVIEWER.defaults.canvasWillReadFrequently;
-            provider.loadDocument();
-        });
+        if (props.skipInit !== true) _this.init();
         return _this;
     }
     provider_create_class(PDFDocumentProvider, [
+        {
+            key: "init",
+            value: function init() {
+                var app = this.app, provider = this;
+                function getPDFScript(callback) {
+                    if (typeof pdfjsLib === "undefined") {
+                        app.updateInfo(app.options.text.loading + " PDF Service ...");
+                        provider_utils.getScript(app.options.pdfjsSrc + provider.cacheBustParameters, function() {
+                            if (typeof define === 'function' && __webpack_require__.amdO && window.requirejs && window.require && window.require.config) {
+                                app.updateInfo(app.options.text.loading + " PDF Service (require) ...");
+                                window.require.config({
+                                    paths: {
+                                        'pdfjs-dist/build/pdf.worker': app.options.pdfjsWorkerSrc.replace(".js", "")
+                                    }
+                                });
+                                window.require([
+                                    'pdfjs-dist/build/pdf'
+                                ], function(pdfjsLib1) {
+                                    window.pdfjsLib = pdfjsLib1;
+                                    getWorkerScript(callback);
+                                });
+                            } else {
+                                getWorkerScript(callback);
+                            }
+                        }, function() {
+                            app.updateInfo("Unable to load PDF service..");
+                            provider.dispose();
+                        }, app.options.pdfjsSrc.indexOf("pdfjs-4") > 1 || app.options.pdfjsSrc.indexOf("pdfjs-5") > 1);
+                    } else {
+                        if (typeof callback === "function") callback();
+                    }
+                }
+                function getWorkerScript(callback) {
+                    app.updateInfo(app.options.text.loading + " PDF Worker ...");
+                    var tmp = document.createElement('a');
+                    tmp.href = app.options.pdfjsWorkerSrc + provider.cacheBustParameters;
+                    if (tmp.hostname !== window.location.hostname && defaults_DEARVIEWER['loadCorsPdfjsWorker'] === true) {
+                        app.updateInfo(app.options.text.loading + " PDF Worker CORS ...");
+                        provider_jQuery.ajax({
+                            url: app.options.pdfjsWorkerSrc + provider.cacheBustParameters,
+                            cache: true,
+                            success: function success(data) {
+                                app.options.pdfjsWorkerSrc = provider_utils.createObjectURL(data, "text/javascript");
+                                if (typeof callback === "function") callback();
+                            }
+                        });
+                    } else {
+                        if (typeof callback === "function") callback();
+                    }
+                }
+                getPDFScript(function() {
+                    pdfjsLib.GlobalWorkerOptions.workerSrc = app.options.pdfjsWorkerSrc + provider.cacheBustParameters;
+                    pdfjsLib.canvasWillReadFrequently = defaults_DEARVIEWER.defaults.canvasWillReadFrequently;
+                    provider.loadDocument();
+                });
+            }
+        },
         {
             key: "dispose",
             value: function dispose() {
@@ -8822,7 +10244,7 @@ var PDFDocumentProvider = /*#__PURE__*/ function(DocumentProvider) {
                         app.dimensions.maxTextureWidth = app.dimensions.maxTextureHeight * _defaultPageRatio;
                         app.dimensions.autoHeightRatio = 1 / _defaultPageRatio;
                         provider.pageCount = pdf.numPages;
-                        provider.numPages = pdf.numPages;
+                        provider.numPages = pdf.numPages; //numPages are original pages, required when comparing the values even after pageCount is altered.
                         provider._page1Pass = true;
                         provider.pagesLoaded();
                     });
@@ -8845,7 +10267,7 @@ var PDFDocumentProvider = /*#__PURE__*/ function(DocumentProvider) {
                         provider._page2Pass = true;
                         provider.pagesLoaded();
                     }
-                }).catch(function(error) {
+                })["catch"](function(error) {
                     if (app !== null && app.options != null) {
                         var _app_options;
                         //Find errors condition
@@ -8924,7 +10346,7 @@ var PDFDocumentProvider = /*#__PURE__*/ function(DocumentProvider) {
                     }
                     pdfOutline = pdfOutline || [];
                     provider.outline = pdfOutline;
-                }).finally(function() {
+                })["finally"](function() {
                     provider._getLabels();
                 });
             }
@@ -8955,7 +10377,7 @@ var PDFDocumentProvider = /*#__PURE__*/ function(DocumentProvider) {
                         return;
                     }
                     provider.pageLabels = pageLabels;
-                }).finally(function() {
+                })["finally"](function() {
                     provider._getPermissions();
                 });
             }
@@ -8972,7 +10394,7 @@ var PDFDocumentProvider = /*#__PURE__*/ function(DocumentProvider) {
                             app.options.showPrintControl = app.options.showPrintControl && provider.canPrint;
                         }
                     }
-                }).finally(function() {
+                })["finally"](function() {
                     provider._documentLoaded();
                 });
             }
@@ -8980,7 +10402,7 @@ var PDFDocumentProvider = /*#__PURE__*/ function(DocumentProvider) {
         {
             key: "processPage",
             value: function processPage(param) {
-                var app = this.app, provider = this, pageNumber = param.pageNumber, startTime = performance.now();
+                var app = this.app, provider = this, pageNumber = param.pageNumber, startTime = 0, sizeStr = "";
                 var dimen = app.viewer.getTextureSize(param);
                 if (DEARFLIP.defaults.cachePDFTexture === true) {
                     if (this.getCache(pageNumber, dimen.height) !== undefined) {
@@ -9003,14 +10425,18 @@ var PDFDocumentProvider = /*#__PURE__*/ function(DocumentProvider) {
                     }
                     //region Render the Page
                     var renderContext = app.viewer.getRenderContext(pdfPage, param);
+                    provider.viewPorts[pageNumber].lastScale = renderContext.viewport.scale;
+                    provider.viewPorts[pageNumber].lastHeight = renderContext.canvas.height;
                     if (param.isFreshPage) {
                         var _app_viewer_getPageByNumber;
                         (_app_viewer_getPageByNumber = app.viewer.getPageByNumber(param.pageNumber)) === null || _app_viewer_getPageByNumber === void 0 ? void 0 : _app_viewer_getPageByNumber.changeTexture(param.pageNumber, renderContext.canvas.height);
                     }
-                    provider_utils.log("Page " + pageNumber + " rendering - " + renderContext.canvas.width + "x" + renderContext.canvas.height);
+                    sizeStr = renderContext.canvas.width + "x" + renderContext.canvas.height;
+                    provider_utils.log("Page " + pageNumber + " rendering - " + sizeStr);
                     param.trace = provider.requestIndex++;
                     provider.requestedPages += "," + param.trace + "[" + pdfPageNumberToRender + "|" + renderContext.canvas.height + "]";
                     pdfPage.cleanupAfterRender = false; //needs to disable the cleanup after render code in pdf.js
+                    startTime = performance.now();
                     var pageRendering = pdfPage.render(renderContext);
                     pageRendering.promise.then(function() {
                         app.applyTexture(renderContext.canvas, param);
@@ -9019,25 +10445,27 @@ var PDFDocumentProvider = /*#__PURE__*/ function(DocumentProvider) {
                         }
                         if (app.options.cleanupAfterRender === true) {
                             var checkString = "," + param.trace + "[" + pdfPageNumberToRender + "|" + renderContext.canvas.height + "]";
-                            provider_utils.log("CleanUp Requesting for (" + pageNumber + ") actual " + pdfPageNumberToRender);
+                            // utils.log("CleanUp Requesting for (" + pageNumber + ") actual " + pdfPageNumberToRender);
                             if (provider.requestedPages.indexOf(checkString) > -1) {
                                 provider.requestedPages = provider.requestedPages.replace(checkString, "");
                                 if (provider.requestedPages.indexOf("[" + pdfPageNumberToRender + "|") == -1) {
-                                    provider_utils.log("CleanUp Passed for (" + pageNumber + ") actual " + pdfPageNumberToRender);
+                                    // utils.log("CleanUp Passed for (" + pageNumber + ") actual " + pdfPageNumberToRender);
                                     provider.pagesToClean.push(pdfPage);
                                     if (provider.pagesToClean.length > 0) provider.cleanUpPages();
                                 } else {
-                                    provider_utils.log("CleanUp Cancelled waiting for (" + pageNumber + ") actual " + pdfPageNumberToRender + " : " + provider.requestedPages);
+                                // utils.log("CleanUp Cancelled waiting for (" + pageNumber + ") actual " + pdfPageNumberToRender + " : " + provider.requestedPages);
                                 }
                             }
                         }
                         renderContext = null;
-                        provider_utils.log("Rendered " + pageNumber + " in " + (performance.now() - startTime) + " milliseconds");
-                    }).catch(function(error) {
+                        var _renderTime = performance.now() - startTime;
+                        provider.renderTime += _renderTime;
+                        provider_utils.log("Rendered " + pageNumber + " in " + _renderTime + " ms : " + sizeStr);
+                    })["catch"](function(error) {
                         console.log(error);
                     });
                 //endregion
-                }).catch(function(error) {
+                })["catch"](function(error) {
                     console.log(error);
                 });
             }
@@ -9047,7 +10475,7 @@ var PDFDocumentProvider = /*#__PURE__*/ function(DocumentProvider) {
             value: function cleanUpPages() {
                 while(this.pagesToClean.length > 0){
                     var page = this.pagesToClean.splice(-1)[0];
-                    provider_utils.log("Cleanup Completed for PDF page: " + (page._pageIndex + 1));
+                    // utils.log("Cleanup Completed for PDF page: " + (page._pageIndex + 1));
                     page.cleanup();
                 }
             }
@@ -9072,7 +10500,7 @@ var PDFDocumentProvider = /*#__PURE__*/ function(DocumentProvider) {
                 if (provider.textSearch === text) return;
                 provider.clearSearch();
                 if (text.length < 3 && text != "") {
-                    provider.app.updateSearchInfo("Minimum 3 letters required.");
+                    provider.app.updateSearchInfo(provider.app.options.text.searchMinimum);
                     return;
                 }
                 provider.textSearch = text;
@@ -9087,7 +10515,7 @@ var PDFDocumentProvider = /*#__PURE__*/ function(DocumentProvider) {
             value: function _search(text) {
                 var pageNumber = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : 1;
                 var provider = this;
-                provider.app.updateSearchInfo("Searching Page: " + pageNumber);
+                provider.app.updateSearchInfo(provider.app.options.text.searchSearchingInfo + " " + pageNumber);
                 provider.searchPage(pageNumber).then(function(textContent) {
                     // console.log(textContent);
                     var searchString = textContent, pos = 0, myRegexp = new RegExp(text, 'gi'), result;
@@ -9103,7 +10531,7 @@ var PDFDocumentProvider = /*#__PURE__*/ function(DocumentProvider) {
                         var searchPage = provider.app.viewer.searchPage(pageNumber);
                         if (searchPage.include === true) {
                             provider.totalHits += hits.length;
-                            provider.app.searchResults.append('<div class="df-search-result ' + (provider.app.currentPageNumber === pageNumber ? 'df-active' : '') + '" data-df-page="' + pageNumber + '">' + '<span>Page ' + searchPage.label + '</span><span>' + hits.length + ' ' + (hits.length > 1 ? 'results' : 'result') + '</span></div>');
+                            provider.app.searchResults.append('<div class="df-search-result ' + (provider.app.currentPageNumber === pageNumber ? 'df-active' : '') + '" data-df-page="' + pageNumber + '">' + '<span>' + provider.app.options.text.searchResultPage + ' ' + searchPage.label + '</span><span>' + hits.length + ' ' + (hits.length > 1 ? provider.app.options.text.searchResults : provider.app.options.text.searchResult) + '</span></div>');
                         }
                     }
                     if (provider.app.viewer.isActivePage(pageNumber)) {
@@ -9111,11 +10539,11 @@ var PDFDocumentProvider = /*#__PURE__*/ function(DocumentProvider) {
                         provider.app.ui.update();
                     }
                     provider._search(text, pageNumber + 1);
-                }).catch(function() {}).finally(function() {
-                    if (provider.totalHits == 0) {
-                        provider.app.updateSearchInfo("No results Found!");
+                })["catch"](function() {})["finally"](function() {
+                    if (provider.totalHits === 0) {
+                        provider.app.updateSearchInfo(provider.app.options.text.searchResultsNotFound);
                     } else {
-                        provider.app.updateSearchInfo(provider.totalHits + " results found");
+                        provider.app.updateSearchInfo(provider.totalHits + " " + provider.app.options.text.searchResultsFound);
                     }
                     provider.app.searchContainer.removeClass("df-searching");
                     provider.app.container.removeClass('df-fetch-pdf');
@@ -9280,6 +10708,7 @@ function image_provider_create_super(Derived) {
 }
 
 
+var image_provider_jQuery = defaults_DEARVIEWER.jQuery;
 var image_provider_utils = defaults_DEARVIEWER.utils;
 var ImagePage = /*#__PURE__*/ function() {
     "use strict";
@@ -9325,8 +10754,11 @@ var ImageDocument = /*#__PURE__*/ function() {
                 var provider = this;
                 return new Promise(function(resolve, reject) {
                     try {
-                        jQuery("<img/>").attr("src", provider.source[pageNumber - 1]).prop("crossOrigin", "Anonymous").on('load', function() {
-                            jQuery(this).off();
+                        var img = image_provider_jQuery("<img/>");
+                        img.attr("src", provider.source[pageNumber - 1]);
+                        img[0].crossOrigin = "Anonymous";
+                        img.on('load', function() {
+                            image_provider_jQuery(this).off();
                             var page = new ImagePage({
                                 src: this.src
                             });
@@ -9484,7 +10916,7 @@ defaults_DEARVIEWER.providers['image'] = ImageDocumentProvider;
 
 
 // EXTERNAL MODULE: ./src/js/dearviewer/utils/tween.js
-var tween = __webpack_require__(101);
+var tween = __webpack_require__(795);
 ;// CONCATENATED MODULE: ./src/js/dearviewer/utils/controls.js
 /* globals jQuery */ function controls_class_call_check(instance, Constructor) {
     if (!(instance instanceof Constructor)) {
@@ -9521,16 +10953,16 @@ var UI = /*#__PURE__*/ function() {
         this.app = appContext;
         this.parentElement = this.app.container;
         this.element = controls_jQuery('<div>', {
-            class: "df-ui"
+            "class": "df-ui"
         });
         this.leftElement = controls_jQuery('<div>', {
-            class: "df-ui-left"
+            "class": "df-ui-left"
         }).appendTo(this.element);
         this.centerElement = controls_jQuery('<div>', {
-            class: "df-ui-center"
+            "class": "df-ui-center"
         }).appendTo(this.element);
         this.rightElement = controls_jQuery('<div>', {
-            class: "df-ui-right"
+            "class": "df-ui-right"
         }).appendTo(this.element);
         this.parentElement.append(this.element);
         this.events = {};
@@ -9544,14 +10976,14 @@ var UI = /*#__PURE__*/ function() {
                 var text = app.options.text, icons = app.options.icons;
                 ui.createLogo();
                 this.openRight = controls.openRight = controls_jQuery(div, {
-                    class: "df-ui-nav df-ui-next",
+                    "class": "df-ui-nav df-ui-next",
                     title: app.isRTL ? text.previousPage : text.nextPage,
                     html: '<div class="df-ui-btn ' + icons['next'] + '"></div>'
                 }).on("click", function() {
                     app.openRight();
                 });
                 this.openLeft = controls.openLeft = controls_jQuery(div, {
-                    class: "df-ui-nav df-ui-prev",
+                    "class": "df-ui-nav df-ui-prev",
                     title: app.isRTL ? text.nextPage : text.previousPage,
                     html: '<div class="df-ui-btn ' + icons['prev'] + '"></div>'
                 }).on("click", function() {
@@ -9622,7 +11054,7 @@ var UI = /*#__PURE__*/ function() {
                             searchContainer.toggleClass("df-sidemenu-visible");
                             if (el.hasClass("df-active")) {
                                 el.siblings(".df-active").trigger("click");
-                                app.searchBox.focus();
+                                app.searchBox[0].focus();
                             }
                             ui.update();
                             if (app.options.sideMenuOverlay === false) app.resizeRequestStart();
@@ -9669,8 +11101,10 @@ var UI = /*#__PURE__*/ function() {
                     // jQuery(this).toggleClass(buttonClass + " " + uiClass + "-widthfit ");
                     });
                 }
-                ui.shareBox = new DV_Share(app.container, app.options);
                 this.share = controls.share = controls_utils.createBtn('share', icons['share'], text.share).on("click", function() {
+                    if (ui.shareBox == null) {
+                        ui.shareBox = new DV_Share(app.container, app.options);
+                    }
                     if (ui.shareBox.isOpen === true) ui.shareBox.close();
                     else {
                         ui.shareBox.update(app.getURLHash());
@@ -9706,7 +11140,7 @@ var UI = /*#__PURE__*/ function() {
                 //endregion
                 //region MoreContainer
                 ui.moreContainer = controls_jQuery(div, {
-                    class: "df-more-container"
+                    "class": "df-more-container"
                 });
                 controls.more.append(ui.moreContainer);
                 //endregion
@@ -9802,6 +11236,12 @@ var UI = /*#__PURE__*/ function() {
                     case 39:
                         if (navKeysValid) app.openRight();
                         break;
+                    case 38:
+                        if (navKeysValid && app.viewer.isVertical()) app.openLeft();
+                        break;
+                    case 40:
+                        if (navKeysValid && app.viewer.isVertical()) app.openRight();
+                        break;
                     default:
                         break;
                 }
@@ -9845,27 +11285,27 @@ var UI = /*#__PURE__*/ function() {
                     //https://github.com/deepak-ghimire/dearviewer/issues/349
                     this.pageLabel.width("");
                     if (app.provider.pageLabels) {
-                        this.pageLabel.html("88888888888888888".substring(0, app.pageCount.toString().length * 3 + 4));
+                        this.pageLabel.text("88888888888888888".substring(0, app.pageCount.toString().length * 3 + 4));
                     } else {
-                        this.pageLabel.html("88888888888".substring(0, app.pageCount.toString().length * 2 + 3));
+                        this.pageLabel.text("88888888888".substring(0, app.pageCount.toString().length * 2 + 3));
                     }
                     this.pageNumber.width(this.pageLabel.width());
                     this.pageLabel.width(this.pageLabel.width());
-                    this.pageLabel.html("");
+                    this.pageLabel.text("");
                     this._pageLabelWidthSet = true;
                 }
                 var pageLabel = app.getCurrentLabel();
                 if (pageLabel.toString() !== app.currentPageNumber.toString()) {
-                    controls.pageLabel.html(pageLabel + "(" + app.currentPageNumber + "/" + app.pageCount + ")");
+                    controls.pageLabel.text(pageLabel + "(" + app.currentPageNumber + "/" + app.pageCount + ")");
                 } else {
-                    controls.pageLabel.html(pageLabel + "/" + app.pageCount);
+                    controls.pageLabel.text(pageLabel + "/" + app.pageCount);
                 }
                 controls.pageInput.val(pageLabel);
                 app.container.toggleClass("df-sidemenu-open", app.container.find(".df-sidemenu-visible").length > 0);
-                var isSearchOpen = app.provider.totalHits > 0 && app.container.find(".df-sidemenu-visible.df-search-container").length > 0;
-                app.container.toggleClass("df-search-open", isSearchOpen);
-                if (isSearchOpen) {
-                    var targetSearchresult = app.searchContainer.find(".df-search-result[data-df-page=" + app.currentPageNumber + "]");
+                this.isSearchOpen = app.provider.totalHits > 0 && app.container.find(".df-sidemenu-visible.df-search-container").length > 0;
+                app.container.toggleClass("df-search-open", this.isSearchOpen);
+                if (this.isSearchOpen) {
+                    var targetSearchresult = app.searchContainer.find(".df-search-result[data-df-page='" + app.currentPageNumber + "']");
                     app.searchContainer.find(".df-search-result.df-active").removeClass("df-active");
                     if (targetSearchresult.length > 0 && !targetSearchresult.hasClass(".df-active")) {
                         targetSearchresult.addClass("df-active");
@@ -9907,7 +11347,7 @@ var DV_Share = /*#__PURE__*/ function() {
                         var shareTemplate = options.share[shareKey];
                         if (shareTemplate !== null) {
                             dfShare[shareKey] = controls_jQuery('<div>', {
-                                class: shareButtonClass + " df-share-" + shareKey + " " + options.icons[shareKey]
+                                "class": shareButtonClass + " df-share-" + shareKey + " " + options.icons[shareKey]
                             }).on("click", function(e) {
                                 e.preventDefault();
                                 window.open(shareTemplate.replace("{{url}}", encodeURIComponent(dfShare.shareUrl)).replace("{{mailsubject}}", options.text.mailSubject), "Sharer", windowParameters);
@@ -9930,7 +11370,7 @@ var DV_Share = /*#__PURE__*/ function() {
                 });
                 dfShare.box.appendTo(dfShare.wrapper).html('<span class="df-share-title">' + options.text.share + '</span>');
                 dfShare.urlInput = controls_jQuery('<textarea name="df-share-url" class="df-share-url">').on("click", function() {
-                    controls_jQuery(this).select();
+                    this.select();
                 });
                 dfShare.box.append(dfShare.urlInput);
                 for(var shareKey in options.share)_loop(shareKey);
@@ -9940,7 +11380,7 @@ var DV_Share = /*#__PURE__*/ function() {
         {
             key: "show",
             value: function show() {
-                this.wrapper.fadeIn(300);
+                this.wrapper.show();
                 this.urlInput.val(this.shareUrl);
                 this.urlInput.trigger("click");
                 this.isOpen = true;
@@ -9961,7 +11401,7 @@ var DV_Share = /*#__PURE__*/ function() {
         {
             key: "close",
             value: function close() {
-                this.wrapper.fadeOut(300);
+                this.wrapper.hide();
                 this.isOpen = false;
             }
         },
@@ -10002,7 +11442,7 @@ var DVLightBox = /*#__PURE__*/ function() {
             value: function show(callback) {
                 if (this.lightboxWrapper.parent().length === 0) controls_jQuery("body").append(this.lightboxWrapper);
                 controls_jQuery("html,body").addClass("df-lightbox-open");
-                this.lightboxWrapper.fadeIn(this.duration);
+                this.lightboxWrapper.show();
                 if (typeof callback === "function") callback();
                 return this;
             }
@@ -10010,16 +11450,16 @@ var DVLightBox = /*#__PURE__*/ function() {
         {
             key: "close",
             value: function close(callback) {
-                this.lightboxWrapper.fadeOut(this.duration);
+                this.lightboxWrapper.hide();
                 Array.prototype.forEach.call(defaults_DEARVIEWER.utils.getSharePrefixes(), function(prefix) {
-                    if (window.location.hash.indexOf("#" + prefix) === 0) history.replaceState(undefined, undefined, "#_");
+                    if (window.location.hash.indexOf("#" + prefix) === 0 && defaults_DEARVIEWER.defaults.hashNavigationEnabled == true) history.replaceState(undefined, undefined, "#_");
                 //window.location.hash = "#_";
                 });
                 if (typeof callback === "function") setTimeout(callback, this.duration);
                 controls_jQuery("html,body").removeClass("df-lightbox-open");
                 //cleanup any classes to remove old CSS classes
                 this.element.attr("class", "df-app").attr("style", "");
-                this.lightboxWrapper.attr("class", "df-lightbox-wrapper").attr("style", "");
+                this.lightboxWrapper.attr("class", "df-lightbox-wrapper").attr("style", "display:none");
                 this.backGround.attr("style", "");
                 return this;
             }
@@ -10033,7 +11473,7 @@ var PrintHandler = /*#__PURE__*/ function() {
         controls_class_call_check(this, PrintHandler);
         //cache this
         var printHandler = this;
-        printHandler.frame = controls_jQuery('<iframe id="df-print-frame" style="display:none">').appendTo(controls_jQuery("body"));
+        printHandler.frame = controls_jQuery('<iframe id="df-print-frame" style="display:none" src="about:blank">').appendTo(controls_jQuery("body"));
         printHandler.frame.on("load", function() {
             try {
                 printHandler.frame[0].contentWindow.print();
@@ -10047,6 +11487,12 @@ var PrintHandler = /*#__PURE__*/ function() {
         {
             key: "printPDF",
             value: function printPDF(source) {
+                //bypass dearflip chrome extension
+                if (source.indexOf("?") == -1) {
+                    source += "?print=true";
+                } else {
+                    source += "&print=true";
+                }
                 this.frame[0].src = source;
             }
         }
@@ -10061,11 +11507,11 @@ var Sidemenu = /*#__PURE__*/ function() {
         this.app = appContext;
         this.parentElement = options.parentElement;
         this.element = controls_jQuery('<div>', {
-            class: "df-sidemenu-wrapper"
+            "class": "df-sidemenu-wrapper"
         });
         this.parentElement.append(this.element);
         this.buttons = controls_jQuery('<div>', {
-            class: "df-sidemenu-buttons df-ui-wrapper"
+            "class": "df-sidemenu-buttons df-ui-wrapper"
         }).appendTo(this.element);
         /*
         let icons = this.app.options.icons,
@@ -10348,7 +11794,7 @@ var ThumbList = /*#__PURE__*/ function() {
                         container: app.thumblist.container,
                         elements: app.thumblist.container.children
                     });
-                    if (controls_jQuery.inArray(visible)) visible.unshift(app.activeThumb);
+                    if (visible.indexOf(app.activeThumb) === -1) visible.unshift(app.activeThumb);
                     for(var count = 0; count < visible.length; count++){
                         var thumb1 = app.thumblist.container.children[visible[count] - 1];
                         if (thumb1 !== void 0 && thumb1.classList.contains("df-thumb-loaded") === false && thumb1.classList.contains("df-thumb-requested") === false) {
@@ -10405,18 +11851,21 @@ defaults_DEARVIEWER.openLightBox = function openLightBox(app) {
         defaults_DEARVIEWER.activeLightBox.app = controls_utils.disposeObject(defaults_DEARVIEWER.activeLightBox.app);
         if (defaults_DEARVIEWER.activeLightBox.app === null) {
             defaults_DEARVIEWER.activeLightBox.show(function() {
-                defaults_DEARVIEWER.activeLightBox.app = controls_jQuery(defaults_DEARVIEWER.activeLightBox.element).dearviewer({
+                defaults_DEARVIEWER.activeLightBox.app = new defaults_DEARVIEWER.Application({
                     transparent: false,
                     isLightBox: true,
-                    hashNavigationEnabled: true,
+                    // hashNavigationEnabled: true,
                     height: "100%",
-                    dataElement: app
+                    dataElement: app,
+                    element: defaults_DEARVIEWER.activeLightBox.element
                 });
-                history.pushState({}, null, "#");
+                if (defaults_DEARVIEWER._isHashTriggered !== true && defaults_DEARVIEWER.defaults.hashNavigationEnabled == true) {
+                    history.pushState(null, null, "#");
+                }
                 defaults_DEARVIEWER.activeLightBox.lightboxWrapper.toggleClass("df-lightbox-padded", defaults_DEARVIEWER.activeLightBox.app.options.popupFullsize === false);
                 defaults_DEARVIEWER.activeLightBox.lightboxWrapper.toggleClass("df-rtl", defaults_DEARVIEWER.activeLightBox.app.options.readDirection === defaults_DEARVIEWER.READ_DIRECTION.RTL);
                 defaults_DEARVIEWER.activeLightBox.backGround.css({
-                    "backgroundColor": defaults_DEARVIEWER.activeLightBox.app.options.backgroundColor === "transparent" ? defaults_DEARVIEWER.defaults.popupBackGroundColor : defaults_DEARVIEWER.activeLightBox.app.options.backgroundColor
+                    backgroundColor: defaults_DEARVIEWER.activeLightBox.app.options.backgroundColor === "transparent" ? defaults_DEARVIEWER.defaults.popupBackGroundColor : defaults_DEARVIEWER.activeLightBox.app.options.backgroundColor
                 });
             });
         }
@@ -10433,18 +11882,18 @@ defaults_DEARVIEWER.checkBrowserURLforDefaults = function() {
         defaults_DEARVIEWER.defaults.is3D = is3D === "true";
     }
 };
-defaults_DEARVIEWER.checkBrowserURLforPDF = function() {
-    var openFlipbook = arguments.length > 0 && arguments[0] !== void 0 ? arguments[0] : false;
-    if (controls_utils.isIEUnsupported) return;
-    var pdf = new URL(location.href).searchParams.get('pdf-source');
-    if (pdf) {
-        pdf = decodeURI(pdf);
-        if (openFlipbook) {
-            defaults_DEARVIEWER.openURL(pdf);
-        }
-    }
-    return pdf;
-};
+//Unsafe can lead to XSS vulnerability
+// DEARVIEWER.checkBrowserURLforPDF = function (openFlipbook = false) {
+//   if (utils.isIEUnsupported) return;
+//   let pdf = (new URL(location.href)).searchParams.get('pdf-source');
+//   if (pdf) {
+//     pdf = decodeURI(pdf);
+//     if (openFlipbook) {
+//       DEARVIEWER.openURL(pdf);
+//     }
+//   }
+//   return pdf;
+// };
 //Exists if there is need for open file and other lightbox present in the same page. They cannot share same settings.
 //also is needed just be a dummy elemet for lightbox dataElement
 function createFileInput() {
@@ -10562,8 +12011,8 @@ defaults_DEARVIEWER.initControls = function() {
             if (top + commentPopup.height() > containerBounds.height) top = elBounds.top - commentPopup.height() - elBounds.height - 10;
             else if (top < 10) top = 10;
             commentPopup.css({
-                "left": left,
-                "top": top
+                left: left,
+                top: top
             });
         }
     };
@@ -10611,13 +12060,6 @@ function app_create_class(Constructor, protoProps, staticProps) {
     if (protoProps) app_defineProperties(Constructor.prototype, protoProps);
     if (staticProps) app_defineProperties(Constructor, staticProps);
     return Constructor;
-}
-function app_instanceof(left, right) {
-    if (right != null && typeof Symbol !== "undefined" && right[Symbol.hasInstance]) {
-        return !!right[Symbol.hasInstance](left);
-    } else {
-        return left instanceof right;
-    }
 }
 
 
@@ -10714,11 +12156,11 @@ var App = /*#__PURE__*/ function() {
                 this.container = app_jQuery("<div>").appendTo(this.element);
                 // Q. Why are this.element and this.container defined separately?
                 // A. In IOS when fullscreen is used, then the whole this.container can be transferred to the pseudo fullscreen container that stays at the last of the DOM.
-                this.container.addClass('df-container df-loading df-init' + " df-controls-" + this.options.controlsPosition + (this.options.controlsFloating === true ? " df-float" : " df-float-off") + (this.options.backgroundColor === 'transparent' ? " df-transparent" : "") + (this.isRTL === true ? " df-rtl" : "") + (app_utils.isIOS === true || app_utils.isIPad === true ? " df-ios" : ""));
+                this.container.addClass('df-container df-loading df-init' + (this.options.controlsFloating === true ? " df-float" : " df-float-off") + " df-controls-" + this.options.controlsPosition + (this.options.backgroundColor === 'transparent' ? " df-transparent" : "") + (this.isRTL === true ? " df-rtl" : "") + (app_utils.isIOS === true || app_utils.isIPad === true ? " df-ios" : ""));
                 this._offsetParent = this.container[0].offsetParent;
                 this.backGround = app_jQuery("<div class='df-bg'>").appendTo(this.container).css({
-                    "backgroundColor": this.options.backgroundColor,
-                    "backgroundImage": this.options.backgroundImage ? "url('" + this.options.backgroundImage + "')" : ''
+                    backgroundColor: this.options.backgroundColor,
+                    backgroundImage: this.options.backgroundImage ? "url('" + this.options.backgroundImage + "')" : ''
                 });
                 this.viewerContainer = app_jQuery("<div>").appendTo(this.container);
                 this.viewerContainer.addClass('df-viewer-container');
@@ -10896,12 +12338,12 @@ var App = /*#__PURE__*/ function() {
    */ key: "initInfo",
             value: function initInfo() {
                 this.info = app_jQuery('<div>', {
-                    class: 'df-loading-info'
+                    "class": 'df-loading-info'
                 });
                 this.container.append(this.info);
                 this.info.html(this.options.text.loading + "...");
                 this.loadingIcon = app_jQuery('<div>', {
-                    class: 'df-loading-icon'
+                    "class": 'df-loading-icon'
                 }).appendTo(this.container);
             }
         },
@@ -11043,7 +12485,7 @@ var App = /*#__PURE__*/ function() {
                 app.searchButton = app_jQuery('<div class="df-ui-btn df-search-btn df-icon-search">').on("click", function(event) {
                     app.search();
                 }).appendTo(app.searchForm);
-                app.clearButton = app_jQuery('<a class="df-search-clear">Clear</a>').on("click", function(event) {
+                app.clearButton = app_jQuery('<a class="df-search-clear">' + this.options.text.searchClear + '</a>').on("click", function(event) {
                     app.clearSearch();
                 }).appendTo(app.searchForm);
                 app.searchInfo = app_jQuery('<div class="df-search-info">').appendTo(searchContainer);
@@ -11138,7 +12580,7 @@ var App = /*#__PURE__*/ function() {
                     app.refreshRequestStatus = app_REQUEST_STATUS.OFF;
                     app.pendingResize = false;
                     app.viewer.refresh();
-                    this.container.removeClass("df-pendingresize");
+                    app.container.removeClass("df-pendingresize");
                 } else if (app.refreshRequestStatus === app_REQUEST_STATUS.COUNT) {
                     app.refreshRequestCount++;
                     if (app.refreshRequestCount > 3) {
@@ -11182,13 +12624,17 @@ var App = /*#__PURE__*/ function() {
                                 textureSize = viewer.getTextureSize({
                                     pageNumber: pageNumber
                                 });
+                                var param = {
+                                    pageNumber: pageNumber,
+                                    textureTarget: zoomView ? defaults_DEARVIEWER.TEXTURE_TARGET.ZOOM : defaults_DEARVIEWER.TEXTURE_TARGET.VIEWER
+                                };
                                 if (page.changeTexture(pageNumber, Math.floor(textureSize.height))) {
-                                    provider.processPage({
-                                        pageNumber: pageNumber,
-                                        textureTarget: zoomView ? defaults_DEARVIEWER.TEXTURE_TARGET.ZOOM : defaults_DEARVIEWER.TEXTURE_TARGET.VIEWER
-                                    });
+                                    provider.processPage(param);
                                     requestCount++;
                                     app.viewer.getAnnotationElement(pageNumber, true);
+                                }
+                                if (app.options.progressiveZoom === true && app.zoomValue > viewer.pureMaxZoom * 1.1) {
+                                    app.viewer.zoomViewer.startZoomUpdateRequest();
                                 }
                             }
                             if (requestCount > 0) break;
@@ -11200,6 +12646,7 @@ var App = /*#__PURE__*/ function() {
                 } else {
                     app.textureRequestStatus = app_REQUEST_STATUS.ON;
                 }
+                return requestCount;
             }
         },
         {
@@ -11576,7 +13023,7 @@ var App = /*#__PURE__*/ function() {
 }();
 defaults_DEARVIEWER.prepareOptions = function(options) {
     //convert the element to jQuery Element
-    if (!app_instanceof(options.element, app_jQuery)) options.element = app_jQuery(options.element);
+    if (!(options.element instanceof app_jQuery)) options.element = app_jQuery(options.element);
     var element = options.element;
     /**
    * @type {jQuery|HTMLElement} - is useful when lightbox is displayed in one location but the options are pulled from another button or thumb element. Used by internal lightbox. No external use.
@@ -11598,7 +13045,7 @@ defaults_DEARVIEWER.prepareOptions = function(options) {
     }
     if (typeof defaults_DEARVIEWER.viewers[opts.viewerType] !== "function") {
         console.warn("Invalid Viewer Type! " + opts.viewerType + " | Using default Viewer!");
-        opts.viewerType = defaults_DEARVIEWER.viewers.default;
+        opts.viewerType = defaults_DEARVIEWER.viewers["default"];
     } else {
         opts.viewerType = defaults_DEARVIEWER.viewers[opts.viewerType];
     }
@@ -11614,31 +13061,26 @@ defaults_DEARVIEWER.Application = function(options) {
     }
     return app;
 };
-//region jQuery Extension and Triggers
-//jQuery Extension
-app_jQuery.fn.extend({
-    dearviewer_options: function dearviewer_options(options) {
-        if (options == null) options = {};
-        options.element = app_jQuery(this);
-        return new defaults_DEARVIEWER.prepareOptions(options);
-    },
-    dearviewer: function dearviewer(options) {
-        if (options == null) options = {};
-        options.element = app_jQuery(this);
-        return new defaults_DEARVIEWER.Application(options);
-    }
-});
+if (window.jQuery !== void 0 && defaults_DEARVIEWER.fakejQuery == false) {
+    //region jQuery Extension and Triggers
+    //jQuery Extension
+    app_jQuery.fn.extend({
+        dearviewer_options: function dearviewer_options(options) {
+            if (options == null) options = {};
+            options.element = app_jQuery(this);
+            return new defaults_DEARVIEWER.prepareOptions(options);
+        },
+        dearviewer: function dearviewer(options) {
+            if (options == null) options = {};
+            options.element = app_jQuery(this);
+            return new defaults_DEARVIEWER.Application(options);
+        }
+    });
+}
 
 
 ;// CONCATENATED MODULE: ./src/js/dflip.js
-/* globals jQuery, pdfjsLib, THREE */ function dflip_instanceof(left, right) {
-    if (right != null && typeof Symbol !== "undefined" && right[Symbol.hasInstance]) {
-        return !!right[Symbol.hasInstance](left);
-    } else {
-        return left instanceof right;
-    }
-}
-
+/* globals jQuery, pdfjsLib, THREE */ 
 
 
 
@@ -11706,7 +13148,7 @@ dflip_DEARFLIP.parseBooks = function() {
     dflip_DEARFLIP.parseElements();
 };
 var updateOptions = function updateOptions(options) {
-    if (options.source != null && (Array === options.source.constructor || Array.isArray(options.source) || dflip_instanceof(options.source, Array))) {
+    if (options.source != null && (Array === options.source.constructor || Array.isArray(options.source) || options.source instanceof Array)) {
         options.providerType = "image";
     }
     //Replaced with cover3DType
@@ -11841,7 +13283,8 @@ dflip_jQuery(document).ready(function() {
     dflip_DEARFLIP.parseFallBack();
     utils.detectHash();
     dflip_DEARFLIP.parseNormalElements();
-    dflip_DEARFLIP.checkBrowserURLforPDF(true);
+    //Unsafe can lead to XSS vulnerability
+    // DEARFLIP.checkBrowserURLforPDF(true);
     dflip_DEARFLIP.executeCallback("afterDearFlipInit");
 });
 utils.finalizeOptions = function(options) {

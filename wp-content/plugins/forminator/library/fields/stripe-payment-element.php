@@ -101,17 +101,17 @@ class Forminator_Stripe_Payment_Element extends Forminator_Field {
 		}
 
 		return array(
-			'field_label'         => esc_html__( 'Credit / Debit Card', 'forminator' ),
-			'mode'                => 'test',
-			'currency'            => $default_currency,
-			'company_name'        => '',
-			'product_description' => '',
-			'customer_email'      => '',
-			'receipt'             => '',
-			'billing'             => '',
-			'language'            => 'auto',
-			'options'             => array(),
-			'payments'            => array(
+			'field_label'               => esc_html__( 'Credit / Debit Card', 'forminator' ),
+			'mode'                      => 'test',
+			'currency'                  => $default_currency,
+			'company_name'              => '',
+			'product_description'       => '',
+			'customer_email'            => '',
+			'receipt'                   => '',
+			'billing'                   => '',
+			'language'                  => 'auto',
+			'options'                   => array(),
+			'payments'                  => array(
 				array(
 					'plan_name'                => esc_html__( 'Plan 1', 'forminator' ),
 					'payment_method'           => 'single',
@@ -123,10 +123,11 @@ class Forminator_Stripe_Payment_Element extends Forminator_Field {
 					'bill_input'               => '1',
 				),
 			),
-			'primary_color'       => '#0570DE',
-			'background_color'    => '#FFFFFF',
-			'text_color'          => '#30313D',
-			'error'               => '#DF1B41',
+			'primary_color'             => '#0570DE',
+			'background_color'          => '#FFFFFF',
+			'text_color'                => '#30313D',
+			'error'                     => '#DF1B41',
+			'automatic_payment_methods' => 'true',
 		);
 	}
 

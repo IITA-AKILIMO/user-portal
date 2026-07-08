@@ -1,8 +1,8 @@
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
-/***/ 659:
-/***/ ((module) => {
+/***/ 659
+(module) {
 
 var l10n = wp.media.view.l10n,
 	EditAttachmentMetadata;
@@ -34,10 +34,10 @@ EditAttachmentMetadata = wp.media.controller.State.extend(/** @lends wp.media.co
 module.exports = EditAttachmentMetadata;
 
 
-/***/ }),
+/***/ },
 
-/***/ 2429:
-/***/ ((module) => {
+/***/ 2429
+(module) {
 
 /**
  * wp.media.view.MediaFrame.Manage.Router
@@ -108,10 +108,10 @@ var Router = Backbone.Router.extend(/** @lends wp.media.view.MediaFrame.Manage.R
 module.exports = Router;
 
 
-/***/ }),
+/***/ },
 
-/***/ 1312:
-/***/ ((module) => {
+/***/ 1312
+(module) {
 
 var Details = wp.media.view.Attachment.Details,
 	TwoColumn;
@@ -157,10 +157,10 @@ TwoColumn = Details.extend(/** @lends wp.media.view.Attachment.Details.TwoColumn
 module.exports = TwoColumn;
 
 
-/***/ }),
+/***/ },
 
-/***/ 5806:
-/***/ ((module) => {
+/***/ 5806
+(module) {
 
 var Button = wp.media.view.Button,
 	DeleteSelected = wp.media.view.DeleteSelectedButton,
@@ -211,10 +211,10 @@ DeleteSelectedPermanently = DeleteSelected.extend(/** @lends wp.media.view.Delet
 module.exports = DeleteSelectedPermanently;
 
 
-/***/ }),
+/***/ },
 
-/***/ 6606:
-/***/ ((module) => {
+/***/ 6606
+(module) {
 
 var Button = wp.media.view.Button,
 	l10n = wp.media.view.l10n,
@@ -272,10 +272,10 @@ DeleteSelected = Button.extend(/** @lends wp.media.view.DeleteSelectedButton.pro
 module.exports = DeleteSelected;
 
 
-/***/ }),
+/***/ },
 
-/***/ 682:
-/***/ ((module) => {
+/***/ 682
+(module) {
 
 
 var Button = wp.media.view.Button,
@@ -356,10 +356,10 @@ SelectModeToggle = Button.extend(/** @lends wp.media.view.SelectModeToggle.proto
 module.exports = SelectModeToggle;
 
 
-/***/ }),
+/***/ },
 
-/***/ 8521:
-/***/ ((module) => {
+/***/ 8521
+(module) {
 
 var View = wp.media.View,
 	EditImage = wp.media.view.EditImage,
@@ -398,10 +398,10 @@ Details = EditImage.extend(/** @lends wp.media.view.EditImage.Details.prototype 
 module.exports = Details;
 
 
-/***/ }),
+/***/ },
 
-/***/ 1003:
-/***/ ((module) => {
+/***/ 1003
+(module) {
 
 var Frame = wp.media.view.Frame,
 	MediaFrame = wp.media.view.MediaFrame,
@@ -660,6 +660,11 @@ EditAttachments = MediaFrame.extend(/** @lends wp.media.view.MediaFrame.EditAtta
 			return;
 		}
 
+		// Return if Ctrl + Shift or Shift key pressed
+		if ( event.shiftKey || ( event.ctrlKey && event.shiftKey ) ) {
+			return;
+		}
+
 		// The right arrow key.
 		if ( 39 === event.keyCode ) {
 			this.nextMediaItem();
@@ -680,10 +685,10 @@ EditAttachments = MediaFrame.extend(/** @lends wp.media.view.MediaFrame.EditAtta
 module.exports = EditAttachments;
 
 
-/***/ }),
+/***/ },
 
-/***/ 8359:
-/***/ ((module) => {
+/***/ 8359
+(module) {
 
 var MediaFrame = wp.media.view.MediaFrame,
 	Library = wp.media.controller.Library,
@@ -974,7 +979,7 @@ Manage = MediaFrame.extend(/** @lends wp.media.view.MediaFrame.Manage.prototype 
 module.exports = Manage;
 
 
-/***/ })
+/***/ }
 
 /******/ 	});
 /************************************************************************/
@@ -1003,9 +1008,6 @@ module.exports = Manage;
 /******/ 	}
 /******/ 	
 /************************************************************************/
-var __webpack_exports__ = {};
-// This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
-(() => {
 /**
  * @output wp-includes/js/media-grid.js
  */
@@ -1021,8 +1023,6 @@ media.view.MediaFrame.EditAttachments = __webpack_require__( 1003 );
 media.view.SelectModeToggleButton = __webpack_require__( 682 );
 media.view.DeleteSelectedButton = __webpack_require__( 6606 );
 media.view.DeleteSelectedPermanentlyButton = __webpack_require__( 5806 );
-
-})();
 
 /******/ })()
 ;

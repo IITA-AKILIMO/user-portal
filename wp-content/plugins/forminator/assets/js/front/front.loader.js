@@ -22,6 +22,8 @@
 		    id: '',
 		    render_id: '',
 		    is_preview: '',
+		    instant_preview: '',
+			is_block_editor: '',
 		    preview_data: [],
 			 nonce: false,
 		    last_submit_data: {},
@@ -52,23 +54,31 @@
 	// Avoid Plugin.prototype conflicts
 	$.extend(ForminatorLoader.prototype, {
 		init: function () {
-			var param = (decodeURI(document.location.search)).replace(/(^\?)/, '').split("&").map(function (n) {
-				return n = n.split("="), this[n[0]] = n[1], this
+			const param = (decodeURI(document.location.search)).replace(/(^\?)/, '').split("&").map(function (n) {
+				return n = n.split("="), this[n[0].replace(/[.]/g, '_')] = n[1], this
 			}.bind({}))[0];
+			var saved_render_id = param.render_id;
 
 			param.action           = this.settings.action;
 			param.type             = this.settings.type;
 			param.id               = this.settings.id;
 			param.render_id        = this.settings.render_id;
 			param.is_preview       = this.settings.is_preview;
+			param.instant_preview  = this.settings.instant_preview;
 			param.preview_data     = JSON.stringify(this.settings.preview_data);
 			param.last_submit_data = this.settings.last_submit_data;
 			param.extra            = this.settings.extra;
 			param.nonce				  = this.settings.nonce;
 
+			if ( 'undefined' !== typeof saved_render_id ) {
+				param.saved_render_id = saved_render_id;
+			}
 			if ( 'undefined' !== typeof this.settings.has_lead ) {
 				param.has_lead         = this.settings.has_lead;
 				param.leads_id         = this.settings.leads_id;
+			}
+			if ( 'undefined' !== typeof this.settings.is_block_editor ) {
+				param.is_block_editor  = this.settings.is_block_editor;
 			}
 
 			this.load_ajax(param);
@@ -120,7 +130,8 @@
 
 								self.leadFrontOptions = response.lead_options || null;
 
-								if (typeof window.Forminator_Cform_Paginations === "undefined" && self.leadFrontOptions.pagination_config) {
+								if ( ( typeof window.Forminator_Cform_Paginations === "undefined" || typeof window.Forminator_Cform_Paginations[param.leads_id] === "undefined" )
+									&& self.leadFrontOptions.pagination_config ) {
 									window.Forminator_Cform_Paginations           = window.Forminator_Cform_Paginations || [];
 									window.Forminator_Cform_Paginations[param.leads_id] = self.leadFrontOptions.pagination_config;
 								}
@@ -170,10 +181,17 @@
 			    message         = '',
 			    wrapper_message = null;
 
-			wrapper_message = $(html).find('.forminator-response-message');
-			if (wrapper_message.length) {
+			// Try to find message in current DOM, if not found, try to find in new HTML
+			wrapper_message = this.$el.find('.forminator-response-message');
+			if (wrapper_message.length && $.trim(wrapper_message.text()) !== '') {
 				message = wrapper_message.get(0).outerHTML;
+			} else {
+				wrapper_message = $(html).find('.forminator-response-message');
+				if (wrapper_message.length && $.trim(wrapper_message.text()) !== '') {
+					message = wrapper_message.get(0).outerHTML;
+				}
 			}
+
 			wrapper_message = this.$el.find('.forminator-poll-response-message');
 			if (wrapper_message.length) {
 				message = wrapper_message.get(0).outerHTML;
@@ -190,6 +208,9 @@
 			// Show form only after initialized ForminatorFront to avoid showing hidden fields.
 			let $element = $('#forminator-module-' + id + '[data-forminator-render=' + render_id + ']');
 			$element.hide();
+			if ( ! this.$el.parent().has( '#forminator-instant-preview' ) ) {
+				$element.hide();
+			}
 
 			if (message) {
 				$('#forminator-module-' + id + '[data-forminator-render=' + render_id + '] .forminator-response-message')
@@ -200,8 +221,8 @@
 
 			//response.style
 			if (style) {
-				if ($('style#forminator-module-' + id).length) {
-					$('style#forminator-module-' + id).remove();
+				if ($('style#forminator-module-styles-' + id).length) {
+					$('style#forminator-module-styles-' + id).remove();
 				}
 				$('body').append(style);
 			}
@@ -291,7 +312,26 @@
 
 			// Check if script is already loaded or not.
 			if ( 0 === $( 'script[src="' + script.src + '"]' ).length ) {
-				body.appendChild(script);
+				if( window.parent !== window && script_props.src.includes( "paypal.com" ) ) {
+					// Handle the case when PayPal is loaded in an iframe (e.g., in the theme editor).
+					var parentScript = window.parent.document.createElement('script');
+						parentScript.type = 'text/javascript';
+						parentScript.src = script_props.src;
+						parentScript.async = script_props.async;
+						parentScript.defer = true;
+						parentScript.onload = function () {
+							self.script_on_load();
+						};
+
+						// Check if script is already loaded in the parent document.
+						if ( 0 === $(window.parent.document).find('script[src="' + parentScript.src + '"]').length ) {
+							window.parent.document.body.appendChild(parentScript);
+						} else {
+							self.script_on_load();
+						}
+				} else {
+					body.appendChild(script);
+				}
 			} else {
 				self.script_on_load();
 			}
@@ -315,10 +355,18 @@
 			var render_id        = this.settings.render_id;
 			var options          = this.frontOptions || null;
 			var lead_options     = this.leadFrontOptions || null;
+			var $module          = $( '#forminator-module-' + id + '[data-forminator-render="' + render_id + '"]' );
+
+			// Ensures SUI Select2 dropdownParent behaves correctly within modal context.
+			if ( this.settings.is_preview ) {
+				var $dialog = $module.closest( '.sui-box' );
+				if ( $dialog.length ) {
+					$dialog.addClass( 'sui-dialog-content' );
+				}
+			}
 
 			if (options) {
-				$('#forminator-module-' + id + '[data-forminator-render="' + render_id + '"]')
-					.forminatorFront(options);
+				$module.forminatorFront(options);
 			}
 			if ( 'undefined' !== typeof this.settings.has_lead && lead_options) {
 				var leads_id = this.settings.leads_id;
@@ -357,7 +405,16 @@
 					if ( 0 !== $form.length ) {
 						self.frontInitCalled = false;
 						self.init_front();
-						forminator_render_hcaptcha();
+						var captchaRenderers = [
+							forminator_render_captcha,
+							forminator_render_hcaptcha,
+							forminator_render_turnstile
+						];
+						for ( var i = 0; i < captchaRenderers.length; i++ ) {
+							if ( 'function' === typeof captchaRenderers[ i ] ) {
+								captchaRenderers[ i ]();
+							}
+						}
 					}
 				});
 			}

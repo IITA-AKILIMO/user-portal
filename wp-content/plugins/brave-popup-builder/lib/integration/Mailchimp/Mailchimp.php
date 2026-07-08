@@ -119,39 +119,41 @@ if ( ! class_exists( 'BravePop_Mailchimp' ) ) {
          );
 
          // https://mailchimp.com/developer/api/marketing/list-members/add-member-to-list/
-         $response = wp_remote_post( 'https://' . $this->dc . '.api.mailchimp.com/3.0/lists/' . $list_id . '/members/' . md5(strtolower($email)), $args );
-         
-
+         $response = wp_remote_post( 'https://' . $this->dc . '.api.mailchimp.com/3.0/lists/' . $list_id . '/members/' . md5(strtolower($email)), $args );         
          $body = wp_remote_retrieve_body( $response );
          $data = json_decode( $body );
-         //error_log('######## MC Result: '.wp_json_encode($response));
-         $addedResult = new stdClass();
-         if($data && isset($data->id)){
-               if(isset($contact['tags']) && is_array($contact['tags']) && count($contact['tags']) > 0){
-                  //Update Tags If user already Exist
-                  //https://mailchimp.com/developer/marketing/guides/organize-contacts-with-tags/
-                  $tagsFinal = array();
-                  foreach ($contact['tags'] as $key => $tag) {   $tagsFinal[] = array('name'=> $tag, 'status'=>'active'); }
-                  $tagargs = array( 
-                     'method' => 'POST', 'timeout' => 30, 'headers' => array( 'Authorization' => 'Basic ' . base64_encode( 'user:'. $this->api_key ) ),
-                     'body' => wp_json_encode(array('tags'=> $tagsFinal))
-                  );
-                  $tagsResponse = wp_remote_post( 'https://' . $this->dc . '.api.mailchimp.com/3.0/lists/' . $list_id . '/members/' . md5(strtolower($email)).'/tags', $tagargs );
-               }
+         // error_log('######## MC Result: '.wp_json_encode($response));
 
-               $addedData = array(
-                  'action'=> isset($userData['action']) ? $userData['action'] : 'visitor_added',  
-                  'user_id'=> isset($userData['userData']['ID']) ? $userData['userData']['ID'] : false,
-                  'user_mail'=> $email, 'esp_user_id'=> $data->id
-               ); 
-               do_action( 'bravepop_addded_to_list', 'mailchimp', $addedData );
+         if(!is_wp_error($response) && $data && isset($data->id)){
+            if(isset($contact['tags']) && is_array($contact['tags']) && count($contact['tags']) > 0){
+               //Update Tags If user already Exist
+               //https://mailchimp.com/developer/marketing/guides/organize-contacts-with-tags/
+               $tagsFinal = array();
+               foreach ($contact['tags'] as $key => $tag) {   $tagsFinal[] = array('name'=> $tag, 'status'=>'active'); }
+               $tagargs = array( 
+                  'method' => 'POST', 'timeout' => 30, 'headers' => array( 'Authorization' => 'Basic ' . base64_encode( 'user:'. $this->api_key ) ),
+                  'body' => wp_json_encode(array('tags'=> $tagsFinal))
+               );
+               $tagsResponse = wp_remote_post( 'https://' . $this->dc . '.api.mailchimp.com/3.0/lists/' . $list_id . '/members/' . md5(strtolower($email)).'/tags', $tagargs );
+            }
 
-            return true; 
-            $addedResult->status = true;
+            $addedData = array(
+               'action'=> isset($userData['action']) ? $userData['action'] : 'visitor_added',  
+               'user_id'=> isset($userData['userData']['ID']) ? $userData['userData']['ID'] : false,
+               'esp_user_id'=> $data->id,
+               'user_mail'=> $email,
+               'user_data'=> $contact,
+               'list_id' => $list_id,
+               'response' => $response,
+            );
+
+            do_action( 'bravepop_added_to_list', 'mailchimp', $addedData );
+            return array( 'success' => true, 'result' => $addedData );
          }else{
-            $addedResult->status = false;
-            $addedResult->error = isset($data->detail) ? $data->detail : '';
-            return false;
+            $errorMsg = isset($data->detail) ? $data->detail : 'Unknown Error Occurred. No Error details provided by Mailchimp.';
+            $errorPayload = array( 'user_mail'=> $email, 'user_data'=> $contact, 'list_id'=> $list_id, 'error' => $errorMsg, 'response'=> $response );
+            do_action( 'bravepop_added_to_list_failed', 'mailchimp', $errorPayload );
+            return array( 'success' => false, 'errorMsg' => $errorMsg, 'result' => $errorPayload );
          }
       }
 

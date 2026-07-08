@@ -125,6 +125,16 @@ class Ays_Pb {
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-ays-pb-i18n.php';
 
 		/**
+         * The class responsible for showing Popup Box Welcome page.
+         */
+        require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-ays-pb-ays-welcome.php';
+
+        /**
+         * The class responsible for showing Popup Box Feedback popup.
+         */
+        require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-ays-pb-feedback.php';
+
+		/**
 		 * The class responsible for defining all actions that occur in the admin area.
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-ays-pb-admin.php';
@@ -194,9 +204,13 @@ class Ays_Pb {
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'disable_scripts', 100 );
-
+		$this->loader->add_filter( 'admin_body_class', $plugin_admin, 'ays_pb_add_body_class' );
+		
         // Add menu item
         $this->loader->add_action( 'admin_menu', $plugin_admin, 'add_plugin_admin_menu' );
+
+        // Add Popup dashboard
+        $this->loader->add_action( 'admin_menu', $plugin_admin, 'add_plugin_admin_dashboard_menu', 10 );
 
 		// Add Popups submenu
         $this->loader->add_action( 'admin_menu', $plugin_admin, 'add_plugin_popups_submenu', 75 );
@@ -247,9 +261,10 @@ class Ays_Pb {
 
 		// Add plugin footer
         $this->loader->add_action( 'in_admin_footer', $plugin_admin, 'popup_box_admin_footer', 1 );
+        // $this->loader->add_action( 'in_admin_footer', $plugin_admin, 'ays_pb_black_friady_popup_box', 10 );
 
 		// Sale banner
-		$this->loader->add_action( 'admin_notices', $data_admin, 'ays_pb_sale_baner', 1 );
+		$this->loader->add_action( 'admin_notices', $data_admin, 'ays_pb_sale_baner', 10 );
 
 		// Sale banner dismiss button
 		$this->loader->add_action( 'wp_ajax_ays_pb_dismiss_button', $plugin_admin, 'ays_pb_dismiss_button' );
@@ -270,7 +285,20 @@ class Ays_Pb {
 		// Our Products | Activate plugin
         $this->loader->add_action( 'wp_ajax_ays_pb_activate_plugin', $plugin_admin, 'ays_pb_activate_plugin' );
         $this->loader->add_action( 'wp_ajax_nopriv_ays_pb_activate_plugin', $plugin_admin, 'ays_pb_activate_plugin' );
-    }
+
+		// AJAX handler for changing popupbox status in list table
+		$this->loader->add_action( 'wp_ajax_ays_pb_change_status', $plugin_admin, 'ays_pb_change_status' );
+		$this->loader->add_action( 'wp_ajax_nopriv_ays_pb_change_status', $plugin_admin, 'ays_pb_change_status' );
+		
+		// Dencque third-party scripts and styles
+		// $this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'maybe_dequeue_third_party_assets');
+		// $this->loader->add_action('wp_footer', $plugin_admin, 'end_buffer', 999);
+		// $this->loader->add_action('admin_footer', $plugin_admin, 'end_buffer', 999);
+
+		$this->loader->add_action('current_screen', $plugin_admin, 'ays_pb_disable_all_notice_from_plugin', 200, 1);
+
+
+	}
 
 	/**
 	 * Register all of the hooks related to the integrations functionality
@@ -344,6 +372,14 @@ class Ays_Pb {
 			// MailerLite integration / popup page
 			$this->loader->add_filter( 'ays_pb_popup_page_integrations_contents', $plugin_integrations, 'ays_popup_page_mailerLite_content', 120, 2 );
 		// ===== MailerLite integration ====
+
+		// ===== reCAPTCHA integration ====
+			// reCAPTCHA integration / settings page
+			$this->loader->add_filter( 'ays_pb_settings_page_integrations_contents', $plugin_integrations, 'ays_settings_page_recaptcha_content', 125, 2 );
+
+			// reCAPTCHA integration / popup page
+			$this->loader->add_filter( 'ays_pb_popup_page_integrations_contents', $plugin_integrations, 'ays_popup_page_recaptcha_content', 125, 2 );
+		// ===== reCAPTCHA integration ====
 	}
 
 	/**

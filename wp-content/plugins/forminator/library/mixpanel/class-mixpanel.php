@@ -59,7 +59,7 @@ class Forminator_Mixpanel {
 			$extra_options  = array(
 				'consumer' => 'socket',
 			);
-			$this->mixpanel = new WPMUDEV_Analytics( 'forminator', 'Forminator', 55, self::TOKEN, $extra_options );
+			$this->mixpanel = new WPMUDEV_Analytics_V4( 'forminator', 'Forminator', 55, self::TOKEN, $extra_options );
 
 			// Configure mixpanel.
 			$this->mixpanel->identify( $this->identity() );
@@ -81,6 +81,9 @@ class Forminator_Mixpanel {
 		include_once $this->mixpanel_dir() . 'class-general.php';
 		include_once $this->mixpanel_dir() . 'class-modules.php';
 		include_once $this->mixpanel_dir() . 'class-notifications.php';
+		include_once $this->mixpanel_dir() . 'class-feedback.php';
+		include_once $this->mixpanel_dir() . 'class-deactivation-survey.php';
+		include_once $this->mixpanel_dir() . 'class-hub-deactivation-survey.php';
 	}
 
 	/**
@@ -93,6 +96,9 @@ class Forminator_Mixpanel {
 		Forminator_Mixpanel_General::init();
 		Forminator_Mixpanel_Modules::init();
 		Forminator_Mixpanel_Notifications::init();
+		Forminator_Mixpanel_Feedback::init();
+		Forminator_Mixpanel_Deactivation_Survey::init();
+		Forminator_Mixpanel_Hub_Deactivation_Survey::init();
 	}
 
 	/**
@@ -136,7 +142,7 @@ class Forminator_Mixpanel {
 			'mysql_version'      => $wpdb->get_var( 'SELECT VERSION()' ), // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 			'php_version'        => phpversion(),
 			'plugin'             => 'Forminator',
-			'plugin_type'        => FORMINATOR_PRO ? 'Pro' : 'Free',
+			'plugin_type'        => 'Free',
 			'plugin_version'     => FORMINATOR_VERSION,
 			'server_type'        => $this->get_server_type(),
 			'device'             => $this->get_device(),
@@ -253,12 +259,15 @@ class Forminator_Mixpanel {
 
 		$plugins = array(
 			'wpforms-lite/wpforms.php'             => 'WP Forms',
+			'wpforms/wpforms.php'                  => 'WP Forms Pro',
 			'ninja-forms/ninja-forms.php'          => 'Ninja Forms',
 			'gravityforms/gravityforms.php'        => 'Gravity Forms',
 			'contact-form-7/wp-contact-form-7.php' => 'Contact Form 7',
 			'formidable/formidable.php'            => 'Formidable Forms',
-			'everest-forms/everest-forms.php'      => 'Formidable Forms',
+			'everest-forms/everest-forms.php'      => 'Everest Forms',
 			'fluentform/fluentform.php'            => 'Fluent Forms (Contact Form Plugin)',
+			'metform/metform.php'                  => 'MetForm',
+			'sureforms/sureforms.php'              => 'SureForms',
 		);
 
 		foreach ( $plugins as $plugin => $name ) {

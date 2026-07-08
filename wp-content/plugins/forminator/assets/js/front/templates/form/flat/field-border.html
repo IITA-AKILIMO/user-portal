@@ -3,9 +3,20 @@
 	#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-input,
 	#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> div.StripeElement:not(.forminator-stripe-payment-element),
 	#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-select2 + .forminator-select .selection .select2-selection--single[role="combobox"],
-	#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-textarea {
+	#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-textarea,
+	.forminator-ui#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-select2 + .forminator-select .selection .select2-selection--multiple[role="combobox"],
+	.forminator-select.forminator-select-dropdown-container--open .forminator-custom-form-<?php echo $properties['form_id'] ?>.forminator-select-dropdown.forminator-dropdown--<?php echo $theme; ?> .select2-search input {
 		<?php if ( forminator_array_value_exists( $properties, 'field-border-radius' ) && !empty( $properties['field-border-radius'] ) ) { ?>
 			border-radius: <?php echo $properties['field-border-radius'] ?>px;
+		<?php } ?>
+	}
+
+	.forminator-ui#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-multiselect,
+	.forminator-select.forminator-select-dropdown-container--open .forminator-custom-form-<?php echo $properties['form_id'] ?>.forminator-select-dropdown.forminator-dropdown--<?php echo $theme; ?>{
+		<?php if ( forminator_array_value_exists( $properties, 'field-border-radius' ) && !empty( $properties['field-border-radius'] ) ) { ?>
+			border-radius: <?php echo $properties['field-border-radius'] ?>px;
+			overflow: hidden;
+			padding: max(4px, <?php echo ( $properties['field-border-radius'] * 0.5 ) ?>px);
 		<?php } ?>
 	}
 

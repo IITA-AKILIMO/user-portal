@@ -46,10 +46,33 @@ class Forminator_Entries_Page extends Forminator_Admin_Page {
 	 * @since 1.0.5
 	 */
 	public function populate_screen_params() {
+		$form_type           = Forminator_Core::sanitize_text_field( 'form_type' );
 		$this->screen_params = array(
-			'form_type' => Forminator_Core::sanitize_text_field( 'form_type', 'forminator_forms' ),
+			'form_type' => $form_type ? $form_type : get_option( 'forminator_submissions_form_type', 'forminator_forms' ),
 			'form_id'   => Forminator_Core::sanitize_text_field( 'form_id', 0 ),
 		);
+
+		if ( empty( $this->screen_params['form_id'] ) ) {
+			$forms    = self::get_entries_forms( $this->screen_params['form_type'] );
+			$saved_id = (int) get_option( 'forminator_submissions_form_id' );
+			$form_id  = in_array( $saved_id, array_map( 'intval', wp_list_pluck( $forms, 'id' ) ), true ) ? $saved_id : 0;
+
+			if ( ! $form_id && 1 === count( $forms ) ) {
+				$form_id = (int) reset( $forms )->id;
+			}
+
+			if ( $form_id ) {
+				$url = add_query_arg(
+					array(
+						'form_type' => $this->screen_params['form_type'],
+						'form_id'   => $form_id,
+					)
+				);
+				if ( wp_safe_redirect( $url ) ) {
+					exit;
+				}
+			}
+		}
 	}
 
 	/**
@@ -129,14 +152,41 @@ class Forminator_Entries_Page extends Forminator_Admin_Page {
 	}
 
 	/**
+	 * Get available forms for given type.
+	 *
+	 * @since 1.52.0
+	 *
+	 * @param string $form_type Form type.
+	 *
+	 * @return array
+	 */
+	public static function get_entries_forms( $form_type ) {
+		$method = 'get_forms';
+		$model  = 'Forminator_Form_Model';
+
+		if ( Forminator_Poll_Model::model()->get_post_type() === $form_type ) {
+			$method = 'get_polls';
+			$model  = 'Forminator_Poll_Model';
+		} elseif ( Forminator_Quiz_Model::model()->get_post_type() === $form_type ) {
+			$method = 'get_quizzes';
+			$model  = 'Forminator_Quiz_Model';
+		}
+
+		$forms = Forminator_API::$method( null, 1, 999, $model::STATUS_PUBLISH );
+
+		return apply_filters( 'forminator_entries_get_forms', $forms, $form_type );
+	}
+
+	/**
 	 *  Render Form switcher / select based on current form_type
 	 *
 	 * @param string $form_type Form type.
 	 * @param int    $form_id Form Id.
+	 * @param array  $forms Forms list to render.
 	 *
 	 * @since 1.0.5
 	 */
-	public static function render_form_switcher( $form_type = 'forminator_forms', $form_id = 0 ) {
+	public static function render_form_switcher( $form_type = 'forminator_forms', $form_id = 0, $forms = array() ) {
 		$classes = 'sui-select';
 		// Using this method for Create Appearance Preset.
 		if ( 0 !== $form_id ) {
@@ -144,24 +194,17 @@ class Forminator_Entries_Page extends Forminator_Admin_Page {
 		}
 
 		$empty_option = esc_html__( 'Choose Form', 'forminator' );
-		$method       = 'get_forms';
-		$model        = 'Forminator_Form_Model';
 
 		if ( Forminator_Poll_Model::model()->get_post_type() === $form_type ) {
 			$empty_option = esc_html__( 'Choose Poll', 'forminator' );
-			$method       = 'get_polls';
-			$model        = 'Forminator_Poll_Model';
 		} elseif ( Forminator_Quiz_Model::model()->get_post_type() === $form_type ) {
 			$empty_option = esc_html__( 'Choose Quiz', 'forminator' );
-			$method       = 'get_quizzes';
-			$model        = 'Forminator_Quiz_Model';
 		}
 
 		echo '<select name="form_id" data-allow-search="1" data-minimum-results-for-search="0" class="' . esc_attr( $classes ) . '" data-search="true" data-search="true" data-placeholder="' . esc_attr( $empty_option ) . '">';
 		echo '<option><option>';
 
-		$forms = Forminator_API::$method( null, 1, 999, $model::STATUS_PUBLISH );
-		$forms = apply_filters( 'forminator_entries_get_forms', $forms, $form_type );
+		$forms = empty( $forms ) ? self::get_entries_forms( $form_type ) : $forms;
 
 		foreach ( $forms as $form ) {
 			/**

@@ -106,6 +106,8 @@ class Forminator_Integrations_Page extends Forminator_Admin_Page {
 	 * @since 1.2
 	 */
 	public function render_header() {
+		$this->show_playground_notice();
+
 		if ( ! empty( $this->addon_page ) ) {
 			?>
 			<header class="sui-header">
@@ -113,7 +115,7 @@ class Forminator_Integrations_Page extends Forminator_Admin_Page {
 				<div class="sui-actions-right">
 					<?php if ( forminator_is_show_documentation_link() ) : ?>
 						<a href="https://wpmudev.com/docs/wpmu-dev-plugins/forminator/#integrations" target="_blank" class="sui-button sui-button-ghost">
-							<i class="sui-icon-academy"></i> <?php esc_html_e( 'View Documentation', 'forminator' ); ?>
+							<i class="sui-icon-academy" aria-hidden="true"></i> <?php esc_html_e( 'View Documentation', 'forminator' ); ?>
 						</a>
 					<?php endif; ?>
 				</div>
@@ -122,6 +124,48 @@ class Forminator_Integrations_Page extends Forminator_Admin_Page {
 		} else {
 			parent::render_header();
 		}
+	}
+
+	/**
+	 * Show a notice when the site is running on WordPress Playground.
+	 *
+	 * @since 1.53.0
+	 *
+	 * @return void
+	 */
+	public function show_playground_notice() {
+		$site_host = wp_parse_url( home_url(), PHP_URL_HOST );
+		$site_host = $site_host ? $site_host : '';
+
+		$is_playground = 'playground.wordpress.net' === $site_host || str_ends_with( $site_host, '.playground.wordpress.net' );
+
+		if ( ! $is_playground ) {
+			return;
+		}
+		?>
+
+		<div
+			role="alert"
+			class="sui-notice sui-notice-yellow sui-active"
+			style="display: block; text-align: left;"
+			aria-live="assertive"
+		>
+
+			<div class="sui-notice-content">
+
+				<div class="sui-notice-message">
+
+					<span class="sui-notice-icon sui-icon-info" aria-hidden="true"></span>
+
+					<p><?php esc_html_e( "Forminator integrations don't work in WordPress Playground due to its environment limitations. To test them, use a local or hosted WordPress site.", 'forminator' ); ?></p>
+
+				</div>
+
+			</div>
+
+		</div>
+
+		<?php
 	}
 
 	/**

@@ -437,16 +437,22 @@ abstract class Forminator_Integration_Settings {
 	/**
 	 * Get HTML for Double Opt-in field
 	 *
-	 * @param array $current_data Saved data.
+	 * @param array  $current_data Saved data.
+	 * @param string $description Opt-in description.
 	 * @return string
 	 */
-	protected static function get_double_optin_field( $current_data ) {
+	protected static function get_double_optin_field( $current_data, $description = '' ) {
 		$html  = '<div class="sui-form-field">';
 		$html .= '<label class="sui-toggle">';
 		$html .= '<input type="checkbox" name="enable_double_opt_in" value="1" id="forminator_addon_enable_double_opt_in" ' . checked( 1, $current_data['enable_double_opt_in'], false ) . ' />';
 		$html .= '<span class="sui-toggle-slider"></span>';
 		$html .= '<span class="sui-toggle-label">' . esc_html__( 'Use Double Opt in', 'forminator' ) . '</span>';
 		$html .= '</label>';
+		if ( ! empty( $description ) ) {
+			$html .= '<span class="sui-description">';
+			$html .= $description;
+			$html .= '</span>';
+		}
 		$html .= '</div>';
 
 		return $html;

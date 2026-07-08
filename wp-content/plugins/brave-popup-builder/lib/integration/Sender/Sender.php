@@ -52,7 +52,7 @@ if ( ! class_exists( 'BravePop_Sender' ) ) {
             $lname = $name_parts[1];
          }
 
-         $subscriber = array(
+         $contact = array(
             'email' => $email,
             'groups' => array($list_id),
             'firstname' => trim($fname),
@@ -60,11 +60,11 @@ if ( ! class_exists( 'BravePop_Sender' ) ) {
          );
 
          if(!empty($phone)){
-            $subscriber['phone'] = $phone;
+            $contact['phone'] = $phone;
          }
 
          if(count($customFields) > 0){
-            $subscriber['fields'] = $customFields;
+            $contact['fields'] = $customFields;
          }
 
          $args = array(
@@ -73,7 +73,7 @@ if ( ! class_exists( 'BravePop_Sender' ) ) {
                'Authorization' => 'Bearer ' . $this->api_key,
                'Content-Type' => 'application/json'
             ),
-            'body' => wp_json_encode($subscriber)
+            'body' => wp_json_encode($contact)
          );
          
          $response = wp_remote_post( 'https://api.sender.net/v2/subscribers', $args );
@@ -84,13 +84,19 @@ if ( ! class_exists( 'BravePop_Sender' ) ) {
             $addedData = array(
                'action'=> isset($userData['action']) ? $userData['action'] : 'visitor_added',  
                'user_id'=> isset($userData['userData']['ID']) ? $userData['userData']['ID'] : false,
-               'user_mail'=> $email, 'esp_user_id'=> $data->data->id
+               'user_mail'=> $email, 
+               'esp_user_id'=> $data->data->id,
+               'user_data'=> $contact,
+               'list_id' => $list_id,
+               'response' => $response,
             ); 
-            do_action( 'bravepop_addded_to_list', 'sender', $addedData );
-
-            return $data->data->id; 
+            do_action( 'bravepop_added_to_list', 'sender', $addedData );
+            return array( 'success' => true, 'result' => $addedData );
          }else{
-            return false;
+            $errorMsg = $response->get_error_message() ? $response->get_error_message() : 'Unknown Error Occurred. No Error details provided by Sender.net';
+            $errorPayload = array( 'user_mail'=> $email, 'user_data'=> $contact, 'list_id'=> $list_id, 'error' => $errorMsg, 'response'=> $response );
+            do_action( 'bravepop_added_to_list_failed', 'sender', $errorPayload );
+            return array( 'success' => false, 'errorMsg' => $errorMsg, 'result' => $errorPayload );
          }
       }
    }

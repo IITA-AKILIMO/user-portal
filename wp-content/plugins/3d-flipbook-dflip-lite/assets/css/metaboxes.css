@@ -1102,3 +1102,16 @@ a.df-upgrade-menu {
 a.df-upgrade-menu:hover {
   background-color: #4CAF50 !important;
 }
+
+.df-box.df-pro {
+  background-color: rgb(255 246 232);
+  margin: 0 -10px;
+  padding: 10px 20px;
+  color: rgb(119, 31, 31) !important;
+}
+
+/*Hide password Field in edit-posts*/
+.post-type-dflip input#visibility-radio-password,
+.post-type-dflip label[for="visibility-radio-password"],
+.post-type-dflip label[for="visibility-radio-password"] + br
+{display: none;}

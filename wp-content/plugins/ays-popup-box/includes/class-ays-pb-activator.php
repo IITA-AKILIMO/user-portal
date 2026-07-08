@@ -183,6 +183,16 @@ class Ays_Pb_Activator {
                 );
             }
         }
+
+        $terms_activation = get_option('ays_pb_show_agree_terms');
+        $first_activation = get_option('ays_pb_first_time_activation_page', false);
+
+        if ( !$terms_activation && $first_activation ) {
+            self::ays_pb_activator_request( 'activator' );
+            update_option('ays_pb_agree_terms', 'true');
+            update_option('ays_pb_show_agree_terms', 'hide');
+        }
+
     }
 
     public static function ays_pb_db_check() {
@@ -197,11 +207,22 @@ class Ays_Pb_Activator {
                 delete_network_option($network_id, 'ays_pb_db_version');
             }
 
+            $is_plugin_downloaded = get_network_option('ays_pb_db_version', false) === false;
+            if ($is_plugin_downloaded) {
+                update_option('ays_pb_first_time_activation_page', true);
+            }
+
             if ( get_network_option($network_id, 'ays_pb_db_version') != $ays_pb_db_version ) {
                 self::activate();
                 self::alter_tables();
             }
         } else {
+
+            $is_plugin_downloaded = get_site_option('ays_pb_db_version', false) === false;
+            if ($is_plugin_downloaded) {
+                update_option('ays_pb_first_time_activation_page', true);
+            }
+
             if ( get_site_option('ays_pb_db_version') != $ays_pb_db_version ) {
                 self::activate();
                 self::alter_tables();
@@ -290,7 +311,7 @@ class Ays_Pb_Activator {
                         '',
                         '',
                         %s,
-                        'On',
+                        'off',
                         'off',
                         'all',
                         0,
@@ -342,33 +363,33 @@ class Ays_Pb_Activator {
         $x = '✕';
         $default_options = array(
             // General
-            'author' => $author,
-            'video_theme_url' => '',
-            'image_type_img_src' => '',
-            'image_type_img_redirect_url' => '',
-            'image_type_img_redirect_to_new_tab' => 'off',
-            'facebook_page_url' => '',
-            'hide_fb_page_cover_photo' => 'off',
-            'use_small_fb_header' => 'on',
-            'notification_type_components' => array(),
-            'notification_type_components_order' => array(),
-            'notification_logo_image' => '',
-            'notification_logo_redirect_url' => '',
-            'notification_logo_redirect_to_new_tab' => 'off',
-            'notification_logo_width' => 100,
-            'notification_logo_width_measurement_unit' => 'percentage',
-            'notification_logo_width_mobile' => 100,
-            'notification_logo_width_measurement_unit_mobile' => 'percentage',
-            'notification_logo_max_width' => 100,
-            'notification_logo_max_width_measurement_unit' => 'pixels',
-            'notification_logo_max_width_mobile' => 100,
-            'notification_logo_max_width_measurement_unit_mobile' => 'pixels',
-            'notification_logo_min_width' => 50,
-            'notification_logo_min_width_measurement_unit' => 'pixels',
-            'notification_logo_min_width_mobile' => 50,
-            'notification_logo_min_width_measurement_unit_mobile' => 'pixels',
-            'notification_logo_max_height' => '',
-            'notification_logo_min_height' => '',
+            'author'                                                => $author,
+            'video_theme_url'                                       => '',
+            'image_type_img_src'                                    => '',
+            'image_type_img_redirect_url'                           => '',
+            'image_type_img_redirect_to_new_tab'                    => 'off',
+            'facebook_page_url'                                     => '',
+            'hide_fb_page_cover_photo'                              => 'off',
+            'use_small_fb_header'                                   => 'on',
+            'notification_type_components'                          => array(),
+            'notification_type_components_order'                    => array(),
+            'notification_logo_image'                               => '',
+            'notification_logo_redirect_url'                        => '',
+            'notification_logo_redirect_to_new_tab'                 => 'off',
+            'notification_logo_width'                               => 100,
+            'notification_logo_width_measurement_unit'              => 'percentage',
+            'notification_logo_width_mobile'                        => 100,
+            'notification_logo_width_measurement_unit_mobile'       => 'percentage',
+            'notification_logo_max_width'                           => 100,
+            'notification_logo_max_width_measurement_unit'          => 'pixels',
+            'notification_logo_max_width_mobile'                    => 100,
+            'notification_logo_max_width_measurement_unit_mobile'   => 'pixels',
+            'notification_logo_min_width'                           => 50,
+            'notification_logo_min_width_measurement_unit'          => 'pixels',
+            'notification_logo_min_width_mobile'                    => 50,
+            'notification_logo_min_width_measurement_unit_mobile'   => 'pixels',
+            'notification_logo_max_height'                          => '',
+            'notification_logo_min_height'                          => '',
             'notification_logo_image_sizing' => 'cover',
             'notification_logo_image_shape' => 'rectangle',
             'notification_main_content' => '',
@@ -445,6 +466,8 @@ class Ays_Pb_Activator {
                 'youtube_link' => '',
                 'instagram_link' => '',
                 'behance_link' => '',
+                'telegram_link' => '',
+                'tiktok_link' => '',
             ),
             'create_date' => current_time('mysql'),
             'create_author' => $pb_create_author,
@@ -457,6 +480,7 @@ class Ays_Pb_Activator {
             'disable_scroll_on_popup' => 'off',
             'disable_scroll_on_popup_mobile' => 'off',
             'show_scrollbar' => 'off',
+            'show_scrollbar_mobile' => 'off',
             // Styles
             'enable_display_content_mobile' => 'off',
             'show_popup_title_mobile' => 'off',
@@ -478,6 +502,8 @@ class Ays_Pb_Activator {
             'pb_font_family' => 'inherit',
             'pb_font_size' => 13,
             'pb_font_size_for_mobile' => 13,
+            'pb_description_alignment_for_pc' => 'center',
+            'pb_description_alignment_for_mobile' => 'center',
             'enable_pb_title_text_shadow' => 'off',
             'pb_title_text_shadow' => 'rgba(255,255,255,0)',
             'pb_title_text_shadow_x_offset' => 2,
@@ -532,6 +558,7 @@ class Ays_Pb_Activator {
             'close_button_color' => '#000000',
             'close_button_hover_color' => '#000000',
             'close_button_size' => 1,
+            'close_button_padding' => 0,
             'enable_box_shadow' => 'off',
             'box_shadow_color' => '#000',
             'pb_box_shadow_x_offset' => 0,
@@ -551,5 +578,24 @@ class Ays_Pb_Activator {
         );
 
         return $default_options;
+    }
+
+    public static function ays_pb_activator_request($cta){
+        // $curl = curl_init();
+
+        $api_url = "https://poll-plugin.com/popup-box/";
+
+        // $data = array(
+        //     'type'  => 'popup-box',
+        //     'cta'   => $cta,
+        // );
+
+        wp_remote_post( $api_url, array(
+            'timeout' => 30,
+            'body' => wp_json_encode(array(
+                'type'  => 'popup-box',
+                'cta'   => $cta,
+            )),
+        ) );
     }
 }

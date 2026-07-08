@@ -78,12 +78,12 @@ if ( ! class_exists( 'BravePop_Zoho' ) ) {
             $firstname = $fullname_parts[0] ? $fullname_parts[0] : $firstname;
             $lastname = $fullname_parts[1] ? $fullname_parts[1] : '';
          }
-
+         $contact = array( 'First Name' => $firstname, 'Last Name' => $lastname,  'Contact Email' => $email  );
          $access_token  = $this->get_access_token($this->api_key, $this->api_secret, $this->refresh_token, $this->domain); 
 
          if($access_token){
             $args = array( 'method' => 'POST', 'headers' => array( 'Authorization' => 'Zoho-oauthtoken ' . $access_token ) );
-            $contact = array( 'First Name' => $firstname, 'Last Name' => $lastname,  'Contact Email' => $email  );
+            
             //Add Phone if Avaialbe
             if($phone){   $contact['Phone'] = $phone; }
             //Add Custom Field Values
@@ -101,18 +101,27 @@ if ( ! class_exists( 'BravePop_Zoho' ) ) {
                $addedData = array(
                   'action'=> isset($userData['action']) ? $userData['action'] : 'visitor_added',  
                   'user_id'=> isset($userData['userData']['ID']) ? $userData['userData']['ID'] : false,
-                  'user_mail'=> $email, 'esp_user_id'=> 'none'
+                  'user_mail'=> $email, 
+                  'esp_user_id'=> '',
+                  'user_data'=> $contact,
+                  'list_id' => $list_id,
+                  'response' => $response,
                ); 
-               do_action( 'bravepop_addded_to_list', 'zoho', $addedData );
-
-               return $data->status;
+               do_action( 'bravepop_added_to_list', 'zoho', $addedData );
+               return array( 'success' => true, 'result' => $addedData );
             }else{
-               return false;
+               $errorMsg = $response->get_error_message() ? $response->get_error_message() : 'Unknown Error Occurred. No Error details provided by Zoho.';
+               $errorPayload = array( 'user_mail'=> $email, 'user_data'=> $contact, 'list_id'=> $list_id, 'error' => $errorMsg, 'response'=> $response );
+               do_action( 'bravepop_added_to_list_failed', 'zoho', $errorPayload );
+               return array( 'success' => false, 'errorMsg' => $errorMsg, 'result' => $errorPayload );
             }
 
          }else{
             // error_log('NO ACCESS TOKEN');
-            return false;
+            $errorMsg = 'Failed to get Access Token from Zoho to add the contact.';
+            $errorPayload = array( 'user_mail'=> $email, 'user_data'=> $contact, 'list_id'=> $list_id, 'error' => $errorMsg, 'response'=> false );
+            do_action( 'bravepop_added_to_list_failed', 'zoho', $errorPayload );
+            return array( 'success' => false, 'errorMsg' => $errorMsg, 'result' => $errorPayload );
          }
 
       }

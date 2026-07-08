@@ -69,28 +69,27 @@ if ( ! class_exists( 'BravePop_Mailjet' ) ) {
             $fullname = $firstname.' '.$lastname;
          }
          
-
+         $contact = array(
+               'Email'     => $email,
+               'Name'      => trim($fullname),
+               'Action'    => 'addforce'
+         );
          $args = array(
             'method' => 'POST',
             'headers' => array(
                'content-type' => 'application/json',
                'Authorization' => 'Basic ' . base64_encode( $this->api_key.':'.$this->secret )
             ),
-            'body' => wp_json_encode(array(
-               'Email'     => $email,
-               'Name'      => trim($fullname),
-               'Action'    => 'addforce'
-            ))
+            'body' => wp_json_encode($contact)
          );
-
+         // https://dev.mailjet.com/email/reference/contacts/contact/
          $response = wp_remote_post( 'https://api.mailjet.com/v3/REST/contactslist/' . $list_id . '/managecontact/', $args );
          
 
          $body = wp_remote_retrieve_body( $response );
          $data = json_decode( $body );
-         //error_log(wp_json_encode($data));
+  
          if($data && isset($data->Data) && isset($data->Data[0]->ContactID)){
-
             if(class_exists('BravePop_Mailjet_Advanced') && count($customFields) > 0){
                $mailjetAdv = new BravePop_Mailjet_Advanced();
                $mailjetAdv->add_fields($customFields, $data->Data[0]->ContactID);
@@ -99,13 +98,19 @@ if ( ! class_exists( 'BravePop_Mailjet' ) ) {
             $addedData = array(
                'action'=> isset($userData['action']) ? $userData['action'] : 'visitor_added',  
                'user_id'=> isset($userData['userData']['ID']) ? $userData['userData']['ID'] : false,
-               'user_mail'=> $email, 'esp_user_id'=> isset($data->Data[0]->ContactID) ? $data->Data[0]->ContactID : ''
+               'user_mail'=> $email, 
+               'esp_user_id'=> isset($data->Data[0]->ContactID) ? $data->Data[0]->ContactID : '',
+               'user_data'=> $contact,
+               'list_id' => $list_id,
+               'response' => $response,
             ); 
-            do_action( 'bravepop_addded_to_list', 'mailjet', $addedData );
-
-            return $data->Data; 
+            do_action( 'bravepop_added_to_list', 'mailjet', $addedData );
+            return array( 'success' => true, 'result' => $addedData ); 
          }else{
-            return false;
+            $errorMsg = $response->get_error_message() ? $response->get_error_message() : 'Unknown Error Occurred. No Error details provided by Mailjet.';
+            $errorPayload = array( 'user_mail'=> $email, 'user_data'=> $contact, 'list_id'=> $list_id, 'error' => $errorMsg, 'response'=> $response );
+            do_action( 'bravepop_added_to_list_failed', 'mailjet', $errorPayload );
+            return array( 'success' => false, 'errorMsg' => $errorMsg, 'result' => $errorPayload );
          }
 
       }

@@ -11,7 +11,7 @@
  * Plugin Name:       Automatic YouTube Gallery
  * Plugin URI:        https://plugins360.com/automatic-youtube-gallery/
  * Description:       Create responsive, modern & dynamic video galleries by simply adding a YouTube USERNAME, CHANNEL, PLAYLIST, SEARCH KEYWORDS, or a custom list of YouTube URLs.
- * Version:           2.5.6
+ * Version:           2.7.2
  * Author:            Team Plugins360
  * Author URI:        https://plugins360.com
  * License:           GPL-2.0+
@@ -30,7 +30,7 @@ if ( function_exists( 'ayg_fs' ) ) {
 }
 // Current version of the plugin
 if ( !defined( 'AYG_VERSION' ) ) {
-    define( 'AYG_VERSION', '2.5.6' );
+    define( 'AYG_VERSION', '2.7.2' );
 }
 // Unique identifier of the plugin
 if ( !defined( 'AYG_SLUG' ) ) {
@@ -60,23 +60,24 @@ if ( !function_exists( 'ayg_fs' ) ) {
             // Include Freemius SDK
             require_once dirname( __FILE__ ) . '/vendor/freemius/start.php';
             $ayg_fs = fs_dynamic_init( array(
-                'id'             => '2922',
-                'slug'           => 'automatic-youtube-gallery',
-                'type'           => 'plugin',
-                'public_key'     => 'pk_7734619fa98d4e2b76a390a890739',
-                'is_premium'     => false,
-                'premium_suffix' => 'Premium',
-                'has_addons'     => false,
-                'has_paid_plans' => true,
-                'trial'          => array(
+                'id'               => '2922',
+                'slug'             => 'automatic-youtube-gallery',
+                'type'             => 'plugin',
+                'public_key'       => 'pk_7734619fa98d4e2b76a390a890739',
+                'is_premium'       => false,
+                'premium_suffix'   => 'Premium',
+                'has_addons'       => false,
+                'has_paid_plans'   => true,
+                'trial'            => array(
                     'days'               => 7,
                     'is_require_payment' => false,
                 ),
-                'menu'           => array(
+                'menu'             => array(
                     'slug'       => 'automatic-youtube-gallery',
                     'first-path' => 'admin.php?page=automatic-youtube-gallery',
                 ),
-                'is_live'        => true,
+                'is_live'          => true,
+                'is_org_compliant' => true,
             ) );
         }
         return $ayg_fs;
@@ -92,7 +93,13 @@ if ( !function_exists( 'activate_ayg' ) ) {
      * The code that runs during plugin activation.
      * This action is documented in includes/activator.php
      */
-    function activate_ayg() {
+    function activate_ayg(  $network_wide  ) {
+        if ( is_multisite() && $network_wide ) {
+            deactivate_plugins( AYG_FILE_NAME );
+            wp_die( __( 'Sorry, this plugin cannot be activated network-wide. Please activate it individually on each site where it is needed.', 'automatic-youtube-gallery' ), __( 'Network Activation Not Allowed', 'automatic-youtube-gallery' ), array(
+                'back_link' => true,
+            ) );
+        }
         require_once AYG_DIR . 'includes/activator.php';
         AYG_Activator::activate();
     }
@@ -138,12 +145,13 @@ if ( !function_exists( 'ayg_fs_uninstall_cleanup' ) ) {
     function ayg_fs_uninstall_cleanup() {
         global $wpdb;
         // Delete all the plugin transients
-        $transient_keys = get_option( 'ayg_transient_keys', array() );
+        $transient_keys = array_filter( (array) get_option( 'ayg_transient_keys' ) );
         foreach ( $transient_keys as $key ) {
-            delete_transient( $key );
+            delete_transient( sanitize_key( $key ) );
         }
         // Delete all the plugin options
         delete_option( 'ayg_general_settings' );
+        delete_option( 'ayg_strings_settings' );
         delete_option( 'ayg_gallery_settings' );
         delete_option( 'ayg_player_settings' );
         delete_option( 'ayg_livestream_settings' );
@@ -154,8 +162,9 @@ if ( !function_exists( 'ayg_fs_uninstall_cleanup' ) ) {
         delete_option( 'ayg_playlist_ids' );
         delete_option( 'ayg_transient_keys' );
         delete_option( 'ayg_version' );
-        // Delete our custom database table "{$wpdb->prefix}ayg_videos"
+        // Delete our custom database tables
         $wpdb->query( "DROP TABLE IF EXISTS {$wpdb->prefix}ayg_videos" );
+        $wpdb->query( "DROP TABLE IF EXISTS {$wpdb->prefix}ayg_galleries" );
     }
 
     ayg_fs()->add_action( 'after_uninstall', 'ayg_fs_uninstall_cleanup' );

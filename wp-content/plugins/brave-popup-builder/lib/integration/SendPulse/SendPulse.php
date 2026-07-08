@@ -105,13 +105,19 @@ if ( ! class_exists( 'BravePop_SendPulse' ) ) {
             $addedData = array(
                'action'=> isset($userData['action']) ? $userData['action'] : 'visitor_added',  
                'user_id'=> isset($userData['userData']['ID']) ? $userData['userData']['ID'] : false,
-               'user_mail'=> $email, 'esp_user_id'=> 'none'
+               'user_mail'=> $email, 
+               'esp_user_id'=> '',
+               'user_data'=> $contact,
+               'list_id' => $list_id,
+               'response' => $response,
             ); 
-            do_action( 'bravepop_addded_to_list', 'sendpulse', $addedData );
-            
-            return true;
+            do_action( 'bravepop_added_to_list', 'sendpulse', $addedData );
+            return array( 'success' => true, 'result' => $addedData );
          }else{
-            return false;
+            $errorMsg = $response->get_error_message() ? $response->get_error_message() : 'Unknown Error Occurred. No Error details provided by Sendpulse.';
+            $errorPayload = array( 'user_mail'=> $email, 'user_data'=> $contact, 'list_id'=> $list_id, 'error' => $errorMsg, 'response'=> $response );
+            do_action( 'bravepop_added_to_list_failed', 'sendpulse', $errorPayload );
+            return array( 'success' => false, 'errorMsg' => $errorMsg, 'result' => $errorPayload );
          }
 
       }

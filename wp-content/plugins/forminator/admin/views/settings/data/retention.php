@@ -9,7 +9,7 @@
 <?php $option_slug = $args['option_slug']; ?>
 <?php $forever = '' !== $args['forever']; ?>
 
-<span class="sui-settings-label"><?php echo esc_html( $args['title'] ); ?></span>
+<label for="forminator-field-<?php echo esc_attr( $option_slug ); ?>_number" class="sui-settings-label"><?php echo esc_html( $args['title'] ); ?></label>
 <span class="sui-description"><?php echo esc_html( $args['description'] ); ?></span>
 
 <div class="sui-side-tabs" style="margin-top: 10px;">
@@ -45,6 +45,7 @@
 					<div class="sui-form-field">
 
 						<input type="number"
+							id="forminator-field-<?php echo esc_attr( $option_slug ); ?>_number"
 							name="<?php echo esc_attr( $option_slug ); ?>_number"
 							placeholder="<?php esc_html_e( 'E.g. 10', 'forminator' ); ?>"
 							value="<?php echo esc_attr( $args['number'] ); ?>"
@@ -69,6 +70,9 @@
 					</div>
 				</div>
 			</div>
+			<span class="sui-description">
+				<?php esc_html_e( 'Set the value to "0" or leave it blank to store data forever.', 'forminator' ); ?>
+			</span>
 
 		</div>
 

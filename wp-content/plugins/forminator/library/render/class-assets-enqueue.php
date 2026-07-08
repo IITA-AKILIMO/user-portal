@@ -58,22 +58,23 @@ abstract class Forminator_Assets_Enqueue {
 	 *
 	 * @param int    $id Id.
 	 * @param string $type Type.
-	 * @param bool   $force Force.
+	 * @param bool   $maybe_create Create CSS file if it does not exist.
 	 * @return string
 	 */
-	public static function get_css_upload( $id, $type = 'url', $force = false ) {
+	public static function get_css_upload( $id, $type = 'url', $maybe_create = false ) {
 		$filename = 'style-' . $id . '.css';
 		$css_dir  = forminator_get_upload_path( $id, 'css' );
 		$css_url  = forminator_get_upload_url( $id, 'css' );
 		if ( ! is_dir( $css_dir ) ) {
 			wp_mkdir_p( $css_dir );
 		}
-
-		// Create Index file.
-		Forminator_Field::forminator_upload_index_file( $id, $css_dir );
+		if ( ! forminator_create_index_file_disabled() ) {
+			// Create Index file.
+			Forminator_Field::forminator_upload_index_file( $id, $css_dir );
+		}
 
 		$fullname = $css_dir . '/' . $filename;
-		if ( $force && ! file_exists( $fullname ) ) {
+		if ( ! forminator_disable_regenerate_css_on_form_load() && $maybe_create && ! file_exists( $fullname ) ) {
 			Forminator_Render_Form::regenerate_css_file( $id );
 		}
 
@@ -123,14 +124,16 @@ abstract class Forminator_Assets_Enqueue {
 
 	/**
 	 * Load relevant module CSS
+	 *
+	 * @param bool $force Force loading module CSS in special rendering contexts.
 	 */
-	protected function load_module_css() {
-		if ( ! empty( $this->model->id ) && ! is_admin() ) {
+	public function load_module_css( $force = false ) {
+
+		if ( ! empty( $this->model->id ) && ( ! is_admin() || $force ) ) {
 			$id        = $this->model->id;
 			$timestamp = ! empty( $this->model->raw->post_modified_gmt )
-					? strtotime( $this->model->raw->post_modified_gmt )
+				? strtotime( $this->model->raw->post_modified_gmt )
 					: wp_unique_id();
-
 			// Module styles.
 			wp_enqueue_style(
 				'forminator-module-css-' . $id,

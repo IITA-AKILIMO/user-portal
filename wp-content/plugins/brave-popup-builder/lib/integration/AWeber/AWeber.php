@@ -15,7 +15,7 @@ if ( ! class_exists( 'BravePop_Aweber' ) ) {
 
       public function get_accountID($access_token){
          $accountID = get_option('_bravepop_aweber_accountID');
-         if(!empty($accountID)){ return $accountID; }
+         if(!empty($accountID)){ return array( 'success' => true, 'accountID' => $accountID ); }
          //First Get the AccountID
          $headerArgs = array( 'headers' => array(  'Authorization' => 'Bearer ' . $access_token ) );
          $response = wp_remote_get( 'https://api.aweber.com/1.0/accounts', $headerArgs );
@@ -23,9 +23,10 @@ if ( ! class_exists( 'BravePop_Aweber' ) ) {
          $data = json_decode( $body );
          if(isset($data->entries) && is_array($data->entries) && $data->entries[0]){
             update_option('_bravepop_aweber_accountID', $data->entries[0]->id);
-            return isset($data->entries[0]->id) ? $data->entries[0]->id : '';
+            return array( 'success' => true, 'accountID' => $data->entries[0]->id );
          }else{
-            return '';
+            $errorMsg = isset($data->error->message) ? $data->error->message : 'Unknown Error Occurred. No Error details provided by Aweber.';
+            return array( 'success' => false, 'errorMsg' => $errorMsg, 'response' => $response );
          }
       }
 
@@ -56,9 +57,14 @@ if ( ! class_exists( 'BravePop_Aweber' ) ) {
       public function get_lists($refresh_token=''){
          $refresh_token  = $refresh_token ? $refresh_token : $this->refresh_token;
          $access_token  = $this->get_access_token($refresh_token); 
-         $accountID = $this->get_accountID($access_token);
+         $accountIDObj = $this->get_accountID($access_token);
+
+         if(!$accountIDObj['success'] || !isset($accountIDObj['accountID'])){ 
+            return false; // Bail early if account ID is not available
+         }
+
          $headerArgs = array( 'headers' => array(  'Authorization' => 'Bearer ' . $access_token ) );
-         $lresponse = wp_remote_get( 'https://api.aweber.com/1.0/accounts/'.$accountID.'/lists', $headerArgs );
+         $lresponse = wp_remote_get( 'https://api.aweber.com/1.0/accounts/'.$accountIDObj['accountID'].'/lists', $headerArgs );
 
          if( is_wp_error( $lresponse ) ) {
             return false; // Bail early
@@ -105,8 +111,17 @@ if ( ! class_exists( 'BravePop_Aweber' ) ) {
          }
 
          $access_token  = $this->get_access_token($this->refresh_token);
-         $accountID = $this->get_accountID($access_token);
 
+         // First get the AccountID
+         $getAccountRes = $this->get_accountID($access_token);
+         if(!$getAccountRes['success'] || !isset($getAccountRes['accountID'])){ 
+            $errorMsg = isset($getAccountRes['errorMsg']) ? $getAccountRes['errorMsg'] : 'Unknown Error Occurred. No Error details provided by Aweber.';
+            $errorPayload = array( 'user_mail'=> $email, 'firstname'=> $firstname, 'lastname'=> $lastname, 'list_id'=> $list_id, 'error' => $errorMsg, 'response'=> $getAccountRes['response'] );
+            do_action( 'bravepop_added_to_list_failed', 'aweber', $errorPayload );
+            return array( 'success' => false, 'errorMsg' => $errorMsg, 'result' => $errorPayload );
+         }
+
+         // Then Add User to a List in Aweber
          $contact = array( 'email' => $email, 'name' => trim($fullname), 'update_existing' => 'true', 'ip_address' => class_exists('BravePop_Geolocation') ? bravepop_getVisitorIP() : '' );
 
          //Add Custom Field Values
@@ -126,38 +141,38 @@ if ( ! class_exists( 'BravePop_Aweber' ) ) {
             }
          }
 
-         if($accountID){
+         if($getAccountRes['accountID']){
             $args = array(
                'method' => 'POST',
                'headers' => array( 'Authorization' => 'Bearer ' . $access_token, 'Content-Type' => 'application/json'  ),
                'body' => wp_json_encode($contact)
             );
             //https://api.aweber.com/#tag/Subscribers/paths/~1accounts~1{accountId}~1lists~1{listId}~1subscribers/post
-            $response = wp_remote_post( 'https://api.aweber.com/1.0/accounts/'.$accountID.'/lists/'.$list_id.'/subscribers', $args );
+            $response = wp_remote_post( 'https://api.aweber.com/1.0/accounts/'.$getAccountRes['accountID'].'/lists/'.$list_id.'/subscribers', $args );
             $body = wp_remote_retrieve_body( $response );
             $data = json_decode( $body );
 
-            //error_log(wp_json_encode($response));
-            if(isset($data->error->message)){ error_log($data->error->message); }
+            // if(isset($data->error->message)){ error_log('Error Object: '. $data->error->message); }
 
             if((isset($response['response']['code']) && $response['response']['code'] === 201)){
                $addedData = array(
                   'action'=> isset($userData['action']) ? $userData['action'] : 'visitor_added',  
                   'user_id'=> isset($userData['userData']['ID']) ? $userData['userData']['ID'] : false,
-                  'user_mail'=> $email, 'esp_user_id'=> 'none'
+                  'user_mail'=> $email, 
+                  'user_data'=> $contact,
+                  'esp_user_id'=> '',
+                  'list_id'=> $list_id,
+                  'response' => $response
                ); 
-               do_action( 'bravepop_addded_to_list', 'aweber', $addedData );
-               
-               return $response['response']['code'];
-            }else if( isset($data->error->message) && ($data->error->message === 'email: Subscriber already subscribed.')){
-               return false;
+               do_action( 'bravepop_added_to_list', 'aweber', $addedData );
+               return array( 'success' => true, 'result' => $addedData );
             }else{
-               return false;
+               $errorMsg = isset($data->error->message) ? $data->error->message : 'Unknown Error Occurred. No Error details provided by Aweber.';
+               $errorPayload = array( 'user_mail'=> $email, 'list_id'=> $list_id, 'user_data'=> $contact, 'error' => $errorMsg, 'response'=> $response );
+               do_action( 'bravepop_added_to_list_failed', 'aweber', $errorPayload );
+               return array( 'success' => false, 'errorMsg' => $errorMsg, 'result' => $errorPayload );
             }
 
-         }else{
-            //error_log('NO Account ID');
-            return false;
          }
 
       }

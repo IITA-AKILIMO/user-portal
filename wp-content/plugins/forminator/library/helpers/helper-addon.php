@@ -179,6 +179,9 @@ function forminator_get_registered_addons_grouped_by_module_connected( $module_i
 				return ! empty( $value ) && array( 'a:0:{}' ) !== $value;
 			}
 		);
+		if ( ! is_array( $post_meta ) ) {
+			$post_meta = array();
+		}
 		$meta_keys = array_keys( $post_meta );
 		$addons    = array_filter(
 			$addons,
@@ -250,6 +253,9 @@ function forminator_group_addons_by_module( $grouped_addons, $addon, $addon_sett
 						$addon_array['multi_name']     = ! empty( $multi_id['label'] ) ? $multi_id['label'] : $multi_id['id'];
 						$grouped_addons['connected'][] = $addon_array;
 					}
+				}
+				if ( $addon->can_add_more_on_module( $module_type ) ) {
+					$grouped_addons['not_connected'][] = $addon_settings;
 				}
 			} else {
 				$grouped_addons['not_connected'][] = $addon_settings;
@@ -1085,7 +1091,7 @@ function forminator_addon_replace_custom_vars( $content, $submitted_data, Formin
 
 	$randomed_field_pattern  = 'field-\d+-\d+';
 	$increment_field_pattern = sprintf( '(%s)-\d+', implode( '|', $field_types ) );
-	$pattern                 = '/\{((' . $randomed_field_pattern . ')|(' . $increment_field_pattern . '))(\-[A-Za-z-_]+)?\}/';
+	$pattern                 = '/\{((' . $randomed_field_pattern . ')|(' . $increment_field_pattern . '))(\-[A-Za-z0-9_-]+)?\}/';
 
 	// Find all field ID's.
 	if ( preg_match_all( $pattern, $content, $matches ) ) {
@@ -1126,10 +1132,6 @@ function forminator_addon_replace_custom_vars( $content, $submitted_data, Formin
  * @return string
  */
 function forminator_addon_integration_section_admin_url( $addon, $section, $with_nonce = true, $identifier = '' ) {
-	if ( ! class_exists( 'Forminator_Integrations_Page' ) ) {
-		return '';
-	}
-
 	$admin_url  = admin_url( 'admin.php' );
 	$query_args = array(
 		'page'    => 'forminator-integrations',
@@ -1145,6 +1147,9 @@ function forminator_addon_integration_section_admin_url( $addon, $section, $with
 	}
 
 	if ( $with_nonce ) {
+		if ( ! class_exists( 'Forminator_Integrations_Page' ) ) {
+			return '';
+		}
 		$nonce               = Forminator_Integrations_Page::get_addon_page_nonce();
 		$query_args['nonce'] = $nonce;
 	}
@@ -1449,9 +1454,6 @@ function get_quiz_submitted_data( $quiz, $data, $quiz_entry_fields ) {
  * @return bool
  */
 function forminator_is_show_addons_documentation_link() {
-	if ( Forminator::is_wpmudev_member() ) {
-		return ! apply_filters( 'wpmudev_branding_hide_doc_link', false );
-	}
-
-	return true;
+	_deprecated_function( __FUNCTION__, '1.50', 'forminator_is_show_documentation_link' );
+	return forminator_is_show_documentation_link();
 }

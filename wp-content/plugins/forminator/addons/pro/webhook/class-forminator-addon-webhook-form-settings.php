@@ -118,7 +118,7 @@ class Forminator_Webhook_Form_Settings extends Forminator_Integration_Form_Setti
 									</div>
 									' . ( isset( $input_error_messages['name'] ) ? '<span class="sui-error-message">' . esc_html( $input_error_messages['name'] ) . '</span>' : '' ) . '
 								</div>
-								<div class="sui-form-field ' . ( isset( $input_error_messages['webhook_url'] ) ? 'sui-form-field-error' : '' ) . '">
+								<div class="sui-form-field ' . ( isset( $input_error_messages['webhook_url_error'] ) ? 'sui-form-field-error' : '' ) . '">
 									<label class="sui-label">' . esc_html__( 'Webhook URL', 'forminator' ) . '</label>
 									<div class="sui-control-with-icon">
 										<input
@@ -129,8 +129,8 @@ class Forminator_Webhook_Form_Settings extends Forminator_Integration_Form_Setti
 										class="sui-form-control" />
 										<i class="sui-icon-link" aria-hidden="true"></i>
 									</div>
-									' . ( isset( $input_error_messages['webhook_url'] ) ? '<span class="sui-error-message">' . esc_html( $input_error_messages['webhook_url'] ) . '</span>' : '' ) . '
-									' . ( forminator_is_show_addons_documentation_link() ?
+									' . ( isset( $input_error_messages['webhook_url_error'] ) ? '<span class="sui-error-message">' . esc_html( $input_error_messages['webhook_url_error'] ) . '</span>' : '' ) . '
+									' . ( forminator_is_show_documentation_link() ?
 										'<div class="sui-description">' . sprintf(
 											/* translators: 1: article anchor start, 2: article anchor end. */
 											esc_html__( 'Check %1$sour documentation%2$s for more information on using webhook URLs for your preferred automation tools.', 'forminator' ),

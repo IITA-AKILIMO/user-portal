@@ -20,7 +20,9 @@ class Forminator_Hubspot_Form_Hooks extends Forminator_Integration_Form_Hooks {
 	 * @return array
 	 */
 	protected function custom_entry_fields( $submitted_data, $current_entry_fields ): array {
+		$entry                = func_get_args()[2];
 		$addon_setting_values = $this->settings_instance->get_settings_values();
+		$addon_setting_values = $this->settings_instance->migrate_list_id( $addon_setting_values );
 		$data                 = array();
 
 		foreach ( $addon_setting_values as $key => $addon_setting_value ) {
@@ -29,7 +31,7 @@ class Forminator_Hubspot_Form_Hooks extends Forminator_Integration_Form_Hooks {
 				// exec only on completed connection.
 				$data[] = array(
 					'name'  => 'status-' . $key,
-					'value' => $this->get_status_on_contact_sync( $key, $submitted_data, $addon_setting_value, $current_entry_fields ),
+					'value' => $this->get_status_on_contact_sync( $key, $submitted_data, $addon_setting_value, $current_entry_fields, $entry ),
 				);
 			}
 		}
@@ -46,11 +48,12 @@ class Forminator_Hubspot_Form_Hooks extends Forminator_Integration_Form_Hooks {
 	 * @param array  $submitted_data Submitted data.
 	 * @param array  $connection_settings Connection settings.
 	 * @param array  $form_entry_fields Form entry fields.
+	 * @param object $entry Entry instance.
 	 *
 	 * @return array `is_sent` true means its success send data to HubSpot, false otherwise.
 	 * @throws Forminator_Integration_Exception Throws Integration Exception.
 	 */
-	private function get_status_on_contact_sync( $connection_id, $submitted_data, $connection_settings, $form_entry_fields ) {
+	private function get_status_on_contact_sync( $connection_id, $submitted_data, $connection_settings, $form_entry_fields, $entry ) {
 		// initialize as null.
 		$api = null;
 
@@ -122,6 +125,21 @@ class Forminator_Hubspot_Form_Hooks extends Forminator_Integration_Form_Hooks {
 						if ( 'date' === $hs_field_type && ! empty( $element_value ) ) {
 							$element_value = self::get_date_in_ms( $element_id, $submitted_data[ $element_id ], $form_id );
 						}
+					} elseif ( self::element_is_multi_option( $element_id, $form_id ) ) {
+						$hs_field_type = $api->get_property( 'fieldType', $common_field, $args );
+						if ( 'checkbox' === $hs_field_type ) {
+							// Handle multiple selectbox values.
+							if ( strpos( $element_id, 'select-' ) !== false ) {
+								$element_value = json_decode( $element_value );
+								if ( is_array( $element_value ) ) {
+									$element_value = implode( ', ', $element_value );
+								}
+							}
+							// Remove semicolon from value to avoid conflict.
+							$element_value = str_replace( ';', '', $element_value );
+							// For checkbox, it should be ; separated.
+							$element_value = str_replace( ', ', ';', $element_value );
+						}
 					}
 					if ( ! is_null( $element_value ) ) {
 						$args[ $common_field ] = $element_value;
@@ -161,7 +179,7 @@ class Forminator_Hubspot_Form_Hooks extends Forminator_Integration_Form_Hooks {
 				$to_object_id = $contact_id;
 
 				if ( ! empty( $list_id ) ) {
-					$api->add_to_contact_list( $contact_id, $args['email'], $list_id );
+					$api->add_to_contact_list( $contact_id, $list_id );
 				}
 			}
 
@@ -170,19 +188,17 @@ class Forminator_Hubspot_Form_Hooks extends Forminator_Integration_Form_Hooks {
 			if ( '1' === $create_ticket ) {
 				$ticket['pipeline_id']        = $connection_settings['pipeline_id'];
 				$ticket['status_id']          = $connection_settings['status_id'];
-				$ticket_name                  = forminator_addon_replace_custom_vars( $connection_settings['ticket_name'], $submitted_data, $this->module, $form_entry_fields, false );
+				$ticket_name                  = forminator_addon_replace_custom_vars( $connection_settings['ticket_name'], $submitted_data, $this->module, $form_entry_fields, false, $entry );
 				$ticket['ticket_name']        = $ticket_name;
-				$ticket_description           = forminator_addon_replace_custom_vars( $connection_settings['ticket_description'], $submitted_data, $this->module, $form_entry_fields, false );
+				$ticket_description           = forminator_addon_replace_custom_vars( $connection_settings['ticket_description'], $submitted_data, $this->module, $form_entry_fields, false, $entry );
 				$ticket['ticket_description'] = $ticket_description;
 				$ticket['supported_file']     = isset( $submitted_data[ $connection_settings['supported_file'] ] ) ? $submitted_data[ $connection_settings['supported_file'] ] : '';
 
 				$object_id = $api->create_ticket( $ticket );
 
 				if ( ! is_null( $to_object_id ) && ! is_object( $object_id ) && (int) $object_id > 0 ) {
-					$from_object_id            = $object_id;
-					$associate['fromObjectId'] = $from_object_id;
-					$associate['toObjectId']   = $to_object_id;
-					$api->ticket_associate_contact( $associate );
+					$from_object_id = $object_id;
+					$api->ticket_associate_contact( $from_object_id, $to_object_id );
 				}
 			}
 

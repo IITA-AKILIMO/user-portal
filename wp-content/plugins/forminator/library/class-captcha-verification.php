@@ -136,6 +136,8 @@ class Forminator_Captcha_Verification {
 
 		if ( 'recaptcha' === $provider ) {
 			$endpoint = 'https://www.google.com/recaptcha/api/siteverify';
+		} elseif ( 'turnstile' === $provider ) {
+			$endpoint = 'https://challenges.cloudflare.com/turnstile/v0/siteverify';
 		} else {
 			$endpoint = 'https://hcaptcha.com/siteverify';
 		}

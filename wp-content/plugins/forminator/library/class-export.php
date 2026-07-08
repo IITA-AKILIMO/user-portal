@@ -105,12 +105,14 @@ class Forminator_Export {
 			return;
 		}
 
-		if ( ! forminator_get_permission( 'forminator-entries' ) ) {
+		if ( ! forminator_is_user_allowed( 'forminator-entries' ) ) {
+			wp_die( esc_html__( 'You are not allowed to export submissions.', 'forminator' ) );
 			return;
 		}
 
 		$nonce = Forminator_Core::sanitize_text_field( '_forminator_nonce' );
 		if ( ! wp_verify_nonce( $nonce, 'forminator_export' ) ) {
+			wp_die( esc_html__( 'Invalid nonce.', 'forminator' ) );
 			return;
 		}
 
@@ -146,13 +148,22 @@ class Forminator_Export {
 		 * @since 1.27.0
 		 */
 		do_action( 'forminator_before_manual_export_download', $form_id, $type );
+		$delimiter = $this->forminator_get_csv_export_delimiter();
+
+		// Clean any output that may have been generated (e.g., PHP notices, warnings, or debug output).
+		if ( ob_get_level() > 0 ) {
+			ob_end_clean();
+		}
+
+		// Start fresh output buffering for CSV generation.
+		ob_start();
 
 		$fp = fopen( 'php://output', 'w' ); // phpcs:disable WordPress.WP.AlternativeFunctions.file_system_read_fopen -- disable phpcs because it writes memory
-		ob_start();
 		foreach ( $data as $fields ) {
 			$fields = self::get_formatted_csv_fields( $fields );
-			fputcsv( $fp, $fields );
+			fputcsv( $fp, $fields, $delimiter, '"', '\\' );
 		}
+
 		$filename = sanitize_title( esc_html__( 'forminator', 'forminator' ) ) . '-' . sanitize_title( $model->name ) . '-' . gmdate( 'ymdHis' ) . '.csv';
 
 		$output = ob_get_clean();
@@ -177,14 +188,15 @@ class Forminator_Export {
 		$action = Forminator_Core::sanitize_text_field( 'action' );
 		if ( 'forminator_export_entries' === $action ) {
 			$nonce = Forminator_Core::sanitize_text_field( '_forminator_nonce' );
-			if ( ! $nonce || ! wp_verify_nonce( $nonce, 'forminator_export' ) ) {
 
-				$redirect = add_query_arg(
-					array(
-						'err_msg' => rawurlencode( esc_html__( 'Invalid request, you are not allowed to do that action.', 'forminator' ) ),
-					)
-				);
+			$redirect = add_query_arg(
+				array(
+					'err_msg' => rawurlencode( esc_html__( 'Invalid request, you are not allowed to do that action.', 'forminator' ) ),
+				)
+			);
 
+			if ( ! $nonce || ! wp_verify_nonce( $nonce, 'forminator_export' )
+					|| ! forminator_is_user_allowed( 'forminator-entries' ) ) {
 				wp_safe_redirect( $redirect );
 				exit;
 			}
@@ -455,14 +467,15 @@ class Forminator_Export {
 
 				$export_result->model = $model;
 
-				$entries = Forminator_Form_Entry_Model::get_entries( $form_id );
-
 				if ( ! empty( $filter ) ) {
 					$filters = $export_result->request_filters();
-					$entries = Forminator_Form_Entry_Model::get_filter_entries( $form_id, $filters );
+					$entries = Forminator_Form_Entry_Model::get_all_entries( $form_id, $filters );
+				} else {
+					$entries = Forminator_Form_Entry_Model::get_all_entries( $form_id );
 				}
 
 				$headers = array(
+					esc_html__( 'Submission ID', 'forminator' ),
 					esc_html__( 'Date', 'forminator' ),
 					esc_html__( 'Question', 'forminator' ),
 					esc_html__( 'Answer', 'forminator' ),
@@ -517,6 +530,7 @@ class Forminator_Export {
 							$i = 1;
 							foreach ( $meta['answers'] as $answer ) {
 								$row   = array();
+								$row[] = 1 === $i ? $entry->entry_id : '';
 								$row[] = 1 === $i ? $entry->time_created : '';
 								$row[] = ! empty( $answer['question'] ) ? sprintf( '"%s"', $answer['question'] ) : '';
 								$row[] = $answer['answer'];
@@ -558,10 +572,22 @@ class Forminator_Export {
 							$i = 1;
 							foreach ( $meta as $answer ) {
 								$row   = array();
+								$row[] = 1 === $i ? $entry->entry_id : '';
 								$row[] = 1 === $i ? $entry->time_created : '';
 								$row[] = ! empty( $answer['question'] ) ? sprintf( '"%s"', $answer['question'] ) : '';
-								$row[] = $answer['answer'];
-								if ( ! empty( $answer['answer'] ) ) {
+								if ( isset( $answer['answer'] ) ) {
+									$user_answer = $answer['answer'];
+								} elseif ( isset( $answer['answers'] ) ) {
+									$user_answer = $answer['answers'];
+								} else {
+									$user_answer = '';
+								}
+								if ( is_array( $user_answer ) ) {
+									$user_answer = implode( ', ', $user_answer );
+								}
+								$row[] = $user_answer;
+
+								if ( ! empty( $user_answer ) ) {
 									$row[] = ( ( $answer['isCorrect'] ) ? esc_html__( 'Correct', 'forminator' ) : esc_html__( 'Incorrect', 'forminator' ) );
 								} else {
 									$row[] = '';
@@ -600,7 +626,7 @@ class Forminator_Export {
 
 				$export_result->model = $model;
 
-				$entries = Forminator_Form_Entry_Model::get_entries( $form_id );
+				$entries = Forminator_Form_Entry_Model::get_all_entries( $form_id );
 
 				foreach ( $entries as $entry ) {
 					if ( $entry->entry_id > $latest_exported_entry_id ) {
@@ -611,6 +637,7 @@ class Forminator_Export {
 				$fields_array = $model->get_fields_as_array();
 				$map_entries  = Forminator_Form_Entry_Model::map_polls_entries_for_export( $form_id, $fields_array );
 				$header       = array(
+					esc_html__( 'Submission ID', 'forminator' ),
 					esc_html__( 'Date', 'forminator' ),
 					esc_html__( 'Answer', 'forminator' ),
 					esc_html__( 'Extra', 'forminator' ),
@@ -627,6 +654,7 @@ class Forminator_Export {
 					$entry = new Forminator_Form_Entry_Model( $map_entry['entry_id'] );
 					$extra = $entry->get_meta( 'extra', null );
 					$row   = array(
+						$entry->entry_id,
 						$entry->time_created,
 						$label,
 						$extra,
@@ -651,9 +679,9 @@ class Forminator_Export {
 				}
 				if ( ! empty( $filter ) ) {
 					$filters = $export_result->request_filters();
-					$entries = Forminator_Form_Entry_Model::get_filter_entries( $form_id, $filters );
+					$entries = Forminator_Form_Entry_Model::get_all_entries( $form_id, $filters );
 				} else {
-					$entries = Forminator_Form_Entry_Model::get_entries( $form_id );
+					$entries = Forminator_Form_Entry_Model::get_all_entries( $form_id );
 				}
 				$mappers              = $this->get_custom_form_export_mappers( $model );
 				$addon_mappers        = $this->attach_form_addons_on_export_render_title_row( $form_id, $entries );
@@ -680,7 +708,7 @@ class Forminator_Export {
 								$data[] = '';
 							}
 						} else {
-							$data = self::add_meta_value( $data, $mapper, $entry );
+							$data = self::add_meta_value( $data, $mapper, $entry, $model );
 						}
 					}
 
@@ -736,9 +764,10 @@ class Forminator_Export {
 	 * @param array  $data Saved data.
 	 * @param array  $mapper Mapper.
 	 * @param object $entry Entry object.
+	 * @param object $model Form Model.
 	 * @return array Updated data.
 	 */
-	private static function add_meta_value( $data, $mapper, $entry ) {
+	private static function add_meta_value( $data, $mapper, $entry, $model ) {
 		$copies = array_filter(
 			$entry->meta_data,
 			function ( $key ) use ( $mapper ) {
@@ -770,7 +799,10 @@ class Forminator_Export {
 						$meta_value
 					);
 				}
-				$temp_data[ $mapper['type'] ][] = Forminator_Form_Entry_Model::meta_value_to_string( $mapper['type'], $meta_value );
+				// Convert to string first, then apply draft label conversion if needed.
+				$meta_value                     = Forminator_Form_Entry_Model::meta_value_to_string( $mapper['type'], $meta_value, false, PHP_INT_MAX, $mapper['field'] );
+				$meta_value                     = forminator_resolve_draft_display_value( $entry, $slug, $mapper['type'], $meta_value, $model );
+				$temp_data[ $mapper['type'] ][] = $meta_value;
 			} else {
 
 				// sub_metas available.
@@ -779,7 +811,10 @@ class Forminator_Export {
 					if ( ! empty( $meta_value[ $sub_key ] ) ) {
 						$value      = $meta_value[ $sub_key ];
 						$field_type = $mapper['type'] . '.' . $sub_key;
-
+						// format payment amount.
+						if ( 'amount' === $sub_key && in_array( $mapper['type'], array( 'paypal', 'stripe', 'stripe-ocs' ), true ) ) {
+							$value = Forminator_Field::get_formatted_amount( $mapper['field'], $meta_value, $model );
+						}
 						$temp_data[ $sub_key ][] = Forminator_Form_Entry_Model::meta_value_to_string( $field_type, $value );
 					} else {
 						$temp_data[ $sub_key ][] = '';
@@ -863,14 +898,15 @@ class Forminator_Export {
 			return false;
 		}
 
-		$output = array();
+		$output    = array();
+		$delimiter = $this->forminator_get_csv_export_delimiter();
 
 		foreach ( $fields as $value ) {
 			$f = fopen( 'php://memory', 'r+' ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fopen -- fputcsv() works with file pointers and the WordPress filesystem API does not directly support working with file pointers.
 
 			$value = self::get_formatted_csv_fields( $value );
 
-			$put = fputcsv( $f, $value );
+			$put = fputcsv( $f, $value, $delimiter, '"', '\\' );
 
 			if ( false === $put ) {
 				return false;
@@ -947,6 +983,12 @@ class Forminator_Export {
 			array(
 				array(
 					// read form model's property.
+					'property' => 'entry_id', // Submission ID.
+					'label'    => esc_html__( 'Submission ID', 'forminator' ),
+					'type'     => 'entry_id',
+				),
+				array(
+					// read form model's property.
 					'property' => 'time_created', // must be on export.
 					'label'    => esc_html__( 'Submission Time', 'forminator' ),
 					'type'     => 'entry_time_created',
@@ -997,6 +1039,7 @@ class Forminator_Export {
 			$mapper['meta_key'] = $field->slug; // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key -- false positive.
 			$mapper['label']    = $field->get_label_for_entry();
 			$mapper['type']     = $field_type;
+			$mapper['field']    = $field->to_array();
 
 			if ( $group_field ) {
 				$mapper['label'] = $group_field->get_label_for_entry() . ' - ' . $mapper['label'];
@@ -1865,7 +1908,10 @@ class Forminator_Export {
 						foreach ( $mapper['sub_metas'] as $sub_meta ) {
 							$sub_key = $sub_meta['key'];
 							if ( isset( $meta_value[ $sub_key ] ) && ! empty( $meta_value[ $sub_key ] ) ) {
-								$value            = $meta_value[ $sub_key ];
+								$value = $meta_value[ $sub_key ];
+								if ( 'amount' === $sub_key ) {
+									$value = Forminator_Field::get_formatted_amount( $mapper['field_object'], $value );
+								}
 								$field_type       = $mapper['type'] . '.' . $sub_key;
 								$data[ $sub_key ] = Forminator_Form_Entry_Model::meta_value_to_string( $field_type, $value );
 							} else {
@@ -1878,5 +1924,13 @@ class Forminator_Export {
 		}
 
 		return $data;
+	}
+	/**
+	 * CSV Export Separator.
+	 *
+	 * @since 1.53.0
+	 */
+	private function forminator_get_csv_export_delimiter() {
+		return apply_filters( 'forminator_csv_export_delimiter', ',' );
 	}
 }

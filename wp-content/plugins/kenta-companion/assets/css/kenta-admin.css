@@ -346,16 +346,22 @@
 .kenta-starter-templates .template-wrap .template-item:hover .template-actions {
   opacity: 1;
 }
+.kenta-starter-templates .template-wrap .mixed-badge,
 .kenta-starter-templates .template-wrap .premium-badge {
   position: absolute;
   display: inline-block;
-  background: #0caf2a;
   color: #ffffff;
   top: 0;
   right: 0;
   font-size: 14px;
   line-height: 1;
   padding: 0.5em 0.75em;
+}
+.kenta-starter-templates .template-wrap .mixed-badge {
+  background: #ffc107;
+}
+.kenta-starter-templates .template-wrap .premium-badge {
+  background: #0caf2a;
 }
 .kenta-starter-templates .template-wrap .template-meta {
   position: absolute;
@@ -428,16 +434,22 @@
   display: block;
   width: 100%;
 }
+.kenta-template-preview .wp-full-overlay-sidebar-content .kcmp-theme-screenshot .mixed-badge,
 .kenta-template-preview .wp-full-overlay-sidebar-content .kcmp-theme-screenshot .premium-badge {
   position: absolute;
   display: inline-block;
-  background: #0caf2a;
   color: #ffffff;
   top: 0;
   right: 0;
   font-size: 14px;
   line-height: 1;
   padding: 0.5em 0.75em;
+}
+.kenta-template-preview .wp-full-overlay-sidebar-content .kcmp-theme-screenshot .mixed-badge {
+  background: #ffc107;
+}
+.kenta-template-preview .wp-full-overlay-sidebar-content .kcmp-theme-screenshot .premium-badge {
+  background: #0caf2a;
 }
 .kenta-template-preview .wp-full-overlay-main {
   box-shadow: 0 0 25px 0 rgba(0, 0, 0, 0.14);
@@ -583,12 +595,18 @@
   margin-left: 12px;
 }
 
+.premium-plugins-notice {
+  background-color: #fff490;
+  padding: 24px;
+}
+
 .kenta-plugin-list {
   list-style: none;
   border-radius: 2px;
   border: 1px solid #e2e8f0;
 }
-.kenta-plugin-list, .kenta-plugin-list li {
+.kenta-plugin-list,
+.kenta-plugin-list li {
   margin: 0;
   padding: 0;
 }

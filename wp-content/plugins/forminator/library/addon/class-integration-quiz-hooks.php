@@ -207,4 +207,21 @@ abstract class Forminator_Integration_Quiz_Hooks extends Forminator_Integration_
 
 		return $submitted_data;
 	}
+
+	/**
+	 * Get answer from quiz entry data
+	 *
+	 * @param mixed $quiz_entry_data Quiz entry data.
+	 * @return string
+	 */
+	public static function get_answer( $quiz_entry_data ) {
+		if ( ! empty( $quiz_entry_data['answer'] ) ) {
+			$answer = $quiz_entry_data['answer'];
+		} elseif ( ! empty( $quiz_entry_data['answers'] ) ) {
+			$answer = $quiz_entry_data['answers'];
+		} else {
+			$answer = '';
+		}
+		return is_array( $answer ) ? implode( ', ', $answer ) : $answer;
+	}
 }

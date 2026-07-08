@@ -222,6 +222,14 @@
 
 					formData = new FormData(this); // reinit values
 
+					// Set raw values for number, currency, and calculation fields instead of their masked values.
+					self.$el.find('.forminator-number--field, .forminator-currency, .forminator-calculation').each(function () {
+						if ( $( this ).inputmask ) {
+							formData.set( $( this ).attr('name'), $( this ).val() );
+						}
+					});
+
+					formData.append( 'form_uid', self.$el.data( 'uid' ) );
 					if ( $saveDraft && hasPagination ) {
 						formData.append( 'draft_page', formStep );
 					}
@@ -233,6 +241,17 @@
 						}
 					}
 
+					// Note: removeMaskOnSubmit is not working if form is not actually submitted,
+					// so inputmask values are handled here specifically when submitting via PayPal.
+					if ('forminator:submit:paypal' === submitter) {
+						self.$el.find('input[data-inputmask]').each(function () {
+							var inputName = $(this).attr('name');
+							if (!inputName) {
+								return;
+							}
+							formData.set(inputName, $(this).val());
+						});
+					}
 					// Should check if submitted thru save draft button
 					if ( self.$el.hasClass('forminator_ajax') || $saveDraft ) {
 						$target_message.html('');
@@ -298,9 +317,29 @@
 									return false;
 								}
 
+								// Save lead_entry_id if available.
+								if ( data.success && undefined !== data.data.lead_entry_id ) {
+									const leadEntryId = data.data.lead_entry_id;
+									let leadQuizId = '';
+
+									// Get the quiz form id.
+									const leadQuizInput = $this.find('input[name=lead_quiz]');
+									if (leadQuizInput.length > 0) {
+										leadQuizId = leadQuizInput.val();
+									}
+									// Save the lead entry id in quiz hidden field attribute to be used later.
+									const entryIdInput = $('#forminator-module-'+leadQuizId).find('input[name=entry_id]');
+									if (entryIdInput.length > 0) {
+										entryIdInput.attr('lead-entry-id', leadEntryId);
+									}
+								}
+
 								// Hide validation errors
 								$this.find( '.forminator-error-message' ).not('.forminator-uploaded-files .forminator-error-message').remove();
 								$this.find( '.forminator-field' ).removeClass( 'forminator-has_error' );
+
+								// Remove invalid attribute for screen readers.
+								$this.find( 'input, select, textarea' ).removeAttr( 'aria-invalid' );
 
 								$this.find( 'button' ).removeAttr( 'disabled' );
 								$target_message.html( '' ).removeClass( 'forminator-accessible forminator-error forminator-success' );
@@ -435,12 +474,19 @@
 
 								if (data.success === true) {
 									var hideForm = typeof data.data.behav !== "undefined" && data.data.behav === 'behaviour-hide';
-									// Reset form
-									if ($this[0]) {
-										var resetEnabled = self.settings.resetEnabled;
-										if(resetEnabled && ! hideForm) {
-											$this[0].reset();
-										}
+									var redirectSameTab = typeof data.data.url !== "undefined" && typeof data.data.newtab !== "undefined" && data.data.newtab === 'sametab';
+									var resetEnabled = self.settings.resetEnabled;
+									const isDraftSubmit = $this.find('input[name="previous_draft_id"]').length > 0;
+									if (isDraftSubmit) {
+										hideForm = true;
+									}
+
+									// Reset the form fields to accept a new submission
+									// but skip resetting the form fields if the form behavior after submission
+									// is set to redirect to specific url on the same tab or if set to be hidden
+									if ($this[0] && resetEnabled && !hideForm && !redirectSameTab) {
+
+										$this[0].reset();
 
 										self.$el.trigger('forminator:field:condition:toggled');
 
@@ -454,10 +500,9 @@
 													$.each(value, function (i, v) {
 														if (v['value']) {
 															if (v['type'] === 'multiselect') {
-																$this.find("#" + index + " input[value=" + v['value'] + "]").closest('.forminator-option').remove().trigger("change");
-															} else {
-																$this.find("#" + index + " option[value=" + v['value'] + "]").remove().trigger("change");
+																$this.find("#" + index + " input").filter((_, input) => input.value === v['value']).closest('.forminator-option').remove().trigger("change");
 															}
+															$this.find("#" + index + " option").filter((_, option) => option.value === v['value']).remove().trigger("change");
 														}
 													});
 												}
@@ -473,13 +518,22 @@
 										//self.$el.find( '.forminator-input-file' ).val('');
 
 										// Reset selects
-										if ( $this.find('.forminator-select').length > 0 ) {
-											$this.find('.forminator-select').each(function (index, value) {
+										if ( $this.find('.forminator-select2').length > 0 ) {
+											$this.find('.forminator-select2').each(function (index, value) {
+												// Reset Select2 checkboxes by removing the data-select2-id attribute.
+												$(value).find('option').removeAttr('data-select2-id');
 												var defaultValue = $(value).data('default-value');
 												if ( '' === defaultValue ) {
 													defaultValue = $(value).val();
+												} else if ( 'string' === typeof defaultValue && defaultValue.startsWith('[') ) {
+													// Parse JSON array for multiselect
+													try {
+														defaultValue = JSON.parse(defaultValue);
+													} catch (e) {
+														// If parsing fails, keep as string
+													}
 												}
-												$(value).val(defaultValue).trigger("fui:change");
+												$(value).val(defaultValue).trigger("change.select2");
 											});
 										}
 										// Reset multiselect
@@ -498,15 +552,27 @@
 											});
 										});
 
+										// Reset Post data multiselect fields.
+										$this.find( '.forminator-field-postdata' ).each(function () {
+											let multiSelect = $(this).find( '.forminator-multiselect' );
+											multiSelect.find('input[type="checkbox"]').each(function (i, val) {
+												$(val).prop('checked', false);
+												$(val).closest('label').removeClass('forminator-is_checked');
+											});
+										});
+
 										// Reset slider.
 										$this.find('.forminator-slider').each(function () {
 											var $element = $(this),
 												$slide = $element.find('.forminator-slide'),
 												$slider = $slide.slider("option"),
-												$minRange = parseInt($slide.data('min')) || 0,
-												$maxRange = parseInt($slide.data('max')) || 100,
-												$value = parseInt($slide.data('value')) || $minRange,
-												$valueMax = parseInt($slide.data('value-max')) || $maxRange;
+												$minRange = parseFloat($slide.data('min')) || 0,
+												$maxRange = parseFloat($slide.data('max')) || 100,
+												$value = parseFloat($slide.data('value')) || $minRange,
+												$valueMax = parseFloat($slide.data('value-max')) || $maxRange;
+
+											// Remove slider custom labels.
+											$element.find('.forminator-slider-labels').remove();
 
 											$slider.create();
 											if (true === $slider.range) {
@@ -516,12 +582,18 @@
 											}
 										});
 
+										// Reset rating fields.
+										var ratingFields = $this.find('.forminator-rating');
+										if ( ratingFields.length && 'function' === typeof FUI.rating ) {
+											FUI.rating( ratingFields );
+										}
+
 										self.multi_upload_disable( $this, false );
-										$this.trigger('forminator:form:submit:success', formData);
 
 										// restart condition after form reset to ensure values of input already reset-ed too
 										$this.trigger('forminator.front.condition.restart');
 									}
+									$this.trigger('forminator:form:submit:success', [ formData, data ]);
 
 									if (typeof data.data.url !== "undefined") {
 
@@ -535,7 +607,21 @@
 											window.open( self.decodeHtmlEntity( data.data.url ), '_blank' );
 										} else {
 											//same tab redirection
-											window.location.href = self.decodeHtmlEntity( data.data.url );
+											// Redirect to a unique URL to avoid cached guest page after login
+											var redirectUrl = self.decodeHtmlEntity(data.data.url);
+											var bust = Date.now();
+											try {
+												var url = new URL(redirectUrl, window.location.href); // handles relative URLs too
+												url.searchParams.set('forminator_cache_bust', bust);
+												window.location.href = url.toString();
+											} catch (e) {
+												// Fallback for malformed/edge URLs: preserve hash manually.
+												var hashIndex = redirectUrl.indexOf('#');
+												var hash = hashIndex >= 0 ? redirectUrl.slice(hashIndex) : '';
+												var base = hashIndex >= 0 ? redirectUrl.slice(0, hashIndex) : redirectUrl;
+												var separator = base.includes('?') ? '&' : '?';
+												window.location.href = base + separator + 'forminator_cache_bust=' + bust + hash;
+											}
 										}
 
 									}
@@ -604,6 +690,8 @@
 								.addClass('forminator-loading forminator-show');
 						}
 
+						$this.trigger( 'before:forminator:form:submit', formData );
+
 						submitEvent.currentTarget.submit();
 
 						self.showLeadsLoader( self );
@@ -611,8 +699,10 @@
 				};
 
 				// payment setup
-				var paymentIsHidden = self.$el.find('div[data-is-payment="true"]')
-					.closest('.forminator-row, .forminator-col').hasClass('forminator-hidden');
+				const paymentElement = self.$el.find('div[data-is-payment="true"]');
+				const paymentIsHidden = paymentElement
+					.closest('.forminator-row, .forminator-col').hasClass('forminator-hidden') ||
+					paymentElement.closest('.forminator-pagination').hasClass('forminator-page-hidden');
 				if ( ( self.$el.data('forminatorFrontPayment') || self.$el.data('forminatorFrontStripe') ) && ! paymentIsHidden && ! $saveDraft ) {
 					setTimeout( function() {
 						self.$el.trigger('payment.before.submit.forminator', [formData, function () {
@@ -759,11 +849,24 @@
 		},
 
 		processCaptcha: function( self, e, $target_message, submitter ) {
-			var $captcha_field = self.$el.find('.forminator-g-recaptcha, .forminator-hcaptcha');
+			const $captcha_fields = self.$el.find('.forminator-g-recaptcha, .forminator-hcaptcha, .forminator-turnstile');
+			let $captcha_field, $page;
 
-			if ($captcha_field.length) {
-				//validate only first
-				$captcha_field = $($captcha_field.get(0));
+			if ($captcha_fields.length) {
+				for (let i = 0; i < $captcha_fields.length; i++) {
+					//validate only first not hidden
+					$captcha_field = $($captcha_fields.get(i));
+
+					$page = $captcha_field.closest( '.forminator-pagination' );
+					if ( ! $page.hasClass('forminator-page-hidden') ) {
+						break;
+					} else {
+						$captcha_field = null;
+					}
+				}
+			}
+
+			if ($captcha_field && $captcha_field.length) {
 				var captcha_size  = $captcha_field.data('size'),
 					$captcha_parent = $captcha_field.parent( '.forminator-col' );
 
@@ -788,8 +891,17 @@
 						if ( captcha_size === 'invisible' ) {
 							if ( $captcha_response.length === 0 ) {
 								window.grecaptcha.execute( captcha_widget );
+								self.waitForCaptchaResponse( function() {
+									return window.grecaptcha.getResponse( captcha_widget );
+								});
 								return false;
 							}
+						}
+
+						// Ignore CAPTCHA validation after a PayPal payment.
+						if( 'forminator:submit:paypal' === submitter ) {
+							window.grecaptcha.reset(captcha_widget);
+							return true;
 						}
 
 						// reset after getResponse
@@ -807,13 +919,44 @@
 					if ( captcha_size === 'invisible' ) {
 						if ( $captcha_response.length === 0 ) {
 							hcaptcha.execute( captcha_widget );
+							self.waitForCaptchaResponse( function() {
+								return hcaptcha.getResponse( captcha_widget );
+							});
 							return false;
 						}
+					}
+
+					// Ignore CAPTCHA validation after a PayPal payment.
+					if( 'forminator:submit:paypal' === submitter ) {
+						hcaptcha.reset( captcha_widget );
+						return true;
 					}
 
 					// reset after getResponse
 					if ( self.$el.hasClass( 'forminator_ajax' ) && 'forminator:preSubmit:paypal' !== e.type ) {
 						hcaptcha.reset( captcha_widget );
+					}
+				} else if ( $captcha_field.hasClass( 'forminator-turnstile' ) ) {
+					var captcha_widget   = $captcha_field.data( 'forminator-turnstile-widget' ),
+						$captcha_response = $captcha_field.find( 'input[name="forminator-turnstile-response"]' ).val();
+					
+					const canResetCaptcha = typeof captcha_widget !== 'undefined' && turnstile && typeof turnstile.reset === 'function';
+
+					// Ignore CAPTCHA validation after a PayPal payment.
+					if( 'forminator:submit:paypal' === submitter ) {
+						if ( canResetCaptcha ) {
+							turnstile.reset( captcha_widget );
+						}
+						return true;
+					}
+
+					// Reset after getResponse.
+					if (	
+						canResetCaptcha &&
+						self.$el.hasClass( 'forminator_ajax' ) &&
+						'forminator:preSubmit:paypal' !== e.type
+					) {
+						turnstile.reset( captcha_widget );
 					}
 				}
 
@@ -827,18 +970,31 @@
 						$captcha_field.addClass("error");
 					}
 
-					$target_message.removeAttr("aria-hidden").html('<label class="forminator-label--error forminator-invalid-captcha"><span>' + window.ForminatorFront.cform.captcha_error + '</span></label>');
+					var pagination    = self.$el.data( 'forminatorFrontPagination' ),
+						$captcha_page = $captcha_field.closest( '.forminator-pagination' ),
+						captcha_step  = $captcha_page.data( 'step' ),
+						navigated     = pagination && typeof pagination.go_to === 'function' &&
+							typeof captcha_step !== 'undefined' && captcha_step !== pagination.step;
 
-					if ( ! self.settings.inline_validation ) {
-						self.focus_to_element($target_message);
+					if ( navigated ) {
+						self.disable_form_submit( self, false );
+						pagination.go_to( captcha_step, true );
+						pagination.update_buttons();
+						$target_message.html( '' )
+							.removeClass( 'forminator-loading forminator-show forminator-error forminator-success forminator-accessible' )
+							.removeAttr( 'tabindex' ).attr( 'aria-hidden', true );
 					} else {
+						$target_message.removeAttr("aria-hidden").html('<label class="forminator-label--error forminator-invalid-captcha"><span>' + window.ForminatorFront.cform.captcha_error + '</span></label>');
+					}
 
+					if ( navigated || self.settings.inline_validation ) {
 						if ( ! $captcha_parent.hasClass( 'forminator-has_error' ) && $captcha_field.data( 'size' ) !== 'invisible' ) {
 							$captcha_parent.addClass( 'forminator-has_error' )
 								.append( '<span class="forminator-error-message forminator-invalid-captcha" aria-hidden="true">' + window.ForminatorFront.cform.captcha_error + '</span>' );
 							self.focus_to_element( $captcha_parent );
 						}
-
+					} else {
+						self.focus_to_element($target_message);
 					}
 
 					return false;
@@ -917,6 +1073,10 @@
 				e.preventDefault();
 				e.stopPropagation();
 
+				if ( form.data( 'quizSubmitting' ) ) {
+					return false;
+				}
+
 				// Enable all inputs
 				self.$el.find( '.forminator-has-been-disabled' ).removeAttr( 'disabled' );
 
@@ -927,6 +1087,12 @@
 				self.$el.find( '.forminator-has-been-disabled' ).attr( 'disabled', 'disabled' );
 
 				if( hasLeads ) {
+					// Get lead entry ID from hidden input to include in quiz submission
+					let leadsFormID = self.$el.find('input[name=entry_id]').attr('lead-entry-id') || '';
+					if ( leadsFormID ) {
+						ajaxData += '&lead_entry_id=' + leadsFormID;
+					}
+
 					var entry_id  = '';
 					if ( self.$el.find('input[name=entry_id]').length > 0 ) {
 						entry_id = self.$el.find('input[name=entry_id]').val();
@@ -965,15 +1131,18 @@
 					});
 				}
 
-				var pagination = !! self.$el.find('.forminator-pagination');
+				var pagination = self.$el.find('.forminator-pagination').length > 0;
 
 				$.ajax({
 					type: 'POST',
 					url: window.ForminatorFront.ajaxUrl,
 					data: ajaxData,
 					beforeSend: function() {
+						form.data( 'quizSubmitting', true );
 						if ( ! pagination ) {
 							self.$el.find( 'button' ).attr( 'disabled', 'disabled' );
+						} else {
+							self.$el.find( '.forminator-button-next, .forminator-button-submit' ).attr( 'disabled', 'disabled' );
 						}
 						form.trigger( 'before:forminator:quiz:submit', [ ajaxData, formData ] );
 					},
@@ -1083,6 +1252,10 @@
 						}
 					}
 				}).always(function () {
+					form.data( 'quizSubmitting', false );
+					if ( pagination ) {
+						self.$el.find( '.forminator-button-next, .forminator-button-submit' ).removeAttr( 'disabled' );
+					}
 					form.trigger('after:forminator:quiz:submit', [ ajaxData, formData ] );
 					form.nextAll( '.leads-quiz-loader' ).remove();
 				});
@@ -1453,7 +1626,7 @@
 			}
 
 			function focusElement( $element ) {
-				if ( ! $element.attr("tabindex") ) {
+				if ( ! $element.attr("tabindex") && $element.is( 'div' ) ) {
 					$element.attr("tabindex", -1);
 				}
 
@@ -1511,7 +1684,9 @@
 						// Focus on first error
 						if ( i === 0 ) {
 							self.$el.trigger( 'forminator.front.pagination.focus.input', [getElement]);
-							self.focus_to_element( getElement );
+							if( getElement.is( ':visible' ) ) {
+								self.focus_to_element( getElement );
+							}
 						}
 
 						// CHECK: Timepicker field.
@@ -1532,12 +1707,7 @@
 										$( errorMarkup ).insertBefore( getColumn.find( '.forminator-error-message[data-error-field="year"]' ) );
 
 									} else {
-
-										if ( 0 === getDesc.length ) {
-											getColumn.append( errorMarkup );
-										} else {
-											$( errorMarkup ).insertBefore( getDesc );
-										}
+										forminatorUtils().add_error_message( getDesc, getColumn, errorMarkup );
 									}
 
 									if ( 0 === holderField.find( '.forminator-error-message' ).length ) {
@@ -1557,12 +1727,7 @@
 										);
 
 									} else {
-
-										if ( 0 === getDesc.length ) {
-											getColumn.append( errorMarkup );
-										} else {
-											$( errorMarkup ).insertBefore( getDesc );
-										}
+										forminatorUtils().add_error_message( getDesc, getColumn, errorMarkup );
 									}
 
 									if ( 0 === holderField.find( '.forminator-error-message' ).length ) {
@@ -1575,11 +1740,7 @@
 
 								if ( 'year' === holder.data( 'field' ) ) {
 
-									if ( 0 === getDesc.length ) {
-										getColumn.append( errorMarkup );
-									} else {
-										$( errorMarkup ).insertBefore( getDesc );
-									}
+									forminatorUtils().add_error_message( getDesc, getColumn, errorMarkup );
 
 									if ( 0 === holderField.find( '.forminator-error-message' ).length ) {
 
@@ -1614,12 +1775,7 @@
 											getColumn.find( '.forminator-error-message[data-error-field="minutes"]' )
 										);
 									} else {
-
-										if ( 0 === getDesc.length ) {
-											getColumn.append( errorMarkup );
-										} else {
-											$( errorMarkup ).insertBefore( getDesc );
-										}
+										forminatorUtils().add_error_message( getDesc, getColumn, errorMarkup );
 									}
 
 									if ( 0 === holderField.find( '.forminator-error-message' ).length ) {
@@ -1631,12 +1787,7 @@
 								}
 
 								if ( 'minutes' === holder.data( 'field' ) ) {
-
-									if ( 0 === getDesc.length ) {
-										getColumn.append( errorMarkup );
-									} else {
-										$( errorMarkup ).insertBefore( getDesc );
-									}
+									forminatorUtils().add_error_message( getDesc, getColumn, errorMarkup );
 
 									if ( 0 === holderField.find( '.forminator-error-message' ).length ) {
 
@@ -1660,12 +1811,7 @@
 								;
 
 							if ( 0 === getError.length ) {
-
-								if ( 0 === getDesc.length ) {
-									holderField.append( errorMarkup );
-								} else {
-									$( errorMarkup ).insertBefore( getDesc );
-								}
+								forminatorUtils().add_error_message( getDesc, holderField, errorMarkup );
 							}
 
 							holderError = holderField.find( '.forminator-error-message' );
@@ -1714,6 +1860,27 @@
 
 		disable_form_submit: function ( form, disable  ) {
 			form.$el.find( '.forminator-button-submit' ).prop( 'disabled', disable );
+		},
+
+		/**
+		 * Poll for captcha response in case the callback doesn't fire
+		 * (e.g. when form is inside a popup/modal like Divi).
+		 */
+		waitForCaptchaResponse: function ( getResponse ) {
+			var self     = this,
+				attempts = 0,
+				poll     = setInterval( function() {
+					attempts++;
+					if ( attempts > 50 ) {
+						clearInterval( poll );
+						return;
+					}
+					var response = getResponse();
+					if ( response && response.length > 0 ) {
+						clearInterval( poll );
+						self.$el.trigger( 'submit.frontSubmit' );
+					}
+				}, 100 );
 		},
 
 		showLeadsLoader: function ( quiz  ) {

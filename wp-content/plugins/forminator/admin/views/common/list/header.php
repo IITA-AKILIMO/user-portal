@@ -12,7 +12,7 @@
 
 	<div class="sui-actions-left">
 
-		<button class="sui-button sui-button-blue wpmudev-button-open-modal" data-modal="<?php echo esc_attr( $create_dialog ); ?>"><i class="sui-icon-plus" aria-hidden="true"></i> <?php esc_html_e( 'Create', 'forminator' ); ?></button>
+		<button class="sui-button sui-button-blue wpmudev-button-open-modal" data-modal="<?php echo esc_attr( $create_dialog ); ?>"><i class="sui-icon-plus" aria-hidden="true"></i> <?php esc_html_e( 'Add New', 'forminator' ); ?></button>
 
 		<?php if ( Forminator::is_import_export_feature_enabled() ) : ?>
 
@@ -29,7 +29,7 @@
 	<div class="sui-actions-right">
 		<?php if ( forminator_is_show_documentation_link() ) : ?>
 			<a href="https://wpmudev.com/docs/wpmu-dev-plugins/forminator/<?php echo esc_attr( $hash ); ?>" target="_blank" class="sui-button sui-button-ghost">
-				<i class="sui-icon-academy"></i> <?php esc_html_e( 'View Documentation', 'forminator' ); ?>
+				<i class="sui-icon-academy" aria-hidden="true"></i> <?php esc_html_e( 'View Documentation', 'forminator' ); ?>
 			</a>
 		<?php endif; ?>
 	</div>

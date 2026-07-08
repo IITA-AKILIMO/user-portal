@@ -36,8 +36,8 @@ class AYG_Activator {
     		}
 		}
 		
-		// Create a custom database table "{$wpdb->prefix}ayg_videos" 
-		ayg_db_create_videos_table();
+		// Create custom database tables
+		ayg_db_create_custom_tables();
 
 		// Insert the plugin version
 		add_option( 'ayg_version', AYG_VERSION );

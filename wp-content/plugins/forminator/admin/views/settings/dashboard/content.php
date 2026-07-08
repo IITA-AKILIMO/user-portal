@@ -38,7 +38,7 @@ $draft              = isset( $dashboard_settings['draft'] ) ? filter_var( $dashb
 
 <div class="sui-form-field">
 
-	<label for="forminator-<?php echo esc_attr( $module_type ); ?>-status-published" id="listings-<?php echo esc_attr( $module_type ); ?>-status-label" class="sui-settings-label"><?php esc_html_e( 'Status', 'forminator' ); ?></label>
+	<label id="listings-<?php echo esc_attr( $module_type ); ?>-status-label" class="sui-settings-label"><?php esc_html_e( 'Status', 'forminator' ); ?></label>
 
 	<span id="listings-<?php echo esc_attr( $module_type ); ?>-status-message" class="sui-description" style="margin-bottom: 10px;"><?php echo esc_html( $args['status_descr'] ); ?></span>
 

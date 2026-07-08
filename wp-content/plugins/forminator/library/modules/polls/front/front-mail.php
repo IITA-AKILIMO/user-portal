@@ -47,96 +47,103 @@ class Forminator_Poll_Front_Mail extends Forminator_Mail {
 	 * @param Forminator_Form_Entry_Model $entry Form entry model.
 	 */
 	public function process_mail( $poll, Forminator_Form_Entry_Model $entry ) {
-		$setting = $poll->settings;
+		self::$is_email_context = true;
 
-		/**
-		 * Message data filter
-		 *
-		 * @since 1.6.1
-		 *
-		 * @param array                       $data - the post data.
-		 * @param Forminator_Poll_Model  $poll - the poll model.
-		 * @param Forminator_Form_Entry_Model $entry
-		 *
-		 * @return array $data
-		 */
-		$data = apply_filters( 'forminator_poll_mail_data', Forminator_Front_Action::$prepared_data, $poll, $entry );
+		try {
+			$setting = $poll->settings;
 
-		/**
-		 * Action called before mail is sent
-		 *
-		 * @param Forminator_Poll_Model  $this - the current poll.
-		 * @param Forminator_Poll_Model  $poll - the current poll.
-		 * @param array                       $data - current data.
-		 * @param Forminator_Form_Entry_Model $entry
-		 */
-		do_action( 'forminator_poll_mail_before_send_mail', $this, $poll, $data, $entry );
+			/**
+			 * Message data filter
+			 *
+			 * @since 1.6.1
+			 *
+			 * @param array                       $data - the post data.
+			 * @param Forminator_Poll_Model  $poll - the poll model.
+			 * @param Forminator_Form_Entry_Model $entry
+			 *
+			 * @return array $data
+			 */
+			$data = apply_filters( 'forminator_poll_mail_data', Forminator_Front_Action::$prepared_data, $poll, $entry );
 
-		// Process admin mail.
-		if ( $this->is_send_admin_mail( $setting ) ) {
-			$this->init();
-			$recipients = $this->get_admin_email_recipients( $setting, $poll, $entry );
+			/**
+			 * Action called before mail is sent
+			 *
+			 * @param Forminator_Poll_Model  $this - the current poll.
+			 * @param Forminator_Poll_Model  $poll - the current poll.
+			 * @param array                       $data - current data.
+			 * @param Forminator_Form_Entry_Model $entry
+			 */
+			do_action( 'forminator_poll_mail_before_send_mail', $this, $poll, $data, $entry );
 
-			if ( ! empty( $recipients ) ) {
-				$subject = $this->replace_placeholders( $setting, 'admin-email-title', $poll, $entry );
+			// Process admin mail.
+			if ( $this->is_send_admin_mail( $setting ) ) {
+				$this->init();
+				$recipients = $this->get_admin_email_recipients( $setting, $poll, $entry );
 
-				/**
-				 * Poll subject filter
-				 *
-				 * @since 1.6.1
-				 *
-				 * @param string                     $subject
-				 * @param Forminator_Poll_Model $poll the current poll.
-				 *
-				 * @return string $subject
-				 */
-				$subject = apply_filters( 'forminator_poll_mail_admin_subject', $subject, $poll, $data, $entry, $this );
+				if ( ! empty( $recipients ) ) {
+					$subject = $this->replace_placeholders( $setting, 'admin-email-title', $poll, $entry );
 
-				$message = $this->replace_placeholders( $setting, 'admin-email-editor', $poll, $entry );
+					/**
+					 * Poll subject filter
+					 *
+					 * @since 1.6.1
+					 *
+					 * @param string                     $subject
+					 * @param Forminator_Poll_Model $poll the current poll.
+					 *
+					 * @return string $subject
+					 */
+					$subject = apply_filters( 'forminator_poll_mail_admin_subject', $subject, $poll, $data, $entry, $this );
 
-				/**
-				 * Poll mail message filter
-				 *
-				 * @since 1.6.1
-				 *
-				 * @param string                     $message
-				 * @param Forminator_Poll_Model $poll the current poll.
-				 * @param array                      $data
-				 * @param Forminator_Poll_Front_Mail $this
-				 *
-				 * @return string $message
-				 */
-				$message = apply_filters( 'forminator_poll_mail_admin_message', $message, $poll, $data, $entry, $this );
+					$message = $this->replace_placeholders( $setting, 'admin-email-editor', $poll, $entry );
 
-				$headers = $this->prepare_headers( $setting, $poll, $data, $entry );
-				$this->set_headers( $headers );
+					/**
+					 * Poll mail message filter
+					 *
+					 * @since 1.6.1
+					 *
+					 * @param string                     $message
+					 * @param Forminator_Poll_Model $poll the current poll.
+					 * @param array                      $data
+					 * @param Forminator_Poll_Front_Mail $this
+					 *
+					 * @return string $message
+					 */
+					$message = apply_filters( 'forminator_poll_mail_admin_message', $message, $poll, $data, $entry, $this );
 
-				$this->set_subject( $subject );
-				$this->set_recipients( $recipients );
-				$this->set_message_with_vars( $this->message_vars, $message );
-				$this->send_multiple();
+					$headers = $this->prepare_headers( $setting, $poll, $data, $entry );
+					$this->set_headers( $headers );
 
-				/**
-				 * Action called after admin mail sent
-				 *
-				 * @param Forminator_Poll_Front_Mail - the current poll
-				 * @param Forminator_Poll_Model - the current poll
-				 * @param array                       $data       - current data.
-				 * @param Forminator_Form_Entry_Model $entry      - saved entry.
-				 * @param array                       $recipients - array or recipients.
-				 */
-				do_action( 'forminator_poll_mail_admin_sent', $this, $poll, $data, $entry, $recipients );
+					$this->set_subject( $subject );
+					$this->set_recipients( $recipients );
+					$this->set_message_with_vars( $this->message_vars, $message );
+					$this->send_multiple();
+
+					/**
+					 * Action called after admin mail sent
+					 *
+					 * @param Forminator_Poll_Front_Mail - the current poll
+					 * @param Forminator_Poll_Model - the current poll
+					 * @param array                       $data       - current data.
+					 * @param Forminator_Form_Entry_Model $entry      - saved entry.
+					 * @param array                       $recipients - array or recipients.
+					 */
+					do_action( 'forminator_poll_mail_admin_sent', $this, $poll, $data, $entry, $recipients );
+				}
 			}
-		}
 
-		/**
-		 * Action called after mail is sent
-		 *
-		 * @param Forminator_Poll_Front_Mail - the current poll
-		 * @param Forminator_Poll_Model - the current poll
-		 * @param array $data - current data.
-		 */
-		do_action( 'forminator_poll_mail_after_send_mail', $this, $poll, $data );
+			/**
+			 * Action called after mail is sent
+			 *
+			 * @param Forminator_Poll_Front_Mail - the current poll
+			 * @param Forminator_Poll_Model - the current poll
+			 * @param array $data - current data.
+			 */
+			do_action( 'forminator_poll_mail_after_send_mail', $this, $poll, $data );
+		} finally {
+			// Always reset email context, even if there's an error.
+			self::$is_email_context = false;
+		}
 	}
 
 	/**
@@ -204,13 +211,23 @@ class Forminator_Poll_Front_Mail extends Forminator_Mail {
 		$reply_to_address = apply_filters( 'forminator_poll_mail_admin_reply_to', $reply_to_address, $poll, $data, $entry, $this );
 
 		$cc_addresses = array();
-		if ( isset( $setting['admin-email-cc-address'] ) && ! empty( $setting['admin-email-cc-address'] ) && is_array( $setting['admin-email-cc-address'] ) ) {
-			$setting_cc_addresses = $setting['admin-email-cc-address'];
+		if ( isset( $setting['admin-email-cc-address'] ) && ! empty( $setting['admin-email-cc-address'] ) ) {
+			if ( is_array( $setting['admin-email-cc-address'] ) ) {
+				$setting_cc_addresses = $setting['admin-email-cc-address'];
 
-			foreach ( $setting_cc_addresses as $key => $setting_cc_address ) {
-				$setting_cc_address = $this->replace_placeholders( $setting_cc_addresses, $key, $poll, $entry );
-				if ( is_email( $setting_cc_address ) ) {
-					$cc_addresses[] = $setting_cc_address;
+				foreach ( $setting_cc_addresses as $key => $setting_cc_address ) {
+					$setting_cc_address = $this->replace_placeholders( $setting_cc_addresses, $key, $poll, $entry );
+					if ( is_email( $setting_cc_address ) ) {
+						$cc_addresses[] = $setting_cc_address;
+					}
+				}
+			} else {
+				$cc_string = $this->replace_placeholders( $setting, 'admin-email-cc-address', $poll, $entry );
+				$cc_parts  = array_map( 'trim', explode( ',', $cc_string ) );
+				foreach ( $cc_parts as $cc_part ) {
+					if ( is_email( $cc_part ) ) {
+						$cc_addresses[] = $cc_part;
+					}
 				}
 			}
 		}
@@ -228,13 +245,23 @@ class Forminator_Poll_Front_Mail extends Forminator_Mail {
 		$cc_addresses = apply_filters( 'forminator_poll_mail_admin_cc_addresses', $cc_addresses, $poll, $data, $entry, $this );
 
 		$bcc_addresses = array();
-		if ( isset( $setting['admin-email-bcc-address'] ) && ! empty( $setting['admin-email-bcc-address'] ) && is_array( $setting['admin-email-bcc-address'] ) ) {
-			$setting_bcc_addresses = $setting['admin-email-bcc-address'];
+		if ( isset( $setting['admin-email-bcc-address'] ) && ! empty( $setting['admin-email-bcc-address'] ) ) {
+			if ( is_array( $setting['admin-email-bcc-address'] ) ) {
+				$setting_bcc_addresses = $setting['admin-email-bcc-address'];
 
-			foreach ( $setting_bcc_addresses as $key => $setting_bcc_address ) {
-				$setting_bcc_address = $this->replace_placeholders( $setting_bcc_addresses, $key, $poll, $entry );
-				if ( is_email( $setting_bcc_address ) ) {
-					$bcc_addresses[] = $setting_bcc_address;
+				foreach ( $setting_bcc_addresses as $key => $setting_bcc_address ) {
+					$setting_bcc_address = $this->replace_placeholders( $setting_bcc_addresses, $key, $poll, $entry );
+					if ( is_email( $setting_bcc_address ) ) {
+						$bcc_addresses[] = $setting_bcc_address;
+					}
+				}
+			} else {
+				$bcc_string = $this->replace_placeholders( $setting, 'admin-email-bcc-address', $poll, $entry );
+				$bcc_parts  = array_map( 'trim', explode( ',', $bcc_string ) );
+				foreach ( $bcc_parts as $bcc_part ) {
+					if ( is_email( $bcc_part ) ) {
+						$bcc_addresses[] = $bcc_part;
+					}
 				}
 			}
 		}
@@ -314,19 +341,41 @@ class Forminator_Poll_Front_Mail extends Forminator_Mail {
 	 * @param Forminator_Poll_Model       $poll Poll Model.
 	 * @param Forminator_Form_Entry_Model $entry Form entry model.
 	 * @param array                       $lead_model Lead model.
+	 * @param string                      $result_slug Result slug.
 	 *
 	 * @return array
 	 */
-	public function get_admin_email_recipients( $setting, $poll = null, $entry = null, $lead_model = array() ) {
+	public function get_admin_email_recipients( $setting, $poll = null, $entry = null, $lead_model = array(), $result_slug = '' ) {
 
 		// use settings from model if applicable.
 		if ( $poll instanceof Forminator_Poll_Model ) {
 			$setting = $poll->settings;
 		}
-		$email = array();
+		$email      = array();
+		$recipients = array();
 		if ( isset( $setting['admin-email-recipients'] ) && ! empty( $setting['admin-email-recipients'] ) ) {
 			if ( is_array( $setting['admin-email-recipients'] ) ) {
-				$email = $setting['admin-email-recipients'];
+				$recipients = $setting['admin-email-recipients'];
+			} else {
+				$recipients = array_map( 'trim', explode( ',', $setting['admin-email-recipients'] ) );
+				$recipients = array_filter( $recipients );
+			}
+		}
+
+		if ( ! empty( $recipients ) ) {
+			foreach ( $recipients as $recipient ) {
+				$recipient = forminator_replace_variables( $recipient, $poll ? $poll->id : 0, $entry );
+				$recipient = forminator_replace_poll_form_data( $recipient, $poll, Forminator_Front_Action::$prepared_data, $entry );
+				if ( false !== strpos( $recipient, ',' ) ) {
+					$parts = array_map( 'trim', explode( ',', $recipient ) );
+					foreach ( $parts as $part ) {
+						if ( is_email( $part ) ) {
+							$email[] = $part;
+						}
+					}
+				} elseif ( is_email( $recipient ) ) {
+					$email[] = $recipient;
+				}
 			}
 		}
 

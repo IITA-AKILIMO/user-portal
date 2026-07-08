@@ -2,18 +2,18 @@
 Contributors: getbrave
 Tags: popup, wordpress popup, popups, woocommerce popup, lead generation
 Requires at least: 5.2
-Tested up to: 6.6.2
-Stable tag: 0.7.6
+Tested up to: 7.0
+Stable tag: 0.8.6
 Requires PHP: 7.2.24
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
-Drag n Drop builder to create any kind of popups or conversion widgets. Create popups, optins, lead generation, Woocommerce popups & start Converting.
+The best drag-and-drop Popup Builder for WordPress. Create Popups, exit-intent popups, slide-ins, and lead generation forms & Woocommerce popups in minutes..
 
 
 
 == Description ==
-**Brave Builder** is the most powerful and intuitive Conversion widget builder for WordPress. You can visually create popups, lead generation forms, sitckybars, sidebars in minutes and convert your visitors like there's no tomorrow.
+**Brave Popup Builder** is the most powerful WordPress popup plugin for creating popups, lead generation forms, sitckybars, sidebars in minutes and converting your visitors like there's no tomorrow.
 
 [Brave Website](https://getbrave.io/)  |  [Sample Popups & Widgets](https://getbrave.io/popups)   |  [Docs](https://getbrave.io/brave-documentation)
 
@@ -38,7 +38,7 @@ https://www.youtube.com/watch?v=sBvZR7P8Ml0
 * **Animate Popups** - Add Animations to your Popups from list of ready-made animation list. 
 * **Insert Custom Code** - You can display your favorite plugin's content by adding shortcodes or Custom Codes inside a Code element.
 * **15 Started Presets** - The free version comes with 15 free presets that you can import and customize to build popups within seconds.
-* **23 Newsletter Service Integrations** - Creating eye-catching optin-forms by connecting your Forms to Mailchimp, Mailjet, MailPoet, SendGrid, SendinBlue, Hubspot, Active Campaign, AWeber, ConvertKit, Constant Contact, Campaign Monitor, GetResponse, Mailer Lite, Ontraport, SendPulse, Moosend, Zapier, The Newsletter Plugin, Pabbly, Klaviyo, FluentCRM, Sendy, OmniSend and Mailster.
+* **23 Newsletter Service Integrations** - Creating eye-catching optin-forms by connecting your Forms to Mailchimp, Mailjet, MailPoet, SendGrid, SendinBlue, Hubspot, Active Campaign, AWeber, ConvertKit, Constant Contact, Campaign Monitor, GetResponse, Mailer Lite, Ontraport, SendPulse, Moosend, Zapier, The Newsletter Plugin, Pabbly, Klaviyo, FluentCRM, Sendy, OmniSend, MailWizz and Mailster.
 * **Great Performance** - Unlike other popup's Brave does not load bunch of scripts to your site. It was built with Performance in mind. Brave Popups are very lightweight and only loads assets after the page is fully loaded. 
 * **Analytics** -  Easily find out which popups are bringing in the most conversions. Brave tracks how many times a Popup is viewed and how many times the Popup is clicked or Form is submitted. 
 
@@ -118,6 +118,47 @@ The PRO version lets you create unlimited steps that you can link to each other 
 
 
 == Changelog ==
+= 0.8.6 - 6 Jul 2026. =
+* Fixed: Resolves broken access control vulenrablity in Popup Previews. Reported by Huseyin Mertoglu.
+* Fixed: Resolves XSS vulenrabilty in forms elements via UTM. Reported by Huseyin Mertoglu.
+
+
+= 0.8.5 - 26 Jan 2026. =
+* Added: Ability to Search Newlsetter list item in Newsletter dropdown field.
+
+
+
+= 0.8.4 - 1 Dec 2025. =
+* Fixed: Draft Popup Content could be loaded by anyone using custom Javascript. (CVSS 5.3)
+
+
+= 0.8.3 - 25 Nov 2025. =
+* Fixed: ActiveCampaign Subscription Issue.
+
+
+= 0.8.2 - 22 Aug 2025. =
+* Fixed: Newsletter form Settings could not be accessed.
+* Fixed: Form Phone Field Validation.
+* Fixed: Minor CSS issues.
+* Added: Ability to reload page on Button Click.
+
+
+= 0.8.1 - 13 Aug 2025. =
+* Fixed: The Newsletter Plugin Integration.
+* Fixed: Broken AWeber Integration.
+* Fixed: Click Goal tracking was not working.
+
+
+= 0.8.0 - 28 Jul 2025. =
+* Added: Get Error details of Newsletter subscription error in the admin notification email. 
+* Added: Display error message to visitor when Newsletter subscription fails.
+
+
+
+= 0.7.7 - 19 Jun 2025. =
+* Added: MailWizz Integration.
+
+
 = 0.7.6 - 09 Jan 2025. =
 * Fixed: Warning messages in PHP 8.2.
 * Fixed: Incorrect Inline form fields width when form has hidden fields.

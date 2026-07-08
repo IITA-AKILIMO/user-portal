@@ -11,6 +11,8 @@ $recaptcha_logo              = forminator_plugin_url() . 'assets/img/recaptcha_l
 $recaptcha_logo_2x           = forminator_plugin_url() . 'assets/img/recaptcha_logo@2x.png';
 $hcaptcha_logo               = forminator_plugin_url() . 'assets/img/hcaptcha_logo.png';
 $hcaptcha_logo_2x            = forminator_plugin_url() . 'assets/img/hcaptcha_logo@2x.png';
+$turnstile_logo              = forminator_plugin_url() . 'assets/images/icons/turnstile_logo.png';
+$turnstile_logo_2x           = forminator_plugin_url() . 'assets/images/icons/turnstile_logo@2x.png';
 $v2_captcha_key              = get_option( 'forminator_captcha_key', '' );
 $v2_captcha_secret           = get_option( 'forminator_captcha_secret', '' );
 $v2_invisible_captcha_key    = get_option( 'forminator_v2_invisible_captcha_key', '' );
@@ -23,6 +25,9 @@ $nonce                       = wp_create_nonce( 'forminator_save_popup_captcha' 
 $captcha_tab_saved = get_option( 'forminator_captcha_tab_saved', 'recaptcha' );
 $hcaptcha_key      = get_option( 'forminator_hcaptcha_key', '' );
 $hcaptcha_secret   = get_option( 'forminator_hcaptcha_secret', '' );
+
+$turnstile_key    = get_option( 'forminator_turnstile_key', '' );
+$turnstile_secret = get_option( 'forminator_turnstile_secret', '' );
 
 $new = true;
 ?>
@@ -43,7 +48,7 @@ $new = true;
 				<div class="sui-box-settings-col-1">
 					<span class="sui-settings-label"><?php esc_html_e( 'Configuration', 'forminator' ); ?></span>
 					<span class="sui-description"><?php esc_html_e( 'A CAPTCHA is an anti-spam technique which helps to protect your website from spam and abuse.', 'forminator' ); ?></span>
-					<span class="sui-description"><?php esc_html_e( 'Forminator currently supports both reCAPTCHA and hCaptcha. Select and configure your preferred CAPTCHA settings and language.', 'forminator' ); ?></span>
+					<span class="sui-description"><?php esc_html_e( 'Forminator currently supports reCAPTCHA, hCaptcha, and Cloudflare Turnstile. Select and configure your preferred CAPTCHA settings and language.', 'forminator' ); ?></span>
 				</div>
 
 				<div class="sui-box-settings-col-2">
@@ -60,12 +65,14 @@ $new = true;
 								<button
 									type="button"
 									class="sui-button-icon sui-tabs-navigation--left"
+									aria-label="<?php esc_attr_e( 'Scroll left', 'forminator' ); ?>"
 								>
 									<span class="sui-icon-chevron-left"></span>
 								</button>
 								<button
 									type="button"
 									class="sui-button-icon sui-tabs-navigation--right"
+									aria-label="<?php esc_attr_e( 'Scroll right', 'forminator' ); ?>"
 								>
 									<span class="sui-icon-chevron-right"></span>
 								</button>
@@ -99,6 +106,20 @@ $new = true;
 										style="pointer-events: none;"
 									/>
 									<?php esc_html_e( 'Hcaptcha', 'forminator' ); ?>
+								</button>
+								<button type="button" role="tab" id="turnstile-btn"
+									class="captcha-main-tab sui-tab-item <?php echo esc_attr( 'turnstile' === $captcha_tab_saved ? 'active' : '' ); ?>"
+									aria-controls="turnstile-tab"
+									aria-selected="false"
+									data-tab-name="turnstile"
+								>
+									<img
+										src="<?php echo esc_url( $turnstile_logo ); ?>"
+										srcset="<?php echo esc_url( $turnstile_logo ); ?> 1x, <?php echo esc_url( $turnstile_logo_2x ); ?> 2x"
+										alt="<?php echo esc_attr( 'Cloudflare Turnstile' ); ?>"
+										style="pointer-events: none;"
+									/>
+									<?php esc_html_e( 'Cloudflare Turnstile', 'forminator' ); ?>
 								</button>
 							</div>
 
@@ -343,6 +364,64 @@ $new = true;
 									<div class="sui-form-field">
 										<label for="hcaptcha_preview" id="hcaptcha_preview-label" class="sui-label"><?php esc_html_e( 'hCAPTCHA Preview', 'forminator' ); ?></label>
 										<div id="hcaptcha-preview">
+											<p class="fui-loading-dialog">
+												<i class="sui-icon-loader sui-loading" aria-hidden="true"></i>
+											</p>
+										</div>
+										<span class="sui-description">
+											<?php esc_html_e( 'If you see any errors in the preview, make sure the keys you’ve entered are valid, and you’ve listed your domain name while generating the keys.', 'forminator' ); ?>
+										</span>
+									</div>
+
+								</div>
+
+								<?php // TAB: Cloudflare Turnstile. ?>
+								<div tabindex="1" role="tabpanel" id="turnstile-tab" class="sui-tab-content <?php echo esc_attr( 'turnstile' === $captcha_tab_saved ? 'active' : '' ); ?>" aria-labelledby="turnstile-btn">
+
+									<span class="sui-settings-label"><?php esc_html_e( 'Turnstile API Keys', 'forminator' ); ?></span>
+									<span class="sui-description" style="margin-bottom: 10px;">
+										<?php
+										esc_html_e( 'Enter your Turnstile API keys below to enable Cloudflare Turnstile option in your form’s CAPTCHA field.', 'forminator' );
+										if ( forminator_is_show_documentation_link() ) {
+											printf(
+												/* Translators: 1. Opening <a> tag, 2. closing <a> tag. */
+												' ' . esc_html__( 'See %1$sinstructions%2$s on how to get your API Keys.', 'forminator' ),
+												'<a href="https://wpmudev.com/docs/wpmu-dev-plugins/forminator/#cloudflare-turnstile-settings" target="_blank" rel="noreferrer">',
+												'</a>'
+											);
+										}
+										?>
+									</span>
+
+									<div class="sui-form-field">
+										<label for="turnstile_key" id="turnstile-sitekey-label" class="sui-label"><?php esc_html_e( 'Site Key', 'forminator' ); ?></label>
+										<input
+											type="text"
+											name="turnstile_key"
+											placeholder="<?php esc_html_e( 'Enter your site key here', 'forminator' ); ?>"
+											value="<?php echo esc_attr( $turnstile_key ); ?>"
+											id="turnstile_key"
+											class="sui-form-control"
+											aria-labelledby="turnstile-sitekey-label"
+										/>
+									</div>
+
+									<div class="sui-form-field">
+										<label for="turnstile_secret" id="turnstile-secretkey-label" class="sui-label"><?php esc_html_e( 'Secret Key', 'forminator' ); ?></label>
+										<input
+											type="text"
+											name="turnstile_secret"
+											placeholder="<?php esc_html_e( 'Enter your secret key here', 'forminator' ); ?>"
+											value="<?php echo esc_attr( $turnstile_secret ); ?>"
+											id="turnstile_secret"
+											class="sui-form-control"
+											aria-labelledby="turnstile-secretkey-label"
+										/>
+									</div>
+
+									<div class="sui-form-field">
+										<label for="turnstile_preview" id="turnstile_preview-label" class="sui-label"><?php esc_html_e( 'Turnstile widget preview', 'forminator' ); ?></label>
+										<div id="turnstile-preview">
 											<p class="fui-loading-dialog">
 												<i class="sui-icon-loader sui-loading" aria-hidden="true"></i>
 											</p>

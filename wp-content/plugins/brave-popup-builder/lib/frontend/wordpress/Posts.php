@@ -126,7 +126,7 @@ if ( ! class_exists( 'BravePop_Element_Posts' ) ) {
          $imageAlignLeftClass = $imageAlignLeft && $layout=== 2 ? 'brave_post--left-image' : '';
          $noContentClass = $displayContent === true ? '' : 'brave_post--no-content';
          $slideClass = $slide ? 'brave_post__chunk--carousel' : 'brave_post__chunk--notCarousel';
-         $goalAction = $this->goalItem ? 'onclick="brave_complete_goal('.$this->popupID.', \'click\');"':'';
+         $goalAction = $this->goalItem ? 'brave_complete_click_goal(event, '.$this->popupID.', \'click\', this);"':'';
 
          //QUERY VARS
          $postType = isset($this->data->postType) ? $this->data->postType : 'latest';

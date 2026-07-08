@@ -855,4 +855,57 @@ abstract class Forminator_Integration_Hooks {
 
 		return $value;
 	}
+
+	/**
+	 * Maybe add group fields which were cloned by repeater.
+	 *
+	 * @since 1.53.0
+	 *
+	 * @param array $form_fields Form fields.
+	 * @return array
+	 */
+	protected static function maybe_add_group_cloned_fields( $form_fields ) {
+		$field_data = Forminator_CForm_Front_Action::$prepared_data;
+
+		// For quiz lead forms, $prepared_data contains quiz data (answers, entry_id)
+		// instead of form field values. Load field data from the lead entry meta.
+		if ( ! empty( $field_data['has_lead'] ) && ! empty( $field_data['entry_id'] ) ) {
+			$entry = forminator_lead_form_data( $field_data );
+			if ( ! empty( $entry->meta_data ) ) {
+				$field_data = $entry->meta_data;
+			}
+		}
+
+		if ( empty( $field_data ) ) {
+			return $form_fields;
+		}
+
+		$result       = array();
+		$group_fields = array();
+
+		foreach ( $form_fields as $key => $field ) {
+			$parent      = $field['parent_group'] ?? '';
+			$next_parent = $form_fields[ $key + 1 ]['parent_group'] ?? '';
+
+			$result[] = $field;
+
+			if ( $parent ) {
+				$group_fields[ $parent ][] = $field;
+
+				// When leaving a group, append all clones for that group.
+				if ( $next_parent !== $parent ) {
+					for ( $i = 2; isset( $field_data[ $group_fields[ $parent ][0]['element_id'] . '-' . $i ] ); $i++ ) {
+						foreach ( $group_fields[ $parent ] as $gf ) {
+							$cloned_id = $gf['element_id'] . '-' . $i;
+							if ( isset( $field_data[ $cloned_id ] ) ) {
+								$result[] = array_merge( $gf, array( 'element_id' => $cloned_id ) );
+							}
+						}
+					}
+				}
+			}
+		}
+
+		return $result;
+	}
 }

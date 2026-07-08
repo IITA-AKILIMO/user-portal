@@ -62,7 +62,7 @@ if ( ! class_exists( 'BravePop_CampaignMonitor' ) ) {
          $lastname = trim($lname);
          $fullname = $firstname.($lname ? ' '.$lname : $lname);
 
-         $contact = array( 'EmailAddress' => $email, 'Name' => $fullname, 'ConsentToTrack' => 'Yes' );
+         $contact = array( 'EmailAddress' => $email, 'Name' => $fullname, 'ConsentToTrack' => 'Yes', "Resubscribe" => true, "RestartSubscriptionBasedAutoresponders" => true );
          
          //Add Custom Field Values
          if(count($customFields) > 0){
@@ -96,13 +96,19 @@ if ( ! class_exists( 'BravePop_CampaignMonitor' ) ) {
             $addedData = array(
                'action'=> isset($userData['action']) ? $userData['action'] : 'visitor_added',  
                'user_id'=> isset($userData['userData']['ID']) ? $userData['userData']['ID'] : false,
-               'user_mail'=> $email, 'esp_user_id'=> 'none'
+               'user_mail'=> $email, 
+               'esp_user_id'=> '',
+               'user_data'=> $contact,
+               'list_id'=> $list_id,
+               'response' => $response
             ); 
-            do_action( 'bravepop_addded_to_list', 'campaignmonitor', $addedData );
-
-            return $response['response']['code']; 
+            do_action( 'bravepop_added_to_list', 'campaignmonitor', $addedData );
+            return array( 'success' => true, 'result' => $addedData );
          }else{
-            return false;
+            $errorMsg = isset($data) ? $data : 'Unknown Error Occurred. No Error details provided by Campaignmonitor.';
+            $errorPayload = array( 'user_mail'=> $email, 'list_id'=> $list_id, 'user_data'=> $contact, 'error' => $errorMsg, 'response'=> $response );
+            do_action( 'bravepop_added_to_list_failed', 'campaignmonitor', $errorPayload );
+            return array( 'success' => false, 'errorMsg' => $errorMsg, 'result' => $errorPayload );
          }
 
       }

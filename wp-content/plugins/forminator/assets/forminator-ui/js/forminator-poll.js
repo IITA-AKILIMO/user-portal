@@ -24,10 +24,10 @@ function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == 
     function hover(element) {
       var getInput = $(element);
       var getField = getInput.closest('.forminator-field');
-      getInput.mouseover(function (e) {
+      getField.off('mouseenter.forminatorHoverState mouseleave.forminatorHoverState').on('mouseenter.forminatorHoverState', function (e) {
         getField.addClass('forminator-is_hover');
         e.stopPropagation();
-      }).mouseout(function (e) {
+      }).on('mouseleave.forminatorHoverState', function (e) {
         getField.removeClass('forminator-is_hover');
         e.stopPropagation();
       });
@@ -98,6 +98,15 @@ function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == 
       if (label.length) {
         // Add floating class
         label.addClass('forminator-floating--input');
+
+        // If input has description adjancent to label then calculate it';s height and set --forminator-floating-label-translate css variable
+        var description = field.find('.forminator-label + .forminator-description');
+        if (description.length) {
+          var descriptionHeight = description.outerHeight();
+          var labelHeight = label.outerHeight();
+          var translateY = descriptionHeight + labelHeight + 16; // 16px margin
+          label.css('--forminator-floating-label-translate', translateY + 'px');
+        }
 
         // Add icon class (if applies)
         if (field.find('.forminator-input-with-icon').length) {
@@ -176,36 +185,17 @@ function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == 
       return;
     }
     function formatLabel(str, maxwidth) {
-      var sections = [];
-      var words = str.split(' ');
-      var temp = '';
-      words.forEach(function (item, index) {
-        if (0 < temp.length) {
-          var concat = temp + ' ' + item;
-          if (concat.length > maxwidth) {
-            sections.push(temp);
-            temp = '';
-          } else {
-            if (index == words.length - 1) {
-              sections.push(concat);
-              return;
-            } else {
-              temp = concat;
-              return;
-            }
-          }
-        }
-        if (index == words.length - 1) {
-          sections.push(item);
-          return;
-        }
-        if (item.length < maxwidth) {
-          temp = item;
-        } else {
-          sections.push(item);
-        }
-      });
-      return sections;
+      if ('string' !== typeof str) {
+        str = String(str);
+      }
+      str = str.replace(/\s+/g, ' ').trim();
+      if (maxwidth >= str.length) {
+        return str;
+      }
+      if (3 >= maxwidth) {
+        return str.slice(0, maxwidth);
+      }
+      return str.slice(0, maxwidth - 3).trimEnd() + '...';
     }
     function init() {
       // Poll Data

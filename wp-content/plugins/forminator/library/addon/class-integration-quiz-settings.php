@@ -415,7 +415,7 @@ abstract class Forminator_Integration_Quiz_Settings extends Forminator_Integrati
 	protected function get_fields_for_type( $type = '' ) {
 		$fields = parent::get_fields_for_type( $type );
 
-		if ( 'email' === $type ) {
+		if ( in_array( $type, array( 'email', 'upload' ), true ) ) {
 			return $fields;
 		}
 

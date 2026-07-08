@@ -71,7 +71,7 @@ class Forminator_Reports_Page extends Forminator_Admin_Page {
 			$model        = 'Forminator_Quiz_Model';
 		}
 
-		echo '<select name="form_id" data-allow-search="1" data-minimum-results-for-search="0" class="' . esc_attr( $classes ) . '" data-search="true" data-search="true" data-placeholder="' . esc_attr( $empty_option ) . '">';
+		echo '<select aria-label="' . esc_html__( 'Choose a Form', 'forminator' ) . '" name="form_id" data-allow-search="1" data-minimum-results-for-search="0" class="' . esc_attr( $classes ) . '" data-search="true" data-search="true" data-placeholder="' . esc_attr( $empty_option ) . '">';
 		echo '<option><option>';
 
 		$forms = Forminator_API::$method( null, 1, 999, $model::STATUS_PUBLISH );

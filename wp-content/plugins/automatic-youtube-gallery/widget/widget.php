@@ -54,8 +54,16 @@ class AYG_Widget extends WP_Widget {
 			echo $args['before_title'] . apply_filters( 'widget_title', $instance['title'] ) . $args['after_title'];
 		}
 
+		// Deprecated since v2.5.8. Retained for backward compatibility.
 		if ( isset( $args['widget_id'] ) ) {
-			$instance['uid'] = md5( $args['widget_id'] );
+			$instance['deprecated_uid'] = md5( $args['widget_id'] );
+		}
+
+		// If popup is enabled and type is video, force theme to popup	
+		if ( isset( $instance['popup'] ) && ! empty( $instance['popup'] ) ) {
+			if ( isset( $instance['type'] ) && 'video' == $instance['type'] ) {
+				$instance['theme'] = 'popup';
+			}
 		}
 		
 		echo ayg_build_gallery( $instance );
@@ -90,6 +98,8 @@ class AYG_Widget extends WP_Widget {
 					}
 				} elseif ( 'checkbox' == $field_type ) {
 					$instance[ $field_name ] = isset( $new_instance[ $field_name ] ) ? (int) $new_instance[ $field_name ] : 0;
+				} elseif ( 'textarea' == $field_type ) {
+					$instance[ $field_name ] = ! empty( $new_instance[ $field_name ] ) ? sanitize_textarea_field( $new_instance[ $field_name ] ) : '';
 				} else {
 					$instance[ $field_name ] = ! empty( $new_instance[ $field_name ] ) ? sanitize_text_field( $new_instance[ $field_name ] ) : '';
 				}

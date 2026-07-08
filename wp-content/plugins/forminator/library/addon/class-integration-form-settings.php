@@ -31,6 +31,13 @@ abstract class Forminator_Integration_Form_Settings extends Forminator_Integrati
 	protected $form_fields = array();
 
 	/**
+	 * Current Module instance
+	 *
+	 * @var Forminator_Base_Form_Model|null
+	 */
+	protected $module = null;
+
+	/**
 	 * An addon can be force disconnected from form, if its not met requirement, or data changed externally
 	 * example :
 	 *  - Mail List deleted on mailchimp server app
@@ -76,6 +83,7 @@ abstract class Forminator_Integration_Form_Settings extends Forminator_Integrati
 		}
 		$this->form_fields   = forminator_addon_format_form_fields( $custom_form );
 		$this->form_settings = forminator_addon_format_form_settings( $custom_form );
+		$this->module        = $custom_form;
 	}
 
 	/**
@@ -352,5 +360,14 @@ abstract class Forminator_Integration_Form_Settings extends Forminator_Integrati
 		);
 
 		return $address;
+	}
+
+	/**
+	 * Get current Module instance
+	 *
+	 * @return Forminator_Base_Form_Model|null
+	 */
+	public function get_module() {
+		return $this->module;
 	}
 }

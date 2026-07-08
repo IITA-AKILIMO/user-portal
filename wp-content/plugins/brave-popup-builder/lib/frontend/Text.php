@@ -104,7 +104,7 @@ if ( ! class_exists( 'BravePop_Element_Text' ) ) {
          $eventLabel = isset($this->data->action->trackData->eventLabel) ? $this->data->action->trackData->eventLabel : '';
          $actionTrack = ($actionType !== 'step' || $actionType !== 'close') && $track && $clickable ? ' onclick="brave_send_ga_event(\''.$eventCategory.'\', \''.$eventAction.'\', \''.$eventLabel.'\');"':'';
          $actionInlineTrack = ($actionType === 'step' || $actionType === 'close') && $track && $clickable ? ' brave_send_ga_event(\''.$eventCategory.'\', \''.$eventAction.'\', \''.$eventLabel.'\');':'';
-         $goalAction = $this->goalItem ? 'brave_complete_goal('.$this->popupID.', \'click\');"':'';
+         $goalAction = $this->goalItem ? 'brave_complete_click_goal(event, '.$this->popupID.', \'click\', this);"':'';
          $actionURL  = isset($this->data->action->actionData->url) ? $this->data->action->actionData->url : '';
          $actionPhone  = !empty($this->data->action->actionData->phone) ? $this->data->action->actionData->phone : '';
          $actionDownload = !empty($this->data->action->actionData->download) ? 'download': '';
@@ -126,9 +126,10 @@ if ( ! class_exists( 'BravePop_Element_Text' ) ) {
          $actionStep = $clickable && $actionType === 'step' && $actionStepNum >=0 ? 'onclick="brave_action_step('.$this->popupID.', '.$this->stepIndex.', '.$actionStepNum.'); '.$actionInlineTrack.' '.$goalAction.'"':'';
          $actionClose = $clickable && $actionType === 'close' ? 'onclick="brave_close_popup(\''.$this->popupID.'\', \''.$this->stepIndex.'\'); '.$actionInlineTrack.' '.$goalAction.'"':'';
          $actionCopy = $clickable && $actionType === 'copy' ? 'onclick="brave_copy_to_clipboard(\''.$this->data->id.'\', \''.__('Copied to Clipboard','bravepop').'\', \''.(!empty($this->data->copyTextPos) ? $this->data->copyTextPos : 'bottom').'\'); '.$actionInlineTrack.' '.$goalAction.'"':'';
-         
+         $actionReload = $actionType === 'reload' ? 'onclick="window.location.reload(); '.$actionInlineTrack.' '.$goalAction.'"':'';
+
          $html = new stdClass();
-         $html->start = '<a class="brave_element__inner_link" '.$actionLink.' '.$actionCall.' '.$actionDownload.' '.$actionStep . $actionClose. $actionTrack.$actionJS.$actionCopy.'>';
+         $html->start = '<a class="brave_element__inner_link" '.$actionLink.' '.$actionCall.' '.$actionDownload.' '.$actionStep . $actionClose . $actionReload . $actionTrack.$actionJS.$actionCopy.'>';
          $html->end = '</a>';
 
          return $html;
@@ -148,7 +149,7 @@ if ( ! class_exists( 'BravePop_Element_Text' ) ) {
             if(strpos($content, "{{cookie-") !== false){ $dynamiClass .= ' brave_element--text_hasCookie';}
          }
          if(!empty($this->data->advanced) && $this->goalItem){
-            $content = str_replace('href=', 'onclick="brave_complete_goal('.$this->popupID.', \'click\');" href=', $content);
+            $content = str_replace('href=', 'onclick="brave_complete_click_goal(event, '.$this->popupID.', \'click\', this);" href=', $content);
          }
          $content = apply_filters( 'brave_text_element_content', $content, $this->data->id );
          $content = wp_kses_post($content);

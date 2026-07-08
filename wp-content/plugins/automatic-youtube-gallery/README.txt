@@ -3,10 +3,10 @@ Plugin URI: https://plugins360.com/automatic-youtube-gallery/
 Contributors: plugins360, wpvideogallery, freemius
 Donate link: https://plugins360.com
 Tags: youtube gallery, youtube playlist, youtube channel, youtube embed, youtube live
-Requires at least: 6.0
-Tested up to: 6.7
+Requires at least: 6.3
+Tested up to: 7.0
 Requires PHP: 5.6.20
-Stable tag: 2.5.6
+Stable tag: 2.7.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -29,7 +29,7 @@ https://www.youtube.com/watch?v=a90OGk42fJ4&rel=0
 
 ### STANDARD FEATURES
 
-* Create unlimited galleries.
+* Create unlimited & searchable galleries.
 * Automate your galleries using various YouTube sources like,
  * USERNAME
  * CHANNEL
@@ -120,6 +120,65 @@ Yes, it is. However, do not "network-activate" the plugin. Activate it only on t
 10. Widget
 
 == Changelog ==
+
+= 2.7.2 =
+
+* New: Added "Slider Autoplay" and "Autoplay Speed" settings for the Slider + Popup theme.
+* New: Introduced `ayg_theme_classic_params`, `ayg_theme_inline_params`, `ayg_theme_playlist_params`, `ayg_theme_slider_params`, `ayg_theme_slider_inline_params`, and `ayg_theme_slider_popup_params` filter hooks for customizing player parameters per theme.
+* New: Introduced `ayg_theme_slider_slick_options` filter hook for customizing Slick carousel options across all slider themes.
+* New: Introduced `ayg_search_form_params` filter hook for customizing search form parameters. The previous `ayg_search_form_args` hook is deprecated but retained for backward compatibility.
+* New: Introduced `ayg_autoflush_rewrite_rules_in_admin` filter hook to optionally enable rewrite rule checks in admin contexts (runs on public pages only by default).
+* Tweak: Updated Freemius SDK to version 2.13.1.
+* Tweak: Improved performance of video storage by replacing per-video database queries with a single bulk INSERT per API response, reducing database load on cache-miss pagination requests.
+* Tweak: Disabled autoloading for the `ayg_transient_keys`, `ayg_channel_ids`, and `ayg_playlist_ids` options to prevent lookup caches from being loaded on every page request site-wide.
+* Tweak: Switched rewrite rule flush from hard (`.htaccess` rewrite) to soft (database only), avoiding unnecessary file I/O on the front end.
+* Fix: WordPress 7.0 compatibility issues.
+
+= 2.7.1 =
+
+* New: Added options to force-load the plugin's CSS (recommended) and JavaScript (advanced) across all front-end pages. This helps resolve layout or functionality issues caused by themes, page builders, or optimization plugins.
+* New: Added a "Shorts / Vertical (9:16)" option to the "Image Height (Ratio)" setting.
+* New: Added a "Shorts / Vertical (9:16)" option to the "Player Height (Ratio)" setting.
+* Tweak: Improved popup player behavior — the player now always fits within the viewport. Previously, it could extend beyond the visible area.
+* Tweak: Enhanced slider dots behavior by limiting the maximum number of dots to 5 and automatically enabling dots during navigation when using the slider template.
+* Tweak: Introduced a new wrapper function, ayg_get_option(), for the WordPress get_option() function to prevent issues when plugin settings are missing.
+* Fix: Resolved an issue where deeplinking did not work correctly on the site home/front page.
+* Fix: Registered custom query variables to prevent conflicts with SEO and optimization plugins that may strip unrecognized query vars.
+* Fix: Various minor bug fixes and performance enhancements.
+
+= 2.6.5 =
+
+* Tweak: Updated Freemius SDK to version 2.13.0.
+* Fix: WordPress 6.9 compatibility issues.
+
+= 2.6.4 =
+
+* New: Added support for displaying single videos in a popup.
+* Tweak: Enhanced Schema.org (JSON-LD) structured data support for all single video layouts.
+* Tweak: Updated Freemius SDK to version 2.12.2.
+* Fix: Resolved issue where the fullscreen button stopped working during continuous play in fullscreen mode.
+* Fix: Improved compatibility with the Divi page builder.
+* Fix: Various minor bug fixes and performance enhancements.
+
+= 2.6.1 =
+
+* Security Fix: Addressed multiple security issues to enhance overall plugin security.
+* Tweak: Updated the Freemius SDK to version 2.12.1.
+* Fix: Fixed compatibility issues with the Oxygen page builder.
+* Fix: Various minor bug fixes and performance improvements.
+
+= 2.6.0 =
+
+* New: Added support for disabling automatic page scroll to the video player by setting the "Page Scroll Top Offset" to -1, giving users more control over layout behavior.
+* Fix: Resolved various minor bugs and applied performance improvements for a smoother experience.
+
+= 2.5.9 =
+
+* New: Introduced a search form to filter videos within the gallery for easier navigation.
+* New: Added a dedicated settings page to manage all button labels used by the plugin in one place.
+* Tweak: "Development Mode" is now disabled by default, as some users were unknowingly using it on production websites, leading to YouTube quota exceeded errors.
+* Tweak: Added an option to disable caching on a per-gallery basis for greater flexibility.
+* Fix: Addressed several minor bugs and implemented performance enhancements.
 
 = 2.5.6 =
 
@@ -277,6 +336,6 @@ Yes, it is. However, do not "network-activate" the plugin. Activate it only on t
 
 == Upgrade Notice ==
 
-= 2.5.6 =
+= 2.7.2 =
 
-Upgraded to the latest version of the Freemius SDK for enhanced compatibility. [See changelog](https://wordpress.org/plugins/automatic-youtube-gallery/#developers)
+WordPress 7 Compatibility Release. [See changelog](https://wordpress.org/plugins/automatic-youtube-gallery/#developers)

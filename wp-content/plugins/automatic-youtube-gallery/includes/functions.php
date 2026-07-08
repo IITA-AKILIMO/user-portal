@@ -22,21 +22,28 @@ if ( ! defined( 'WPINC' ) ) {
  * @return mixed
  */
 function ayg_build_gallery( $args ) {
-	$general_settings = get_option( 'ayg_general_settings' );
+	$general_settings = ayg_get_option( 'ayg_general_settings' );
+	$strings_settings = ayg_get_option( 'ayg_strings_settings' );
 
 	global $post;
 
 	// Vars
-	$fields   = ayg_get_editor_fields();
+	$fields = ayg_get_editor_fields();
+	$excluded_fields = array( 'popup' ); // Fields not part of attributes
 	$defaults = array();
 
 	foreach ( $fields as $key => $value ) {
 		foreach ( $value['fields'] as $field ) {
+			if ( in_array( $field['name'], $excluded_fields ) ) {
+				continue;
+			}
+
 			$defaults[ $field['name'] ] = $field['value'];
 		}
 	}
 
-	$attributes = shortcode_atts( $defaults, $args );
+	$defaults = array_merge( $defaults, (array) $strings_settings );
+	$attributes = shortcode_atts( $defaults, $args, 'automatic_youtube_gallery' );
 
 	$attributes['post_id'] = 0;
 	if ( isset( $post->ID ) ) {
@@ -63,22 +70,34 @@ function ayg_build_gallery( $args ) {
 		$attributes['livestream'] = $attributes['channel'];
 	}
 
-	if ( isset( $args['uid'] ) && ! empty( $args['uid'] ) ) {
-		$attributes['uid'] = $args['uid'];
-	} else {
-		$attributes['uid'] = md5( $source_type . sanitize_text_field( $attributes[ $source_type ] ) . sanitize_text_field( $attributes['theme'] ) );
+	$attributes['lazyload'] = 0;
+	if ( ! empty( $general_settings['lazyload'] ) ) {
+		$attributes['lazyload'] = 1;
 	}
 
-	$attributes['lazyload'] = 0;
-	if ( isset( $general_settings['lazyload'] ) && ! empty( $general_settings['lazyload'] ) ) {
-		$attributes['lazyload'] = 1;
+	$source_url = sanitize_text_field( $attributes[ $source_type ] );	
+
+	if ( isset( $args['uid'] ) && ! empty( $args['uid'] ) ) {
+		$attributes['uid'] = sanitize_text_field( $args['uid'] );
+	} else {
+		$attributes['uid'] = md5( $source_type . $source_url );
+	}
+
+	$attributes['uid'] = apply_filters( 'ayg_gallery_id', $attributes['uid'], $args );
+
+	// Deprecated since v2.5.8. Retained for backward compatibility.
+	$deprecated_uid = md5( $source_type . $source_url . sanitize_text_field( $attributes['theme'] ) ); // Deprecated
+	if ( isset( $args['deprecated_uid'] ) && ! empty( $args['deprecated_uid'] ) ) {
+		$deprecated_uid = sanitize_text_field( $args['deprecated_uid'] );
 	}
 
 	// Get Videos
 	$api_params = array(
+		'uid'        => $attributes['uid'],
 		'type'       => $source_type,
-		'src'        => sanitize_text_field( $attributes[ $source_type ] ),
-		'order'      => sanitize_text_field( $attributes['order'] ), // applicable only when type=search
+		'src'        => $source_url,
+		'order'      => sanitize_text_field( $attributes['order'] ), // Works only when type = "search".
+		'limit'      => $attributes['limit'], // Works only when type = "search".
 		'maxResults' => $attributes['per_page'],
 		'cache'      => (int) $attributes['cache']
 	);
@@ -92,7 +111,7 @@ function ayg_build_gallery( $args ) {
 	if ( ! isset( $response->error ) ) {
 		// Store Gallery ID
 		if ( $attributes['post_id'] > 0 && isset( $attributes['deeplinking'] ) && 1 == $attributes['deeplinking'] ) {
-			$pages = get_option( 'ayg_gallery_page_ids', array() );
+			$pages   = ayg_get_option( 'ayg_gallery_page_ids' );
 			$page_id = $attributes['post_id'];
 
 			if ( ! in_array( $page_id, $pages ) ) {
@@ -105,9 +124,9 @@ function ayg_build_gallery( $args ) {
 		$videos = array();		
 
 		$gallery_id_from_url = get_query_var( 'ayg_gallery_id' );	
-		$video_id_from_url = get_query_var( 'ayg_video_id' );	
+		$video_id_from_url   = get_query_var( 'ayg_video_id' );	
 
-		if ( $attributes['uid'] == $gallery_id_from_url ) {
+		if ( $attributes['uid'] == $gallery_id_from_url || $deprecated_uid == $gallery_id_from_url ) {
 			$video = ayg_db_get_video( $video_id_from_url );		
 
 			if ( $video ) {
@@ -186,28 +205,74 @@ function ayg_combine_video_attributes( $atts ) {
 }
 
 /**
- * Create a custom database table "{$wpdb->prefix}ayg_videos" 
+ * Create custom database tables
  *
  * @since 2.1.0
  */
-function ayg_db_create_videos_table() {
+function ayg_db_create_custom_tables() {
 	global $wpdb;
 
-	$charset_collate = $wpdb->get_charset_collate();	
+	require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+	$charset_collate = $wpdb->get_charset_collate();
+	
+	$videos_table = $wpdb->prefix . 'ayg_videos';
 
-	$sql = "CREATE TABLE `{$wpdb->prefix}ayg_videos` (
+	// Check if the videos table exists
+	$query = $wpdb->prepare( 'SHOW TABLES LIKE %s', $wpdb->esc_like( $videos_table ) );
+
+	if ( $wpdb->get_var( $query ) === $videos_table ) {
+		// Find and remove duplicate video IDs
+		$wpdb->query(
+			"DELETE v1 FROM $videos_table v1
+			INNER JOIN $videos_table v2
+			ON v1.id = v2.id AND v1.NUM > v2.NUM"
+		);
+	}
+
+	// Create the videos table
+	$sql = "CREATE TABLE $videos_table (
 		NUM bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
 		id varchar(100) NOT NULL,
 		title text NOT NULL,
 		description text NOT NULL,
-		thumbnails text NOT NULL,		
+		thumbnails text NOT NULL,
 		duration varchar(25) NOT NULL,
 		status varchar(100) NOT NULL,
 		published_at varchar(100) NOT NULL,
-		PRIMARY KEY  (NUM)
+		published_at_datetime datetime NULL,
+		PRIMARY KEY  (NUM),
+		UNIQUE KEY ayg_unique_video_id (id),
+		INDEX ayg_idx_published_at_datetime (published_at_datetime)
 	) $charset_collate;";
-	
-	require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+
+	dbDelta( $sql );
+
+	// Add UNIQUE KEY if it is not added
+	$existing_keys = $wpdb->get_results( "SHOW KEYS FROM $videos_table WHERE Key_name = 'ayg_unique_video_id'" );
+
+	if ( empty( $existing_keys ) ) {
+		$wpdb->query( "ALTER TABLE $videos_table ADD UNIQUE KEY ayg_unique_video_id (id)" );
+	}
+
+	// Add INDEX on published_at_datetime if it is not added (existing installs)
+	$existing_dt_index = $wpdb->get_results( "SHOW KEYS FROM $videos_table WHERE Key_name = 'ayg_idx_published_at_datetime'" );
+
+	if ( empty( $existing_dt_index ) ) {
+		$wpdb->query( "ALTER TABLE $videos_table ADD INDEX ayg_idx_published_at_datetime (published_at_datetime)" );
+	}
+
+	// Create the galleries table
+	$galleries_table = $wpdb->prefix . 'ayg_galleries';
+
+	$sql = "CREATE TABLE $galleries_table (
+		NUM bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+		video_id varchar(100) NOT NULL,
+		gallery_id varchar(100) NOT NULL,
+		PRIMARY KEY  (NUM),
+		UNIQUE KEY ayg_unique_video_gallery (video_id, gallery_id),
+		INDEX ayg_idx_gallery_id (gallery_id)
+	) $charset_collate;";
+
 	dbDelta( $sql );
 }
 
@@ -215,36 +280,42 @@ function ayg_db_create_videos_table() {
  * Store videos in our custom database table "{$wpdb->prefix}ayg_videos" 
  *
  * @since 2.1.0
- * @param object $data YouTube API response object.
+ * @param object $data       YouTube API response object.
+ * @param array  $attributes Array of user attributes.
  */
-function ayg_db_store_videos( $data ) {
+function ayg_db_store_videos( $data, $attributes = array() ) {
 	if ( AYG_VERSION !== get_option( 'ayg_version' ) ) {
 		return false;
 	}
-
-	global $wpdb, $post;
-
-	$table_name = $wpdb->prefix . 'ayg_videos';
 
 	if ( isset( $data->kind ) && 'youtube#channelListResponse' == $data->kind ) {
 		return false;				
 	}
 
-	if ( ! isset( $data->items ) ) {
+	if ( empty( $data->items ) || ! is_array( $data->items ) ) {
 		return false;
 	}
 
-	$items = $data->items;
-	if ( ! is_array( $items ) || 0 == count( $items ) ) {
-		return false;
-	}	
+	global $wpdb;
 
-	// Store Videos
-	foreach ( $items as $item ) {	
+	$items                = $data->items;
+	$gallery_id           = isset( $attributes['uid'] ) ? $attributes['uid'] : '';
+	$source_type          = isset( $attributes['type'] ) ? $attributes['type'] : 'videos';
+	$store_gallery        = ! empty( $gallery_id ) && ! in_array( $source_type, array( 'video', 'livestream' ) );
+
+	$videos_table         = $wpdb->prefix . 'ayg_videos';
+	$galleries_table      = $wpdb->prefix . 'ayg_galleries';
+
+	$video_placeholders   = array();
+	$video_values         = array();
+	$gallery_placeholders = array();
+	$gallery_values       = array();
+
+	foreach ( $items as $item ) {
 		$row = array();
 
 		// Video ID
-		$row['id'] = '';	
+		$row['id'] = '';
 
 		if ( isset( $item->snippet->resourceId ) && isset( $item->snippet->resourceId->videoId ) ) {
 			$row['id'] = $item->snippet->resourceId->videoId;
@@ -254,7 +325,7 @@ function ayg_db_store_videos( $data ) {
 			$row['id'] = $item->id->videoId;
 		} elseif ( isset( $item->id ) ) {
 			$row['id'] = $item->id;
-		}	
+		}
 
 		if ( empty( $row['id'] ) ) {
 			continue;
@@ -270,51 +341,75 @@ function ayg_db_store_videos( $data ) {
 		$row['thumbnails'] = '';
 		if ( isset( $item->snippet->thumbnails ) ) {
 			$row['thumbnails'] = serialize( $item->snippet->thumbnails );
-		}		
+		}
 
 		// Video duration
 		$row['duration'] = '';
 		if ( isset( $item->contentDetails ) && isset( $item->contentDetails->duration ) ) {
 			$row['duration'] = $item->contentDetails->duration;
-		}		
+		}
 
 		// Video status
 		$row['status'] = 'private';
-		
+
 		if ( isset( $item->status ) && ( 'public' == $item->status->privacyStatus || 'unlisted' == $item->status->privacyStatus ) ) {
-			$row['status'] = 'public';				
+			$row['status'] = 'public';
 		}
 
 		if ( isset( $item->snippet->status ) && ( 'public' == $item->snippet->status->privacyStatus || 'unlisted' == $item->snippet->status->privacyStatus ) ) {
-			$row['status'] = 'public';				
+			$row['status'] = 'public';
 		}
 
 		if ( 'youtube#searchResult' == $item->kind ) {
-			$row['status'] = 'public';				
+			$row['status'] = 'public';
 		}
 
 		// Video publish date
 		$row['published_at'] = $item->snippet->publishedAt;
 
-		// Store
-		$query = $wpdb->prepare( "SELECT NUM FROM $table_name WHERE id = %s", $row['id'] );
-		$insert_id = $wpdb->get_var( $query );
+		$datetime = new DateTime( $item->snippet->publishedAt );
+		$row['published_at_datetime'] = date_format( $datetime, 'Y-m-d H:i:s' );
 
-		if ( empty( $insert_id ) ) {
-			$wpdb->insert( 
-				$table_name, 
-				$row, 
-				array( '%s', '%s', '%s', '%s', '%s', '%s', '%s' )
-			);
-		} else {
-			$wpdb->update( 
-				$table_name, 
-				$row, 
-				array( 'NUM' => $insert_id ), 
-				array( '%s', '%s', '%s', '%s', '%s', '%s', '%s' ),
-				array( '%d' ) 
-			);
+		// Collect for bulk insert
+		$video_placeholders[] = '(%s, %s, %s, %s, %s, %s, %s, %s)';
+		
+		array_push(
+			$video_values,
+			$row['id'],
+			$row['title'],
+			$row['description'],
+			$row['thumbnails'],
+			$row['duration'],
+			$row['status'],
+			$row['published_at'],
+			$row['published_at_datetime']
+		);
+
+		if ( $store_gallery ) {
+			$gallery_placeholders[] = '(%s, %s)';
+			array_push( $gallery_values, $row['id'], $gallery_id );
 		}
+	}
+
+	// Bulk insert videos (2 queries total instead of N×2)
+	if ( ! empty( $video_placeholders ) ) {
+		$sql = "INSERT INTO $videos_table (id, title, description, thumbnails, duration, status, published_at, published_at_datetime)
+			VALUES " . implode( ', ', $video_placeholders ) . "
+			ON DUPLICATE KEY UPDATE
+			title = VALUES(title),
+			description = VALUES(description),
+			thumbnails = VALUES(thumbnails),
+			duration = VALUES(duration),
+			status = VALUES(status),
+			published_at = VALUES(published_at),
+			published_at_datetime = VALUES(published_at_datetime)";
+
+		$wpdb->query( $wpdb->prepare( $sql, $video_values ) );
+	}
+
+	if ( ! empty( $gallery_placeholders ) ) {
+		$sql = "INSERT IGNORE INTO $galleries_table (video_id, gallery_id) VALUES " . implode( ', ', $gallery_placeholders );
+		$wpdb->query( $wpdb->prepare( $sql, $gallery_values ) );
 	}
 }
 
@@ -356,15 +451,15 @@ function ayg_delete_cache() {
 	delete_option( 'ayg_gallery_page_ids' );
 	
 	// Get the current list of transients
-	$transient_keys = get_option( 'ayg_transient_keys', array() );
+	$transient_keys = ayg_get_option( 'ayg_transient_keys' );
 
 	// For each key, delete that transient
 	foreach ( $transient_keys as $key ) {
 		delete_transient( $key );
 	}
 	
-	// Reset our DB value
-	update_option( 'ayg_transient_keys', array() );
+	// Reset our DB value (autoload=no: not needed on every page load)
+	update_option( 'ayg_transient_keys', array(), false );
 }
 
 /** 
@@ -389,9 +484,19 @@ function ayg_get_current_url() {
 function ayg_get_default_settings() {
 	$defaults = array(
 		'ayg_general_settings' => array(
-			'api_key'          => '',
-			'development_mode' => 1,
-			'lazyload'         => 0
+			'force_load_assets' => array(
+				'css' => 'css'
+			),
+			'api_key'           => '',
+			'lazyload'          => 0,
+			'development_mode'  => 0
+		),
+		'ayg_strings_settings' => array(
+			'more_button_label'     => __( 'Load More', 'automatic-youtube-gallery' ),
+			'previous_button_label' => __( 'Previous', 'automatic-youtube-gallery' ),
+			'next_button_label'     => __( 'Next', 'automatic-youtube-gallery' ),
+			'show_more_label'       => __( 'Show More', 'automatic-youtube-gallery' ),
+			'show_less_label'       => __( 'Show Less', 'automatic-youtube-gallery' )
 		),
 		'ayg_gallery_settings' => array(
 			'theme'                 => 'classic',
@@ -404,9 +509,6 @@ function ayg_get_default_settings() {
 			'thumb_excerpt_length'  => 75,
 			'pagination'            => 1,
 			'pagination_type'       => 'more',
-			'more_button_label'     => __( 'Load More', 'automatic-youtube-gallery' ),
-			'previous_button_label' => __( 'Previous', 'automatic-youtube-gallery' ),
-			'next_button_label'     => __( 'Next', 'automatic-youtube-gallery' ),
 			'scroll_top_offset'     => 10
 		),
 		'ayg_player_settings' => array(
@@ -550,6 +652,7 @@ function ayg_get_editor_fields() {
 					'description'       => __( 'Specifies how frequently we should check your YouTube source for new videos/updates.', 'automatic-youtube-gallery' ),
 					'type'              => 'select',
 					'options' => array(
+						'0'       => '— '. __( 'No Caching', 'automatic-youtube-gallery' ) . ' —',
 						'900'     => __( '15 Minutes', 'automatic-youtube-gallery' ),
 						'1800'    => __( '30 Minutes', 'automatic-youtube-gallery' ),
 						'3600'    => __( '1 Hour', 'automatic-youtube-gallery' ),
@@ -569,6 +672,22 @@ function ayg_get_editor_fields() {
 		'player' => array(
 			'label'  => __( 'Player (optional)', 'automatic-youtube-gallery' ),
 			'fields' => ayg_get_player_settings_fields()
+		),
+		'search' => array(
+			'label'  => __( 'Search Form (optional)', 'automatic-youtube-gallery' ),
+			'fields' => array(
+				array(
+					'name'              => 'search_form',
+					'label'             => __( 'Search Form', 'automatic-youtube-gallery' ),			
+					'description'       => sprintf(
+						__( 'Check this option to enable the search form. Having issues? <a href="%s" target="_blank" rel="noopener noreferrer">Check here</a>.', 'automatic-youtube-gallery' ),
+						'https://plugins360.com/automatic-youtube-gallery/searchform/'
+					),
+					'type'              => 'checkbox',
+					'value'             => 0,
+					'sanitize_callback' => 'intval'
+				)
+			)
 		)
 	);
 
@@ -582,7 +701,7 @@ function ayg_get_editor_fields() {
  * @return array $fields Array of fields.
  */
 function ayg_get_gallery_settings_fields() {
-	$gallery_settings = get_option( 'ayg_gallery_settings' );
+	$gallery_settings = ayg_get_option( 'ayg_gallery_settings' );
 
 	$fields = array(
 		array(
@@ -620,10 +739,11 @@ function ayg_get_gallery_settings_fields() {
 			'name'              => 'thumb_ratio',
 			'label'             => __( 'Image Height (Ratio)', 'automatic-youtube-gallery' ),
 			'description'       => __( 'Select the ratio value used to calculate the image height in the gallery thumbnails.', 'automatic-youtube-gallery' ),			
-			'type'              => 'radio',
+			'type'              => 'select',
 			'options'           => array(
-				'56.25' => '16:9',
-				'75'    => '4:3'				
+				'56.25'  => __( 'Standard (16:9) — Default', 'automatic-youtube-gallery' ),
+				'177.78' => __( 'Shorts / Vertical (9:16)', 'automatic-youtube-gallery' ),
+				'75'     => __( 'Classic (4:3)', 'automatic-youtube-gallery' )				
 			),
 			'value'             => $gallery_settings['thumb_ratio'],
 			'sanitize_callback' => 'floatval'
@@ -683,30 +803,6 @@ function ayg_get_gallery_settings_fields() {
 			),
 			'value'             => $gallery_settings['pagination_type'],
 			'sanitize_callback' => 'sanitize_key'
-		),
-		array(
-			'name'              => 'more_button_label',
-			'label'             => __( 'More Button Label', 'automatic-youtube-gallery' ),
-			'description'       => __( 'Enter the more button label text.', 'automatic-youtube-gallery' ),
-			'type'              => 'text',
-			'value'             => isset( $gallery_settings['more_button_label'] ) ? $gallery_settings['more_button_label'] : __( 'Load More', 'automatic-youtube-gallery' ),
-			'sanitize_callback' => 'sanitize_text_field'
-		),
-		array(
-			'name'              => 'previous_button_label',
-			'label'             => __( 'Previous Button Label', 'automatic-youtube-gallery' ),
-			'description'       => __( 'Enter the previous button label text.', 'automatic-youtube-gallery' ),
-			'type'              => 'text',
-			'value'             => isset( $gallery_settings['previous_button_label'] ) ? $gallery_settings['previous_button_label'] : __( 'Previous', 'automatic-youtube-gallery' ),
-			'sanitize_callback' => 'sanitize_text_field'
-		),
-		array(
-			'name'              => 'next_button_label',
-			'label'             => __( 'Next Button Label', 'automatic-youtube-gallery' ),
-			'description'       => __( 'Enter the next button label text.', 'automatic-youtube-gallery' ),
-			'type'              => 'text',
-			'value'             => isset( $gallery_settings['next_button_label'] ) ? $gallery_settings['next_button_label'] : __( 'Next', 'automatic-youtube-gallery' ),
-			'sanitize_callback' => 'sanitize_text_field'
 		)
 	);
 
@@ -714,28 +810,52 @@ function ayg_get_gallery_settings_fields() {
 }
 
 /**
+ * Retrieve a plugin option with fallback to default settings.
+ *
+ * @since  2.7.0
+ * @param  string $option The option name to retrieve.
+ * @return mixed
+ */
+function ayg_get_option( $option ) {
+    $defaults = ayg_get_default_settings();
+    $default  = isset( $defaults[ $option ] ) ? $defaults[ $option ] : array();
+
+    $saved = get_option( $option, null );
+
+    // Option does not exist OR corrupted
+    if ( null === $saved || ! is_array( $saved ) ) {
+        return $default;
+    }
+
+    // Merge saved values with defaults
+    return wp_parse_args( $saved, $default );
+}
+
+/**
  * Get video description to show on top of the player.
  *
  * @since  1.0.0
  * @param  stdClass $video       YouTube video object.
+ * @param  array    $attributes  Array of user attributes.
  * @param  int      $words_count Number of words to show by default.
  * @return string                Video description.
  */
-function ayg_get_player_description( $video, $words_count = 30 ) {
+function ayg_get_player_description( $video, $attributes = array(), $words_count = 30 ) {
 	$description = $video->description;
 
 	$words_array = explode( ' ', strip_tags( $description ) );	
 	if ( count( $words_array ) > $words_count ) {
+		$show_more_label = ! empty( $attributes['show_more_label'] ) ? $attributes['show_more_label'] : __( 'Show More', 'automatic-youtube-gallery' );
 		$words_array[ $words_count ] = '<span class="ayg-player-description-dots">...</span></span><span class="ayg-player-description-more">' . $words_array[ $words_count ];
 
 		$description  = '<span class="ayg-player-description-less">' . implode( ' ', $words_array ) . '</span>';
-		$description .= '<a href="#" class="ayg-player-description-toggle-btn">[+] ' . __( 'Show More', 'automatic-youtube-gallery' ) . '</a>';
+		$description .= '<a href="#" class="ayg-player-description-toggle-btn">' . esc_html( $show_more_label ) . '</a>';
 	}
 
 	$description = nl2br( $description );
 	$description = make_clickable( $description );
 
-	return apply_filters( 'ayg_player_description', $description, $video, $words_count );	
+	return apply_filters( 'ayg_player_description', $description, $video, $attributes, $words_count );	
 }
 
 /**
@@ -745,7 +865,7 @@ function ayg_get_player_description( $video, $words_count = 30 ) {
  * @return array $fields Array of fields.
  */
 function ayg_get_player_settings_fields() {
-	$player_settings = get_option( 'ayg_player_settings' );
+	$player_settings = ayg_get_option( 'ayg_player_settings' );
 
 	$fields = array(
 		array(
@@ -760,10 +880,11 @@ function ayg_get_player_settings_fields() {
 			'name'              => 'player_ratio',
 			'label'             => __( 'Player Height (Ratio)', 'automatic-youtube-gallery' ),	
 			'description'       => __( 'Select the ratio value used to calculate the player height.', 'automatic-youtube-gallery' ),		
-			'type'              => 'radio',
+			'type'              => 'select',
 			'options'           => array(
-				'56.25' => '16:9',
-				'75'    => '4:3'				
+				'56.25'  => __( 'Standard (16:9) — Default', 'automatic-youtube-gallery' ),
+				'177.78' => __( 'Shorts / Vertical (9:16)', 'automatic-youtube-gallery' ),
+				'75'     => __( 'Classic (4:3)', 'automatic-youtube-gallery' )
 			),
 			'value'             => $player_settings['player_ratio'],
 			'sanitize_callback' => 'floatval'
@@ -923,7 +1044,7 @@ function ayg_get_uniqid() {
  * @return string YouTube embed domain.
  */
 function ayg_get_youtube_domain() {
-	$player_settings = get_option( 'ayg_player_settings' );
+	$player_settings = ayg_get_option( 'ayg_player_settings' );
 
 	$domain = 'https://www.youtube.com';
 	if ( isset( $player_settings['privacy_enhanced_mode'] ) && ! empty( $player_settings['privacy_enhanced_mode'] ) ) {
@@ -942,7 +1063,7 @@ function ayg_get_youtube_domain() {
  * @return string             Player embed URL.
  */
 function ayg_get_youtube_embed_url( $video_id, $attributes = array() ) {
-	$player_settings = get_option( 'ayg_player_settings' );
+	$player_settings = ayg_get_option( 'ayg_player_settings' );
 
 	$player_website = 'https://www.youtube.com';
 	if ( isset( $player_settings['privacy_enhanced_mode'] ) && ! empty( $player_settings['privacy_enhanced_mode'] ) ) {
@@ -1043,6 +1164,40 @@ function ayg_insert_array_after( $key, $array, $new_array ) {
 }
 
 /**
+ * Detect if the client is using an iOS device (iPhone, iPad, or iPod).
+ *
+ * @return bool True if the user agent string suggests an iOS device, false otherwise.
+ */
+function ayg_is_ios() {
+    if ( empty( $_SERVER['HTTP_USER_AGENT'] ) ) {
+        return false;
+    }
+
+    $ua = strtolower( $_SERVER['HTTP_USER_AGENT'] );
+
+    if ( 
+		strpos( $ua, 'iphone' ) !== false ||
+        strpos( $ua, 'ipad' ) !== false ||
+        strpos( $ua, 'ipod' ) !== false 
+	) {
+        return true;
+    }
+
+    return false;
+}
+
+/**
+ * Sanitize the array inputs.
+ *
+ * @since  2.7.0
+ * @param  array $value Input array.
+ * @return array        Sanitized array.
+ */
+function ayg_sanitize_array( $value ) {
+	return ! empty( $value ) ? array_map( 'sanitize_text_field', $value ) : array();
+}
+
+/**
  * Sanitize the integer inputs, accepts empty values.
  *
  * @since  1.0.0
@@ -1106,6 +1261,18 @@ function the_ayg_gallery_thumbnail( $video, $attributes ) {
 function the_ayg_pagination( $attributes ) {
 	if ( ! empty( $attributes['pagination'] ) ) {
 		include ayg_get_template( AYG_DIR . 'public/templates/pagination.php' );
+	}	
+}
+
+/**
+ * Search Form HTML output.
+ *
+ * @since 2.5.7
+ * @param array $attributes Array of user attributes.
+ */
+function the_ayg_search_form( $attributes ) {
+	if ( ! empty( $attributes['search_form'] ) ) {
+		include ayg_get_template( AYG_DIR . 'public/templates/search-form.php' );
 	}	
 }
 

@@ -103,6 +103,8 @@ class Forminator_Admin_L10n {
 				'validate_form_name'           => esc_html__( 'Form name cannot be empty! Please pick a name for your form.', 'forminator' ),
 				'close'                        => esc_html__( 'Close', 'forminator' ),
 				'close_label'                  => esc_html__( 'Close this dialog window', 'forminator' ),
+				'close_preview'                => esc_html__( 'Close preview', 'forminator' ),
+				'disable_validations'          => esc_html__( 'Disable validations', 'forminator' ),
 				'go_back'                      => esc_html__( 'Go back', 'forminator' ),
 				'records'                      => esc_html__( 'Records', 'forminator' ),
 				'delete'                       => esc_html__( 'Delete', 'forminator' ),
@@ -152,7 +154,7 @@ class Forminator_Admin_L10n {
 				'new_form_placeholder'         => esc_html__( 'E.g., Blank Form', 'forminator' ),
 				'new_poll_placeholder'         => esc_html__( 'E.g., Blank Poll', 'forminator' ),
 				'new_quiz_placeholder'         => esc_html__( 'E.g., My Awesome Quiz', 'forminator' ),
-				'create'                       => esc_html__( 'Create', 'forminator' ),
+				'create'                       => esc_html__( 'Add New', 'forminator' ),
 				'reset'                        => esc_html__( 'RESET', 'forminator' ),
 				'disconnect'                   => esc_html__( 'Disconnect', 'forminator' ),
 				'apply_submission_filter'      => esc_html__( 'Apply Submission Filters', 'forminator' ),
@@ -257,7 +259,7 @@ class Forminator_Admin_L10n {
 				'quiz_leads_desc'         => esc_html__( 'We will automatically create a default lead generation form for you. The lead generation form uses the Forms module, and some of the settings are shared between this quiz and the leads form.', 'forminator' ),
 			),
 			'form'          => array(
-				'form_template_title'       => esc_html__( 'Choose a template', 'forminator' ),
+				'form_template_title'       => esc_html__( 'Choose a template or create a blank form', 'forminator' ),
 				'form_template_description' => esc_html__( 'Customize one of our pre-made form templates, or start from scratch.', 'forminator' ),
 				'continue_button'           => esc_html__( 'Continue', 'forminator' ),
 				'result'                    => esc_html__( 'result', 'forminator' ),
@@ -266,7 +268,6 @@ class Forminator_Admin_L10n {
 				'saved_templates'           => esc_html__( 'Cloud Templates', 'forminator' ),
 				'categories'                => esc_html__( 'Categories', 'forminator' ),
 				'preview'                   => esc_html__( 'Preview', 'forminator' ),
-				'useTemplate'               => esc_html__( 'Use Template', 'forminator' ),
 				'create_blank_form'         => esc_html__( 'Create Blank Form', 'forminator' ),
 				'pro'                       => esc_html__( 'PRO', 'forminator' ),
 			),
@@ -350,7 +351,8 @@ class Forminator_Admin_L10n {
 				'display_name'          => esc_html__( 'User Display Name', 'forminator' ),
 				'user_email'            => esc_html__( 'User Email', 'forminator' ),
 				'user_login'            => esc_html__( 'User Login', 'forminator' ),
-				'shortcode_copied'      => esc_html__( 'Shortcode has been copied successfully.', 'forminator' ),
+				// translators: %s: Shortcode string, e.g. [forminator_form id="276"].
+				'shortcode_copied'      => esc_html__( 'Shortcode %s has been copied successfully.', 'forminator' ),
 				'uri_copied'            => esc_html__( 'URI has been copied successfully.', 'forminator' ),
 			),
 			'commons'       => array(
@@ -430,10 +432,13 @@ class Forminator_Admin_L10n {
 				'approve_user_successfull'       => esc_html__( 'User approved successfully.', 'forminator' ),
 				'error_message'                  => esc_html__( 'Something went wrong!', 'forminator' ),
 				'approve_user_unsuccessfull'     => esc_html__( 'Error! User was not approved.', 'forminator' ),
+				/* translators: %s - error code(s) */
+				'turnstile_error'                => esc_html__( 'Turnstile error code(s): %s', 'forminator' ),
+				'draft_link_copied'              => esc_html__( 'Draft link copied to clipboard.', 'forminator' ),
 			),
 			'social'        => array(
 				'facebook'    => esc_html__( 'Facebook', 'forminator' ),
-				'twitter'     => esc_html__( 'Twitter', 'forminator' ),
+				'twitter'     => esc_html__( 'X', 'forminator' ),
 				'google_plus' => esc_html__( 'Google+', 'forminator' ),
 				'linkedin'    => esc_html__( 'LinkedIn', 'forminator' ),
 			),
@@ -442,7 +447,7 @@ class Forminator_Admin_L10n {
 				'month_names'   => self::get_months_names(),
 			),
 			'exporter'      => array(
-				'export_nonce' => wp_create_nonce( 'forminator_export' ),
+				'export_nonce' => forminator_is_user_allowed( 'forminator-entries' ) ? wp_create_nonce( 'forminator_export' ) : '',
 				'form_id'      => forminator_get_form_id_helper(),
 				'form_type'    => forminator_get_form_type_helper(),
 				'enabled'      => filter_var( forminator_get_exporter_info( 'enabled', forminator_get_form_id_helper() . forminator_get_form_type_helper() ), FILTER_VALIDATE_BOOLEAN ),
@@ -480,16 +485,13 @@ class Forminator_Admin_L10n {
 					esc_html__( 'Hey %s, your WPMU DEV membership has expired. You need an active membership to access cloud templates. Renew your membership to get instant access to the cloud templates.', 'forminator' ),
 					esc_html( $current_user->display_name )
 				),
-				'install_title'     => esc_html__( 'Install WPMU DEV Dashboard Plugin', 'forminator' ),
 				'install_dashboard' => esc_html__( 'You don\'t have the WPMU DEV Dashboard plugin, which you\'ll need to access Pro preset templates. Install and log in to the dashboard to unlock the complete list of preset templates.', 'forminator' ),
 				'install_button'    => esc_html__( 'Install Plugin', 'forminator' ),
-				'upgrade_title'     => esc_html__( 'Save Forms as Templates', 'forminator' ),
-				'upgrade_desc'      => esc_html__( 'Save your forms as templates in the Hub cloud to easily reuse them on any sites you manage via the Hub. Customize once and reuse on different sites with one click.', 'forminator' ),
-				'upgrade_button'    => esc_html__( 'Upgrade to Save Template', 'forminator' ),
-				'no_templates'      => esc_html__( 'No templates available', 'forminator' ),
-				'no_templates_desc' => sprintf(
+				'no_templates'      => esc_html__( 'No saved templates yet', 'forminator' ),
+				'no_templates_desc' => esc_html__( 'Save any of your forms as cloud templates to reuse them across your sites connected to The Hub – no need to start from scratch. Your saved templates will appear here. ', 'forminator' ),
+				'no_templates_link' => sprintf(
 					/* translators: %1$s - opening anchor tag, %2$s - closing anchor tag */
-					esc_html__( 'You have not saved any form templates yet. All your saved form templates will be displayed here. Click %1$shere%2$s to learn more on how to create form templates.', 'forminator' ),
+					esc_html__( '%1$sLearn how to save forms as cloud templates%2$s.', 'forminator' ),
 					'<a href="https://wpmudev.com/docs/wpmu-dev-plugins/forminator/#templates" target="_blank">',
 					'</a>'
 				),
@@ -509,6 +511,7 @@ class Forminator_Admin_L10n {
 				'loading_templates' => esc_html__( 'Loading templates...', 'forminator' ),
 				'load_categories'   => esc_html__( 'Loading categories...', 'forminator' ),
 				'upgrade'           => esc_html__( 'Upgrade', 'forminator' ),
+				'free_plan'         => esc_html__( 'Free Plan', 'forminator' ),
 			),
 		);
 

@@ -18,6 +18,7 @@
 		<?php } ?>
 	}
 
+	.forminator-ui#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-button-upload:focus,
 	.forminator-ui#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-button-upload:active {
 		<?php if ( forminator_array_value_exists( $properties, 'basic-button-upload-background-active' ) && !empty( $properties['basic-button-upload-background-active'] ) ) { ?>
 			background-color: <?php echo $properties['basic-button-upload-background-active'] ?>;
@@ -26,6 +27,20 @@
 			color: <?php echo $properties['basic-button-upload-color-active'] ?>;
 		<?php } ?>
 	}
+
+	<?php if ( forminator_array_value_exists( $properties, 'basic-button-upload-focus-outline-color' ) && !empty( $properties['basic-button-upload-focus-outline-color'] ) ) { ?>
+		.forminator-ui#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-button-upload:focus {
+			outline: 2px solid <?php echo $properties['basic-button-upload-focus-outline-color'] ?>;
+			outline-offset: 1px;
+		}
+	<?php } ?>
+
+	<?php if ( forminator_array_value_exists( $properties, 'basic-button-upload-delete-focus-outline-color' ) && !empty( $properties['basic-button-upload-delete-focus-outline-color'] ) ) { ?>
+		.forminator-ui#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-button-delete:focus {
+			outline: 2px solid <?php echo $properties['basic-button-upload-delete-focus-outline-color'] ?>;
+			outline-offset: 1px;
+		}
+	<?php } ?>
 
 	.forminator-ui#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-file-upload > span {
 		<?php if ( forminator_array_value_exists( $properties, 'basic-button-upload-notice' ) && !empty( $properties['basic-button-upload-notice'] ) ) { ?>
@@ -45,6 +60,7 @@
 		<?php } ?>
 	}
 
+	.forminator-ui#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-button-delete:focus,
 	.forminator-ui#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-button-delete:active {
 		<?php if ( forminator_array_value_exists( $properties, 'basic-button-upload-delete-background-active' ) && !empty( $properties['basic-button-upload-delete-background-active'] ) ) { ?>
 			background-color: <?php echo $properties['basic-button-upload-delete-background-active'] ?>;
@@ -63,6 +79,7 @@
 		<?php } ?>
 	}
 
+	.forminator-ui#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-button-delete:focus [class*="forminator-icon-"],
 	.forminator-ui#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-button-delete:active [class*="forminator-icon-"] {
 		<?php if ( forminator_array_value_exists( $properties, 'basic-button-upload-delete-color-active' ) && !empty( $properties['basic-button-upload-delete-color-active'] ) ) { ?>
 			color: <?php echo $properties['basic-button-upload-delete-color-active'] ?>;

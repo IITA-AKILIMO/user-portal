@@ -443,7 +443,8 @@ class Forminator_PayPal extends Forminator_Field {
 					} else {
 						$field_object = Forminator_Core::get_field_object( $form_field['type'] );
 						if ( $field_object ) {
-							$payment_amount = $field_object::get_calculable_value( $submitted_field_data, $form_field );
+							$submitted_field_data = Forminator_CForm_Front_Action::$prepared_data[ $amount_var ] ?? null;
+							$payment_amount       = $field_object::get_calculable_value( $submitted_field_data, $form_field );
 						}
 					}
 				}

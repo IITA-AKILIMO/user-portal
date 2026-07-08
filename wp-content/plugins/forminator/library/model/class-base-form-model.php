@@ -15,7 +15,8 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @property  string $status
  */
 abstract class Forminator_Base_Form_Model {
-	const META_KEY = 'forminator_form_meta';
+	const META_KEY      = 'forminator_form_meta';
+	const TEMP_META_KEY = 'forminator_temp_form_meta';
 	/**
 	 * Form ID
 	 *
@@ -125,7 +126,7 @@ abstract class Forminator_Base_Form_Model {
 						$post_data[ $map['field'] ] = $map['default'];
 					}
 				} elseif ( 'fields' === $map['field'] ) {
-						$meta_data[ $map['field'] ] = $this->get_fields_as_array();
+					$meta_data[ $map['field'] ] = forminator_sort_fields_with_groups( $this->get_fields_as_array() );
 				} else {
 					$meta_data[ $map['field'] ] = $this->{$attribute};
 				}
@@ -153,6 +154,83 @@ abstract class Forminator_Base_Form_Model {
 		update_post_meta( $id, self::META_KEY, $meta_data );
 
 		return $id;
+	}
+
+	/**
+	 * Save temporary settings
+	 *
+	 * @param int   $id Module ID.
+	 * @param array $module_data Module data.
+	 *
+	 * @return bool
+	 */
+	public static function save_temp_settings( int $id, array $module_data ): bool {
+		unset( $module_data['pdfs'] ); // Remove PDFs from temp settings.
+		$response = update_post_meta( $id, self::TEMP_META_KEY, $module_data );
+		// It can be false, if new data is the same as old data.
+		if ( ! $response && self::get_temp_settings( $id ) === $module_data ) {
+			return true;
+		}
+
+		return (bool) $response;
+	}
+
+	/**
+	 * Get temporary settings
+	 *
+	 * @param int $id Module ID.
+	 *
+	 * @return array|bool
+	 */
+	public static function get_temp_settings( int $id ) {
+		$temp_meta = get_post_meta( $id, self::TEMP_META_KEY, true );
+
+		if ( ! empty( $temp_meta ) && is_array( $temp_meta ) ) {
+			return $temp_meta;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Remove temporary settings
+	 *
+	 * @param int $id Module ID.
+	 * @return bool
+	 */
+	public static function remove_temp_settings( int $id ): bool {
+		$response = delete_post_meta( $id, self::TEMP_META_KEY );
+
+		return (bool) $response;
+	}
+
+	/**
+	 * Add temp saved changes to the data
+	 *
+	 * @param array                           $data Data.
+	 * @param Forminator_Base_Form_Model|null $model Model.
+	 *
+	 * @return array
+	 */
+	public static function add_saved_changes( $data, $model ) {
+		if ( $model ) {
+			$data['originalSettings'] = $data['currentForm'];
+
+			$saved_changes = self::get_temp_settings( $model->id );
+			// Add saved changes to the data.
+			if ( ! empty( $saved_changes ) ) {
+				$data['currentForm'] = $saved_changes;
+				if ( isset( $data['originalSettings']['pdfs'] ) ) {
+					// If PDFs are set in original settings, we need to keep them in the current form.
+					$data['currentForm']['pdfs'] = $data['originalSettings']['pdfs'];
+				} else {
+					// If PDFs are not set in original settings, we need to remove them from the current form.
+					unset( $data['currentForm']['pdfs'] );
+				}
+			}
+		}
+
+		return $data;
 	}
 
 	/**
@@ -224,6 +302,51 @@ abstract class Forminator_Base_Form_Model {
 		);
 
 		return $grouped_fields;
+	}
+
+
+	/**
+	 * Get filtered fields by page break.
+	 *
+	 * @param string $page_break_id Page break ID.
+	 * @return array
+	 */
+	public function get_page_fields( $page_break_id ) {
+		$fields             = $this->get_fields();
+		$last_page_break_id = null;
+		$page_fields        = array();
+		$collecting         = false;
+		foreach ( $fields as $field ) {
+			if ( 0 === strpos( $field->slug, 'page-break-' ) ) {
+				if ( $field->element_id === $page_break_id ) {
+					$collecting = true;
+				} else {
+					$collecting = false;
+				}
+				$last_page_break_id = $field->element_id;
+			} elseif ( $collecting ) {
+				if ( ! empty( $field->parent_group ) ) {
+					continue;
+				}
+				// If the field is a group, get its fields.
+				if ( 'group' === $field->type ) {
+					$group_fields = $this->get_grouped_fields( $field->element_id );
+					foreach ( $group_fields as $group_field ) {
+						$page_fields[] = $group_field;
+					}
+					continue;
+				}
+				$page_fields[] = $field;
+			}
+		}
+
+		// If it's the last page break id, then the page fields are empty.
+		// Because we ignore visibility conditions on the last page.
+		if ( $page_break_id === $last_page_break_id ) {
+			$page_fields = array();
+		}
+
+		return $page_fields;
 	}
 
 	/**
@@ -483,10 +606,11 @@ abstract class Forminator_Base_Form_Model {
 	/**
 	 * Get all paginated
 	 *
-	 * @param int      $current_page Current page.
-	 * @param null|int $per_page Limit per page.
-	 * @param string   $status Status.
-	 * @param null|int $pdf_parent_id PDF parent Id.
+	 * @param int         $current_page Current page.
+	 * @param null|int    $per_page Limit per page.
+	 * @param string      $status Status.
+	 * @param null|int    $pdf_parent_id PDF parent Id.
+	 * @param null|string $search Optional search. Added in 1.52.
 	 *
 	 * @return array
 	 * @since 1.5.4 add optional param per_page
@@ -494,7 +618,7 @@ abstract class Forminator_Base_Form_Model {
 	 *
 	 * @since 1.2
 	 */
-	public function get_all_paged( $current_page = 1, $per_page = null, $status = '', $pdf_parent_id = null ) {
+	public function get_all_paged( $current_page = 1, $per_page = null, $status = '', $pdf_parent_id = null, $search = '' ) {
 		if ( is_null( $per_page ) ) {
 			$per_page = forminator_form_view_per_page();
 		}
@@ -504,6 +628,12 @@ abstract class Forminator_Base_Form_Model {
 			'posts_per_page' => $per_page,
 			'paged'          => $current_page,
 		);
+
+		if ( ! empty( $search ) ) {
+			add_filter( 'posts_search', array( $this, 'filter_multi_search' ), 10, 2 );
+			$args['s']                       = $search;
+			$args['forminator_multi_search'] = true;
+		}
 
 		if ( ! empty( $status ) ) {
 			$args['post_status'] = $status;
@@ -530,7 +660,12 @@ abstract class Forminator_Base_Form_Model {
 			}
 		}
 
-		$query  = new WP_Query( $args );
+		$query = new WP_Query( $args );
+
+		if ( ! empty( $search ) ) {
+			remove_filter( 'posts_search', array( $this, 'filter_multi_search' ) );
+		}
+
 		$models = array();
 
 		foreach ( $query->posts as $post ) {
@@ -541,6 +676,7 @@ abstract class Forminator_Base_Form_Model {
 			'totalPages'   => $query->max_num_pages,
 			'totalRecords' => $query->post_count,
 			'models'       => $models,
+			'foundPosts'   => $query->found_posts,
 		);
 	}
 
@@ -724,12 +860,35 @@ abstract class Forminator_Base_Form_Model {
 				$form_settings['cform-section-border-color'] = $meta['settings']['cform-section-border-color'];
 			}
 
+			// Decode HTML entities.
+			$decode_html_keys = array( 'notifications', 'behaviors', 'integration_conditions' );
+			foreach ( $decode_html_keys as $decode_html_key ) {
+				if ( ! empty( $meta[ $decode_html_key ] ) ) {
+					foreach ( $meta[ $decode_html_key ] as $key => $meta_data ) {
+						if ( ! empty( $meta_data['conditions'] ) ) {
+							$meta[ $decode_html_key ][ $key ]['conditions'] = forminator_decode_html_entity( $meta_data['conditions'] );
+						}
+						if ( 'notifications' === $decode_html_key && ! empty( $meta_data['routing'] ) ) {
+							$meta[ $decode_html_key ][ $key ]['routing'] = forminator_decode_html_entity( $meta_data['routing'] );
+						}
+					}
+				}
+			}
+			if ( ! empty( $meta['settings']['user_role'] ) ) {
+				$meta['settings']['user_role'] = forminator_decode_html_entity( $meta['settings']['user_role'] );
+			}
+
 			if ( ! empty( $maps ) ) {
 				foreach ( $maps as $map ) {
 					$attribute = $map['property'];
 					if ( 'post' === $map['type'] ) {
-						$att                  = $map['field'];
-						$object->{$attribute} = $post->{$att};
+						$att = $map['field'];
+						if ( 'pdf_form' === $post->post_status && 'name' === $attribute ) {
+							// To support non-English characters in the file name.
+							$object->{$attribute} = urldecode( $post->{$att} );
+						} else {
+							$object->{$attribute} = $post->{$att};
+						}
 					} elseif ( ! empty( $meta['fields'] ) && 'fields' === $map['field'] ) {
 							$meta['fields'] = forminator_decode_html_entity( $meta['fields'] );
 							$password_count = 0;
@@ -815,22 +974,36 @@ abstract class Forminator_Base_Form_Model {
 	private static function validate_registration_fields_mapping( $form_settings, $fields ) {
 		$field_ids = wp_list_pluck( $fields, 'id' );
 		if ( ! empty( $form_settings['form-type'] ) && 'registration' === $form_settings['form-type'] && ! empty( $field_ids ) ) {
+			$optional_registration_fields = array(
+				'registration-first-name-field',
+				'registration-last-name-field',
+				'registration-website-field',
+			);
+
 			// Get first field id (not password).
 			$i = 0;
 			do {
-				$first_id = isset( $field_ids[ $i ] ) ? $field_ids[ $i ] : null;
+				$first_id = isset( $field_ids[ $i ] ) && false === strpos( $field_ids[ $i ], 'password' )
+					? $field_ids[ $i ] : null;
 				++$i;
-				$is_password = false !== strpos( $first_id, 'password' );
-				$go_next     = empty( $first_id ) || $is_password;
+				$go_next = empty( $first_id ) && $i < count( $field_ids );
 			} while ( $go_next );
+
+			if ( ! $first_id ) {
+				return $form_settings;
+			}
 
 			foreach ( $form_settings as $key => $value ) {
 				if ( ! is_string( $value ) ) {
 					continue;
 				}
+
+				if ( '' === $value && in_array( $key, $optional_registration_fields, true ) ) {
+					continue;
+				}
+
 				$value_parts = explode( '-', $value );
-				if ( ! $first_id
-					|| 'registration-' !== substr( $key, 0, 13 )
+				if ( 'registration-' !== substr( $key, 0, 13 )
 					|| '-field' !== substr( $key, - 6 )
 					|| 'registration-role-field' === $key
 					|| in_array( $value, $field_ids, true )
@@ -888,9 +1061,10 @@ abstract class Forminator_Base_Form_Model {
 			 * Forminator_Form_Field_Model
 			 *
 			 * @var Forminator_Form_Field_Model $field */
-			if ( strpos( $field->form_id, 'wrapper-' ) === 0 ) {
+			$form_id = '';
+			if ( ! empty( $field->form_id ) && strpos( (string) $field->form_id, 'wrapper-' ) === 0 ) {
 				$form_id = $field->form_id;
-			} else {
+			} elseif ( ! empty( $field->formID ) ) { // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 				// Backward Compat.
 				$form_id = $field->formID; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 			}
@@ -1279,6 +1453,11 @@ abstract class Forminator_Base_Form_Model {
 			$meta['settings']['form_id']         = $post_id;
 			$meta['settings']['previous_status'] = 'draft';
 
+			// Sort fields to ensure grouped fields appear after their parent group.
+			if ( ! empty( $meta['fields'] ) && is_array( $meta['fields'] ) ) {
+				$meta['fields'] = forminator_sort_fields_with_groups( $meta['fields'] );
+			}
+
 			update_post_meta( $post_id, self::META_KEY, $meta );
 
 			/**
@@ -1649,32 +1828,12 @@ abstract class Forminator_Base_Form_Model {
 			}
 		}
 		if ( $can_show['can_submit'] ) {
-			if ( isset( $form_settings['form-expire'] ) ) {
-				if ( 'submits' === $form_settings['form-expire'] ) {
-					if ( isset( $form_settings['expire_submits'] ) && ! empty( $form_settings['expire_submits'] ) ) {
-						$submits       = intval( $form_settings['expire_submits'] );
-						$total_entries = Forminator_Form_Entry_Model::count_entries( $this->id );
-						if ( $total_entries >= $submits ) {
-							$can_show = array(
-								'can_submit' => false,
-								/* translators: %s: module slug */
-								'error'      => sprintf( esc_html__( 'You have reached the maximum allowed submissions for this %s.', 'forminator' ), $module_slug ),
-							);
-						}
-					}
-				} elseif ( 'date' === $form_settings['form-expire'] ) {
-					if ( isset( $form_settings['expire_date'] ) && ! empty( $form_settings['expire_date'] ) ) {
-						$expire_date  = $this->get_expiry_date( $form_settings['expire_date'] );
-						$current_date = strtotime( 'now' );
-						if ( $current_date > $expire_date ) {
-							$can_show = array(
-								'can_submit' => false,
-								/* translators: %s: module slug */
-								'error'      => sprintf( esc_html__( 'Unfortunately this %s has expired.', 'forminator' ), $module_slug ),
-							);
-						}
-					}
-				}
+			$form_expired = $this->check_form_expired( $form_settings, $module_slug );
+			if ( true === $form_expired['expired'] ) {
+				$can_show = array(
+					'can_submit' => false,
+					'error'      => $form_expired['error'],
+				);
 			}
 		}
 
@@ -1690,6 +1849,74 @@ abstract class Forminator_Base_Form_Model {
 		}
 
 		return apply_filters( 'forminator_cform_' . static::$module_slug . '_is_submittable', $can_show, $this->id, $form_settings );
+	}
+
+	/**
+	 * Check if form has active PayPal field
+	 *
+	 * @return bool
+	 * @since 1.51.0
+	 */
+	public function has_active_paypal() {
+		$is_enabled = forminator_has_paypal_settings();
+		$active     = 0;
+		$fields     = $this->get_fields_as_array();
+
+		if ( ! empty( $fields ) ) {
+			foreach ( $fields as $field ) {
+				if ( 'paypal' === $field['type'] && ! Forminator_Field::is_hidden( $field ) ) {
+					++$active;
+					break;
+				}
+			}
+		}
+
+		return ( $is_enabled && $active > 0 ) ? true : false;
+	}
+
+	/**
+	 * Check if form is expired
+	 *
+	 * @param array  $form_settings Form settings.
+	 * @param string $module_slug Module slug.
+	 *
+	 * @since 1.53.0
+	 * @return array
+	 */
+	public function check_form_expired( $form_settings, $module_slug = '' ) {
+		$expired = array(
+			'expired' => false,
+			'error'   => '',
+		);
+		if ( isset( $form_settings['form-expire'] ) ) {
+			if ( 'submits' === $form_settings['form-expire'] ) {
+				if ( isset( $form_settings['expire_submits'] ) && ! empty( $form_settings['expire_submits'] ) ) {
+					$submits       = intval( $form_settings['expire_submits'] );
+					$total_entries = Forminator_Form_Entry_Model::count_entries( $this->id );
+					if ( $total_entries >= $submits ) {
+						$expired = array(
+							'expired' => true,
+							/* translators: %s: module slug */
+							'error'   => sprintf( esc_html__( 'You have reached the maximum allowed submissions for this %s.', 'forminator' ), $module_slug ),
+						);
+					}
+				}
+			} elseif ( 'date' === $form_settings['form-expire'] ) {
+				if ( isset( $form_settings['expire_date'] ) && ! empty( $form_settings['expire_date'] ) ) {
+					$expire_date  = $this->get_expiry_date( $form_settings['expire_date'] );
+					$current_date = strtotime( 'now' );
+					if ( $current_date > $expire_date ) {
+						$expired = array(
+							'expired' => true,
+							/* translators: %s: module slug */
+							'error'   => sprintf( esc_html__( 'Unfortunately this %s has expired.', 'forminator' ), $module_slug ),
+						);
+					}
+				}
+			}
+		}
+
+		return $expired;
 	}
 
 	/**
@@ -1710,24 +1937,9 @@ abstract class Forminator_Base_Form_Model {
 			}
 		}
 		if ( $can_show ) {
-			if ( isset( $form_settings['form-expire'] ) ) {
-				if ( 'submits' === $form_settings['form-expire'] ) {
-					if ( isset( $form_settings['expire_submits'] ) && ! empty( $form_settings['expire_submits'] ) ) {
-						$submits       = intval( $form_settings['expire_submits'] );
-						$total_entries = Forminator_Form_Entry_Model::count_entries( $this->id );
-						if ( $total_entries >= $submits && ! $is_preview ) {
-							$can_show = false;
-						}
-					}
-				} elseif ( 'date' === $form_settings['form-expire'] ) {
-					if ( isset( $form_settings['expire_date'] ) && ! empty( $form_settings['expire_date'] ) ) {
-						$expire_date  = $this->get_expiry_date( $form_settings['expire_date'] );
-						$current_date = strtotime( 'now' );
-						if ( $current_date > $expire_date && ! $is_preview ) {
-							$can_show = false;
-						}
-					}
-				}
+			$form_expired = $this->check_form_expired( $form_settings );
+			if ( ! $is_preview && true === $form_expired['expired'] ) {
+				$can_show = false;
 			}
 		}
 
@@ -1750,6 +1962,32 @@ abstract class Forminator_Base_Form_Model {
 	}
 
 	/**
+	 * Filter multi search.
+	 * This filter is used to search for multiple words in post titles (OR logic).
+	 *
+	 * @param string   $search The existing SQL WHERE clause for search.
+	 * @param WP_Query $query  The WP_Query instance.
+	 *
+	 * @since 1.52
+	 * @return string Modified SQL WHERE clause for search.
+	 */
+	public function filter_multi_search( $search, $query ) {
+		global $wpdb;
+		if ( empty( $query->query_vars['s'] ) || ! isset( $query->query_vars['forminator_multi_search'] ) ) {
+			return $search;
+		}
+		$terms = explode( ' ', $query->query_vars['s'] );
+		$likes = array();
+		foreach ( $terms as $term ) {
+			$likes[] = $wpdb->prepare(
+				"{$wpdb->posts}.post_title LIKE %s",
+				'%' . $wpdb->esc_like( $term ) . '%'
+			);
+		}
+		return ' AND (' . implode( ' OR ', $likes ) . ') ';
+	}
+
+	/**
 	 * Call do action when module update
 	 *
 	 * @param string $type module type.
@@ -1763,27 +2001,48 @@ abstract class Forminator_Base_Form_Model {
 		$post_status                 = ! empty( $model_array['status'] ) ? $model_array['status'] : '';
 		$settings                    = ! empty( $model_array['settings'] ) ? $model_array['settings'] : array();
 		$settings['previous_status'] = 'draft';
-		switch ( $type ) {
-			case 'form':
-				$fields    = ! empty( $model->fields ) ? $model->get_fields_grouped() : array();
-				$form_name = $model_array['settings']['formName'];
-				/** This action is documented in library/modules/custom-forms/admin/admin-loader.php */
-				do_action( 'forminator_custom_form_action_update', $post_id, $form_name, $post_status, $fields, $settings );
-				break;
-			case 'poll':
-				$answer = ! empty( $model->fields ) ? $model->get_fields_as_array() : array();
-				/** This action is documented in library/modules/polls/admin/admin-loader.php */
-				do_action( 'forminator_poll_action_update', $post_id, $post_status, $answer, $settings );
-				break;
-			case 'quiz':
-				$quiz_type = $model_array['quiz_type'];
-				$questions = $model_array['questions'];
-				$results   = $model_array['results'];
-				/** This action is documented in library/modules/quizzes/admin/admin-loader.php */
-				do_action( 'forminator_quiz_action_update', $post_id, $quiz_type, $post_status, $questions, $results, $settings );
-				break;
-			default:
-				break;
+		try {
+			switch ( $type ) {
+				case 'form':
+					$fields    = ! empty( $model->fields ) ? $model->get_fields_grouped() : array();
+					$form_name = $model_array['settings']['formName'];
+					/** This action is documented in library/modules/custom-forms/admin/admin-loader.php */
+					do_action( 'forminator_custom_form_action_update', $post_id, $form_name, $post_status, $fields, $settings );
+					break;
+				case 'poll':
+					$answer = ! empty( $model->fields ) ? $model->get_fields_as_array() : array();
+					/** This action is documented in library/modules/polls/admin/admin-loader.php */
+					do_action( 'forminator_poll_action_update', $post_id, $post_status, $answer, $settings );
+					break;
+				case 'quiz':
+					$quiz_type = $model_array['quiz_type'];
+					$questions = $model_array['questions'];
+					$results   = $model_array['results'];
+					/** This action is documented in library/modules/quizzes/admin/admin-loader.php */
+					do_action( 'forminator_quiz_action_update', $post_id, $quiz_type, $post_status, $questions, $results, $settings );
+					break;
+				default:
+					break;
+			}
+		} catch ( Exception $e ) { // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedCatch
+			// Ignore errors coming from the add-on for now.
+			// TODO: Display an appropriate error message.
 		}
+	}
+
+	/**
+	 * Check if model is publishable
+	 *
+	 * @return true|WP_Error
+	 */
+	public function is_publishable() {
+		if ( empty( $this->name ) ) {
+			return new WP_Error(
+				'form_error',
+				__( 'Please, enter a valid name.', 'forminator' )
+			);
+		}
+
+		return true;
 	}
 }

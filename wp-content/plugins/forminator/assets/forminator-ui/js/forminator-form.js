@@ -26,10 +26,10 @@ function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == 
     function hover(element) {
       var getInput = $(element);
       var getField = getInput.closest('.forminator-field');
-      getInput.mouseover(function (e) {
+      getField.off('mouseenter.forminatorHoverState mouseleave.forminatorHoverState').on('mouseenter.forminatorHoverState', function (e) {
         getField.addClass('forminator-is_hover');
         e.stopPropagation();
-      }).mouseout(function (e) {
+      }).on('mouseleave.forminatorHoverState', function (e) {
         getField.removeClass('forminator-is_hover');
         e.stopPropagation();
       });
@@ -101,6 +101,15 @@ function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == 
         // Add floating class
         label.addClass('forminator-floating--input');
 
+        // If input has description adjancent to label then calculate it';s height and set --forminator-floating-label-translate css variable
+        var description = field.find('.forminator-label + .forminator-description');
+        if (description.length) {
+          var descriptionHeight = description.outerHeight();
+          var labelHeight = label.outerHeight();
+          var translateY = descriptionHeight + labelHeight + 16; // 16px margin
+          label.css('--forminator-floating-label-translate', translateY + 'px');
+        }
+
         // Add icon class (if applies)
         if (field.find('.forminator-input-with-icon').length) {
           label.addClass('forminator-has_icon');
@@ -136,10 +145,10 @@ function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == 
     function hover(element) {
       var getTextarea = $(element);
       var getField = getTextarea.closest('.forminator-field');
-      getTextarea.mouseover(function (e) {
+      getField.off('mouseenter.forminatorHoverState mouseleave.forminatorHoverState').on('mouseenter.forminatorHoverState', function (e) {
         getField.addClass('forminator-is_hover');
         e.stopPropagation();
-      }).mouseout(function (e) {
+      }).on('mouseleave.forminatorHoverState', function (e) {
         getField.removeClass('forminator-is_hover');
         e.stopPropagation();
       });
@@ -213,12 +222,16 @@ function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == 
 
       // Wrap Label
       if (label.length) {
-        var labelHeight = 0 === label.height() ? 20 : label.height();
-        var labelPadding = 9;
-        var labelMath = labelHeight + labelPadding;
-
         // Add floating class
         label.addClass('forminator-floating--textarea');
+
+        // If input has description adjancent to label then calculate it';s height and set --forminator-floating-label-translate css variable
+        var description = field.find('.forminator-label + .forminator-description');
+        if (description.length) {
+          var descriptionHeight = description.outerHeight();
+          var translateY = descriptionHeight;
+          label.css('--forminator-floating-label-translate', translateY + 'px');
+        }
 
         // Align textarea
         field.css({
@@ -227,14 +240,6 @@ function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == 
         if (textarea.val()) {
           field.addClass('forminator-is_filled');
         }
-        if (!field.hasClass('forminator-is_filled') || !field.hasClass('forminator-is_active')) {
-          label.css({
-            'padding-top': labelMath + 'px'
-          });
-        }
-        textarea.css({
-          'padding-top': labelMath + 'px'
-        });
       }
     }
     init();
@@ -353,26 +358,52 @@ function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == 
     window.FUI = {};
   }
   FUI.select = {};
-  FUI.select.escapeJS = function (string) {
-    // Create a temporary <div> element using jQuery and set the HTML content.
-    var div = $('<div>').html(string);
-
-    // Get the text content of the <div> element and remove script tags
-    var text = div.text().replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
-
-    // Return the escaped text
-    return text;
+  FUI.select.dropdownParentSelectors = ['.sui-dialog-content', '.pum-container', '.elementor-popup-modal', '.popup', '[role="dialog"]', '[role="alertdialog"]'];
+  FUI.select.getDropdownParent = function ($select) {
+    var $customSelectors = $select.data('dropdown-parent-selector'),
+      $selectors = FUI.select.dropdownParentSelectors.join(', '),
+      $popupSelectors = FUI.select.dropdownParentSelectors.join(', '),
+      $parent = $select.closest($selectors),
+      $formParent = $();
+    if ('string' === typeof $customSelectors && $customSelectors.trim().length) {
+      $selectors = $customSelectors;
+      $parent = $select.closest($selectors);
+    }
+    if ($parent.length && $parent.is($popupSelectors)) {
+      $formParent = $select.closest('.forminator-custom-form');
+      if (!$formParent.length) {
+        $formParent = $select.closest('form');
+      }
+      if ($formParent.length) {
+        $parent = $formParent;
+      }
+    }
+    return $parent.length ? $parent : $(document.body);
   };
   FUI.select.formatCheckbox = function (data, container) {
-    var label = FUI.select.escapeJS(data.text);
+    var label = data.text;
     var selected = data.selected;
-    var markup,
-      id = label.toLowerCase().replace(/\s+/g, '-');
-    if (data.id) {
-      id = data.id;
+    var id = data.id || label.toLowerCase().replace(/\s+/g, '-');
+    var wrapper = document.createElement('label');
+    wrapper.setAttribute('for', id);
+    wrapper.className = 'forminator-checkbox';
+    var input = document.createElement('input');
+    input.type = 'checkbox';
+    input.value = label;
+    input.id = id;
+    if (selected) {
+      input.checked = true;
     }
-    markup = '<label for="' + id + '" class="forminator-checkbox">' + '<input type="checkbox" value="' + label + '" id="' + id + '" ' + (selected ? 'checked' : '') + ' />' + '<span class="forminator-checkbox-box" aria-hidden="true"></span>' + '<span class="forminator-select-label">' + label + '</span>' + '</label>';
-    return markup;
+    var box = document.createElement('span');
+    box.className = 'forminator-checkbox-box';
+    box.setAttribute('aria-hidden', 'true');
+    var text = document.createElement('span');
+    text.className = 'forminator-select-label';
+    text.textContent = label;
+    wrapper.appendChild(input);
+    wrapper.appendChild(box);
+    wrapper.appendChild(text);
+    return wrapper;
   };
   FUI.select2 = function () {
     $('.forminator-custom-form').each(function () {
@@ -389,10 +420,9 @@ function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == 
         if ($element.hasClass('forminator-design--' + $theme) && $select.length) {
           $select.each(function () {
             var $select = $(this),
-              $dialog = $select.closest('.sui-dialog-content'),
-              $parent = $dialog.length ? $dialog : $select.closest('.elementor-popup-modal'),
+              $parent = FUI.select.getDropdownParent($select),
               $dropdownClass = 'forminator-custom-form-' + $formid + ' forminator-dropdown--' + $theme;
-            if (true === $select.data('rtl-support')) {
+            if (true === $select.data('rtl-support') || 'rtl' === $select.closest('html').attr('dir')) {
               $dir = 'rtl';
             } else {
               $dir = 'ltr';
@@ -420,9 +450,6 @@ function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == 
             }
             if ($select.prop('multiple')) {
               $dropdownClass += ' forminator-dropdown--multiple';
-            }
-            if (!$parent.length) {
-              $parent = $(document.body);
             }
             $select.FUIselect2(_objectSpread({
               dir: $dir,
@@ -797,16 +824,17 @@ function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == 
       var $slide = $element.find('.forminator-slide');
       var $input = $element.find('.forminator-hidden-input');
       var $disabled = $element.hasClass('forminator-disabled');
+      var $sliderLimit = $element.find('.forminator-slider-limit');
 
       // Check if it's a range slider
       var $isRange = $slide.data('is-range');
 
       // Parse integer values from data attributes with error handling
-      var $minRange = parseInt($slide.data('min')) || 0;
-      var $maxRange = parseInt($slide.data('max')) || 100;
-      var $value = parseInt($slide.data('value')) || $minRange;
-      var $valueMax = parseInt($slide.data('value-max')) || $maxRange;
-      var $step = parseInt($slide.data('step')) || 1;
+      var $minRange = getSafeFloat($slide.data('min'), 0);
+      var $maxRange = getSafeFloat($slide.data('max'), 100);
+      var $value = getSafeFloat($slide.data('value'), $minRange);
+      var $valueMax = getSafeFloat($slide.data('value-max'), $maxRange);
+      var $step = getSafeFloat($slide.data('step'), 1);
       var $sliderValueWrapper = $element.find('.forminator-slider-amount');
 
       // Get the label associated with this slider
@@ -833,6 +861,7 @@ function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == 
           // Format the slider values using the template
           var $formattedValue = valueTemplate($element, $value);
           var $formattedValueMax = $isRange ? valueTemplate($element, $valueMax) : null;
+          var $sliderHandles = $(this).find('.ui-slider-handle');
 
           // add data-attribute to check intialization.
           $slide.data('init', true);
@@ -841,8 +870,27 @@ function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == 
             $sliderValueWrapper.find('.forminator-slider-hidden-max').val($valueMax).change();
           }
 
-          // Create the UI with the formatted values
+          // Generate slider labels.
+          generateSliderLabels($sliderLimit, $minRange, $maxRange, $step);
+
+          // Add custom labels if available.
+          customSliderLabels($sliderLimit, $slide);
+
+          // Create the UI with the formatted values.
           updateSliderValues($element, $formattedValue, $formattedValueMax, $value, $valueMax);
+
+          // Update the slider handle attributes.
+          $sliderHandles.each(function (index) {
+            var isFirst = 0 === index;
+            var currentValue = isFirst ? $value : $valueMax;
+            $(this).attr({
+              role: 'slider',
+              'aria-valuemin': $minRange,
+              'aria-valuemax': $maxRange,
+              'aria-valuenow': currentValue,
+              'aria-valuetext': currentValue
+            });
+          });
         },
         slide: function slide(event, ui) {
           // Format the slider values using the template
@@ -850,9 +898,27 @@ function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == 
           var $valueMax = $isRange ? ui.values[1] : null;
           var $formattedValue = valueTemplate($element, $value);
           var $formattedValueMax = $isRange ? valueTemplate($element, $valueMax) : null;
+          var $sliderHandles = $(this).find('.ui-slider-handle');
 
           // Update the UI with the formatted values
           updateSliderValues($element, $formattedValue, $formattedValueMax, $value, $valueMax);
+
+          // Update the slider handle attributes.
+          if ($isRange) {
+            $sliderHandles.eq(0).attr({
+              'aria-valuenow': ui.values[0],
+              'aria-valuetext': ui.values[0]
+            });
+            $sliderHandles.eq(1).attr({
+              'aria-valuenow': ui.values[1],
+              'aria-valuetext': ui.values[1]
+            });
+          } else {
+            $sliderHandles.eq(0).attr({
+              'aria-valuenow': ui.value,
+              'aria-valuetext': ui.value
+            });
+          }
         },
         stop: function stop(event, ui) {
           // Format the slider values using the template
@@ -882,11 +948,63 @@ function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == 
       });
     });
 
+    // Function to generate slider labels
+    function generateSliderLabels($sliderLimit, $minRange, $maxRange, $step) {
+      if (!$sliderLimit.length) {
+        return;
+      }
+      var showAllLabels = 'all' === $sliderLimit.data('step-type');
+      $sliderLimit.empty(); // Clear existing labels
+      $sliderLimit.css({
+        position: 'relative',
+        height: '22px'
+      });
+      for (var $i = $minRange; $i <= $maxRange; $i += $step) {
+        // If not showing all labels, only show first and last
+        if (!showAllLabels && $i !== $minRange && $i !== $maxRange) {
+          continue;
+        }
+        var totalSteps = Math.floor(($maxRange - $minRange) / $step);
+        var currentStep = Math.floor(($i - $minRange) / $step);
+        var percent = currentStep / totalSteps * 100;
+        var className = 'forminator-slider-limit-between'; // Default class
+
+        // Assign specific classes for first and last labels
+        if ($i === $minRange) {
+          className = 'forminator-slider-limit-min';
+        } else if ($i === $maxRange) {
+          className = 'forminator-slider-limit-max';
+        }
+        var label = $('<span class="' + className + '">' + $i + '</span>').css({
+          left: percent + '%',
+          position: 'absolute'
+        });
+        label.css('transform', 'translateX(-50%)');
+        $sliderLimit.append(label);
+      }
+    }
+
+    // Function for custom slider labels
+    function customSliderLabels($sliderLimit, $slide) {
+      var minLabel = sanitize($slide.data('min-label') || '');
+      var maxLabel = sanitize($slide.data('max-label') || '');
+
+      // Safe: text() escapes potentially dangerous characters.
+      var $minLabelSpan = $('<span class="forminator-slider-label-min"></span>').text(minLabel);
+      var $maxLabelSpan = $('<span class="forminator-slider-label-max"></span>').text(maxLabel);
+      var $labelWrapper = $('<div class="forminator-slider-labels"></div>').append($minLabelSpan).append($maxLabelSpan);
+      if ($sliderLimit.length && $sliderLimit.prev('.forminator-slide').length) {
+        $sliderLimit.after($labelWrapper);
+      } else if ($sliderLimit.length && $sliderLimit.next('.forminator-slide').length) {
+        $sliderLimit.before($labelWrapper);
+      }
+    }
+
     // Function to format the slider value using the template
     function valueTemplate($element, $sliderValue) {
       var $sliderValueWrapper = $element.find('.forminator-slider-amount');
-      var $sliderValueTemplate = $sliderValueWrapper.data('value-template') || '{slider-value}';
-      return $sliderValueTemplate.replace('{slider-value}', '<span class="forminator-slider-value">' + $('<div>').text($sliderValue).html() + '</span>');
+      var $sliderValueTemplate = sanitize($sliderValueWrapper.data('value-template') || '{slider-value}');
+      return $sliderValueTemplate.replace('{slider-value}', '<span class="forminator-slider-value">' + sanitize(String($sliderValue)) + '</span>');
     }
 
     // Function to update the UI with the formatted values
@@ -904,6 +1022,22 @@ function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == 
           $sliderValueWrapper.find('.forminator-slider-value-max').html($formattedValueMax);
         }
       }
+    }
+
+    // function to get int value safely from data attr.
+    function getSafeFloat(value, defaultValue) {
+      var parsedValue = parseFloat(value, 10);
+      return isNaN(parsedValue) ? defaultValue : parsedValue;
+    }
+
+    // function to sanitize the data values.
+    function sanitize(template) {
+      if ('string' !== typeof template) {
+        return '';
+      }
+
+      // Sanitize values.
+      return template.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
     }
   };
 })(jQuery);
@@ -932,11 +1066,11 @@ function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == 
         var $options = $element.find('option').not(':disabled');
         var numOptions = $options.length;
 
-        // Get the icon type from the data-type attribute
-        var iconType = $element.attr('data-type') || 'star';
+        // Get the icon type from the data-type attribute and sanitize it
+        var iconType = ($element.attr('data-type') || 'star').replace(/[^a-z0-9_-]/gi, '');
 
-        // Get the icon type from the data-type attribute
-        var iconSize = $element.attr('data-size') || 'md';
+        // Get the icon size from the data-size attribute and sanitize it
+        var iconSize = ($element.attr('data-size') || 'md').replace(/[^a-z0-9_-]/gi, '');
 
         // Calculate the selected value.
         var selectedValue = Number($element.find('option:selected').val()) || 0;
@@ -945,7 +1079,7 @@ function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == 
         var $wrapper = $('<div class="forminator-rating-wrapper"></div>');
 
         // Create the rating items container
-        var $ratingItemsContainer = $('<span data-id="' + id + '" data-selected-value="' + selectedValue + '" class="forminator-rating-items forminator-rating-' + iconSize + '"></span>');
+        var $ratingItemsContainer = $('<span></span>').attr('data-id', id).attr('data-selected-value', selectedValue).addClass('forminator-rating-items').addClass('forminator-rating-' + iconSize.replace(/[^a-z0-9_-]/gi, ''));
 
         // Intialized
         var isInitialized = $element.attr('data-init') || 'false';
@@ -957,7 +1091,13 @@ function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == 
         for (i = 0; i < numOptions; i++) {
           var optionValue = Number($options.eq(i).val());
           var itemClass = optionValue <= selectedValue ? 'forminator-rating-item forminator-rating-selected' : 'forminator-rating-item';
-          $ratingItemsContainer.append('<span class="' + itemClass + '" data-value="' + optionValue + '">' + '<i class="forminator-icon-' + iconType + '" aria-hidden="true"></i>' + '</span>');
+          $ratingItemsContainer.append($('<span>', {
+            'class': itemClass,
+            'data-value': optionValue
+          }).append($('<i>', {
+            'class': 'forminator-icon-' + iconType,
+            'aria-hidden': 'true'
+          })));
         }
 
         // Add selected-value and total-value in select.

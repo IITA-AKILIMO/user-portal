@@ -110,6 +110,48 @@ abstract class Forminator_Admin_Page {
 		add_action( 'load-' . $this->page_id, array( $this, 'before_render' ) );
 		add_action( 'load-' . $this->page_id, array( $this, 'trigger_before_render_action' ) );
 		add_filter( 'load-' . $this->page_id, array( $this, 'add_page_hooks' ) );
+
+		if ( $this->is_edit_page() ) {
+			add_filter( 'forminator_data', array( $this, 'add_forminator_data' ) );
+			// Suppress admin notices on edit page.
+			add_action( 'in_admin_header', array( $this, 'suppress_wp_admin_notices' ), PHP_INT_MAX );
+		}
+	}
+
+	/**
+	 * Suppress WP admin notices.
+	 *
+	 * @return void
+	 */
+	public function suppress_wp_admin_notices() {
+		remove_all_actions( 'admin_notices' );
+		remove_all_actions( 'all_admin_notices' );
+		remove_all_actions( 'user_admin_notices' );
+		remove_all_actions( 'network_admin_notices' );
+	}
+
+	/**
+	 * Check if current page is edit page
+	 *
+	 * @return bool
+	 */
+	public function is_edit_page() {
+		global $plugin_page;
+		return ! empty( $plugin_page ) && $this->page_slug === $plugin_page &&
+			in_array( $this->page_slug, array( 'forminator-cform-wizard', 'forminator-poll-wizard', 'forminator-knowledge-wizard', 'forminator-nowrong-wizard' ), true );
+	}
+
+	/**
+	 * Add logo info in Forminator data.
+	 *
+	 * @param array $data Data.
+	 *
+	 * @return array
+	 */
+	public function add_forminator_data( $data ) {
+		$data['statusBarLogoClass'] = $this->get_box_summary_classes();
+
+		return $data;
 	}
 
 	/**
@@ -145,6 +187,11 @@ abstract class Forminator_Admin_Page {
 	 * @since 1.0
 	 */
 	public function add_page_hooks() {
+		$page_action = filter_input( INPUT_GET, 'page_action' );
+		if ( ! forminator_cloud_templates_disabled() && 'hub_connection' === $page_action
+				&& ! Forminator_Hub_Connector::hub_connector_connected() ) {
+			return;
+		}
 		add_filter( 'user_can_richedit', '__return_true' ); // Confirms wp editor script is loaded on Forminator admin pages.
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 		add_filter( 'admin_body_class', array( $this, 'admin_body_classes' ) );
@@ -161,6 +208,14 @@ abstract class Forminator_Admin_Page {
 		$vars[] = 'forminator_notice';
 		$vars[] = 'forminator_text_notice';
 		$vars[] = 'forminator_error_notice';
+		$vars[] = 'forminator_open_addon';
+		$vars[] = 'forminator_install_addon';
+		$vars[] = 'page_referral';
+		$vars[] = 'forminator_cache_bust';
+		if ( Forminator_Hub_Connector::hub_connector_connected() ) {
+			$vars[] = 'page_action';
+			$vars[] = 'feature';
+		}
 
 		return $vars;
 	}
@@ -243,22 +298,11 @@ abstract class Forminator_Admin_Page {
 		?>
 		<div class="sui-footer"><?php echo wp_kses_post( $footer_text ); ?></div>
 
-		<?php if ( FORMINATOR_PRO ) { ?>
+		<?php
+		do_action( 'forminator_before_admin_footer_links', $hide_footer );
 
-			<?php if ( ! $hide_footer ) : ?>
-				<ul class="sui-footer-nav">
-					<li><a href="https://wpmudev.com/hub2/" target="_blank"><?php esc_html_e( 'The Hub', 'forminator' ); ?></a></li>
-					<li><a href="https://wpmudev.com/projects/category/plugins/" target="_blank"><?php esc_html_e( 'Plugins', 'forminator' ); ?></a></li>
-					<li><a href="https://wpmudev.com/roadmap/" target="_blank"><?php esc_html_e( 'Roadmap', 'forminator' ); ?></a></li>
-					<li><a href="https://wpmudev.com/hub2/support/" target="_blank"><?php esc_html_e( 'Support', 'forminator' ); ?></a></li>
-					<li><a href="https://wpmudev.com/docs/" target="_blank"><?php esc_html_e( 'Docs', 'forminator' ); ?></a></li>
-					<li><a href="https://wpmudev.com/hub2/community/" target="_blank"><?php esc_html_e( 'Community', 'forminator' ); ?></a></li>
-					<li><a href="https://wpmudev.com/terms-of-service/" target="_blank"><?php esc_html_e( 'Terms of Service', 'forminator' ); ?></a></li>
-					<li><a href="https://incsub.com/privacy-policy/" target="_blank"><?php esc_html_e( 'Privacy Policy', 'forminator' ); ?></a></li>
-				</ul>
-			<?php endif; ?>
-
-		<?php } else { ?>
+		if ( ! FORMINATOR_PRO ) {
+			?>
 
 			<ul class="sui-footer-nav">
 				<li><a href="https://profiles.wordpress.org/wpmudev#content-plugins" target="_blank"><?php esc_html_e( 'Free Plugins', 'forminator' ); ?></a></li>
@@ -281,7 +325,7 @@ abstract class Forminator_Admin_Page {
 				</a></li>
 				<li><a href="https://twitter.com/wpmudev" target="_blank">
 					<i class="sui-icon-social-twitter" aria-hidden="true"></i>
-					<span class="sui-screen-reader-text"><?php esc_html_e( 'Twitter', 'forminator' ); ?></span>
+					<span class="sui-screen-reader-text"><?php esc_html_e( 'X', 'forminator' ); ?></span>
 				</a></li>
 				<li><a href="https://www.instagram.com/wpmu_dev/" target="_blank">
 					<i class="sui-icon-instagram" aria-hidden="true"></i>
@@ -303,18 +347,147 @@ abstract class Forminator_Admin_Page {
 		$accessibility_enabled = get_option( 'forminator_enable_accessibility', false );
 		?>
 
-		<main class="sui-wrap <?php echo $accessibility_enabled ? 'sui-color-accessible' : ''; ?> <?php echo esc_attr( 'wpmudev-forminator-' . $this->page_slug ); ?>">
+		<main id="<?php echo esc_attr( 'wpmudev-page-' . $this->page_slug ); ?>" class="sui-wrap <?php echo $accessibility_enabled ? 'sui-color-accessible' : ''; ?> <?php echo esc_attr( 'wpmudev-forminator-' . $this->page_slug ); ?>">
 
 			<?php
-			$this->render_header();
 
-			$this->render_page_content();
+			$page_action    = filter_input( INPUT_GET, 'page_action' );
+			$hub_connecting = ! forminator_cloud_templates_disabled() && 'hub_connection' === $page_action;
+			if ( $hub_connecting && ! Forminator_Hub_Connector::hub_connector_connected() ) {
+				do_action( 'wpmudev_hub_connector_ui', 'forminator' );
+			} else {
+				if ( ! $this->is_edit_page() ) {
+					$this->render_header();
+				}
 
-			$this->render_footer();
+				$this->render_page_content();
+
+				if ( ! $this->is_edit_page() ) {
+					$this->render_footer();
+				}
+
+				if ( $hub_connecting && Forminator_Hub_Connector::hub_connector_connected() ) {
+					self::hub_connected_successfully_modal();
+				}
+			}
 			?>
 
 		</main>
 
+		<?php
+	}
+
+	/**
+	 * Show modal when hub connected successfully
+	 */
+	public static function hub_connected_successfully_modal() {
+		$page    = filter_input( INPUT_GET, 'page' );
+		$feature = filter_input( INPUT_GET, 'feature' );
+		?>
+		<div class="sui-modal sui-modal-md">
+			<div
+				role="dialog"
+				id="forminator-hub-connected-successfully-modal"
+				class="sui-modal-content forminator-hub-modal"
+				aria-modal="true"
+				aria-labelledby="forminator-hub-connected-successfully-modal-title"
+				aria-describedby="forminator-hub-connected-successfully-modal-description"
+				data-esc-close="true"
+			>
+				<div class="sui-box">
+					<div class="sui-box-header sui-flatten sui-content-center sui-spacing-top--60">
+						<span class="sui-icon-check-tick sui-success sui-xl" aria-hidden="true"></span>
+						<h3 id="forminator-hub-connected-successfully-modal-title" class="sui-box-title sui-lg">
+							<?php esc_html_e( 'Site connected successfully!', 'forminator' ); ?>
+						</h3>
+						<p id="forminator-hub-connected-successfully-modal-description" class="sui-description">
+							<?php
+							if ( 'forminator-settings' === $page ) {
+								esc_html_e( 'Your site is now connected to your WPMU DEV account, unlocking powerful tools to help you work faster and manage forms across sites, including:', 'forminator' );
+							} else {
+								?>
+								<b><?php esc_html_e( 'Congratulations!', 'forminator' ); ?></b>
+								<?php
+								if ( 'preset-template' === $feature ) {
+									esc_html_e( 'Your site is now connected to The Hub, and preset templates are unlocked. Start building forms faster with any of our ready-made templates.', 'forminator' );
+								} elseif ( 'extension-pack' === $feature ) {
+									esc_html_e( 'Your site is now connected to The Hub, and the following features are now unlocked.', 'forminator' );
+								} else {
+									esc_html_e( 'Your site is connected to The Hub. You can now save your forms to The Hub cloud.', 'forminator' );
+								}
+							}
+							?>
+						</p>
+					</div>
+					<?php
+					if ( 'forminator-settings' === $page ) {
+						?>
+						<div class="sui-box-body sui-flatten">
+							<div class="sui-notice">
+								<div class="sui-notice-content">
+									<div class="sui-notice-message">
+										<ul>
+											<li class="sui-icon-check-tick"><?php esc_html_e( 'Save form templates to the cloud for easy reuse', 'forminator' ); ?></li>
+											<li class="sui-icon-check-tick"><?php esc_html_e( 'Access your cloud templates from any connected site', 'forminator' ); ?></li>
+											<li class="sui-icon-check-tick"><?php esc_html_e( 'Discover additional ready-made form templates', 'forminator' ); ?></li>
+											<li class="sui-icon-check-tick"><?php esc_html_e( 'Manage your site using The Hub’s site management tools', 'forminator' ); ?></li>
+											<li class="sui-icon-check-tick"><?php printf( /* translators: 1: Open Italic tag, 2: Close Italic tag */ esc_html__( 'Enable add-ons via The Hub %1$s(coming soon)%2$s', 'forminator' ), '<i>', '</i>' ); ?></li>
+										</ul>
+									</div>
+								</div>
+							</div>
+						</div>
+						<?php
+					} elseif ( 'extension-pack' === $feature ) {
+						?>
+						<div class="sui-box-body">
+							<div class="sui-box-body-item forminator-hub-modal-item">
+								<div class="forminator-hub-modal-box">
+									<span class="sui-icon-check-tick sui-sm sui-success" aria-hidden="true"></span>
+									<strong>
+										<?php esc_html_e( 'Preset and Cloud Templates', 'forminator' ); ?>
+									</strong>
+									<span class="sui-tag sui-tag-blue sui-tag-sm"><?php echo esc_html__( 'Unlocked', 'forminator' ); ?></span>
+								</div>
+							</div>
+							<div class="sui-box-body-item forminator-hub-modal-item">
+								<div class="forminator-hub-modal-box">
+									<span class="sui-icon-check-tick sui-sm sui-success" aria-hidden="true"></span>
+									<strong>
+										<?php esc_html_e( 'Extension Pack Add-on', 'forminator' ); ?>
+									</strong>
+									<button
+										class="addons-actions sui-button sui-button-blue sui-button-sm"
+										data-action="addons-install-activate"
+										data-addon="<?php echo esc_attr( Forminator_Admin_Addons_Page::EXTENSION_PACK_PID ); ?>"
+										data-nonce="<?php echo esc_attr( wp_create_nonce( 'forminator_popup_addons_actions' ) ); ?>"
+									>
+										<span class="sui-icon-download" aria-hidden="true"></span>
+										<?php esc_html_e( 'Install & Activate', 'forminator' ); ?>
+									</button>
+								</div>
+
+								<ul class="forminator-hub-modal-list">
+									<li>
+										<span class="sui-icon-check sui-sm sui-success" aria-hidden="true"></span>
+										<strong><?php esc_html_e( 'Form Abandonment', 'forminator' ); ?></strong>
+									</li>
+									<li>
+										<span class="sui-icon-clock sui-sm sui-success" aria-hidden="true"></span>
+										<strong><?php esc_html_e( 'More features coming soon', 'forminator' ); ?></strong>
+									</li>
+								</ul>
+							</div>
+						</div>
+					<?php } ?>
+					<div class="sui-box-footer sui-flatten sui-content-center">
+						<button class="sui-button forminator-close-hub-connected-modal" data-feature="<?php echo esc_attr( $feature ); ?>" data-modal-close>
+							<?php esc_html_e( 'Close', 'forminator' ); ?>
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
 		<?php
 	}
 
@@ -407,14 +580,12 @@ abstract class Forminator_Admin_Page {
 
 		$screen = get_current_screen();
 
-		$classes = '';
-
 		// Do nothing if not a forminator page.
 		if ( strpos( $screen->base, '_page_forminator' ) === false ) {
 			return $classes;
 		}
 
-		$classes .= $this->get_sui_body_class();
+		$classes = $this->get_sui_body_class();
 
 		// if accessibility enabled add sui select accessible class.
 		if ( get_option( 'forminator_enable_accessibility', false ) ) {
@@ -551,10 +722,11 @@ abstract class Forminator_Admin_Page {
 						<?php
 						$stripe_link = 'https://wpmudev.com/docs/wpmu-dev-plugins/forminator/#stripe-field';
 						printf(
-							/* Translators: 1. Opening <a> tag with link 2. closing <a> tag. */
-							esc_html__( 'You are using the Stripe simple card payment element, which is being deprecated by Stripe. %1$sLearn more%2$s. To ensure seamless transactions, update the Stripe field in the form(s) below to the new Stripe payment element.', 'forminator' ),
-							'<a href="' . esc_url( $stripe_link ) . '" target="_blank">',
-							'</a>'
+							/* Translators: 1. 'Learn more' link */
+							esc_html__( 'You are using the Stripe simple card payment element, which is being deprecated by Stripe. %1$sTo ensure seamless transactions, update the Stripe field in the form(s) below to the new Stripe payment element.', 'forminator' ),
+							forminator_is_show_documentation_link() ?
+								'<a href="' . esc_url( $stripe_link ) . '" target="_blank">' . esc_html__( 'Learn more.', 'forminator' ) . '</a> '
+								: ''
 						);
 						?>
 					</p>

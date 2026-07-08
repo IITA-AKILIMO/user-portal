@@ -59,6 +59,11 @@ class Forminator_Assets_Enqueue_Form extends Forminator_Assets_Enqueue {
 			$this->load_phone_scripts();
 		}
 
+		// FIELD: HTML.
+		if ( $render_obj->has_field_type( 'html' ) ) {
+			self::load_dompurify_scripts();
+		}
+
 		// FIELD: Date picker.
 		if ( $render_obj->has_field_type( 'date' ) ) {
 			$this->load_date_scripts();
@@ -70,6 +75,9 @@ class Forminator_Assets_Enqueue_Form extends Forminator_Assets_Enqueue {
 			|| $render_obj->has_field_type( 'number' ) ) {
 			$this->load_number_scripts();
 		}
+
+		// ACTION: Enqueue custom form scripts.
+		do_action( 'forminator_custom_forms_enqueue_scripts', $render_obj );
 	}
 
 	/**
@@ -166,11 +174,13 @@ class Forminator_Assets_Enqueue_Form extends Forminator_Assets_Enqueue {
 
 		$has_signature = $render_obj->has_field_type( 'signature' );
 
+		$has_address_autocomplete = $render_obj->has_field_type_with_setting_value( 'address', 'auto_suggest', 'enable' );
+
 		// Forminator UI - Base stylesheet.
 		if ( 'none' !== $form_design && 'basic' !== $form_design ) {
 
 			// Forminator UI - Full stylesheet.
-			if ( $has_phone_settings || $has_address_country || $has_select_multiple || $has_datepicker || $has_timepicker || $has_uploader || $has_post_feat_image || ( $has_post_categories && $has_multi_categories ) || ( $has_post_tags && $has_multi_tags ) || $has_currency || $has_paypal || $has_stripe || $has_signature || $has_dateselect || $has_select_single || $has_timepicker ) {
+			if ( $has_address_autocomplete || $has_phone_settings || $has_address_country || $has_select_multiple || $has_datepicker || $has_timepicker || $has_uploader || $has_post_feat_image || ( $has_post_categories && $has_multi_categories ) || ( $has_post_tags && $has_multi_tags ) || $has_currency || $has_paypal || $has_stripe || $has_signature || $has_dateselect || $has_select_single || $has_timepicker ) {
 				Forminator_Assets_Enqueue::fui_enqueue_style(
 					'forminator-forms-' . $form_design . '-full',
 					forminator_plugin_url() . 'assets/forminator-ui/css/src/form/forminator-form-' . $form_design . '.full.min.css',
@@ -291,6 +301,18 @@ class Forminator_Assets_Enqueue_Form extends Forminator_Assets_Enqueue {
 
 		Forminator_Assets_Enqueue::fui_enqueue_style( 'intlTelInput-forminator-css', $style_src, array(), $style_version ); // intlTelInput.
 		wp_enqueue_script( 'forminator-intlTelInput', $script_src, array( 'jquery' ), $script_version, false ); // intlTelInput.
+	}
+
+	/**
+	 * Load DOMPurify script for HTML field
+	 *
+	 * @return void
+	 */
+	public static function load_dompurify_scripts() {
+		$script_src     = forminator_plugin_url() . 'assets/js/library/dompurify.min.js';
+		$script_version = '3.3.1';
+
+		wp_enqueue_script( 'forminator-dompurify', $script_src, array(), $script_version, false );
 	}
 
 	/**

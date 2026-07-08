@@ -117,11 +117,21 @@ function forminator_remove_upload_files() {
 }
 
 $clear_data = get_option( 'forminator_uninstall_clear_data', false );
-$usage_data = get_option( 'forminator_usage_tracking', false );
+
+require_once plugin_dir_path( __FILE__ ) . 'library/class-core.php';
+require_once plugin_dir_path( __FILE__ ) . 'constants.php';
+require_once plugin_dir_path( __FILE__ ) . 'functions.php';
+Forminator_Core::init_mixpanel();
+
+/**
+ * Action hook to run before plugin reset.
+ *
+ * @param bool $clear_data Uninstallation data settings reset or preserve
+ */
+do_action( 'forminator_before_uninstall', $clear_data );
 
 if ( $clear_data ) {
 	global $wpdb;
-	include_once plugin_dir_path( __FILE__ ) . 'library/class-core.php';
 	include_once plugin_dir_path( __FILE__ ) . 'library/helpers/helper-core.php';
 
 	if ( ! is_multisite() ) {
@@ -162,19 +172,9 @@ if ( $clear_data ) {
 	}
 }
 
-require_once plugin_dir_path( __FILE__ ) . 'constants.php';
-if ( file_exists( plugin_dir_path( __FILE__ ) . 'library/lib/analytics/autoload.php' ) ) {
-	include_once plugin_dir_path( __FILE__ ) . 'library/lib/analytics/autoload.php';
-	include_once plugin_dir_path( __FILE__ ) . 'library/mixpanel/class-mixpanel.php';
-	Forminator_Mixpanel::get_instance();
-
-	/**
-	 * Action hook to run after plugin reset.
-	 *
-	 * @param bool $usage_data usage tracking data enable or not
-	 * @param bool $clear_data Uninstallation data settings reset or preserve
-	 *
-	 * @since 1.27.0
-	 */
-	do_action( 'forminator_after_uninstall', $usage_data, $clear_data );
-}
+/**
+ * Action hook to run after plugin reset.
+ *
+ * @since 1.27.0
+ */
+do_action( 'forminator_after_uninstall' );

@@ -18,6 +18,7 @@
 		<?php } ?>
 	}
 
+	.forminator-ui#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-button-submit:focus,
 	.forminator-ui#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-button-submit:active {
 		<?php if ( forminator_array_value_exists( $properties, 'basic-button-submit-background-active' ) && !empty( $properties['basic-button-submit-background-active'] ) ) { ?>
 			background-color: <?php echo $properties['basic-button-submit-background-active'] ?>;
@@ -26,5 +27,12 @@
 			color: <?php echo $properties['basic-button-submit-color-active'] ?>;
 		<?php } ?>
 	}
+
+	<?php if ( forminator_array_value_exists( $properties, 'basic-button-submit-focus-outline-color' ) && !empty( $properties['basic-button-submit-focus-outline-color'] ) ) { ?>
+		.forminator-ui#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-button-submit:focus {
+			outline: 2px solid <?php echo $properties['basic-button-submit-focus-outline-color'] ?>;
+			outline-offset: 1px;
+		}
+	<?php } ?>
 
 <?php } ?>

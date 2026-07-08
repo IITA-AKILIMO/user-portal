@@ -12,6 +12,10 @@
 
 define( 'FORMINATOR_ADDON_GOOGLESHEET_VERSION', '2.16.0' );
 
+if ( ! defined( 'FORMINATOR_ADDON_GOOGLESHEET_SEND_SELECT_VALUES' ) ) {
+	define( 'FORMINATOR_ADDON_GOOGLESHEET_SEND_SELECT_VALUES', true );
+}
+
 /**
  * Forminator addon Google sheet directory path
  *

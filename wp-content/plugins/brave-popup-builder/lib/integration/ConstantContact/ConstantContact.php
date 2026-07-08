@@ -114,13 +114,37 @@ if ( ! class_exists( 'BravePop_ConstantContact' ) ) {
             $putArgs = array('method' => 'PUT','timeout' => 30, 'headers' => array( 'content-type' => 'application/json', 'Authorization' => 'Bearer ' . $this->access_key), 'body' => wp_json_encode($updatedContact)  );
             $putResponse = wp_remote_post( 'https://api.constantcontact.com/v2/contacts/'.$exitingContactID.'?action_by=ACTION_BY_VISITOR&api_key='.$this->api_key, $putArgs );
             $putBody = wp_remote_retrieve_body( $putResponse );
+            $putData = json_decode( $putBody );
             //$putData = json_decode( $putBody );
-
-            return true;
+            if(isset($putResponse['response']['code']) && $putResponse['response']['code'] === 201){
+               $addedData = array(
+                  'action'=> isset($userData['action']) ? $userData['action'] : 'visitor_added',  
+                  'user_id'=> isset($userData['userData']['ID']) ? $userData['userData']['ID'] : false,
+                  'user_mail'=> $email, 
+                  'esp_user_id'=> '',
+                  'user_data'=> $updatedContact,
+                  'list_id'=> $list_id,
+                  'response' => $putResponse
+               ); 
+               do_action( 'bravepop_added_to_list', 'constantcontact', $addedData );
+               return array( 'success' => true, 'result' => $addedData );
+            }else{
+               $errorMsg = $putResponse->get_error_message() ? $putResponse->get_error_message() : 'Unknown Error Occurred. No Error details provided by Constantcontact.';
+               $errorPayload = array( 'user_mail'=> $email, 'list_id'=> $list_id, 'user_data'=> $updatedContact, 'error' => $errorMsg, 'response'=> $putResponse );
+               do_action( 'bravepop_added_to_list_failed', 'constantcontact', $errorPayload );
+               return array( 'success' => false, 'errorMsg' => $errorMsg, 'result' => $errorPayload );
+            }
    
          }else{
             //User Does not exit, create User
             //error_log('User Does not exit, create User');
+            $contact = array(
+                  'email_addresses' => $emails,
+                  'first_name'      => $firstname,
+                  'last_name'       => $lastname,
+                  'lists'           => $lists,
+                  'confirmed'       =>  true
+            );
             $args = array(
                'method' => 'POST',
                'timeout' => 30,
@@ -128,13 +152,7 @@ if ( ! class_exists( 'BravePop_ConstantContact' ) ) {
                   'content-type' => 'application/json',
                   'Authorization' => 'Bearer ' . $this->access_key
                ),
-               'body' => wp_json_encode(array(
-                  'email_addresses' => $emails,
-                  'first_name'      => $firstname,
-                  'last_name'       => $lastname,
-                  'lists'           => $lists,
-                  'confirmed'       =>  true
-               ))
+               'body' => wp_json_encode($contact)
             );
             
             $response = wp_remote_post( 'https://api.constantcontact.com/v2/contacts?action_by=ACTION_BY_VISITOR&api_key='.$this->api_key, $args );
@@ -147,12 +165,19 @@ if ( ! class_exists( 'BravePop_ConstantContact' ) ) {
                $addedData = array(
                   'action'=> isset($userData['action']) ? $userData['action'] : 'visitor_added',  
                   'user_id'=> isset($userData['userData']['ID']) ? $userData['userData']['ID'] : false,
-                  'user_mail'=> $email, 'esp_user_id'=> $data->id
+                  'user_mail'=> $email, 
+                  'esp_user_id'=> '',
+                  'user_data'=> $contact,
+                  'list_id'=> $list_id,
+                  'response' => $response
                ); 
-               do_action( 'bravepop_addded_to_list', 'constantcontact', $addedData );
-               return $data->id; 
+               do_action( 'bravepop_added_to_list', 'constantcontact', $addedData );
+               return array( 'success' => true, 'result' => $addedData );
             }else{
-               return false;
+               $errorMsg = $response->get_error_message() ? $response->get_error_message() : 'Unknown Error Occurred. No Error details provided by Constantcontact.';
+               $errorPayload = array( 'user_mail'=> $email, 'list_id'=> $list_id, 'user_data'=> $contact, 'error' => $errorMsg, 'response'=> $response );
+               do_action( 'bravepop_added_to_list_failed', 'constantcontact', $errorPayload );
+               return array( 'success' => false, 'errorMsg' => $errorMsg, 'result' => $errorPayload );
             }
          }
 

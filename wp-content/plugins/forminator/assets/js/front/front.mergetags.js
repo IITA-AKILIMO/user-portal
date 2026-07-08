@@ -46,6 +46,8 @@
 
 			ForminatorFront.MergeTags[ formId ] = ForminatorFront.MergeTags[ formId ] || [];
 
+			this._mergeTagInputs = {};
+
 			if (fields.length > 0) {
 				fields.each(function () {
 					let html = $(this).html(),
@@ -74,9 +76,11 @@
 					}
 
 					ForminatorFront.MergeTags[ formId ][ fieldId ] = {
-						$input: $(this),
 						value: html,
 					};
+
+					// Store the DOM reference per-instance to avoid cross-instance pollution.
+					self._mergeTagInputs[ fieldId ] = $(this);
 				});
 			}
 
@@ -101,16 +105,21 @@
 			var self = this;
 
 			this.$el.find(
-				'.forminator-textarea, input.forminator-input, .forminator-checkbox, .forminator-radio, .forminator-input-file, select.forminator-select2, .forminator-multiselect input'
+				'.forminator-textarea, input.forminator-input, .forminator-input input, .forminator-checkbox input, .forminator-radio input, .forminator-input-file, select.forminator-select2, .forminator-multiselect input'
 				+ ', input.forminator-slider-hidden, input.forminator-slider-hidden-min, input.forminator-slider-hidden-max, select.forminator-rating'
 			).each(function () {
-				$(this).on('change', function () {
+				$(this).on('change forminator.change', function () {
 					// Give jquery sometime to apply changes
 					setTimeout( function() {
 					   self.replaceAll();
                }, 300 );
 				});
 			});
+
+			// When remove a group item, we need to replace all merge tags.
+			this.$el.on( 'forminator-group-item-removed', function () {
+				self.replaceAll();
+			} );
 		},
 
 		replaceAll: function () {
@@ -119,22 +128,53 @@
 					formFields = ForminatorFront.MergeTags[ formId ];
 
 			for ( const key in formFields ) {
+				// Only update fields belonging to this specific form instance.
+				if ( ! self._mergeTagInputs[ key ] ) {
+					continue;
+				}
 				const formField = formFields[key];
-				self.replace( formField );
+				self.replace( formField, self._mergeTagInputs[ key ] );
 			}
 		},
 
-		replace: function ( field ) {
-			var $input = field.$input;
+		replace: function ( field, $input ) {
 			var res = this.maybeReplaceValue(field.value);
-
+			if ( typeof window.DOMPurify !== 'undefined' ) {
+				let config = { ADD_ATTR: [ 'target' ] };
+				// Allow iframe tags and attributes if the original value contains iframes.
+				if( this.hasIframes(field.value) ) {
+					config.ADD_TAGS = [ 'iframe' ];
+					config.ADD_ATTR = [
+						'align',
+						'width',
+						'height',
+						'frameborder',
+						'name',
+						'src',
+						'id',
+						'class',
+						'style',
+						'scrolling',
+						'marginwidth',
+						'marginheight',
+						'allowfullscreen',
+						'target'
+					];
+				}
+				res = window.DOMPurify.sanitize( res, config );
+			}
 			$input.html(res);
+		},
+
+		hasIframes: function ( html ) {
+			const $temp = $('<div>').html(html);
+			return $temp.find('iframe').length > 0;
 		},
 
 		maybeReplaceValue: function (value) {
 			var joinedFieldTypes      = this.settings.forminatorFields.join('|');
 			var incrementFieldPattern = "(" + joinedFieldTypes + ")-\\d+";
-			var pattern               = new RegExp('\\{(' + incrementFieldPattern + ')(\\-[0-9A-Za-z-_]+)?\\}', 'g');
+			var pattern               = new RegExp('\\{(' + incrementFieldPattern + ')(\\-[0-9A-Za-z-_]+)?(\\-\\*)?\\}', 'g');
 			var parsedValue           = value;
 
 			var matches;
@@ -149,7 +189,13 @@
 					continue;
 				}
 
-				replace = this.get_field_value(inputName);
+				// Check if the field is a grouped field.
+				if( inputName.endsWith( '-*' ) ){
+					inputName = inputName.replace( '-*', '' );
+					replace = this.get_group_field_values( inputName );
+				} else {
+					replace = this.get_field_value(inputName);
+				}
 
 				parsedValue = parsedValue.replace(fullMatch, replace);
 			}
@@ -158,10 +204,14 @@
 		},
 
 		// taken from forminatorFrontCondition
-		get_form_field: function (element_id) {
+		get_form_field: function (element_id, repeater = false) {
 			let $form = this.$el;
 			if ( $form.hasClass( 'forminator-grouped-fields' ) ) {
 				$form = $form.closest( 'form.forminator-ui' );
+			}
+			if( repeater === true ) {
+				// Find element by name start with element_id- (for repeater fields)
+				return $form.find('[name^=' + element_id + '-]');
 			}
 			//find element by suffix -field on id input (default behavior)
 			var $element = $form.find('#' + element_id + '-field');
@@ -187,14 +237,37 @@
 			return $element;
 		},
 
-		is_calculation: function (element_id) {
-			var $element    = this.get_form_field(element_id);
+		get_group_field_values: function ( element_id ) {
+			var $first_elements    	= this.get_form_field( element_id ),
+				$repeated_elements 	= this.get_form_field( element_id, true),
+				value       		= '',
+				self        		= this;
 
-			if ( $element.hasClass("forminator-calculation") ) {
-				return true;
+			if ( $first_elements.length === 0 ) {
+				return '';
 			}
 
-			return false;
+			let $elements = [$first_elements[0]];
+			let seenElementIds = new Set();
+
+			$.each($repeated_elements, function ( index, element ) {
+				let elementId = $( element ).attr( 'name' ).replace( '[]', '' );
+				if ( ! seenElementIds.has( elementId ) ) {
+					seenElementIds.add( elementId );
+					$elements.push( element );
+				}
+			});
+
+			$.each( $elements, function( index, element ) {
+				if ( $( element ).attr( 'name' ) !== undefined ) {
+					let elementId = $( element ).attr( 'name' ).replace( '[]', '' );
+					let result = self.get_field_value( elementId );
+					if( result.trim() !== '' ) {
+						value += '<p>' + result + '</p>';
+					}
+				}
+			} );
+			return value;
 		},
 
 		get_field_value: function (element_id) {
@@ -203,23 +276,18 @@
 				value       = '',
 				checked     = null;
 
-			if ( this.is_hidden( element_id ) && ! this.is_calculation( element_id ) ) {
-         	return '';
+			// Check if this is a postdata field (e.g., postdata-1).
+			// Postdata fields have a wrapper div, so we check by element_id pattern first.
+			if ( element_id.indexOf('postdata-') === 0 ) {
+				return this.get_postdata_field_value(element_id);
 			}
 
 			if ( $element.length === 0 ) {
 				return '';
 			}
 
-			if ( this.is_calculation( element_id ) ) {
-				var $element_id = this.get_form_field(element_id),
-					$column_field = $element_id.closest('.forminator-col'),
-					$row_field = $column_field.closest('.forminator-row')
-				;
-
-				if ( ! $row_field.hasClass("forminator-hidden-option") && this.is_hidden( element_id ) ) {
-					return '';
-				}
+			if ( forminatorUtils().is_hidden( $element ) ) {
+				return '';
 			}
 
 			if (this.field_is_radio($element)) {
@@ -233,12 +301,17 @@
 								? checked.siblings( '.forminator-screen-reader-only' ).text()
 								: checked.siblings( '.forminator-radio-label' ).text();
 					}
+					value += self.append_custom_input_value_if_present( checked, 'radio' );
 				}
 			} else if (this.field_is_checkbox($element)) {
 				$element.each(function () {
 					if ($(this).is(':checked')) {
 						if(value !== "") {
 							value += ', ';
+						}
+
+						if ( undefined !== $(this).attr('id') && $(this).attr('id').indexOf('forminator-field-consent') > -1 ) {
+							value += $(this).val();
 						}
 
 						var multiselect = !! $(this).closest('.forminator-multiselect').length;
@@ -252,6 +325,7 @@
 									 ? $(this).siblings( '.forminator-screen-reader-only' ).text()
 									 : $(this).siblings( '.forminator-checkbox-label' ).text();
 						}
+						value += self.append_custom_input_value_if_present( $(this), 'checkbox' );
 					}
 				});
 
@@ -267,11 +341,59 @@
 						} else {
 							value += $( this ).text();
 						}
+						value += self.append_custom_input_value_if_present( $(this), 'select' );
 					} );
 				}
-			} else if (this.field_is_upload($element)) {
-				value = $element.val().split('\\').pop();
-			} else if (this.field_has_inputMask($element)) {
+				} else if (this.field_is_upload($element)) {
+					var $form = this.$el,
+						hiddenValue = '';
+
+					if ( $form.hasClass( 'forminator-grouped-fields' ) ) {
+						$form = $form.closest( 'form.forminator-ui' );
+					}
+
+					$element.each(function () {
+						if ( this.files && this.files.length ) {
+							$.each( this.files, function ( index, file ) {
+								if ( file && file.name ) {
+									value += ( value !== '' ? ', ' : '' ) + file.name;
+								}
+							});
+						}
+					});
+
+					if ( value !== '' ) {
+						return this.sanitize_text_field( value );
+					}
+
+					hiddenValue = $form.find( '.forminator-multifile-hidden' ).val();
+					if ( hiddenValue ) {
+						try {
+							var uploadedFiles = $.parseJSON( hiddenValue ),
+								uploadFieldKey = Object.keys( uploadedFiles ).find( function ( key ) {
+									return key === element_id || 0 === key.indexOf( element_id + '_' );
+								} ),
+								uploadFiles = uploadFieldKey && Array.isArray( uploadedFiles[ uploadFieldKey ] )
+									? uploadedFiles[ uploadFieldKey ]
+									: null;
+
+							if ( uploadFiles ) {
+								value = uploadFiles
+									.filter( function ( file ) {
+										return file && file.success && file.file_name;
+									} )
+									.map( function ( file ) {
+										return file.file_name.replace( /^[a-z0-9]{12}-/i, '' );
+									} )
+									.join( ', ' );
+
+								return this.sanitize_text_field( value );
+							}
+						} catch ( e ) {}
+					}
+
+					value = $element.val().split('\\').pop();
+				} else if (this.field_has_inputMask($element)) {
 				$element.inputmask({'autoUnmask' : false});
 				value = $element.val();
 				$element.inputmask({'autoUnmask' : true});
@@ -280,6 +402,108 @@
 			}
 
 			return this.sanitize_text_field( value );
+		},
+
+		/**
+		 * Get postdata field value by collecting values from its sub-fields.
+		 * Postdata fields have sub-fields like: postdata-1-post-title, postdata-1-post-content, postdata-1-post-image, etc.
+		 *
+		 * @param {string} element_id The postdata element ID (e.g., "postdata-1").
+		 * @return {string} The combined value of the postdata field.
+		 */
+		get_postdata_field_value: function (element_id) {
+			var $form = this.$el,
+				parts = [];
+
+			if ($form.hasClass('forminator-grouped-fields')) {
+				$form = $form.closest('form.forminator-ui');
+			}
+
+			// Post Title.
+			var $title = $form.find('[name="' + element_id + '-post-title"]');
+			if ($title.length && $title.val()) {
+				parts.push('<strong>' + this.sanitize_text_field($title.val()) + '</strong>');
+			}
+
+			// Post Content - handle both textarea and WP Editor (preserve formatting).
+			var $content = $form.find('[name="' + element_id + '-post-content"]');
+			if ($content.length) {
+				var contentVal = '';
+				var editorId = $content.attr('id');
+
+				// Check if TinyMCE is active for this field.
+				if (typeof tinymce !== 'undefined' && tinymce.get(editorId)) {
+					// Get HTML content to preserve formatting (bold, italic, lists, etc.)
+					contentVal = tinymce.get(editorId).getContent();
+				} else {
+					contentVal = $content.val();
+				}
+
+				if (contentVal) {
+					// Don't sanitize - preserve HTML formatting from editor.
+					parts.push(contentVal);
+				}
+			}
+
+			// Post Excerpt.
+			var $excerpt = $form.find('[name="' + element_id + '-post-excerpt"]');
+			if ($excerpt.length && $excerpt.val()) {
+				parts.push(this.sanitize_text_field($excerpt.val()));
+			}
+
+			// Post Image - show preview if available (200x200 max).
+			var $image = $form.find('[name="' + element_id + '-post-image"]');
+			if ($image.length && $image[0].files && $image[0].files[0]) {
+				var file = $image[0].files[0];
+				parts.push('<em>[File: ' + this.sanitize_text_field(file.name) + ']</em>');
+			}
+
+			var getPostdataTaxonomyValue = function (fieldName) {
+				var $checkboxes = $form.find('input[name="' + fieldName + '[]"]');
+				if ($checkboxes.length) {
+					return $checkboxes.filter(':checked').map(function () {
+						return $(this).closest('label').text().trim();
+					}).get().filter(function (label) {
+						return label !== '';
+					}).join(', ');
+				}
+
+				var $select = $form.find('select[name="' + fieldName + '"], select[name="' + fieldName + '[]"]');
+				if ($select.length) {
+					return $select.find('option:selected').map(function () {
+						return $(this).text().trim();
+					}).get().filter(function (label) {
+						return label !== '';
+					}).join(', ');
+				}
+
+				return '';
+			};
+
+			// Post Category.
+			var categoryValue = getPostdataTaxonomyValue(element_id + '-category');
+			if (categoryValue) {
+				parts.push(this.sanitize_text_field(categoryValue));
+			}
+
+			// Post Tags.
+			var tagsValue = getPostdataTaxonomyValue(element_id + '-post_tag');
+			if (tagsValue) {
+				parts.push(this.sanitize_text_field(tagsValue));
+			}
+
+			return parts.join('<br>');
+		},
+
+		append_custom_input_value_if_present: function ( $element, type ) {
+			let value = '';
+			if( $element.val() === 'custom_option' ) {
+				const customInput = $element.closest( '.forminator-field-' + type ).find( '.forminator-custom-input .forminator-input' );
+				if( customInput.length && customInput.val() !== '' ) {
+					value += ": " + customInput.val();
+				}
+			}
+			return value;
 		},
 
 		field_has_inputMask: function ( $element ) {
@@ -332,24 +556,6 @@
 
 		field_is_select: function ($element) {
 			return $element.is('select');
-		},
-
-		// modified from front.condition
-		is_hidden: function (element_id) {
-			var $element_id = this.get_form_field(element_id),
-				$column_field = $element_id.closest('.forminator-col'),
-				$row_field = $column_field.closest('.forminator-row')
-			;
-
-			if ( $row_field.hasClass("forminator-hidden-option") || $row_field.hasClass("forminator-hidden") ) {
-				return true;
-			}
-
-			if( $column_field.hasClass("forminator-hidden") ) {
-				return true;
-			}
-
-			return false;
 		},
 
 		/**

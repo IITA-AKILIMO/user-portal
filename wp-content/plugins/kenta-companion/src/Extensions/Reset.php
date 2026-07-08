@@ -30,12 +30,21 @@ class Reset {
 			'priority' => 999999,
 			'title'    => __( 'Reset Customizer Options', 'kenta' ),
 			'link'     => array(
-				'url' => esc_url( add_query_arg( array( 'action' => 'kcmp_reset_customizer_options' ), admin_url( 'admin.php' ) ) ),
+				'url' => esc_url_raw(
+					add_query_arg(
+						array(
+							'action' => 'kcmp_reset_customizer_options',
+							'_wpnonce' => wp_create_nonce( 'reset_customizer_options' )
+						),
+						admin_url( 'admin.php' )
+					)
+				),
 			)
 		) ) );
 	}
 
 	public function reset_customizer_options() {
+		check_ajax_referer( 'reset_customizer_options' );
 
 		if ( ! current_user_can( 'edit_theme_options' ) ) {
 			wp_die(

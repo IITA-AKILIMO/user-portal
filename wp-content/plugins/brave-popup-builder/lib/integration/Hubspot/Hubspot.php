@@ -101,17 +101,18 @@ if ( ! class_exists( 'BravePop_Hubspot' ) ) {
 
          if($data && isset($data->vid)){
             $vid = $data->vid;
-
-            return $this->add_to_list_action($email, $vid, $list_id, $userData);
-
+            return $this->add_to_list_action($email, $vid, $list_id, $userData, $contact);
          }else{
-            return false;
+            $errorMsg = $response->get_error_message() ? $response->get_error_message() : 'Unknown Error Occurred. No Error details provided by Hubspot.';
+            $errorPayload = array( 'user_mail'=> $email, 'user_data'=> $contact, 'list_id'=> $list_id, 'error' => $errorMsg, 'response'=> $response );
+            do_action( 'bravepop_added_to_list_failed', 'hubspot', $errorPayload );
+            return array( 'success' => false, 'errorMsg' => $errorMsg, 'result' => $errorPayload );
          }
 
       }
 
 
-      public function add_to_list_action($email, $vid, $list_id, $userData){
+      public function add_to_list_action($email, $vid, $list_id, $userData, $contact=array()){
          if(!$vid){ return false; }
          $userToList = array( 'method' => 'POST', 'headers' => array( 'content-type' => 'application/json' ),'body' => wp_json_encode(array( 'vids' => array($vid) )) );
          if($this->isAccessToken && $userToList['headers']){   $userToList['headers']['Authorization'] = 'Bearer ' . $this->api_key;  }
@@ -124,13 +125,19 @@ if ( ! class_exists( 'BravePop_Hubspot' ) ) {
             $addedData = array(
                'action'=> isset($userData['action']) ? $userData['action'] : 'visitor_added',  
                'user_id'=> isset($userData['userData']['ID']) ? $userData['userData']['ID'] : false,
-               'user_mail'=> $email, 'esp_user_id'=> $vid
+               'user_mail'=> $email, 
+               'esp_user_id'=> $vid,
+               'user_data'=> $contact,
+               'list_id' => $list_id,
+               'response' => $listresponse,
             ); 
-            do_action( 'bravepop_addded_to_list', 'hubspot', $addedData );
-
-            return true; 
+            do_action( 'bravepop_added_to_list', 'hubspot', $addedData );
+            return array( 'success' => true, 'result' => $addedData ); 
          }else{
-            return false;
+            $errorMsg = $listresponse->get_error_message() ? $listresponse->get_error_message() : 'Unknown Error Occurred. No Error details provided by Hubspot.';
+            $errorPayload = array( 'user_mail'=> $email, 'user_data'=> $contact, 'list_id'=> $list_id, 'error' => $errorMsg, 'response'=> $listresponse );
+            do_action( 'bravepop_added_to_list_failed', 'hubspot', $errorPayload );
+            return array( 'success' => false, 'errorMsg' => $errorMsg, 'result' => $errorPayload );
          }
       }
 

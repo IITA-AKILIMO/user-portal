@@ -48,7 +48,7 @@ $is_show_fields     = ! method_exists( $this, 'has_leads' ) || (bool) $this->has
 
 			<?php $this->paginate(); ?>
 
-			<button class="sui-button-icon sui-button-outlined forminator-toggle-entries-filter <?php echo( $is_filter_enabled ? 'sui-active' : '' ); ?>">
+			<button aria-label="<?php esc_attr_e( 'Filter entries', 'forminator' ); ?>" class="sui-button-icon sui-button-outlined forminator-toggle-entries-filter <?php echo( $is_filter_enabled ? 'sui-active' : '' ); ?>">
 				<i class="sui-icon-filter" aria-hidden="true"></i>
 			</button>
 
@@ -104,7 +104,7 @@ $is_show_fields     = ! method_exists( $this, 'has_leads' ) || (bool) $this->has
 				min="0"
 				value="<?php echo esc_attr( $max_id ); ?>"
 				placeholder="<?php esc_html_e( 'E.g. 100', 'forminator' ); ?>"
-				id="forminator-forms-filte--to-id"
+				id="forminator-forms-filter--to-id"
 				class="sui-form-control"/>
 
 		</div>
@@ -156,7 +156,7 @@ $is_show_fields     = ! method_exists( $this, 'has_leads' ) || (bool) $this->has
 
 	<div class="sui-row">
 
-		<?php if ( 'form' === static::$module_slug ) { ?>
+		<?php if ( 'form' === $this::$module_slug ) { ?>
 			<div class="sui-col-md-6">
 
 				<div class="sui-form-field">
@@ -166,6 +166,9 @@ $is_show_fields     = ! method_exists( $this, 'has_leads' ) || (bool) $this->has
 						<option value="all" <?php selected( 'all', $entry_status ); ?> ><?php esc_html_e( 'All', 'forminator' ); ?></option>
 						<option value="completed" <?php selected( 'completed', $entry_status ); ?> ><?php esc_html_e( 'Completed', 'forminator' ); ?></option>
 						<option value="draft" <?php selected( 'draft', $entry_status ); ?> ><?php esc_html_e( 'Draft', 'forminator' ); ?></option>
+						<?php if ( ! forminator_form_abandonment_disabled() ) { ?>
+							<option value="abandoned" <?php selected( 'abandoned', $entry_status ); ?> ><?php esc_html_e( 'Abandoned', 'forminator' ); ?></option>
+						<?php } ?>
 					</select>
 
 				</div>

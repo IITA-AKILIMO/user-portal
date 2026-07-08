@@ -41,20 +41,20 @@ class DFlip_Post_Type {
     $this->base = DFlip::get_instance();
     
     $labels = array(
-        'name'               => __( 'dFlip Book', '3d-flipbook-dflip-lite' ),
-        'singular_name'      => __( 'dFlip Book', '3d-flipbook-dflip-lite' ),
-        'menu_name'          => __( 'dFlip Books', '3d-flipbook-dflip-lite' ),
-        'name_admin_bar'     => __( 'dFlip Book', '3d-flipbook-dflip-lite' ),
+        'name'               => __( 'DearFlip Book', '3d-flipbook-dflip-lite' ),
+        'singular_name'      => __( 'DearFlip Book', '3d-flipbook-dflip-lite' ),
+        'menu_name'          => __( 'DearFlip Books', '3d-flipbook-dflip-lite' ),
+        'name_admin_bar'     => __( 'DearFlip Book', '3d-flipbook-dflip-lite' ),
         'add_new'            => __( 'Add New Book', '3d-flipbook-dflip-lite' ),
         'add_new_item'       => __( 'Add New Book', '3d-flipbook-dflip-lite' ),
-        'new_item'           => __( 'New dFlip Book', '3d-flipbook-dflip-lite' ),
-        'edit_item'          => __( 'Edit dFlip Book', '3d-flipbook-dflip-lite' ),
-        'view_item'          => __( 'View dFlip Book', '3d-flipbook-dflip-lite' ),
+        'new_item'           => __( 'New DearFlip Book', '3d-flipbook-dflip-lite' ),
+        'edit_item'          => __( 'Edit DearFlip Book', '3d-flipbook-dflip-lite' ),
+        'view_item'          => __( 'View DearFlip Book', '3d-flipbook-dflip-lite' ),
         'all_items'          => __( 'All Books', '3d-flipbook-dflip-lite' ),
-        'search_items'       => __( 'Search dFlip Books', '3d-flipbook-dflip-lite' ),
-        'parent_item_colon'  => __( 'Parent dFlip Books:', '3d-flipbook-dflip-lite' ),
-        'not_found'          => __( 'No dFlip-Books found.', '3d-flipbook-dflip-lite' ),
-        'not_found_in_trash' => __( 'No dFlip Books found in Trash.', '3d-flipbook-dflip-lite' )
+        'search_items'       => __( 'Search DearFlip Books', '3d-flipbook-dflip-lite' ),
+        'parent_item_colon'  => __( 'Parent DearFlip Books:', '3d-flipbook-dflip-lite' ),
+        'not_found'          => __( 'No DearFlip-Books found.', '3d-flipbook-dflip-lite' ),
+        'not_found_in_trash' => __( 'No DearFlip Books found in Trash.', '3d-flipbook-dflip-lite' )
     );
     
     $args = array(
@@ -129,7 +129,7 @@ class DFlip_Post_Type {
   
   public function hidedflipRating() {
     update_option( 'dflip_showratingdiv', 'no' );
-    echo wp_send_json_success();
+    wp_send_json_success();
     exit;
   }
   
@@ -164,7 +164,7 @@ class DFlip_Post_Type {
         var data={\'action\':\'hidedflipRating\'}
              jQuery.ajax({
         
-        url: "' . admin_url( 'admin-ajax.php' ) . '",
+        url: "' . esc_url(admin_url( 'admin-ajax.php' )) . '",
         type: "post",
         data: data,
         dataType: "json",
@@ -298,8 +298,7 @@ class DFlip_Post_Type {
   
 	// $which (the position of the filters form) is either 'top' or 'bottom'
 	function dflip_category_filter( $post_type, $which ) {
-		if (( 'top' === $which && 'dflip' === $post_type) ||
-          ('bar' === $which && 'attachment' === $post_type && isset($_REQUEST['page']) && $_REQUEST['page']==='dflip-pdfs') ) {
+		if ( 'top' === $which && 'dflip' === $post_type) {
 			$taxonomy = $post_type === 'dflip' ? 'dflip_category':'dflip_pdf_category';
 			$tax = get_taxonomy( $taxonomy );            // get the taxonomy object/data
 			$cat = filter_input( INPUT_GET, $taxonomy ); // get the selected category slug

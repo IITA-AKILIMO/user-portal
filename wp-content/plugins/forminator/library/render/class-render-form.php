@@ -83,6 +83,20 @@ abstract class Forminator_Render_Form {
 	protected $is_preview = false;
 
 	/**
+	 * Whether the current render is running in Breakdance SSR preview.
+	 *
+	 * @var bool
+	 */
+	protected $is_breakdance_ssr_preview = false;
+
+	/**
+	 * Breakdance preview-only style handles collected during enqueue.
+	 *
+	 * @var array
+	 */
+	protected $breakdance_preview_style_handles = array();
+
+	/**
 	 * Last submitted data
 	 * useful when rendering via ajax and need older data for markup
 	 *
@@ -192,13 +206,14 @@ abstract class Forminator_Render_Form {
 
 		$is_preview = apply_filters( 'forminator_render_shortcode_is_preview', $is_preview );
 
-		$preview_data = isset( $atts['preview_data'] ) ? $atts['preview_data'] : array();
+		$preview_data    = isset( $atts['preview_data'] ) ? $atts['preview_data'] : array();
+		$is_block_editor = isset( $atts['is_block_editor'] ) ? $atts['is_block_editor'] : false;
 
 		ob_start();
 
 		$view->display( $id, $is_preview, $preview_data );
 		$lead_data = ! empty( static::$lead_data ) ? static::$lead_data : array();
-		$view->ajax_loader( $is_preview, $preview_data, $lead_data );
+		$view->ajax_loader( $is_preview, $preview_data, $lead_data, $is_block_editor );
 
 		return ob_get_clean();
 	}
@@ -265,6 +280,30 @@ abstract class Forminator_Render_Form {
 		do_action( 'forminator_after_form_render', $id, $form_type, $post_id, $form_fields, $form_settings );
 	}
 
+
+	/**
+	 * Maybe wrap description
+	 *
+	 * @param string $html HTML.
+	 * @param string $description Description.
+	 * @param string $id ID.
+	 * @param string $descr_position Description position.
+	 *
+	 * @return string
+	 */
+	public function maybe_wrap_description( $html, $description, $id, $descr_position ) {
+		if ( empty( $html ) ) {
+			return $html;
+		}
+
+		if ( 'above' === $descr_position && 'none' === $this->get_form_design() ) {
+			$html = '<div>' . $html . '</div>';
+		}
+
+		return $html;
+	}
+
+
 	/**
 	 * Return form markup
 	 *
@@ -281,17 +320,13 @@ abstract class Forminator_Render_Form {
 		$id            = (int) $id;
 		$html          = '';
 		$forminator_ui = '';
-
-		$data_design = '';
-		$data_grid   = '';
-		$draft_page  = '';
-		$maybe_draft = '';
+		$maybe_draft   = '';
 
 		$form_type         = $this->get_form_type();
 		$form_fields       = $this->get_fields();
 		$form_settings     = $this->get_form_settings();
 		$form_design       = $this->get_form_design();
-		$form_enctype      = $this->form_enctype();
+		$extra_attrs       = $this->form_enctype();
 		$extra_classes     = $this->form_extra_classes();
 		$track_views       = $this->can_track_views();
 		$fields_type_class = $this->get_fields_type_class();
@@ -311,24 +346,37 @@ abstract class Forminator_Render_Form {
 
 		$forminator_ui = 'forminator-ui ';
 
-		if ( 'quiz' === $form_type ) {
-			$data_design = 'data-design="' . $this->get_quiz_theme() . '"';
+		if ( ! empty( $form_settings['cform-color-option'] ) && 'theme' === $form_settings['cform-color-option'] ) {
+			$extra_attrs .= ' data-color-option="theme"';
 		} else {
-			$data_design = 'data-design="' . $this->get_form_design() . '"';
+			$extra_attrs .= ' data-color-option="default"';
+		}
+
+		if ( 'quiz' === $form_type ) {
+			$extra_attrs .= ' data-design="' . $this->get_quiz_theme() . '"';
+		} else {
+			$extra_attrs .= ' data-design="' . $this->get_form_design() . '"';
 		}
 
 		if ( 'custom-form' === $form_type ) {
 			$is_draft_enabled = isset( $form_settings['use_save_and_continue'] ) ? filter_var( $form_settings['use_save_and_continue'], FILTER_VALIDATE_BOOLEAN ) : false;
 			$maybe_draft      = $this->set_draft_data( $is_draft_enabled );
-			$data_grid        = 'data-grid="' . $this->get_fields_style() . '"';
+			$extra_attrs     .= ' data-grid="' . $this->get_fields_style() . '"';
 
 			if ( $is_draft_enabled ) {
 				$extra_classes .= ' draft-enabled';
 			}
 
-			if ( $this->has_pagination() ) {
-				$draft_page = $this->get_draft_page();
+			if ( ! empty( $form_settings['abandonment'] ) ) {
+				$extra_classes .= ' forminator-tracking-abandonment';
+				$extra_attrs   .= $this->get_abandonment_required_fields();
 			}
+
+			if ( $this->has_pagination() ) {
+				$extra_attrs .= $this->get_draft_page();
+			}
+
+			add_filter( 'forminator_field_description', array( $this, 'maybe_wrap_description' ), 10, 4 );
 		}
 
 		// Markup Loader.
@@ -351,35 +399,30 @@ abstract class Forminator_Render_Form {
 			$loader = '';
 		}
 
-		$quiz_type      = '';
-		$quiz_spacing   = '';
-		$quiz_columns   = '';
-		$quiz_alignment = '';
-		$aria_live      = '';
-
 		if ( 'quiz' === $form_type ) {
-			$quiz_type      = $this->model->quiz_type;
-			$quiz_type      = 'data-quiz="' . $quiz_type . '"';
-			$aria_live      = 'aria-live="polite"'; // Listen to live changes on form.
-			$quiz_spacing   = 'data-spacing="default"';
-			$quiz_alignment = 'data-alignment="left"';
+			$quiz_type    = $this->model->quiz_type;
+			$extra_attrs .= ' data-quiz="' . $quiz_type . '"';
+			$extra_attrs .= ' aria-live="polite"'; // Listen to live changes on form.
 
 			if ( isset( $form_settings['quiz-spacing'] ) && ! empty( $form_settings['quiz-spacing'] ) ) {
-				$quiz_spacing = 'data-spacing="' . $form_settings['quiz-spacing'] . '"';
+				$extra_attrs .= ' data-spacing="' . $form_settings['quiz-spacing'] . '"';
+			} else {
+				$extra_attrs .= ' data-spacing="default"';
 			}
 
 			if ( isset( $form_settings['quiz-alignment'] ) && ! empty( $form_settings['quiz-alignment'] ) ) {
-				$quiz_alignment = 'data-alignment="' . $form_settings['quiz-alignment'] . '"';
+				$extra_attrs .= ' data-alignment="' . $form_settings['quiz-alignment'] . '"';
 			} elseif ( false !== strpos( $form_design, 'grid' ) ) {
-
-					$quiz_alignment = 'data-alignment="center"';
+				$extra_attrs .= ' data-alignment="center"';
+			} else {
+				$extra_attrs .= ' data-alignment="left"';
 			}
 
 			if ( isset( $form_settings['visual_style'] ) && 'grid' === $form_settings['visual_style'] ) {
 				if ( isset( $form_settings['quiz-grid-cols'] ) ) {
-					$quiz_columns = 'data-columns="' . $form_settings['quiz-grid-cols'] . '"';
+					$extra_attrs .= ' data-columns="' . $form_settings['quiz-grid-cols'] . '"';
 				} else {
-					$quiz_columns = 'data-columns="3"';
+					$extra_attrs .= ' data-columns="3"';
 				}
 			}
 		}
@@ -388,10 +431,8 @@ abstract class Forminator_Render_Form {
 
 		$html .= $loader;
 
-		$hidden = $hide ? 'style="display: none;"' : '';
-
-		if ( $this->is_preview || is_admin() ) {
-			$hidden = '';
+		if ( $hide && ! $this->is_preview && ! is_admin() ) {
+			$extra_attrs .= ' style="display: none;"';
 		}
 
 		if ( 'quiz' === $form_type && $has_lead ) {
@@ -407,15 +448,6 @@ abstract class Forminator_Render_Form {
 				data-form-id="%s"
 				%s
 				%s
-				%s
-				%s
-				%s
-				%s
-				%s
-				%s
-				%s
-				%s
-				%s
 			>',
 			$id,
 			$forminator_ui,
@@ -427,16 +459,7 @@ abstract class Forminator_Render_Form {
 			$extra_classes,
 			$render_id,
 			$id,
-			$quiz_type,
-			$data_design,
-			$quiz_spacing,
-			$quiz_columns,
-			$quiz_alignment,
-			$data_grid,
-			$form_enctype,
-			$aria_live,
-			$hidden,
-			$draft_page,
+			$extra_attrs,
 			$form_uid
 		);
 		if ( 'quiz' === $form_type ) {
@@ -638,6 +661,7 @@ abstract class Forminator_Render_Form {
 		$html     .= $nonce;
 		$html     .= sprintf( '<input type="hidden" name="form_id" value="%s">', $form_id );
 		$html     .= sprintf( '<input type="hidden" name="page_id" value="%s">', $post_id );
+		$settings  = $this->model->settings ?? array();
 		if ( isset( self::$render_ids[ $form_id ] ) ) {
 			$html .= sprintf( '<input type="hidden" name="render_id" value="%s">', self::$render_ids[ $form_id ] );
 		}
@@ -647,11 +671,12 @@ abstract class Forminator_Render_Form {
 		} else {
 			$html .= sprintf( '<input type="hidden" name="action" value="%s">', 'forminator_submit_form_' . $form_type );
 		}
+		$html = apply_filters( 'forminator_render_form_submit_markup', $html, $form_id, $post_id, $nonce, $settings );
 		if ( $render ) {
-			echo apply_filters( 'forminator_render_form_submit_markup', $html, $form_id, $post_id, $nonce ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			echo $html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		} else {
 			/* @noinspection PhpInconsistentReturnPointsInspection */
-			return apply_filters( 'forminator_render_form_submit_markup', $html, $form_id, $post_id, $nonce );
+			return $html;
 		}
 	}
 
@@ -846,6 +871,10 @@ abstract class Forminator_Render_Form {
 	 * @return string
 	 */
 	protected static function get_custom_css( $properties ) {
+		if ( empty( $properties['use-custom-css'] ) || 'false' === $properties['use-custom-css'] ) {
+			return '';
+		}
+
 		$slug   = forminator_get_prefix( static::$module_slug, 'custom-' );
 		$prefix = '.forminator-ui.forminator-' . $slug . '-' . $properties['form_id'];
 		if ( method_exists( static::class, 'get_css_prefix' ) ) {
@@ -1239,7 +1268,30 @@ abstract class Forminator_Render_Form {
 	 * @return bool
 	 */
 	public function can_track_views() {
-		return $this->track_views;
+		return $this->track_views && ! $this->is_preview && ! $this->is_admin && ! $this->is_admin_ajax_render();
+	}
+
+	/**
+	 * Check if the current ajax render originated from a wp-admin screen.
+	 *
+	 * @since 1.55.0
+	 * @return bool
+	 */
+	protected function is_admin_ajax_render() {
+		if ( ! wp_doing_ajax() ) {
+			return false;
+		}
+
+		$is_block_editor = filter_input( INPUT_POST, 'is_block_editor', FILTER_VALIDATE_BOOLEAN );
+		if ( $is_block_editor ) {
+			return true;
+		}
+
+		if ( empty( $this->_wp_http_referer ) ) {
+			return false;
+		}
+
+		return false !== strpos( wp_normalize_path( $this->_wp_http_referer ), '/wp-admin/' );
 	}
 
 	/**
@@ -1269,6 +1321,10 @@ abstract class Forminator_Render_Form {
 	 */
 	public function is_ajax_load( $force = false, $quiz_id = null ) {
 
+		if ( $this->is_breakdance_ssr_preview ) {
+			return false;
+		}
+
 		if ( ! empty( $quiz_id ) ) {
 			$this->lead_model = Forminator_Base_Form_Model::get_model( $quiz_id );
 			if ( ! $force ) {
@@ -1286,6 +1342,69 @@ abstract class Forminator_Render_Form {
 	}
 
 	/**
+	 * Set Breakdance SSR preview flag for the current render.
+	 *
+	 * @param bool $is_preview Is preview.
+	 *
+	 * @return void
+	 */
+	protected function set_breakdance_ssr_preview( $is_preview ) {
+		$this->is_breakdance_ssr_preview = $is_preview && forminator_is_breakdance_builder_preview();
+	}
+
+	/**
+	 * Render stylesheet link tags for Breakdance SSR preview.
+	 *
+	 * @return string
+	 */
+	protected function get_breakdance_preview_styles_html() {
+		if ( empty( $this->breakdance_preview_style_handles ) ) {
+			return '';
+		}
+
+		ob_start();
+		wp_print_styles( $this->breakdance_preview_style_handles );
+		return ob_get_clean();
+	}
+
+	/**
+	 * Render Breakdance SSR preview markup in the required order.
+	 *
+	 * Order matters here: print the captured styles and inline styles first,
+	 * then output the HTML and front scripts for the preview response.
+	 *
+	 * @param string $html HTML markup to output.
+	 * @param bool   $is_preview Is preview.
+	 *
+	 * @return void
+	 */
+	protected function render_breakdance_ssr_preview_markup( $html, $is_preview ) {
+		echo $this->get_breakdance_preview_styles_html(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+
+		if ( is_admin() || $is_preview ) {
+			$this->print_styles();
+		}
+
+		echo $html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		$this->forminator_render_front_scripts();
+	}
+
+	/**
+	 * Capture the style handles added during Breakdance SSR preview asset enqueue.
+	 *
+	 * @param array $before_style_handles Style handles queued before enqueue.
+	 *
+	 * @return void
+	 */
+	protected function set_breakdance_preview_style_handles( $before_style_handles ) {
+		$this->breakdance_preview_style_handles = array_values(
+			array_unique(
+				array_diff( wp_styles()->queue, $before_style_handles )
+			)
+		);
+	}
+
+	/**
 	 * Script loader module via ajax
 	 *
 	 * @since 1.6.1
@@ -1293,8 +1412,9 @@ abstract class Forminator_Render_Form {
 	 * @param bool  $is_preview Is preview.
 	 * @param array $preview_data Preview data.
 	 * @param array $lead_data Lead data.
+	 * @param array $is_block_editor Is block editor.
 	 */
-	public function ajax_loader( $is_preview, $preview_data = array(), $lead_data = array() ) {
+	public function ajax_loader( $is_preview, $preview_data = array(), $lead_data = array(), $is_block_editor = false ) {
 
 		if ( ! $this->model instanceof Forminator_Base_Form_Model ) {
 			return;
@@ -1333,6 +1453,10 @@ abstract class Forminator_Render_Form {
 				'referer_url'      => '', // Original referer url where the user come from. This field will be set via JS.
 			),
 		);
+
+		if ( $is_block_editor ) {
+			$ajax_options['is_block_editor'] = $is_block_editor;
+		}
 
 		if ( ! empty( $lead_data ) ) {
 			$ajax_options['has_lead'] = $lead_data['has_lead'];
@@ -1382,7 +1506,7 @@ abstract class Forminator_Render_Form {
 			}(jQuery, document, window));';
 
 		// on real render use add_inline_script to avoid late initialization.
-		if ( ! $is_preview ) {
+		if ( ! $is_preview && ! wp_script_is( 'forminator-front-scripts', 'done' ) ) {
 			wp_add_inline_script( 'forminator-front-scripts', $forminator_loader_script );
 		} else {
 			// we are on preview, and its ajax called, so scripts need to be output-ed rather than add it on enqueued script.
@@ -1408,20 +1532,30 @@ abstract class Forminator_Render_Form {
 		$verify_nonce = apply_filters( 'forminator_ajax_load_module_nonce_verification', false );
 		$nonce        = Forminator_Core::sanitize_text_field( 'nonce' );
 		$is_preview   = filter_input( INPUT_POST, 'is_preview', FILTER_VALIDATE_BOOLEAN );
+		$live_preview = filter_input( INPUT_POST, 'instant_preview', FILTER_VALIDATE_BOOLEAN );
+
+		// For preview, nonce verification is required to ensure the request is legitimate.
+		if ( $is_preview && ! wp_verify_nonce( $nonce, 'forminator_load_module' ) ) {
+			wp_send_json_error( new WP_Error( 'invalid_code' ) );
+		}
 
 		if ( $verify_nonce && ! $is_preview && ! wp_verify_nonce( $nonce, 'forminator_load_module' ) ) {
 			wp_send_json_error( new WP_Error( 'invalid_code' ) );
 		}
 
-		$id                = filter_input( INPUT_POST, 'id', FILTER_VALIDATE_INT );
-		$type              = Forminator_Core::sanitize_text_field( 'type' );
-		$preview_data      = isset( $_POST['preview_data'] ) ? Forminator_Core::sanitize_array( $_POST['preview_data'], 'preview_data' ) : array(); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput
-		$last_submit_data  = isset( $_POST['last_submit_data'] ) ? Forminator_Core::sanitize_array( $_POST['last_submit_data'] ) : array(); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput
-		$extra             = isset( $_POST['extra'] ) ? Forminator_Core::sanitize_array( $_POST['extra'] ) : array(); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput
-		$has_lead          = Forminator_Core::sanitize_text_field( 'has_lead' );
-		$leads_id          = filter_input( INPUT_POST, 'leads_id', FILTER_VALIDATE_INT );
-		$lead_preview_data = isset( $_POST['lead_preview_data'] ) ? Forminator_Core::sanitize_array( $_POST['lead_preview_data'] ) : array(); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput
-		$render_id         = filter_input( INPUT_POST, 'render_id', FILTER_VALIDATE_INT );
+		$preview_data      = array();
+		$lead_preview_data = array();
+		if ( $is_preview && current_user_can( forminator_get_permission( 'forminator-cform' ) ) ) {
+			$preview_data      = $_POST['preview_data'] ?? array(); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput
+			$lead_preview_data = isset( $_POST['lead_preview_data'] ) ? Forminator_Core::sanitize_array( $_POST['lead_preview_data'] ) : array(); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput
+		}
+		$id               = filter_input( INPUT_POST, 'id', FILTER_VALIDATE_INT );
+		$type             = Forminator_Core::sanitize_text_field( 'type' );
+		$last_submit_data = isset( $_POST['last_submit_data'] ) ? Forminator_Core::sanitize_array( $_POST['last_submit_data'] ) : array(); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput
+		$extra            = isset( $_POST['extra'] ) ? Forminator_Core::sanitize_array( $_POST['extra'] ) : array(); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput
+		$has_lead         = Forminator_Core::sanitize_text_field( 'has_lead' );
+		$leads_id         = filter_input( INPUT_POST, 'leads_id', FILTER_VALIDATE_INT );
+		$render_id        = filter_input( INPUT_POST, 'render_id', FILTER_VALIDATE_INT );
 
 		if ( empty( $id ) && ! $is_preview ) {
 			wp_send_json_error( new WP_Error( 'invalid_id' ) );
@@ -1433,8 +1567,10 @@ abstract class Forminator_Render_Form {
 
 		if ( ! empty( $preview_data ) ) {
 			if ( ! is_array( $preview_data ) ) {
+				$preview_data = wp_unslash( $preview_data );
 				$preview_data = json_decode( $preview_data, true );
 			}
+			$preview_data = Forminator_Core::sanitize_array( $preview_data, 'preview_data', true );
 		}
 
 		// Force set the render id as each ajax request requires specific render_id.
@@ -1476,6 +1612,44 @@ abstract class Forminator_Render_Form {
 			$response['style']        = $response['style'] . $lead_response['style'];
 			$response['lead_options'] = $lead_response['options'];
 		}
+
+		wp_send_json_success( $response );
+	}
+
+	/**
+	 * Update live preview
+	 */
+	public static function update_live_preview() {
+		$nonce = Forminator_Core::sanitize_text_field( '_wpnonce' );
+		if ( ! $nonce || ! wp_verify_nonce( $nonce, 'forminator_update_live_preview' ) ) {
+			wp_send_json_error( new WP_Error( 'invalid_nonce' ) );
+		}
+
+		if ( ! current_user_can( forminator_get_permission( 'forminator-cform' ) ) ) {
+			wp_send_json_error( new WP_Error( 'invalid_request' ) );
+		}
+
+		$id    = filter_input( INPUT_POST, 'id', FILTER_VALIDATE_INT );
+		$model = Forminator_Base_Form_Model::get_model( $id );
+
+		if ( 'form' !== $model::$module_slug ) {
+			wp_send_json_error( new WP_Error( 'invalid_module_type' ) );
+		}
+		$preview_data = isset( $_POST['preview_data'] ) ? wp_unslash( $_POST['preview_data'] ) : '{}'; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput
+		$preview_data = json_decode( $preview_data, true );
+		$preview_data = Forminator_Core::sanitize_array( $preview_data, 'preview_data', true );
+
+		if ( ! empty( $preview_data['settings'] ) ) {
+			$model->settings = $preview_data['settings'];
+		}
+
+		$obj = new Forminator_CForm_Front();
+		ob_start();
+		$obj->generate_styles( $model );
+		$styles   = ob_get_clean();
+		$response = array(
+			'styles' => $styles,
+		);
 
 		wp_send_json_success( $response );
 	}
@@ -1590,7 +1764,7 @@ abstract class Forminator_Render_Form {
 		}
 
 		// setup extra param.
-		if ( isset( $extra ) && is_array( $extra ) ) {
+		if ( ! empty( $extra ) && is_array( $extra ) ) {
 			if ( isset( $extra['_wp_http_referer'] ) ) {
 				$this->_wp_http_referer = $extra['_wp_http_referer'];
 			}
@@ -1679,6 +1853,8 @@ abstract class Forminator_Render_Form {
 
 				if ( isset( $properties['custom_css'] ) && isset( $properties['form_id'] ) ) {
 					$properties['custom_css'] = static::get_custom_css( $properties );
+				} else {
+					$properties['custom_css'] = '';
 				}
 
 				$theme = $this->get_form_design();
@@ -1765,6 +1941,10 @@ abstract class Forminator_Render_Form {
 	 * @return string
 	 */
 	protected function nonce_field( $action, $name, $referer_url = '' ) {
+		// Don't generate nonce field when it's preview, as preview is only for admin and it doesn't have real form action.
+		if ( $this->is_preview ) {
+			return '';
+		}
 		if ( $referer_url ) {
 			$referer = $referer_url;
 		} elseif ( ! empty( $this->_wp_http_referer ) ) {
@@ -1829,12 +2009,17 @@ abstract class Forminator_Render_Form {
 			return;
 		}
 
-		$draft = new Forminator_Form_Entry_Model( $this->draft_id );
-		if ( is_null( $draft->form_id ) && $is_draft_enabled ) {
-			return esc_html__( 'Can\'t find the draft associated with the draft ID in the URL. This draft was either submitted or has expired.', 'forminator' );
+		$draft_not_found = esc_html__( 'Can\'t find the draft associated with the draft ID in the URL. This draft was either submitted or has expired.', 'forminator' );
+		if ( is_numeric( $this->draft_id ) ) {
+			return $draft_not_found;
 		}
 
-		if ( (int) $draft->form_id === $this->model->id ) {
+		$draft = new Forminator_Form_Entry_Model( $this->draft_id );
+		if ( is_null( $draft->form_id ) ) {
+			return $draft_not_found;
+		}
+
+		if ( (int) $draft->form_id === $this->model->id && 'draft' === $draft->status ) {
 			$this->draft_data = $draft->meta_data;
 		}
 	}
@@ -1854,6 +2039,23 @@ abstract class Forminator_Render_Form {
 		}
 
 		return $draft_page;
+	}
+
+	/**
+	 * Get abandonment required fields
+	 *
+	 * @return string
+	 */
+	public function get_abandonment_required_fields() {
+		$required_fields = '';
+
+		if ( ! empty( $this->model->settings['abandonment_required_fields'] )
+				&& is_array( $this->model->settings['abandonment_required_fields'] ) ) {
+			$required_fields = ' data-abandonment-required-fields="'
+				. esc_attr( implode( ',', $this->model->settings['abandonment_required_fields'] ) ) . '"';
+		}
+
+		return $required_fields;
 	}
 
 	/**

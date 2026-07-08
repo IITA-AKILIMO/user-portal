@@ -84,15 +84,26 @@ if ( ! class_exists( 'BravePop_Pabbly' ) ) {
          );
 
          $response = wp_remote_post( 'https://emails.pabbly.com/api/subscribers', $args );
-
          $body = wp_remote_retrieve_body( $response );
          $data = json_decode( $body );
-         //error_log(wp_json_encode($data->Data[0]));
+
          if($data && isset($data->status) && $data->status === 'success'){
-            //error_log('##### USER ADDED #####');
-            return $data->status; 
+               $addedData = array(
+               'action'=> isset($userData['action']) ? $userData['action'] : 'visitor_added',  
+               'user_id'=> isset($userData['userData']['ID']) ? $userData['userData']['ID'] : false,
+               'user_mail'=> $email, 
+               'esp_user_id'=> '',
+               'user_data'=> $contact,
+               'list_id' => $list_id,
+               'response' => $response,
+            ); 
+            do_action( 'bravepop_added_to_list', 'pabbly', $addedData );
+            return array( 'success' => true, 'result' => $addedData );
          }else{
-            return false;
+            $errorMsg = $response->get_error_message() ? $response->get_error_message() : 'Unknown Error Occurred. No Error details provided by Pabbly.';
+            $errorPayload = array( 'user_mail'=> $email, 'user_data'=> $contact, 'list_id'=> $list_id, 'error' => $errorMsg, 'response'=> $response );
+            do_action( 'bravepop_added_to_list_failed', 'pabbly', $errorPayload );
+            return array( 'success' => false, 'errorMsg' => $errorMsg, 'result' => $errorPayload );
          }
 
       }

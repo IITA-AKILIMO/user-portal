@@ -59,6 +59,9 @@ class Forminator_Rating extends Forminator_Field {
 		parent::__construct();
 
 		$this->name = esc_html__( 'Rating', 'forminator' );
+		$required   = __( 'This field is required. Please select a rating.', 'forminator' );
+
+		self::$default_required_messages[ $this->type ] = $required;
 	}
 
 	/**
@@ -69,12 +72,13 @@ class Forminator_Rating extends Forminator_Field {
 	 */
 	public function defaults(): array {
 		return array(
-			'validation'  => false,
-			'field_label' => esc_html__( 'Rating', 'forminator' ),
-			'max_rating'  => 5,
-			'suffix'      => true,
-			'icon'        => 'star',
-			'size'        => 'md',
+			'validation'    => false,
+			'field_label'   => esc_html__( 'Rating', 'forminator' ),
+			'max_rating'    => 5,
+			'default_value' => '',
+			'suffix'        => true,
+			'icon'          => 'star',
+			'size'          => 'md',
 		);
 	}
 
@@ -111,8 +115,22 @@ class Forminator_Rating extends Forminator_Field {
 		$size        = self::get_property( 'size', $field, 'md' );
 		$max_rating  = self::get_property( 'max_rating', $field, 5 );
 		$suffix      = self::get_property( 'suffix', $field, true );
+		$settings    = $views_obj->model->settings;
 
-		$value = 0;
+		$descr_position = self::get_description_position( $field, $settings );
+
+		$maximum_rating = max( 0, min( (int) $max_rating, 50 ) );
+		$default_value  = self::get_property( 'default_value', $field, '' );
+		$safe_default   = 0;
+		if ( '' !== $default_value && is_numeric( $default_value ) ) {
+			$parsed_default = (int) $default_value;
+			if ( $parsed_default >= 1 && $parsed_default <= $maximum_rating ) {
+				$safe_default = $parsed_default;
+			}
+		}
+
+		$value = (int) self::get_post_data( $name, $safe_default );
+
 		if ( isset( $draft_value['value'] ) ) {
 			$rating_value = explode( '/', $draft_value['value'] )[0] ?? 0;
 			$value        = esc_html( $rating_value );
@@ -140,7 +158,6 @@ class Forminator_Rating extends Forminator_Field {
 			),
 		);
 
-		$maximum_rating = max( 0, min( $max_rating, 50 ) );
 		for ( $rating = 1; $rating <= $maximum_rating; $rating++ ) {
 			$options[] = array(
 				'value'    => $rating,
@@ -157,7 +174,8 @@ class Forminator_Rating extends Forminator_Field {
 			$options,
 			$value,
 			$description,
-			$required
+			$required,
+			$descr_position,
 		);
 
 		$html .= '</div>';
@@ -193,10 +211,10 @@ class Forminator_Rating extends Forminator_Field {
 		$message = '';
 		$field   = $this->field;
 		if ( $this->is_required( $field ) ) {
-			$required_message = self::get_property( 'required_message', $field, '' );
+			$required_message = self::get_property( 'required_message', $field, self::$default_required_messages[ $this->type ] );
 			$required_message = apply_filters(
 				'forminator_rating_field_required_validation_message',
-				( ! empty( $required_message ) ? $required_message : esc_html__( 'This field is required. Please select a rating.', 'forminator' ) ),
+				$required_message,
 				$this->get_id( $field ),
 				$field
 			);
@@ -225,7 +243,7 @@ class Forminator_Rating extends Forminator_Field {
 					$field,
 					'required_message',
 					'',
-					esc_html__( 'This field is required. Please select a rating.', 'forminator' )
+					esc_html( self::$default_required_messages[ $this->type ] )
 				);
 
 			if ( empty( $rating_value ) ) {

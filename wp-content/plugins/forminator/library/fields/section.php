@@ -140,9 +140,9 @@ class Forminator_Section extends Forminator_Field {
 
 			$html .= sprintf(
 				'<hr class="forminator-border" style="border: %s %s %s;" />',
-				$border_width . 'px',
-				$border,
-				$border_color
+				esc_attr( $border_width ) . 'px',
+				esc_attr( $border ),
+				esc_attr( $border_color )
 			);
 		}
 

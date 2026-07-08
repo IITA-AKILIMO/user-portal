@@ -116,11 +116,18 @@ class Forminator_Hidden extends Forminator_Field {
 	 */
 	public function markup( $field, $views_obj ) {
 
-		$id    = self::get_property( 'element_id', $field );
-		$name  = $id;
-		$value = esc_html( $this->get_value( $field ) );
+		$id           = self::get_property( 'element_id', $field );
+		$name         = $id;
+		$value        = esc_html( $this->get_value( $field, true ) );
+		$custom_class = self::get_property( 'custom-class', $field, '' );
 
-		return sprintf( '<input type="hidden" id="%s" name="%s" value="%s" />', $id . '_' . Forminator_CForm_Front::$uid, $name, $value );
+		// Build class attribute if custom class is set.
+		$class_attr = '';
+		if ( ! empty( $custom_class ) ) {
+			$class_attr = sprintf( ' class="%s"', esc_attr( $custom_class ) );
+		}
+
+		return sprintf( '<input type="hidden" id="%s"%s name="%s" value="%s" />', esc_attr( $id . '_' . Forminator_CForm_Front::$uid ), $class_attr, esc_attr( $name ), $value );
 	}
 
 	/**
@@ -128,57 +135,34 @@ class Forminator_Hidden extends Forminator_Field {
 	 *
 	 * @since 1.0
 	 * @since 1.5 add user_id value getter
-	 * @param array $field Field.
+	 * @param array   $field Field.
+	 * @param boolean $is_markup For front-end markup.
 	 *
 	 * @return mixed|string
 	 */
-	public function get_value( $field ) {
+	public function get_value( $field, $is_markup = false ) {
 		$value       = '';
 		$saved_value = self::get_property( 'default_value', $field );
 		$embed_url   = forminator_get_current_url();
 
 		switch ( $saved_value ) {
-			case 'user_ip':
-				$value = Forminator_Geo::get_user_ip();
-				break;
-			case 'date_mdy':
-				$value = date_i18n( 'm/d/Y', forminator_local_timestamp(), true );
-				break;
-			case 'date_dmy':
-				$value = date_i18n( 'd/m/Y', forminator_local_timestamp(), true );
-				break;
 			case 'embed_id':
 				$value = forminator_get_post_data( 'ID' );
 				break;
 			case 'embed_title':
 				$value = forminator_get_post_data( 'post_title' );
 				break;
-			case 'embed_url':
-				$value = $embed_url;
-				break;
-			case 'login_url':
-				$value = forminator_get_login_url( $embed_url );
-				break;
-			case 'user_agent':
-				$value = isset( $_SERVER['HTTP_USER_AGENT'] ) ? esc_html( sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) ) ) : '';
-				break;
 			case 'refer_url':
-				$value = isset( $_SERVER['HTTP_REFERER'] ) ? esc_url_raw( wp_unslash( $_SERVER['HTTP_REFERER'] ) ) : $embed_url;
+				if ( true === $is_markup ) {
+					$value = forminator_get_referer_url( $embed_url );
+				} else {
+					$element_id = self::get_property( 'element_id', $field );
+					$post_value = self::get_post_data( $element_id );
+					$value      = empty( $post_value ) ? $embed_url : $this->sanitize( $field, $post_value );
+				}
 				break;
 			case 'submission_id':
 				$value = 'submission_id';
-				break;
-			case 'user_id':
-				$value = forminator_get_user_data( 'ID' );
-				break;
-			case 'user_name':
-				$value = forminator_get_user_data( 'display_name' );
-				break;
-			case 'user_email':
-				$value = forminator_get_user_data( 'user_email' );
-				break;
-			case 'user_login':
-				$value = forminator_get_user_data( 'user_login' );
 				break;
 			case 'custom_value':
 				$value = self::get_property( 'custom_value', $field );
@@ -187,6 +171,11 @@ class Forminator_Hidden extends Forminator_Field {
 				$value = $this->replace_prefill( $field );
 				break;
 			default:
+				$placeholder       = '{' . $saved_value . '}';
+				$placeholder_value = forminator_replace_variables( $placeholder );
+				if ( $placeholder_value !== $placeholder ) {
+					$value = $placeholder_value;
+				}
 				break;
 		}
 

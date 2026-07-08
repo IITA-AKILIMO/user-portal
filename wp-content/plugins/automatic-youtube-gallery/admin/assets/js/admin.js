@@ -166,7 +166,9 @@
 
 			// Attributes
 			var props = {};
+			var popup = 0;
 			
+			// Loop through all editor fields
 			$( '.ayg-editor-control', '#ayg-shortcode-builder' ).each(function() {							
 				var $elem = $( this ).find( '.ayg-editor-field' );
 				var type  = $elem.attr( 'type' );
@@ -174,6 +176,12 @@
 				var value = $elem.val();
 				var def   = $elem.data( 'default' );
 				
+				// Skip popup field
+				if ( 'popup' == key ) {
+					popup = $elem.is( ':checked' ) ? 1 : 0;
+					return true; // continue
+				}	
+
 				// field type = checkbox
 				if ( 'checkbox' == type ) {
 					value = $elem.is( ':checked' ) ? 1 : 0;
@@ -219,7 +227,14 @@
 				}				
 			});
 
+			// If popup is enabled and type is video, force theme to popup
+			if ( popup && props.hasOwnProperty( 'type' ) && 'video' == props.type ) {
+				props.theme = 'popup';
+			}
+
+			// Build attributes string
 			var attrs = '';
+
 			for ( var key in props ) {
 				if ( props.hasOwnProperty( key ) ) {
 					attrs += ( ' ' + key + '="' + props[ key ] + '"' );
@@ -273,19 +288,6 @@
 			$container.addClass( 'ayg-editor-field-theme-' + value );
 		});	
 
-		// Editor: Toggle fields based on the pagination type
-		$( document ).on( 'change', '.ayg-editor-field-pagination_type', function() {			
-			var $container = $( this ).closest( '.ayg-editor' );
-			var value = $( this ).val();
-
-			$container.removeClass(function( index, classes ) {
-				var matches = classes.match( /\ayg-editor-field-pagination_type-\S+/ig );
-				return ( matches ) ? matches.join( ' ' ) : '';
-			});
-
-			$container.addClass( 'ayg-editor-field-pagination_type-' + value );
-		});		
-
 		// Settings: Toggle fields based on the theme
 		$( 'tr.theme select', '#ayg-settings' ).on( 'change', function() {
 			var $container = $( '#ayg-settings' );		
@@ -297,19 +299,6 @@
 			});
 
 			$container.addClass( 'theme-' + value );
-		});
-
-		// Settings: Toggle fields based on the pagination type
-		$( 'tr.pagination_type select', '#ayg-settings' ).on( 'change', function() {
-			var $container = $( '#ayg-settings' );			
-			var value = $( this ).val();			
-
-			$container.removeClass(function( index, classes ) {
-				var matches = classes.match( /pagination_type-\S+/ig );
-				return ( matches ) ? matches.join( ' ' ) : '';
-			});
-
-			$container.addClass( 'pagination_type-' + value );
 		});
 
 		// Settings: Toggle fields based on the player type

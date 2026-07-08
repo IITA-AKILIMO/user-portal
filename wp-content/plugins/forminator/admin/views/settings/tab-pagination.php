@@ -8,7 +8,7 @@
 $entries_per_page = get_option( 'forminator_pagination_entries', 10 );
 $module_per_page  = get_option( 'forminator_pagination_listings', 10 );
 ?>
-<div class="sui-box-settings-row">
+<div id="forminator-section-settings-pagination" class="sui-box-settings-row">
 
 	<div class="sui-box-settings-col-1">
 		<span class="sui-settings-label"><?php esc_html_e( 'Pagination', 'forminator' ); ?></span>
@@ -31,7 +31,7 @@ $module_per_page  = get_option( 'forminator_pagination_listings', 10 );
 				id="forminator-limit-listing"
 				class="sui-form-control forminator-required sui-input-sm sui-field-has-suffix"/>
 
-			<span class="sui-field-suffix"><?php esc_html_e( 'modules per page', 'forminator' ); ?></span>
+			<label for="forminator-limit-listing" class="sui-field-suffix"><?php esc_html_e( 'modules per page', 'forminator' ); ?></label>
 			<span class="sui-error-message"
 				style="display: none;"><?php esc_html_e( 'This field cannot be empty.', 'forminator' ); ?></span>
 
@@ -49,7 +49,7 @@ $module_per_page  = get_option( 'forminator_pagination_listings', 10 );
 				min="1"
 				id="forminator-limit-entries"
 				class="sui-form-control forminator-required sui-input-sm sui-field-has-suffix"/>
-			<span class="sui-field-suffix"><?php esc_html_e( 'submissions per page', 'forminator' ); ?></span>
+			<label for="forminator-limit-entries" class="sui-field-suffix"><?php esc_html_e( 'submissions per page', 'forminator' ); ?></label>
 			<span class="sui-error-message"
 				style="display: none;"><?php esc_html_e( 'This field cannot be empty.', 'forminator' ); ?></span>
 

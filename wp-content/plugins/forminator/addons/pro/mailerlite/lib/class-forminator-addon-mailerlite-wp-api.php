@@ -271,6 +271,12 @@ class Forminator_Mailerlite_Wp_Api {
 			'groups' => array( $list_id ),
 			'status' => 'active',
 		);
+
+		if ( ! empty( $args['enable_double_opt_in'] ) ) {
+			// If double opt in enabled, we need to set subscriber status to unconfirmed, so the subscriber will receive the confirmation email.
+			$data['status'] = 'unconfirmed';
+		}
+
 		if ( ! empty( $args['merge_fields'] ) ) {
 			$data['fields'] = (object) $args['merge_fields'];
 		}

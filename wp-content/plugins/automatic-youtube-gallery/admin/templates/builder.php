@@ -11,8 +11,14 @@
 
 $fields = ayg_get_editor_fields(); 
 
+$theme           = 'classic';
 $pagination_type = 'more';
+
 foreach ( $fields['gallery']['fields'] as $field ) {
+    if ( 'theme' == $field['name'] ) {
+        $theme = $field['value'];
+    }
+
     if ( 'pagination_type' == $field['name'] ) {
         $pagination_type = $field['value'];
         break;
@@ -24,7 +30,7 @@ foreach ( $fields['gallery']['fields'] as $field ) {
     <!-- Shortcode Builder -->
     <div class="ayg-left-col">
         <div class="ayg-col-content">
-            <div class="ayg-editor ayg-editor-field-type-playlist ayg-editor-field-theme-classic ayg-editor-field-pagination_type-<?php echo esc_attr( $pagination_type ); ?>">              
+            <div class="ayg-editor ayg-editor-field-type-playlist ayg-editor-field-theme-<?php echo esc_attr( $theme ); ?> ayg-editor-field-pagination_type-<?php echo esc_attr( $pagination_type ); ?>">              
                 <?php
                 foreach ( $fields as $key => $value ) : 
                     ?>
@@ -98,7 +104,7 @@ foreach ( $fields['gallery']['fields'] as $field ) {
         <div class="ayg-col-content">
             <p class="about-description"><?php esc_html_e( '"Automatic YouTube Gallery" provides several methods to build your gallery. Choose one of the following methods best suited for you,', 'automatic-youtube-gallery' ); ?></p>
             <p><span class="dashicons dashicons-arrow-left-alt"></span> <?php esc_html_e( 'Use the shortcode builder in this page to build your gallery shortcode, then add it in your POST/PAGE.', 'automatic-youtube-gallery' ); ?></p>
-            <p>2. <?php printf( __( 'Use our "Automatic YouTube Gallery" <a href="%s" target="_blank">Gutenberg block</a> to build the gallery directly in your POST/PAGE.', 'automatic-youtube-gallery' ), 'https://plugins360.com/automatic-youtube-gallery/building-youtube-gallery-using-gutenberg/' ); ?></p>
+            <p>2. <?php printf( __( 'Use our "Automatic YouTube Gallery" <a href="%s" target="_blank" rel="noopener noreferrer">Gutenberg block</a> to build the gallery directly in your POST/PAGE.', 'automatic-youtube-gallery' ), 'https://plugins360.com/automatic-youtube-gallery/building-youtube-gallery-using-gutenberg/' ); ?></p>
             <p>3. <?php esc_html_e( 'Use our "Automatic YouTube Gallery" widget to add the gallery in your website sidebars.', 'automatic-youtube-gallery' ); ?></p>
         </div>
     </div>
@@ -108,6 +114,6 @@ foreach ( $fields['gallery']['fields'] as $field ) {
 <div id="ayg-shortcode-modal" class="ayg-modal mfp-hide">
     <div class="ayg-modal-body">
         <p><?php esc_html_e( 'Congrats! copy the shortcode below and paste it in your POST/PAGE where you need the gallery,', 'automatic-youtube-gallery' ); ?></p>
-        <textarea id="aiovg-shortcode" class="widefat code" autofocus="autofocus" onfocus="this.select()"></textarea>
+        <textarea id="aiovg-shortcode" class="widefat code" rows="3" autofocus="autofocus" onfocus="this.select()"></textarea>
     </div>
 </div>

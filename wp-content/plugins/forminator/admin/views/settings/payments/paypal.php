@@ -49,9 +49,10 @@ if ( ! empty( $vars['error_message'] ) ) {
 
 	<div class="sui-form-field <?php echo esc_attr( ! empty( $vars['sandbox_id_error'] ) ? 'sui-form-field-error' : '' ); ?>">
 
-		<label class="sui-label"><?php esc_html_e( 'Sandbox Client ID', 'forminator' ); ?></label>
+		<label for="forminator-field-paypal-sandbox_id" class="sui-label"><?php esc_html_e( 'Sandbox Client ID', 'forminator' ); ?></label>
 
 		<input
+			id="forminator-field-paypal-sandbox_id"
 			class="sui-form-control"
 			name="sandbox_id" placeholder="<?php echo esc_attr__( 'Enter your sandbox client id', 'forminator' ); ?>"
 			value="<?php echo esc_attr( $vars['sandbox_id'] ); ?>"
@@ -64,9 +65,10 @@ if ( ! empty( $vars['error_message'] ) ) {
 
 	<div class="sui-form-field <?php echo esc_attr( ! empty( $vars['sandbox_secret_error'] ) ? 'sui-form-field-error' : '' ); ?>">
 
-		<label class="sui-label"><?php esc_html_e( 'Sandbox Secret', 'forminator' ); ?></label>
+		<label for="forminator-field-paypal-sandbox_secret" class="sui-label"><?php esc_html_e( 'Sandbox Secret', 'forminator' ); ?></label>
 
 		<input
+			id="forminator-field-paypal-sandbox_secret"
 			class="sui-form-control"
 			name="sandbox_secret" placeholder="<?php echo esc_attr__( 'Enter your sandbox secret', 'forminator' ); ?>"
 			value="<?php echo esc_attr( $vars['sandbox_secret'] ); ?>"
@@ -80,9 +82,10 @@ if ( ! empty( $vars['error_message'] ) ) {
 
 	<div class="sui-form-field <?php echo esc_attr( ! empty( $vars['live_id_error'] ) ? 'sui-form-field-error' : '' ); ?>">
 
-		<label class="sui-label"><?php esc_html_e( 'Live Client ID', 'forminator' ); ?></label>
+		<label for="forminator-field-paypal-live_id" class="sui-label"><?php esc_html_e( 'Live Client ID', 'forminator' ); ?></label>
 
 		<input
+			id="forminator-field-paypal-live_id"
 			class="sui-form-control"
 			name="live_id" placeholder="<?php echo esc_attr__( 'Enter your live client id', 'forminator' ); ?>"
 			value="<?php echo esc_attr( $vars['live_id'] ); ?>"
@@ -96,9 +99,10 @@ if ( ! empty( $vars['error_message'] ) ) {
 
 	<div class="sui-form-field <?php echo esc_attr( ! empty( $vars['live_secret_error'] ) ? 'sui-form-field-error' : '' ); ?>">
 
-		<label class="sui-label"><?php esc_html_e( 'Live Secret Key', 'forminator' ); ?></label>
+		<label for="forminator-field-paypal-live_secret" class="sui-label"><?php esc_html_e( 'Live Secret Key', 'forminator' ); ?></label>
 
 		<input
+			id="forminator-field-paypal-live_secret"
 			class="sui-form-control"
 			name="live_secret" placeholder="<?php echo esc_attr__( 'Enter your live secret id', 'forminator' ); ?>"
 			value="<?php echo esc_attr( $vars['live_secret'] ); ?>"

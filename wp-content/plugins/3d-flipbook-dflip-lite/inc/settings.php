@@ -121,7 +121,7 @@ class DFlip_Settings {
                 foreach ( (array) $tabs as $id => $title ) {
                   ?>
                     <li class="dflip-update-hash dflip-tab <?php echo( $active_set == false ? 'dflip-active' : '' ) ?>">
-                        <a href="#dflip-tab-content-<?php echo $id ?>"><?php echo $title ?></a></li>
+                        <a href="#dflip-tab-content-<?php echo esc_html($id) ?>"><?php echo esc_html($title) ?></a></li>
                   <?php $active_set = true;
                 }
                 ?>
@@ -131,7 +131,7 @@ class DFlip_Settings {
             $active_set = false;
             foreach ( (array) $tabs as $id => $title ) {
               ?>
-                <div id="dflip-tab-content-<?php echo $id ?>"
+                <div id="dflip-tab-content-<?php echo esc_html($id) ?>"
                      class="dflip-tab-content <?php echo( $active_set == false ? "dflip-active" : "" ) ?>">
                   
                   <?php
@@ -306,15 +306,15 @@ class DFlip_Settings {
     }
     
     // Check nonce is valid
-    if ( !wp_verify_nonce( $_POST['dflip_settings_nonce'], 'dflip_settings_nonce' ) ) {
+    if ( !wp_verify_nonce( isset($_POST['dflip_settings_nonce']) ? sanitize_key(wp_unslash($_POST['dflip_settings_nonce'])) : null, 'dflip_settings_nonce' ) ) {
       return;
     }
     
     // Sanitize all user inputs.
     
     $sanitized_data = array();
-    $sanitized_data['viewerType'] = sanitize_text_field( $_POST['_dflip']['viewerType'] );
-    $sanitized_data['selectiveScriptLoading'] = sanitize_text_field( $_POST['_dflip']['selectiveScriptLoading'] );
+    $sanitized_data['viewerType'] = isset($_POST['_dflip']['viewerType']) ? sanitize_text_field( wp_unslash($_POST['_dflip']['viewerType']) ) : null;
+    $sanitized_data['selectiveScriptLoading'] = isset($_POST['_dflip']['selectiveScriptLoading']) ? sanitize_text_field( wp_unslash($_POST['_dflip']['selectiveScriptLoading']) ) : null;
     
     $settings = is_multisite() ? get_blog_option( null, '_dflip_settings', array() ) : get_option( '_dflip_settings', array() );
     if ( empty( $settings ) || !is_array($settings)) {
@@ -342,7 +342,7 @@ class DFlip_Settings {
   public function updated_settings() {
     ?>
       <div class="updated">
-          <p><?php _e( 'Settings updated.', '3d-flipbook-dflip-lite' ); ?></p>
+          <p><?php esc_html_e( 'Settings updated.', '3d-flipbook-dflip-lite' ); ?></p>
       </div>
     <?php
     

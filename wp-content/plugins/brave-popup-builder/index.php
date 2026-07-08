@@ -3,7 +3,7 @@
     * Plugin Name: Brave Conversion Engine
     * Plugin URI:  https://getbrave.io
     * Description: A plugin to create highly effective conversion widgets & Popups to convert your visitors to leads or Customers.
-    * Version:     0.7.6
+    * Version:     0.8.6
     * Author:      Brave
     * Author URI:  https://getbrave.io/
     * Text Domain: bravepop

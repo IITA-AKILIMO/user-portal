@@ -78,6 +78,7 @@ function brave_signupUser(event, elementID, popupID, stepIndex){
    var username = document.getElementById('brave_signup_username_'+elementID) && document.getElementById('brave_signup_username_'+elementID).value;
    var userEmail = document.getElementById('brave_signup_email_'+elementID).value;
    var userPassword = document.getElementById('brave_signup_pass_'+elementID) ? document.getElementById('brave_signup_pass_'+elementID).value : false;
+   var signupNewsletter = document.getElementById('brave_signup_newsletter_'+elementID) && document.getElementById('brave_signup_newsletter_'+elementID).checked ? true : false;
    var passwordDisabled = document.getElementById('brave_signup_pass_type_'+elementID) && document.getElementById('brave_signup_pass_type_'+elementID).value === 'auto' ? true : false;
    var ajaxurl = document.getElementById('brave_signup_ajaxURL_'+elementID).value;
    var security = document.getElementById('brave_signup_security'+elementID).value;
@@ -94,7 +95,7 @@ function brave_signupUser(event, elementID, popupID, stepIndex){
    if(!ajaxurl || !security){ return brave_show_loginError(elementID, bravepop_global.login_error);  }
 
 
-   var newUserData = { username: username || false, email: userEmail, signupsecurity: security, firstname: userFirstname, lastname: userLastname, elementID: elementID, popupID: popupID, stepIndex: stepIndex, redirect: redirectURL, action: 'bravepop_ajax_signup' };
+   var newUserData = { username: username || false, email: userEmail, signupsecurity: security, firstname: userFirstname, lastname: userLastname, elementID: elementID, popupID: popupID, stepIndex: stepIndex, signupNewsletter: signupNewsletter, redirect: redirectURL, action: 'bravepop_ajax_signup' };
    if(!passwordDisabled && userPassword){
       newUserData.password = userPassword;
    }

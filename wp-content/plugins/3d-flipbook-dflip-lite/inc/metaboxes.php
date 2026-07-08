@@ -58,7 +58,7 @@ class DFlip_Meta_boxes {
     add_action( 'add_meta_boxes', array( $this, 'add_meta_boxes' ), 100 );
 
     // Add action to save metabox config options.
-    add_action( 'save_post', array( $this, 'save_meta_boxes' ), 10, 2 );
+    add_action( 'save_post_dflip', array( $this, 'save_meta_boxes' ), 10, 2 );
   }
 
   /**
@@ -84,7 +84,7 @@ class DFlip_Meta_boxes {
 
     // Load necessary metabox scripts.
     wp_register_script( $this->base->plugin_slug . '-metabox-script', plugins_url( '../assets/js/metaboxes.js', __FILE__ ),
-      array( 'jquery-ui-sortable', 'jquery-ui-draggable', 'jquery-ui-resizable', 'wp-color-picker' ), $this->base->version );
+      array( 'jquery-ui-sortable', 'jquery-ui-draggable', 'jquery-ui-resizable', 'wp-color-picker' ), $this->base->version, true );
     wp_enqueue_script( $this->base->plugin_slug . '-metabox-script' );
 
     if(isset( $post->ID ) || isset($id)){
@@ -162,11 +162,11 @@ class DFlip_Meta_boxes {
         ?>
           <strong>Embedded:</strong>
           <br>
-          [dflip id="<?php echo $post->ID; ?>"][/dflip]
+          [dflip id="<?php echo esc_html($post->ID); ?>"][/dflip]
           <hr>
           <strong>Thumb - Lightbox(Popup):</strong>
           <br>
-          [dflip id="<?php echo $post->ID; ?>" type="thumb"][/dflip]
+          [dflip id="<?php echo esc_html($post->ID); ?>" type="thumb"][/dflip]
           <hr>
           <a target="_blank" href="https://wordpress.dearflip.com/docs/shortcode-options/">More Shortcode Options</a>
           <hr>
@@ -297,16 +297,16 @@ class DFlip_Meta_boxes {
       <div id="dflip_pages_box" class="df-box hide-on-fail " data-condition="dflip_source_type:is(image)" data-operator="and">
 
       <label for="dflip_pages" class="dflip-label">
-        <?php echo __( 'Custom Pages', '3d-flipbook-dflip-lite' ); ?>
+        <?php echo esc_html_e( 'Custom Pages', '3d-flipbook-dflip-lite' ); ?>
       </label>
 
       <div class="dflip-desc">
-        <?php echo __( 'Add or remove pages as per your requirement. Plus reorder them in the order needed.', '3d-flipbook-dflip-lite' ); ?>
+        <?php echo esc_html_e( 'Add or remove pages as per your requirement. Plus reorder them in the order needed.', '3d-flipbook-dflip-lite' ); ?>
       </div>
       <div class="dflip-option dflip-page-list">
         <a href="javascript:void(0);" class="dflip-page-list-add button button-primary"
                 title="Add New Page">
-          <?php echo __( 'Add New Page', '3d-flipbook-dflip-lite' ); ?>
+          <?php echo esc_html_e( 'Add New Page', '3d-flipbook-dflip-lite' ); ?>
         </a>
         <ul id="dflip_page_list">
           <?php
@@ -327,7 +327,7 @@ class DFlip_Meta_boxes {
                 <div class="dflip-page-options">
 
                   <label for="dflip-page-<?php echo esc_attr( $index ); ?>-title">
-                    <?php echo __( 'Title', '3d-flipbook-dflip-lite' ); ?>
+                    <?php echo esc_html_e( 'Title', '3d-flipbook-dflip-lite' ); ?>
                   </label>
                   <input type="text"
                           name="_dflip[pages][<?php echo esc_attr( $index ); ?>][url]"
@@ -336,7 +336,7 @@ class DFlip_Meta_boxes {
                           class="widefat">
 
                   <label for="dflip-page-<?php echo esc_attr( $index ); ?>-content">
-                    <?php echo __( 'Content', '3d-flipbook-dflip-lite' ); ?>
+                    <?php echo esc_html_e( 'Content', '3d-flipbook-dflip-lite' ); ?>
                   </label>
                   <textarea rows="10" cols="40"
                           name="_dflip[pages][<?php echo esc_attr( $index ); ?>][content]"
@@ -352,7 +352,7 @@ class DFlip_Meta_boxes {
                       ?>
                       <input class="dflip-hotspot-input"
                               name="_dflip[pages][<?php echo esc_attr( $index ); ?>][hotspots][<?php echo esc_attr( $spotindex ); ?>]"
-                              value="<?php echo htmlspecialchars( $spot ); ?>">
+                              value="<?php echo esc_html( $spot ); ?>">
                       <?php
                       $spotindex ++;
                     }
@@ -475,8 +475,10 @@ class DFlip_Meta_boxes {
 
       <div class="dflip-desc">
         <p>
-          <?php echo sprintf( __( 'Create a tree structure bookmark/outline of your book for easy access:<br>%s', '3d-flipbook-dflip-lite' ),
-              '<code>	Outline Name : (destination as blank or link to url or page number)</code>' ); ?>
+          <?php
+          /* translators: Format of Outline - Outline Name : (destination as blank or link to url or page number) */
+          echo  esc_html_e( 'Create a tree structure bookmark/outline of your book for easy access:', '3d-flipbook-dflip-lite' ) .
+              '<br><code>Outline Name : (destination as blank or link to url or page number)</code>' ; ?>
         </p>
       </div>
 
@@ -571,7 +573,7 @@ class DFlip_Meta_boxes {
 
     // Bail out if we fail a security check.
     if ( !isset( $_POST['dflip'] )
-         || !wp_verify_nonce( $_POST['dflip'], 'dflip' )
+         || !wp_verify_nonce(  isset($_POST['dflip']) ? sanitize_key(wp_unslash($_POST['dflip'])) : null, 'dflip' )
          || !isset( $_POST['_dflip'] ) ) {
       set_transient( "my_save_post_errors_{$post_id}", "Security Check Failed", 10 );
 
@@ -619,13 +621,14 @@ class DFlip_Meta_boxes {
     $sanitized_data = array();
 
     //Source Tab
-    $sanitized_data['source_type'] = sanitize_text_field( $_POST['_dflip']['source_type'] );
-    $sanitized_data['pdf_source'] = esc_url_raw( $_POST['_dflip']['pdf_source'] );
-    $sanitized_data['pdf_thumb'] = esc_url_raw( $_POST['_dflip']['pdf_thumb'] );
+    $sanitized_data['source_type'] = isset($_POST['_dflip']['source_type']) ? sanitize_text_field( wp_unslash($_POST['_dflip']['source_type']) ) : null;
+    $sanitized_data['pdf_source'] = isset($_POST['_dflip']['pdf_source']) ? esc_url_raw( wp_unslash($_POST['_dflip']['pdf_source']) ) : null;
+    $sanitized_data['pdf_thumb'] = isset($_POST['_dflip']['pdf_thumb']) ? esc_url_raw( wp_unslash($_POST['_dflip']['pdf_thumb']) ) : null;
 
     $page_list = array();
-    if ( is_array( $_POST['_dflip']['pages'] ) ) {
-      foreach ( (array) $_POST['_dflip']['pages'] as $page_key => $page_value ) {
+    $pages = isset($_POST['_dflip']['pages']) ? wp_unslash($_POST['_dflip']['pages']) : null;
+    if ( is_array( $pages ) ) {
+      foreach ( (array) $pages as $page_key => $page_value ) {
         $page = array();
         $page['url'] = isset( $page_value['url'] ) ? esc_url_raw( $page_value['url'] ) : '';
         $page['hotspots'] = array();
@@ -640,32 +643,32 @@ class DFlip_Meta_boxes {
     $sanitized_data['pages'] = $page_list;
 
     //Layout tab
-    $sanitized_data['viewerType'] = sanitize_text_field( $_POST['_dflip']['viewerType'] );
-    $sanitized_data['webgl'] = sanitize_text_field( $_POST['_dflip']['webgl'] );
-    $sanitized_data['hard'] = sanitize_text_field( $_POST['_dflip']['hard'] );
-    $sanitized_data['bg_color'] = sanitize_text_field( $_POST['_dflip']['bg_color'] );
-    $sanitized_data['bg_image'] = esc_url_raw( $_POST['_dflip']['bg_image'] );
-    $sanitized_data['duration'] = sanitize_text_field( $_POST['_dflip']['duration'] );
-    $sanitized_data['height'] = sanitize_text_field( $_POST['_dflip']['height'] );
-    $sanitized_data['texture_size'] = sanitize_text_field( $_POST['_dflip']['texture_size'] );
-    $sanitized_data['auto_sound'] = sanitize_text_field( $_POST['_dflip']['auto_sound'] );
-    $sanitized_data['enable_download'] = sanitize_text_field( $_POST['_dflip']['enable_download'] );
-    $sanitized_data['page_mode'] = sanitize_text_field( $_POST['_dflip']['page_mode'] );
-    $sanitized_data['single_page_mode'] = sanitize_text_field( $_POST['_dflip']['single_page_mode'] );
-    $sanitized_data['controls_position'] = sanitize_text_field( $_POST['_dflip']['controls_position'] );
-    $sanitized_data['direction'] = sanitize_text_field( $_POST['_dflip']['direction'] );
+    $sanitized_data['viewerType'] = isset($_POST['_dflip']['viewerType']) ? sanitize_text_field( wp_unslash($_POST['_dflip']['viewerType']) ) : null;
+    $sanitized_data['webgl'] = isset($_POST['_dflip']['webgl']) ? sanitize_text_field( wp_unslash($_POST['_dflip']['webgl']) ) : null;
+    $sanitized_data['hard'] = isset($_POST['_dflip']['hard']) ? sanitize_text_field( wp_unslash($_POST['_dflip']['hard']) ) : null;
+    $sanitized_data['bg_color'] = isset($_POST['_dflip']['bg_color']) ? sanitize_text_field( wp_unslash($_POST['_dflip']['bg_color']) ) : null;
+    $sanitized_data['bg_image'] = isset($_POST['_dflip']['bg_image']) ? esc_url_raw( wp_unslash($_POST['_dflip']['bg_image']) ) : null;
+    $sanitized_data['duration'] = isset($_POST['_dflip']['duration']) ? sanitize_text_field( wp_unslash($_POST['_dflip']['duration']) ) : null;
+    $sanitized_data['height'] = isset($_POST['_dflip']['height']) ? sanitize_text_field( wp_unslash($_POST['_dflip']['height']) ) : null;
+    $sanitized_data['texture_size'] = isset($_POST['_dflip']['texture_size']) ? sanitize_text_field( wp_unslash($_POST['_dflip']['texture_size']) ) : null;
+    $sanitized_data['auto_sound'] = isset($_POST['_dflip']['auto_sound']) ? sanitize_text_field( wp_unslash($_POST['_dflip']['auto_sound']) ) : null;
+    $sanitized_data['enable_download'] = isset($_POST['_dflip']['enable_download']) ? sanitize_text_field( wp_unslash($_POST['_dflip']['enable_download']) ) : null;
+    $sanitized_data['page_mode'] = isset($_POST['_dflip']['page_mode']) ? sanitize_text_field( wp_unslash($_POST['_dflip']['page_mode']) ) : null;
+    $sanitized_data['single_page_mode'] = isset($_POST['_dflip']['single_page_mode']) ? sanitize_text_field( wp_unslash($_POST['_dflip']['single_page_mode']) ) : null;
+    $sanitized_data['controls_position'] = isset($_POST['_dflip']['controls_position']) ? sanitize_text_field( wp_unslash($_POST['_dflip']['controls_position']) ) : null;
+    $sanitized_data['direction'] = isset($_POST['_dflip']['direction']) ? sanitize_text_field( wp_unslash($_POST['_dflip']['direction']) ) : null;
 //    $sanitized_data['force_fit'] = sanitize_text_field( $_POST['_dflip']['force_fit'] );
-    $sanitized_data['autoplay'] = sanitize_text_field( $_POST['_dflip']['autoplay'] );
-    $sanitized_data['autoplay_duration'] = sanitize_text_field( $_POST['_dflip']['autoplay_duration'] );
-    $sanitized_data['autoplay_start'] = sanitize_text_field( $_POST['_dflip']['autoplay_start'] );
-    $sanitized_data['page_size'] = sanitize_text_field( $_POST['_dflip']['page_size'] );
+    $sanitized_data['autoplay'] = isset($_POST['_dflip']['autoplay']) ? sanitize_text_field( wp_unslash($_POST['_dflip']['autoplay']) ) : null;
+    $sanitized_data['autoplay_duration'] = isset($_POST['_dflip']['autoplay_duration']) ? sanitize_text_field( wp_unslash($_POST['_dflip']['autoplay_duration']) ) : null;
+    $sanitized_data['autoplay_start'] = isset($_POST['_dflip']['autoplay_start']) ? sanitize_text_field( wp_unslash($_POST['_dflip']['autoplay_start']) ) : null;
+    $sanitized_data['page_size'] = isset($_POST['_dflip']['page_size']) ? sanitize_text_field( wp_unslash($_POST['_dflip']['page_size']) ) : null;
 
     //Outline/sidemenu tab
-    $sanitized_data['auto_outline'] = sanitize_text_field( $_POST['_dflip']['auto_outline'] );
-    $sanitized_data['auto_thumbnail'] = sanitize_text_field( $_POST['_dflip']['auto_thumbnail'] );
-    $sanitized_data['overwrite_outline'] = sanitize_text_field( $_POST['_dflip']['overwrite_outline'] );
+    $sanitized_data['auto_outline'] = isset($_POST['_dflip']['auto_outline']) ? sanitize_text_field( wp_unslash($_POST['_dflip']['auto_outline']) ) : null;
+    $sanitized_data['auto_thumbnail'] = isset($_POST['_dflip']['auto_thumbnail']) ? sanitize_text_field( wp_unslash($_POST['_dflip']['auto_thumbnail']) ) : null;
+    $sanitized_data['overwrite_outline'] = isset($_POST['_dflip']['overwrite_outline']) ? sanitize_text_field( wp_unslash($_POST['_dflip']['overwrite_outline']) ) : null;
 
-    $sanitized_data['outline'] = isset( $_POST['_dflip']['outline'] ) ? $this->array_outline_sanitize( $_POST['_dflip']['outline'] ) : array();
+    $sanitized_data['outline'] = isset( $_POST['_dflip']['outline'] ) ? $this->array_outline_sanitize( wp_unslash($_POST['_dflip']['outline'] )) : array();
     $sanitized_data['outline'] = $this->array_val($sanitized_data['outline'],'items');
 
     $settings = get_post_meta( $post_id, '_dflip_data', true );
@@ -677,7 +680,7 @@ class DFlip_Meta_boxes {
     //These values are from postObject
     if ( isset( $post->post_type ) && 'dflip' == $post->post_type ) {
       if ( empty( $settings['title'] ) ) {
-        $settings['title'] = trim( strip_tags( $post->post_title ) );
+        $settings['title'] = trim( wp_strip_all_tags( $post->post_title ) );
       }
 
       if ( empty( $settings['slug'] ) ) {

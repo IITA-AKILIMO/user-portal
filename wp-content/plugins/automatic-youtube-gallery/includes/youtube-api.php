@@ -31,6 +31,24 @@ class AYG_YouTube_API {
 	protected $api_key;
 
 	/**
+	 * Array of query params.
+	 * 
+	 * @since  2.5.7
+	 * @access protected
+     * @var    array
+     */
+    protected $params = array();
+
+	/**
+     * Is development mode enabled?
+	 * 
+	 * @since  2.3.0
+	 * @access protected
+     * @var    bool
+     */
+	protected $is_development_mode = false;
+
+	/**
 	 * The YouTube API URLs.
 	 * 
 	 * @since  1.0.0
@@ -45,30 +63,22 @@ class AYG_YouTube_API {
 	);
 
 	/**
-     * Is development mode enabled?
-	 * 
-	 * @since  2.3.0
-	 * @access protected
-     * @var    bool
-     */
-	protected $is_development_mode = false;
-
-	/**
 	 * Get videos.
 	 * 
 	 * @since  1.0.0
-     * @param  array  $params Array of query params.
+     * @param  array $params Array of query params.
      * @return mixed
      */
     public function query( $params = array() ) {
 		// Get YouTube API Key
-		$general_settings = get_option( 'ayg_general_settings' );
+		$general_settings = ayg_get_option( 'ayg_general_settings' );
 
 		if ( empty( $general_settings['api_key'] ) ) {
-			return $this->get_error( __( 'YouTube API key not found.', 'automatic-youtube-gallery' ) . ' ' . sprintf( __( 'Kindly follow this URL <a href="%s" target="_blank">this guide</a> to get your own API key.', 'automatic-youtube-gallery' ), 'https://plugins360.com/automatic-youtube-gallery/how-to-get-youtube-api-key/' ) );
+			return $this->get_error( __( 'YouTube API key not found.', 'automatic-youtube-gallery' ) . ' ' . sprintf( __( 'Kindly follow this URL <a href="%s" target="_blank" rel="noopener noreferrer">this guide</a> to get your own API key.', 'automatic-youtube-gallery' ), 'https://plugins360.com/automatic-youtube-gallery/how-to-get-youtube-api-key/' ) );
 		}
 
 		$this->api_key = $general_settings['api_key'];
+		$this->params  = $params;
 
 		// Is development mode enabled?
 		if ( isset( $general_settings['development_mode'] ) && ! empty( $general_settings['development_mode'] ) ) {
@@ -77,6 +87,11 @@ class AYG_YouTube_API {
 
 		// Process output
 		$response = array();
+
+		if ( ! empty( $params['searchTerm'] ) ) {
+			$response = $this->get_videos_from_db( $params );
+			return $response;
+		}
 
 		switch ( $params['type'] ) {
 			case 'playlist':
@@ -220,12 +235,16 @@ class AYG_YouTube_API {
 				break;
 			
 			default: // video
+				if ( wp_http_validate_url( $id ) ) {
+					$id = '';
+				}
+
 				$url = parse_url( $url );
 			
 				if ( array_key_exists( 'host', $url ) ) {				
 					if ( 0 === strcasecmp( $url['host'], 'youtu.be' ) ) {
 						$id = substr( $url['path'], 1 );
-					} elseif ( 0 === strcasecmp( $url['host'], 'www.youtube.com' ) ) {
+					} elseif ( 0 === strcasecmp( $url['host'], 'www.youtube.com' ) || 0 === strcasecmp( $url['host'], 'youtube.com' ) ) {
 						if ( isset( $url['query'] ) ) {
 							parse_str( $url['query'], $url['query'] );
 
@@ -236,8 +255,7 @@ class AYG_YouTube_API {
 							
 						if ( empty( $id ) ) {
 							$url['path'] = explode( '/', substr( $url['path'], 1 ) );
-
-							if ( in_array( $url['path'][0], array( 'e', 'embed', 'v' ) ) ) {
+							if ( in_array( $url['path'][0], array( 'e', 'embed', 'v', 'shorts', 'live' ) ) ) {
 								$id = $url['path'][1];
 							}
 						}
@@ -265,10 +283,7 @@ class AYG_YouTube_API {
 			$video_id = $this->parse_youtube_id_from_url( $params['src'], 'video' );
 
 			// Request from cache
-			$channel_ids = get_option( 'ayg_channel_ids', array() );
-			if ( ! is_array( $channel_ids ) ) {
-				$channel_ids = (array) $channel_ids;
-			}
+			$channel_ids = ayg_get_option( 'ayg_channel_ids' );
 
 			if ( isset( $channel_ids[ $video_id ] ) && ! empty( $channel_ids[ $video_id ] ) ) {
 				return $channel_ids[ $video_id ];
@@ -302,7 +317,7 @@ class AYG_YouTube_API {
 			if ( $id = $videos[0]->channel_id ) {
 				// Store in cache
 				$channel_ids[ $video_id ] = $id;
-				update_option( 'ayg_channel_ids', $channel_ids );
+				update_option( 'ayg_channel_ids', $channel_ids, false );
 			}
 		}
 
@@ -319,10 +334,7 @@ class AYG_YouTube_API {
      */
     private function get_playlist_id( $params = array() ) {
 		// Request from cache
-		$playlist_ids = get_option( 'ayg_playlist_ids', array() );
-		if ( ! is_array( $playlist_ids ) ) {
-			$playlist_ids = (array) $playlist_ids;
-		}
+		$playlist_ids = ayg_get_option( 'ayg_playlist_ids' );
 
 		$key = '';
 
@@ -370,7 +382,7 @@ class AYG_YouTube_API {
 		if ( $id = $items[0]->contentDetails->relatedPlaylists->uploads ) {
 			// Store in cache
 			$playlist_ids[ $key ] = $id;
-			update_option( 'ayg_playlist_ids', $playlist_ids );
+			update_option( 'ayg_playlist_ids', $playlist_ids, false );
 
 			// Return
 			return $id;
@@ -504,7 +516,7 @@ class AYG_YouTube_API {
 
 		$videos = $this->parse_videos( $api_response );
 		if ( isset( $videos->error ) ) {
-			$livestream_settings = get_option( 'ayg_livestream_settings' );
+			$livestream_settings = ayg_get_option( 'ayg_livestream_settings' );
 			return $this->get_error( '<div class="ayg-livestream-fallback-message">' . $livestream_settings['fallback_message'] . '</div>' );
 		}
 
@@ -581,10 +593,7 @@ class AYG_YouTube_API {
 		$current_page = max( $current_page, 1 );
 		$current_page = min( $current_page, $total_pages );
 
-		$offset = ( $current_page - 1 ) * $params['maxResults'];
-		if ( $offset < 0 ) {
-			$offset = 0;
-		}
+		$offset = max( 0, ( $current_page - 1 ) * $params['maxResults'] );
 
 		$current_ids  = array_slice( $all_ids, $offset, $params['maxResults'] );
 		$params['id'] = implode( ',', $current_ids );
@@ -613,8 +622,98 @@ class AYG_YouTube_API {
 		$response->videos = $videos;
 
 		$response->page_info = array(
-			'videos_found' => $total_videos
+			'videos_found' => $total_videos,
+			'total_pages'  => $total_pages,
+			'paged'        => $current_page
 		);
+
+		if ( $current_page > 1 ) {
+			$response->page_info['prev_page_token'] = $current_page - 1;
+		}
+
+		if ( $current_page < $total_pages ) {
+			$response->page_info['next_page_token'] = $current_page + 1;
+		}
+
+		return $response;		
+	}
+
+	/**
+	 * Get videos from our custom database table "{$wpdb->prefix}ayg_videos".
+	 * 
+	 * @since  2.5.7
+	 * @access private
+     * @param  array    $params Array of query params.
+     * @return stdClass
+     */
+    private function get_videos_from_db( $params = array() ) {
+		global $wpdb;
+
+		$videos_table    = $wpdb->prefix . 'ayg_videos';
+		$galleries_table = $wpdb->prefix . 'ayg_galleries';
+
+		$search_term = '%' . $wpdb->esc_like( $params['searchTerm'] ) . '%';
+		$gallery_id  = $params['uid'];
+
+		// Get Total Videos Count
+		$total_query = $wpdb->prepare(
+			"SELECT COUNT(*)
+			FROM $videos_table AS v
+			INNER JOIN $galleries_table AS g ON v.id = g.video_id
+			WHERE g.gallery_id = %s
+			AND (v.title LIKE %s OR v.description LIKE %s)",
+			$gallery_id, $search_term, $search_term
+		);
+		
+		$total_videos = $wpdb->get_var( $total_query );
+
+		if ( empty( $total_videos ) ) {
+			return $this->get_error( __( 'No videos found matching your query.', 'automatic-youtube-gallery' ) );
+		}
+
+		// Fetch Paginated Videos
+		$limit = $params['maxResults'];
+		
+		$total_pages  = ceil( $total_videos / $limit );
+
+		$current_page = isset( $params['pageToken'] ) ? (int) $params['pageToken'] : 1;
+		$current_page = max( $current_page, 1 );
+		$current_page = min( $current_page, $total_pages );
+
+		$offset = max( 0, ( $current_page - 1 ) * $limit );
+
+		$query = $wpdb->prepare(
+			"SELECT v.*
+			FROM $videos_table AS v
+			INNER JOIN $galleries_table AS g ON v.id = g.video_id
+			WHERE g.gallery_id = %s
+			AND (v.title LIKE %s OR v.description LIKE %s)
+			ORDER BY v.published_at_datetime DESC
+			LIMIT %d OFFSET %d",
+			$gallery_id, $search_term, $search_term, $limit, $offset
+		);
+		
+		$videos = $wpdb->get_results( $query );
+
+		if ( empty( $videos ) ) {
+			return $this->get_error( __( 'No videos found matching your query.', 'automatic-youtube-gallery' ) );
+		}
+
+		foreach ( $videos as $index => $video ) {
+			if ( ! empty( $video->thumbnails ) ) {
+				$videos[ $index ]->thumbnails = maybe_unserialize( $video->thumbnails );
+			}
+		}
+
+		// Process output
+		$response = new stdClass();
+		$response->videos = $videos;
+
+		$response->page_info = array(
+			'videos_found' => $total_videos,
+			'total_pages'  => $total_pages,
+			'paged'        => $current_page
+ 		);
 
 		if ( $current_page > 1 ) {
 			$response->page_info['prev_page_token'] = $current_page - 1;
@@ -646,16 +745,34 @@ class AYG_YouTube_API {
 	 * @access private
      * @param  string  $url     YouTube API URL.
      * @param  array   $params  Array of query params.
-	 * @param  string  $context "channel_id", "playlist_id", or "videos"
+	 * @param  string  $context "channel_id", "playlist_id", "videos", or "live"
      * @return mixed     
      */
     private function request_api( $url, $params, $context = 'videos' ) {
 		$params['key'] = $this->api_key;	
+		
+		// Build API URL
+		$cache_duration = 0;		
+		if ( isset( $params['cache'] ) ) {
+			$cache_duration = (int) $params['cache'];
+			unset( $params['cache'] );
+		}
+		$cache_duration = min( $cache_duration, 2419200 ); // Max cache duration: 1 Month
+
+		$q = '';
+		if ( isset( $params['q'] ) ) {
+			$q = $params['q'];
+			unset( $params['q'] );
+		}
+
+		$api_url = $url . ( strpos( $url, '?' ) === false ? '?' : '&' ) . http_build_query( $params );
+		if ( ! empty( $q ) ) {
+			$api_url .= '&q=' . $q; 
+		}
 
 		// Request from cache
-		if ( ! $this->is_development_mode ) {
-			$cache_url  = $url . ( strpos( $url, '?' ) === false ? '?' : '' ) . http_build_query( $params );
-			$cache_key  = 'ayg_' . md5( $cache_url );		
+		if ( ! $this->is_development_mode && $cache_duration > 0 ) {
+			$cache_key  = 'ayg_' . md5( $api_url );		
 			$cache_data = get_transient( $cache_key );
 
 			if ( ! empty( $cache_data ) ) {
@@ -664,25 +781,11 @@ class AYG_YouTube_API {
 		}
 
 		// Request from API
-		$cache_duration = 0;		
-		if ( isset( $params['cache'] ) ) {
-			$cache_duration = (int) $params['cache'];
-			unset( $params['cache'] );
-		}
-
-		$q = '';
-		if ( isset( $params['q'] ) ) {
-			$q = $params['q'];
-			unset( $params['q'] );
-		}
-
-		$url = $url . ( strpos( $url, '?' ) === false ? '?' : '' ) . http_build_query( $params );
-		if ( ! empty( $q ) ) {
-			$url .= '&q=' . $q; 
-		}
-
-		$request = wp_remote_get( $url, array(
+		$timeout = apply_filters( 'ayg_api_request_timeout', 15 );
+		
+		$request = wp_remote_get( $api_url, array(
 			'headers' => [ 'referer' => home_url() ],
+			'timeout' => $timeout, // Increase timeout if needed
 		) );
 
 		if ( is_wp_error( $request ) ) {
@@ -690,8 +793,11 @@ class AYG_YouTube_API {
 		}
 
 		$body = wp_remote_retrieve_body( $request );
-
 		$data = json_decode( $body );
+
+		if ( empty( $data ) ) {
+			return $this->get_error( __( 'Empty or invalid API response', 'automatic-youtube-gallery' ) );
+		}
 
 		if ( isset( $data->error ) ) {
 			$message = "Error " . $data->error->code . " " . $data->error->message;
@@ -704,40 +810,37 @@ class AYG_YouTube_API {
 		}
 
 		// Store in cache (transients)
-		$can_store_in_transients = false;
+		$cache_enabled = false;
 
 		if ( ! $this->is_development_mode && $cache_duration > 0 ) {
-			if ( 'videos' == $context ) {
-				if ( isset( $data->items ) && is_array( $data->items ) && count( $data->items ) > 0 ) {	
-					$can_store_in_transients = true;
+			if ( 'videos' === $context ) {
+				if ( ! empty( $data->items ) && is_array( $data->items ) ) {	
+					$cache_enabled = true;
 				}
 			}
 
-			if ( 'live' == $context ) {
-				$can_store_in_transients = true;
+			if ( 'live' === $context ) {
+				$cache_enabled = true;
 			}
 		}
 
-		if ( $can_store_in_transients ) {
+		if ( $cache_enabled ) {
 			set_transient( $cache_key, $data, $cache_duration );
 
 			// Get the current list of transients
-			$cache_keys = get_option( 'ayg_transient_keys', array() );
-			if ( ! is_array( $cache_keys ) ) {
-				$cache_keys = (array) $cache_keys;
-			}
+			$cache_keys = ayg_get_option( 'ayg_transient_keys' );
 
 			// Append our new one
 			if ( ! in_array( $cache_key, $cache_keys ) ) {
 				$cache_keys[] = $cache_key;
 			}
 
-			// Save it to the DB
-			update_option( 'ayg_transient_keys', $cache_keys );
+			// Save it to the DB (autoload=no: this list can grow large and is not needed on every page load)
+			update_option( 'ayg_transient_keys', $cache_keys, false );
 		}		
 
 		// Store videos in our custom database table "{$wpdb->prefix}ayg_videos" 
-		ayg_db_store_videos( $data );
+		ayg_db_store_videos( $data, $this->params );
 		
 		// Finally return the data
 		return $data;
@@ -752,15 +855,11 @@ class AYG_YouTube_API {
      * @return mixed
      */
     private function parse_videos( $data ) {
-		if ( ! isset( $data->items ) ) {
+		if ( empty( $data->items ) || ! is_array( $data->items ) ) {
 			return $this->get_error( __( 'No videos found matching your query.', 'automatic-youtube-gallery' ) );
 		}
 
-		$items = $data->items;
-		if ( ! is_array( $items ) || 0 == count( $items ) ) {
-			return $this->get_error( __( 'No videos found matching your query.', 'automatic-youtube-gallery' ) );
-		}
-
+		$items  = $data->items;
 		$videos = array();
 
 		foreach ( $items as $item ) {
@@ -836,12 +935,24 @@ class AYG_YouTube_API {
      * @return array
      */
     private function parse_page_info( $data ) {
-		$page_info = array();
+		$page_info = array(
+			'videos_found' => 0
+		);
 
-		// Total count of videos found
+		// Total number of videos found
 		if ( isset( $data->pageInfo ) && isset( $data->pageInfo->totalResults ) ) {
-			$page_info['videos_found'] = $data->pageInfo->totalResults;
-		}		
+			$page_info['videos_found'] = (int) $data->pageInfo->totalResults;
+		}
+		
+		// Calculate total number of pages
+		if ( $page_info['videos_found'] > 0 ) {
+			if ( 'search' == $this->params['type'] ) {
+				$limit = min( (int) $this->params['limit'], $page_info['videos_found'] );
+				$page_info['total_pages'] = ceil( $limit / (int) $this->params['maxResults'] );
+			} else {
+				$page_info['total_pages'] = ceil( $page_info['videos_found'] / (int) $this->params['maxResults'] );
+			}
+		}
 
 		// Token for the previous page
 		if ( isset( $data->prevPageToken ) ) {

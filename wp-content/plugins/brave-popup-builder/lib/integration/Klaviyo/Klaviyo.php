@@ -75,24 +75,28 @@ if ( ! class_exists( 'BravePop_Klaviyo' ) ) {
          );
 
          $response = wp_remote_post( 'https://a.klaviyo.com/api/v2/list/'.$list_id.'/members', $args );
-         
-
          $body = wp_remote_retrieve_body( $response );
          $data = json_decode( $body );
 
          //error_log(wp_json_encode($response));
 
-         if($data && is_array($data) ){ 
+         if(!is_wp_error( $response ) && $data && is_array($data) ){ 
             $addedData = array(
                'action'=> isset($userData['action']) ? $userData['action'] : 'visitor_added',  
                'user_id'=> isset($userData['userData']['ID']) ? $userData['userData']['ID'] : false,
-               'user_mail'=> $contact['email'], 'esp_user_id'=> isset($data[0]->id) ? isset($data[0]->id) : ''
+               'user_mail'=> $contact['email'], 
+               'esp_user_id'=> isset($data[0]->id) ? isset($data[0]->id) : '',
+               'user_data'=> $contact,
+               'list_id' => $list_id,
+               'response' => $response,
             ); 
-            do_action( 'bravepop_addded_to_list', 'klaviyo', $addedData );
-
-            return $data; 
+            do_action( 'bravepop_added_to_list', 'klaviyo', $addedData );
+            return array( 'success' => true, 'result' => $addedData ); 
          }else{
-            return false;
+            $errorMsg = $response->get_error_message() ? $response->get_error_message() : 'Unknown Error Occurred. No Error details provided by Klaviyo.';
+            $errorPayload = array( 'user_mail'=> $contact['email'], 'user_data'=> $contact, 'list_id'=> $list_id, 'error' => $errorMsg, 'response'=> $response );
+            do_action( 'bravepop_added_to_list_failed', 'klaviyo', $errorPayload );
+            return array( 'success' => false, 'errorMsg' => $errorMsg, 'result' => $errorPayload );
          } 
       }
 
@@ -138,13 +142,19 @@ if ( ! class_exists( 'BravePop_Klaviyo' ) ) {
             $addedData = array(
                'action'=> isset($userData['action']) ? $userData['action'] : 'visitor_added',  
                'user_id'=> isset($userData['userData']['ID']) ? $userData['userData']['ID'] : false,
-               'user_mail'=> $contact['email'], 'esp_user_id'=>  ''
+               'user_mail'=> $contact['email'], 
+               'esp_user_id'=>  '',
+               'user_data'=> $contact,
+               'list_id' => $list_id,
+               'response' => $response,
             ); 
-            do_action( 'bravepop_addded_to_list', 'klaviyo', $addedData );
-   
-            return true;
+            do_action( 'bravepop_added_to_list', 'klaviyo', $addedData );
+            return array( 'success' => true, 'result' => $addedData ); 
          }else{
-            return false;
+            $errorMsg = $response->get_error_message() ? $response->get_error_message() : 'Unknown Error Occurred. No Error details provided by Klaviyo.';
+            $errorPayload = array( 'user_mail'=> $contact['email'], 'user_data'=> $contact, 'list_id'=> $list_id, 'error' => $errorMsg, 'response'=> $response );
+            do_action( 'bravepop_added_to_list_failed', 'klaviyo', $errorPayload );
+            return array( 'success' => false, 'errorMsg' => $errorMsg, 'result' => $errorPayload );
          }
       }
 

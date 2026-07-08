@@ -146,24 +146,33 @@ class Ays_Pb_Public {
         }
     }
 
-    public function ays_pb_set_cookie_only_once($attr){
-
-        if(isset($_REQUEST['id']) && $_REQUEST['id'] != ''){
-             $id = $_REQUEST['id'];
-         }else{
-            $id = $attr['id'];
-         }
-
-        if(isset($_REQUEST['title']) && $_REQUEST['title'] != ''){
-              $title = $_REQUEST['title'];
-        }else{
-            $title =  $attr['title'];
-        }
+    public function ays_pb_set_cookie_only_once_on_load($attr){
+        $id = isset($attr['id']) && !empty($attr['id']) ? absint($attr['id']) : 0;
+        $title = isset($attr['title']) && !empty($attr['title']) ? sanitize_text_field($attr['title']) : '';
         
         $cookie_name = 'ays_show_popup_only_once_'.$id;
         $cookie_value =  $title;
         $cookie_expiration = time() + (10 * 365 * 24 * 60 * 60);
         setcookie($cookie_name, $cookie_value, $cookie_expiration, '/');
+    }
+
+
+    public function ays_pb_set_cookie_only_once( $attr ){
+        
+        check_ajax_referer( 'ays-pb-cookie-nonce', sanitize_key( $_REQUEST['_ajax_nonce'] ) );
+        
+        $id = isset( $_REQUEST['id'] ) && $_REQUEST['id'] !== '' ? absint( $_REQUEST['id'] ) : ( isset( $attr['id'] ) ? absint( $attr['id'] ) : 0 );
+
+        $title = isset( $_REQUEST['title'] ) && $_REQUEST['title'] !== '' ? sanitize_text_field( $_REQUEST['title'] ) : ( isset($attr['title'] ) ? sanitize_text_field( $attr['title'] ) : '' );
+        
+        $cookie_name = 'ays_show_popup_only_once_' . $id;
+        $cookie_value = $title;
+        $cookie_expiration = time() + ( 10 * 365 * 24 * 60 * 60 );
+        
+        setcookie( $cookie_name, $cookie_value, $cookie_expiration, '/' );
+
+        wp_send_json_success( 'Cookie installed' );
+        wp_die();
     }
 
     public function ays_increment_pb_views() {
@@ -604,21 +613,21 @@ class Ays_Pb_Public {
                 }
             }
 
-			$ays_pb_header_bgcolor = stripslashes( esc_attr($popupbox["header_bgcolor"]) );
-			$ays_pb_animate_in = stripslashes( esc_attr($popupbox["animate_in"]) );
-			$ays_pb_animate_out = stripslashes( esc_attr($popupbox["animate_out"]) );
-			$ays_pb_custom_css = wp_unslash( stripslashes( htmlspecialchars_decode( $popupbox["custom_css"] ) ) );
-			$ays_pb_custom_html = $popupbox["custom_html"];
-			$ays_pb_delay = ($popupbox["delay"] == false) ? 0 : intval($popupbox["delay"]);
-            $enable_open_delay_mobile = ( isset($options['enable_open_delay_mobile']) && $options['enable_open_delay_mobile'] == 'on' ) ? 1 : 0;
-            $ays_pb_open_delay_mobile = isset($options['open_delay_mobile']) && $options['open_delay_mobile'] != '' ? intval($options['open_delay_mobile']) : 0;
-			$ays_pb_scroll_top = ($popupbox["scroll_top"] == false) ? 0 : intval($popupbox["scroll_top"]);
-            $enable_scroll_top_mobile = ( isset($options['enable_scroll_top_mobile']) && $options['enable_scroll_top_mobile'] == 'on' ) ? 1 : 0;
-            $ays_pb_scroll_top_mobile = isset($options['scroll_top_mobile']) && $options['scroll_top_mobile'] != '' ? intval($options['scroll_top_mobile']) : 0;
-			$ays_pb_show_all = stripslashes( esc_attr($popupbox["show_all"]) );
-			$ays_pb_action_buttons = ($popupbox["action_button"] == false || $popupbox["action_button"] == '') ? "" : $popupbox["action_button"];
-			$ays_pb_action_buttons_type = ($popupbox["action_button_type"] == false) ? "both" : stripslashes( esc_attr($popupbox["action_button_type"]) );
-			$ays_pb_modal_content = ($popupbox["modal_content"] == false) ? "shortcode" : stripslashes( esc_attr($popupbox["modal_content"]) );
+			$ays_pb_header_bgcolor          = stripslashes( esc_attr($popupbox["header_bgcolor"]) );
+			$ays_pb_animate_in              = stripslashes( esc_attr($popupbox["animate_in"]) );
+			$ays_pb_animate_out             = stripslashes( esc_attr($popupbox["animate_out"]) );
+			$ays_pb_custom_css              = wp_unslash( stripslashes( htmlspecialchars_decode( $popupbox["custom_css"] ) ) );
+			$ays_pb_custom_html             = $popupbox["custom_html"];
+			$ays_pb_delay                   = ($popupbox["delay"] == false) ? 0 : intval($popupbox["delay"]);
+            $enable_open_delay_mobile       = ( isset($options['enable_open_delay_mobile']) && $options['enable_open_delay_mobile'] == 'on' ) ? 1 : 0;
+            $ays_pb_open_delay_mobile       = isset($options['open_delay_mobile']) && $options['open_delay_mobile'] != '' ? intval($options['open_delay_mobile']) : 0;
+			$ays_pb_scroll_top              = ($popupbox["scroll_top"] == false) ? 0 : intval($popupbox["scroll_top"]);
+            $enable_scroll_top_mobile       = ( isset($options['enable_scroll_top_mobile']) && $options['enable_scroll_top_mobile'] == 'on' ) ? 1 : 0;
+            $ays_pb_scroll_top_mobile       = isset($options['scroll_top_mobile']) && $options['scroll_top_mobile'] != '' ? intval($options['scroll_top_mobile']) : 0;
+			$ays_pb_show_all                = stripslashes( esc_attr($popupbox["show_all"]) );
+			$ays_pb_action_buttons          = ($popupbox["action_button"] == false || $popupbox["action_button"] == '') ? "" : $popupbox["action_button"];
+			$ays_pb_action_buttons_type     = ($popupbox["action_button_type"] == false) ? "both" : stripslashes( esc_attr($popupbox["action_button_type"]) );
+			$ays_pb_modal_content           = ($popupbox["modal_content"] == false) ? "shortcode" : stripslashes( esc_attr($popupbox["modal_content"]) );
 
             //Enable Opening Animation Mobile
             $enable_animate_in_mobile = ( isset($options["enable_animate_in_mobile"]) && $options["enable_animate_in_mobile"] == 'on' ) ? true : false;
@@ -839,6 +848,9 @@ class Ays_Pb_Public {
             //Close Button Size
             $close_button_size = (isset($options['close_button_size']) && $options['close_button_size'] != '') ? abs($options['close_button_size']) : '1';
 
+            //Close Button Padding
+            $close_button_padding = (isset($options['close_button_padding']) && $options['close_button_padding'] != '') ? abs($options['close_button_padding']) : '0';
+
             //Close button color
             $close_button_color = (isset($options['close_button_color']) && $options['close_button_color'] != "") ? esc_attr( stripslashes($options['close_button_color'])) : $ays_pb_textcolor;
 
@@ -850,7 +862,7 @@ class Ays_Pb_Public {
             $show_only_once =  isset($options['show_only_once']) && $options['show_only_once'] == 'on' ? 'on' : 'off';
 
             if(!isset($_COOKIE['ays_show_popup_only_once_'.$id]) && isset($options['show_only_once']) && $options['show_only_once'] == 'on' && $ays_pb_action_buttons_type != 'clickSelector'){
-                $this->ays_pb_set_cookie_only_once($popupbox);
+                $this->ays_pb_set_cookie_only_once_on_load($popupbox);
             }elseif(isset($options['show_only_once']) && $options['show_only_once'] == 'off'){
                 $this->ays_pb_remove_cookie_only_once($popupbox);
             }elseif(!isset($options['show_only_once'])){
@@ -951,12 +963,12 @@ class Ays_Pb_Public {
             }
 
             if(!isset($options["close_animation_speed"])){
-                $ays_pb_close_animation_speed = $ays_pb_animation_speed;
+                $ays_pb_close_animation_speed        = $ays_pb_animation_speed;
 
                 $ays_pb_animation_close_milleseconds = $ays_pb_close_animation_speed * 1000;
 
                 if(!$enable_close_animation_speed_mobile) {
-                    $ays_pb_close_animation_speed_mobile = $ays_pb_close_animation_speed;
+                    $ays_pb_close_animation_speed_mobile        = $ays_pb_close_animation_speed;
                     $ays_pb_animation_close_milleseconds_mobile = $ays_pb_close_animation_speed_mobile * 1000;
                 }
             }
@@ -971,7 +983,24 @@ class Ays_Pb_Public {
                 $disable_scroll_mobile = $disable_scroll;
             }
 
-            $ays_pb_show_scrollbar_class = (isset($options['show_scrollbar']) && $options['show_scrollbar'] == 'on') ? 'ays-pb-show-scrollbar' : '';
+            $ays_pb_show_scrollbar = (isset($options['show_scrollbar']) && $options['show_scrollbar'] == 'on') ? true : false;
+            
+            // Show scrollbar mobile
+            if (isset($options['show_scrollbar_mobile'])) {
+                $ays_pb_show_scrollbar_mobile = $options['show_scrollbar_mobile'] == 'on' ? true : false;
+            } else {
+                $ays_pb_show_scrollbar_mobile = $ays_pb_show_scrollbar;
+            }
+
+            $ays_pb_show_scrollbar_class = '';
+            $ays_pb_show_scrollbar_class_desktop = $ays_pb_show_scrollbar ? 'ays-pb-show-scrollbar-desktop' : '';
+            $ays_pb_show_scrollbar_class_mobile = $ays_pb_show_scrollbar_mobile ? 'ays-pb-show-scrollbar-mobile' : '';
+            
+            if($ays_pb_show_scrollbar || $ays_pb_show_scrollbar_mobile){
+                $ays_pb_show_scrollbar_class = 'ays-pb-show-scrollbar';
+            }
+
+            $ays_pb_show_scrollbar_class .= ' ' . $ays_pb_show_scrollbar_class_desktop . ' ' . $ays_pb_show_scrollbar_class_mobile;
 
             $enable_pb_fullscreen = (isset($options['enable_pb_fullscreen']) && $options['enable_pb_fullscreen'] == 'on') ? true : false;
 
@@ -1099,6 +1128,9 @@ class Ays_Pb_Public {
 
             //Font Size for mobile
             $pb_font_size_for_mobile = (isset($options['pb_font_size_for_mobile']) && $options['pb_font_size_for_mobile'] != '') ? absint($options['pb_font_size_for_mobile']) : 13;
+            
+            // Description text align for mobile
+            $pb_text_align_mobile = (isset($options['pb_description_alignment_for_mobile']) && $options['pb_description_alignment_for_mobile'] != '') ? esc_attr( stripslashes($options['pb_description_alignment_for_mobile']) ) : 'left';
 
             ///////////////////////////////////////////////////////////////////////////////////
 
@@ -1129,16 +1161,16 @@ class Ays_Pb_Public {
         
             //Popup box close sound
 
-            $animation_pb = false;
-            $ays_pb_close_sound_status = false;
-            $ays_pb_close_sound = "";
-            $ays_pb_close_sound_html = "";
-            $ays_pb_check_anim_speed  = (isset($options['animation_speed']) && $options['animation_speed'] != '') ? $options['animation_speed'] : '1';
+            $animation_pb                    = false;
+            $ays_pb_close_sound_status       = false;
+            $ays_pb_close_sound              = "";
+            $ays_pb_close_sound_html         = "";
+            $ays_pb_check_anim_speed         = (isset($options['animation_speed']) && $options['animation_speed'] != '') ? $options['animation_speed'] : '1';
             $ays_pb_check_anim_speed_mobile  = $ays_pb_animation_speed_mobile;
 
             if(isset($settings_options['ays_pb_close_sound']) && $settings_options['ays_pb_close_sound'] != ""){
                 $ays_pb_close_sound_status  = true;
-                $ays_pb_close_sound = $settings_options['ays_pb_close_sound'];
+                $ays_pb_close_sound         = $settings_options['ays_pb_close_sound'];
             }
 
             if( isset($options['animation_speed']) || isset($options['animation_speed_mobile']) ){
@@ -1242,43 +1274,43 @@ class Ays_Pb_Public {
             }
             $ays_pb_disable_scroll_on_popup_mobile = ( isset( $options['disable_scroll_on_popup_mobile'] ) && $options['disable_scroll_on_popup_mobile'] == 'on' ) ? true : false;
 
-            $disable_scroll_on_popup = '';
-            $disable_scroll_overflow_y = '';
-            $disable_scroll_display_none = '';
+            $disable_scroll_on_popup        = '';
+            $disable_scroll_overflow_y      = '';
+            $disable_scroll_display_none    = '';
             $position_absolute_popup_scroll = '';
-            $padding_top_popup_scroll = '';
-            $width_popup_scroll = '';
-            $bottom_popup_scroll = '';
-            $margin_top = '';
+            $padding_top_popup_scroll       = '';
+            $width_popup_scroll             = '';
+            $bottom_popup_scroll            = '';
+            $margin_top                     = '';
             if($ays_pb_disable_scroll_on_popup){
-                $disable_scroll_on_popup = 'overflow:hidden !important;';
-                $disable_scroll_overflow_y = 'overflow-y: hidden !important';
-                $disable_scroll_display_none = 'display:none;';
-                $position_absolute_popup_scroll = 'position:absolute;';
-                $padding_top_popup_scroll = 'padding:65px 10px;';
-                $width_popup_scroll = 'width:100%';
-                $bottom_popup_scroll = 'bottom:unset';
-                $margin_top = 'margin-top: 65px;';
+                $disable_scroll_on_popup         = 'overflow:hidden !important;';
+                $disable_scroll_overflow_y       = 'overflow-y: hidden !important';
+                $disable_scroll_display_none     = 'display:none;';
+                $position_absolute_popup_scroll  = 'position:absolute;';
+                $padding_top_popup_scroll        = 'padding:65px 10px;';
+                $width_popup_scroll              = 'width:100%';
+                $bottom_popup_scroll             = 'bottom:unset';
+                $margin_top                      = 'margin-top: 65px;';
             }
-
+            
             if($ays_pb_disable_scroll_on_popup_mobile){
-                $disable_scroll_on_popup_mobile = 'overflow:hidden !important;';
-                $disable_scroll_overflow_y_mobile = 'overflow-y: hidden !important';
-                $disable_scroll_display_none_mobile = 'display:none;';
-                $position_absolute_popup_scroll_mobile = 'position:absolute;';
-                $padding_top_popup_scroll_mobile = 'padding:65px 10px;';
-                $width_popup_scroll_mobile = 'width:100%';
-                $bottom_popup_scroll_mobile = 'bottom:unset';
-                $margin_top_mobile = 'margin-top: 65px;';
+                $disable_scroll_on_popup_mobile          = 'overflow:hidden !important;';
+                $disable_scroll_overflow_y_mobile        = 'overflow-y: hidden !important';
+                $disable_scroll_display_none_mobile      = 'display:none;';
+                $position_absolute_popup_scroll_mobile   = 'position:absolute;';
+                $padding_top_popup_scroll_mobile         = 'padding:65px 10px;';
+                $width_popup_scroll_mobile               = 'width:100%';
+                $bottom_popup_scroll_mobile              = 'bottom:unset';
+                $margin_top_mobile                       = 'margin-top: 65px;';
             } else {
-                $disable_scroll_on_popup_mobile = 'overflow:auto !important;';
-                $disable_scroll_overflow_y_mobile = 'overflow-y: auto !important';
-                $disable_scroll_display_none_mobile = 'display:block;';
-                $position_absolute_popup_scroll_mobile = 'position:sticky;';
-                $padding_top_popup_scroll_mobile = 'padding:0;';
-                $width_popup_scroll_mobile = 'width:auto';
-                $bottom_popup_scroll_mobile = 'bottom:6px';
-                $margin_top_mobile = 'margin-top: 0;';
+                $disable_scroll_on_popup_mobile          = 'overflow:auto !important;';
+                $disable_scroll_overflow_y_mobile        = 'overflow-y: auto !important';
+                $disable_scroll_display_none_mobile      = 'display:block;';
+                $position_absolute_popup_scroll_mobile   = 'position:sticky;';
+                $padding_top_popup_scroll_mobile         = 'padding:0;';
+                $width_popup_scroll_mobile               = 'width:auto';
+                $bottom_popup_scroll_mobile              = 'bottom:6px';
+                $margin_top_mobile                       = 'margin-top: 0;';
             }
 
             //Background image position for mobile
@@ -1746,6 +1778,7 @@ class Ays_Pb_Public {
 
                         .ays-pb-modal_".$id." .ays-pb-modal-close_".$id.":hover .close-lil-btn {
                             transform: rotate(180deg) scale(".$close_button_size.") !important;
+                            padding: ".$close_button_padding." !important;
                         }
 
                         .ays_pb_hide_timer_on_pc {
@@ -1816,9 +1849,13 @@ class Ays_Pb_Public {
                             }
 
                             .ays-pb-modal_".$id."  .ays_pb_description > p{
-                                font-size: {$pb_font_size_for_mobile}px !important;
                                 word-break: break-word !important;
                                 word-wrap: break-word;
+                            }
+
+                            .ays-pb-modal_".$id."  .ays_pb_description {
+                                font-size: {$pb_font_size_for_mobile}px !important;
+                                text-align: {$pb_text_align_mobile} !important;
                             }
 
                             .ays-pb-modal_".$id.".ays_template_window p.ays_pb_timer.ays_pb_timer_".$id."{
@@ -1934,7 +1971,9 @@ class Ays_Pb_Public {
                             }
                             let time_pb_".$id." = $(document).find('.ays_pb_timer_".$id." span').data('seconds'),
                                 ays_pb_animation_close_seconds = (ays_pb_animation_close_speed / 1000);
-                            if( ays_pb_delayOpen_".$id." == 0 &&  ays_pb_scrollTop_".$id." == 0){
+                            // Only show immediately for pageLoaded and both trigger types, not for exitIntent
+                            let actionType = '".$ays_pb_action_buttons_type."';
+                            if( (actionType == 'pageLoaded' || actionType == 'both') && ays_pb_delayOpen_".$id." == 0 &&  ays_pb_scrollTop_".$id." == 0){
                                 $(document).find('.av_pop_modals_".$id."').css('display','block');
                             }
 
@@ -1949,15 +1988,18 @@ class Ays_Pb_Public {
                             $(document).find('.ays_pb_music_sound').css({'display':'none'});
                             if(time_pb_".$id." !== undefined){
                                 if(time_pb_".$id." !== 0){
-                                    $(document).find('#ays-pb-modal-checkbox_".$id."').trigger('click');
-                                    if(ays_pb_scrollTop_".$id." == 0){
-                                        var ays_pb_flag =  true;
-                                        $(document).find('.ays-pb-modal_".$id."').css({
-                                            'animation-duration': ays_pb_animation_close_seconds + 's'
-                                        });
-                                        let timer_pb_".$id." = setInterval(function(){
-                                            let newTime_pb_".$id." = time_pb_".$id."--;
-                                            $(document).find('.ays_pb_timer_".$id." span').text(newTime_pb_".$id.");
+                                    // Only run this timer for non-exitIntent triggers
+                                    let currentActionType = '".$ays_pb_action_buttons_type."';
+                                    if(currentActionType != 'exitIntent'){
+                                        $(document).find('#ays-pb-modal-checkbox_".$id."').trigger('click');
+                                        if(ays_pb_scrollTop_".$id." == 0){
+                                            var ays_pb_flag =  true;
+                                            $(document).find('.ays-pb-modal_".$id."').css({
+                                                'animation-duration': ays_pb_animation_close_seconds + 's'
+                                            });
+                                            let timer_pb_".$id." = setInterval(function(){
+                                                let newTime_pb_".$id." = time_pb_".$id."--;
+                                                $(document).find('.ays_pb_timer_".$id." span').text(newTime_pb_".$id.");
                                             if(newTime_pb_".$id." <= 0){
                                                 $(document).find('.ays-pb-modal-close_".$id."').trigger('click');
                                                 $(document).find('.ays-pb-modal_".$id."').attr('class', '".$modal_class." ays-pb-modal_".$id." ".$custom_class." ays-pb-bg-styles_" . $id . " ays-pb-border-mobile_".$id." '+ays_pb_effectOut_".$id.");
@@ -2076,6 +2118,7 @@ class Ays_Pb_Public {
                                                 }
                                             });
                                         }
+                                    }
                                     }
                                 } else {
                                      $(document).find('.ays_pb_timer_".$id."').css('display','none');
@@ -2318,42 +2361,46 @@ class Ays_Pb_Public {
                                     }
                                 });
                             }else{
-                                if( ays_pb_delayOpen_".$id." !== 0 ){
-                                    $(document).find('.ays-pb-modal_".$id."').css('animation-delay', ays_pb_delayOpen_".$id."/1000);
-                                    setTimeout(function(){
-                                        $(document).find('.av_pop_modals_".$id."').css('display','block');
-                                        $(document).find('.ays-pb-modal_".$id."').addClass(ays_pb_effectIn_".$id.");
-                                        $(document).find('.ays-pb-modal_".$id."').css('display', 'block');
-                                        if (window.innerWidth < 768 && $(document).find('#ays-pb-screen-shade_".$id."').attr('data-mobile-overlay') == 'true') {
-                                            $(document).find('#ays-pb-screen-shade_".$id."').css({'opacity': '".$overlay_mobile_opacity."'});
-                                        }
-                                        else{
-                                            $(document).find('#ays-pb-screen-shade_".$id."').css({'opacity': '".$overlay_opacity."'});
-                                        }
-                                        $(document).find('.ays-pb-modal-check_".$id."').attr('checked', 'checked');
+                                // Only show automatically for pageLoaded and both trigger types, not for exitIntent
+                                let actionType = $(document).find('.ays_pb_abt_".$id."').val();
+                                if(actionType != 'exitIntent'){
+                                    if( ays_pb_delayOpen_".$id." !== 0 ){
+                                        $(document).find('.ays-pb-modal_".$id."').css('animation-delay', ays_pb_delayOpen_".$id."/1000);
+                                        setTimeout(function(){
+                                            $(document).find('.av_pop_modals_".$id."').css('display','block');
+                                            $(document).find('.ays-pb-modal_".$id."').addClass(ays_pb_effectIn_".$id.");
+                                            $(document).find('.ays-pb-modal_".$id."').css('display', 'block');
+                                            if (window.innerWidth < 768 && $(document).find('#ays-pb-screen-shade_".$id."').attr('data-mobile-overlay') == 'true') {
+                                                $(document).find('#ays-pb-screen-shade_".$id."').css({'opacity': '".$overlay_mobile_opacity."'});
+                                            }
+                                            else{
+                                                $(document).find('#ays-pb-screen-shade_".$id."').css({'opacity': '".$overlay_opacity."'});
+                                            }
+                                            $(document).find('.ays-pb-modal-check_".$id."').attr('checked', 'checked');
 
-                                        if(isPageScrollDisabled){
-                                            $(document).find('body').addClass('pb_disable_scroll_".$id."');
-                                            $(document).find('html').removeClass('pb_enable_scroll');
-                                        }
+                                            if(isPageScrollDisabled){
+                                                $(document).find('body').addClass('pb_disable_scroll_".$id."');
+                                                $(document).find('html').removeClass('pb_enable_scroll');
+                                            }
 
-                                    }, ays_pb_delayOpen_".$id.");
-                                } else {
-                                    if($(document).find('.ays_pb_abt_".$id."').val() != 'clickSelector'){
-                                        $(document).find('.av_pop_modals_".$id."').css('display','block');
-                                        $(document).find('.ays-pb-modal_".$id."').addClass(ays_pb_effectIn_".$id.");
-                                        $(document).find('.ays-pb-modal_".$id."').css('display', 'block');
-                                        if (window.innerWidth < 768 && $(document).find('#ays-pb-screen-shade_".$id."').attr('data-mobile-overlay') == 'true') {
-                                            $(document).find('#ays-pb-screen-shade_".$id."').css({'opacity': '".$overlay_mobile_opacity."'});
-                                        }
-                                        else{
-                                            $(document).find('#ays-pb-screen-shade_".$id."').css({'opacity': '".$overlay_opacity."'});
-                                        }
-                                        $(document).find('.ays-pb-modal-check_".$id."').attr('checked', 'checked');
+                                        }, ays_pb_delayOpen_".$id.");
+                                    } else {
+                                        if($(document).find('.ays_pb_abt_".$id."').val() != 'clickSelector'){
+                                            $(document).find('.av_pop_modals_".$id."').css('display','block');
+                                            $(document).find('.ays-pb-modal_".$id."').addClass(ays_pb_effectIn_".$id.");
+                                            $(document).find('.ays-pb-modal_".$id."').css('display', 'block');
+                                            if (window.innerWidth < 768 && $(document).find('#ays-pb-screen-shade_".$id."').attr('data-mobile-overlay') == 'true') {
+                                                $(document).find('#ays-pb-screen-shade_".$id."').css({'opacity': '".$overlay_mobile_opacity."'});
+                                            }
+                                            else{
+                                                $(document).find('#ays-pb-screen-shade_".$id."').css({'opacity': '".$overlay_opacity."'});
+                                            }
+                                            $(document).find('.ays-pb-modal-check_".$id."').attr('checked', 'checked');
 
-                                        if(isPageScrollDisabled){
-                                            $(document).find('body').addClass('pb_disable_scroll_".$id."');
-                                            $(document).find('html').addClass('pb_disable_scroll_".$id."');
+                                            if(isPageScrollDisabled){
+                                                $(document).find('body').addClass('pb_disable_scroll_".$id."');
+                                                $(document).find('html').addClass('pb_disable_scroll_".$id."');
+                                            }
                                         }
                                     }
                                 }
@@ -2470,6 +2517,7 @@ class Ays_Pb_Public {
                                             dataType: 'json',
                                             data: {
                                                 action: 'ays_pb_set_cookie_only_once',
+                                                _ajax_nonce: '". wp_create_nonce( 'ays-pb-cookie-nonce' ) ."',
                                                 id: ".$popupbox['id'].",
                                                 title: '".htmlentities($popupbox['title'],ENT_QUOTES)."',
                                             },
@@ -2917,6 +2965,239 @@ class Ays_Pb_Public {
                     </script>";
             }
 
+            // Exit Intent Trigger - Initialize popup as hidden
+            if($ays_pb_action_buttons_type == 'exitIntent'){
+                $popupbox_view .= "
+                <script>
+                    document.addEventListener('DOMContentLoaded', function() {
+                        (function( $ ) {
+                            // Ensure exit intent popup is hidden on page load
+                            $(document).find('input#ays-pb-modal-checkbox_".$id."').prop('checked', false);
+                            $(document).find('input#ays-pb-modal-checkbox_".$id."').removeAttr('checked');
+                            $(document).find('.av_pop_modals_".$id."').css('display', 'none');
+                        })( jQuery );
+                    });
+                </script>";
+            }
+
+            // Exit Intent Trigger
+            if($ays_pb_action_buttons_type == 'exitIntent'){
+                $popupbox_view .= "
+                <script>
+                    document.addEventListener('DOMContentLoaded', function() {
+                        (function( $ ) {
+                            'use strict';
+                            let pbViewsFlag_".$id." = true;
+                            let exitIntentTriggered_".$id." = false;
+                            let timerRunning_".$id." = false;
+                            
+                            // Exit intent detection
+                            document.addEventListener('mouseleave', function(e) {
+                                // Only trigger on desktop (not mobile)
+                                if (window.innerWidth >= 768 && !exitIntentTriggered_".$id.") {
+                                    // Check if mouse is leaving from the top (Y coordinate near 0) 
+                                    // or bottom (Y coordinate near viewport height - for taskbar area)
+                                    if (e.clientY <= 0 || e.clientY >= window.innerHeight - 10) {
+                                        exitIntentTriggered_".$id." = true;
+                                        
+                                        let isMobile = false;
+                                        let closePopupOverlay = " . $close_popup_overlay_flag . ";
+                                        let isPageScrollDisabled = " . (int)$disable_scroll . ";
+                                        let checkAnimSpeed = " . $ays_pb_check_anim_speed . ";
+                                        let ays_pb_animation_close_speed = $(document).find('#ays_pb_animation_close_speed_".$id."').val();
+                                        let ays_pb_effectIn_".$id." = $(document).find('#ays_pb_modal_animate_in_".$id."').val();
+                                        let ays_pb_effectOut_".$id." = $(document).find('#ays_pb_modal_animate_out_".$id."').val();
+                                        
+                                        // Get open delay settings
+                                        let ays_pb_delayOpen_".$id." = parseInt($(document).find('.ays_pb_delay_".$id."').val());
+                                        if (isMobile) {
+                                            if (" . $enable_open_delay_mobile . ") {
+                                                ays_pb_delayOpen_".$id." = parseInt($(document).find('.ays_pb_delay_mobile_".$id."').val());
+                                            }
+                                        }
+                                        
+                                        // Function to show popup
+                                        function showPopup_".$id."() {
+                                            var ays_flag = true;
+                                            var dataAttr = $(document).find('.ays-pb-modal_".$id."').attr('data-ays-flag');
+                                            
+                                            if(ays_flag && dataAttr == 'true'){
+                                                ays_flag = false;
+                                                $(document).find('.av_pop_modals_".$id."').css('display','block');
+                                                $(document).find('.av_pop_modals_".$id."').css('pointer-events', 'auto');
+
+                                                if (window.innerWidth < 768) {
+                                                    $(document).find('.ays_pb_timer_".$id." span').html($(document).find('.ays_pb_timer_".$id." span').attr('data-ays-mobile-seconds'));
+                                                } else {
+                                                    $(document).find('.ays_pb_timer_".$id." span').html($(document).find('.ays_pb_timer_".$id." span').attr('data-ays-seconds'));
+                                                }
+                                            
+                                                $(document).find('.ays-pb-modal_".$id."').removeClass(ays_pb_effectOut_".$id.");
+                                                $(document).find('.ays-pb-modal_".$id."').addClass(ays_pb_effectIn_".$id.");
+                                                $(document).find('.ays-pb-modal_".$id."').css('display', 'block');
+
+                                                if (window.innerWidth < 768 && $(document).find('#ays-pb-screen-shade_".$id."').attr('data-mobile-overlay') == 'true') {
+                                                    $(document).find('#ays-pb-screen-shade_".$id."').css({'opacity': '".$overlay_mobile_opacity."', 'display': 'block'});
+                                                } else {
+                                                    $(document).find('#ays-pb-screen-shade_".$id."').css({'opacity': '".$overlay_opacity."', 'display': 'block'});
+                                                }
+                                                $(document).find('.ays-pb-modal-check_".$id."').prop('checked', true);
+                                                $(document).find('.ays-pb-modal-check_".$id."').attr('checked', true);
+                                                
+                                                var ays_pb_animation_close_seconds = (ays_pb_animation_close_speed / 1000);
+                                                var sound_src = $(document).find('#ays_pb_sound_".$id."').attr('src');
+                                                var close_sound_src = $(document).find('#ays_pb_close_sound_".$id."').attr('src');
+
+                                                ays_pb_animation_close_speed = parseFloat(ays_pb_animation_close_speed) - 50;
+
+                                                if ('". $ays_pb_check_sound ."' === 'on' && typeof sound_src !== 'undefined'){
+                                                    $('#ays_pb_sound_".$id."').get(0).play();
+                                                    $(document).find('.ays_pb_pause_sound_".$id."').on('click',function(){
+                                                        var audio = $('#ays_pb_sound_".$id."').get(0);
+                                                        audio.pause();
+                                                        audio.currentTime = 0;
+                                                    });
+                                                }
+                                                
+                                                var time_pb_str_".$id." = $(document).find('.ays_pb_timer_".$id." span').attr('data-ays-seconds');
+                                                var initial_time_pb_".$id." = parseInt(time_pb_str_".$id.");
+                                                var hasTimer = (initial_time_pb_".$id." !== undefined && initial_time_pb_".$id." !== 0);
+                                                
+                                                if(hasTimer && !timerRunning_".$id."){
+                                                    // Clear any existing timer just in case
+                                                    if(typeof timer_pb_".$id." !== 'undefined'){
+                                                        clearInterval(timer_pb_".$id.");
+                                                    }
+                                                    timerRunning_".$id." = true;
+                                                    // Use the timer display time
+                                                    var time_pb_".$id." = initial_time_pb_".$id."; // Preserve initial value
+                                                    
+                                                    // Set initial timer display immediately
+                                                    $(document).find('.ays_pb_timer_".$id." span').text(time_pb_".$id.");
+                                                    
+                                                    var timer_pb_".$id." = setInterval(function(){
+                                                        if(timerRunning_".$id."){ // Additional check
+                                                            let newTime_pb_".$id." = time_pb_".$id."--;
+                                                            $(document).find('.ays_pb_timer_".$id." span').text(newTime_pb_".$id.");
+                                                            $(document).find('.ays-pb-modal_".$id."').css({
+                                                                'animation-duration': ays_pb_animation_close_seconds + 's'
+                                                            }); 
+                                                            if(newTime_pb_".$id." <= 0){
+                                                                $(document).find('.ays-pb-modal-close_".$id."').trigger('click');
+                                                                $(document).find('.ays-pb-modal_".$id."').attr('class', '".$modal_class." ays-pb-modal_".$id." ".$custom_class." '+ays_pb_effectOut_".$id.");
+                                                                $modal_close_additional_js
+                                                                if(ays_pb_effectOut_".$id." != 'none'){
+                                                                    setTimeout(function(){
+                                                                        $(document).find('.ays-pb-modal_".$id."').css('display', 'none');
+                                                                        ays_flag = true;
+                                                                    }, ays_pb_animation_close_speed);
+                                                                }else{
+                                                                    $(document).find('.ays-pb-modal_".$id."').css('display', 'none');
+                                                                    ays_flag = true;
+                                                                }
+                                                                if ('". $ays_pb_check_sound ."' === 'on' && typeof sound_src !== 'undefined'){
+                                                                    var audio = $('#ays_pb_sound_".$id."').get(0);
+                                                                    audio.pause();
+                                                                    audio.currentTime = 0;
+                                                                    clearInterval(timer_pb_".$id.");
+                                                                }
+                                                                clearInterval(timer_pb_".$id.");
+                                                                timerRunning_".$id." = false;
+                                                            }
+                                                        }
+                                                        $(document).find('.ays-pb-modal-close_".$id."').one('click', function(){
+                                                            clearInterval(timer_pb_".$id.");
+                                                            timerRunning_".$id." = false;
+                                                            if (pbViewsFlag_".$id.") {
+                                                                var pb_id = ".$id.";
+
+                                                                $.ajax({
+                                                                    url: pbLocalizeObj.ajax,
+                                                                    method: 'POST',
+                                                                    dataType: 'text',
+                                                                    data: {
+                                                                        id: pb_id,
+                                                                        action: 'ays_increment_pb_views',
+                                                                    },
+                                                                });
+
+                                                                pbViewsFlag_".$id." = false;
+                                                            }
+                                                            $(document).find('.av_pop_modals_".$id."').css('pointer-events', 'none');
+                                                            $(document).find('.ays-pb-modal_".$id."').attr('class', '".$modal_class." ays-pb-modal_".$id." ".$ays_pb_show_scrollbar_class."  ".$custom_class." ays-pb-bg-styles_" . $id . " ays-pb-border-mobile_".$id." '+ays_pb_effectOut_".$id.");
+                                                            $modal_close_additional_js
+                                                            if(ays_pb_effectOut_".$id." != 'none'){
+                                                                setTimeout(function(){ 
+                                                                    $(document).find('.ays-pb-modal_".$id."').css('display', 'none'); 
+                                                                    ays_flag = true;
+                                                                }, ays_pb_animation_close_speed);  
+                                                            }else{
+                                                                $(document).find('.ays-pb-modal_".$id."').css('display', 'none'); 
+                                                                ays_flag = true;
+                                                            }
+                                                            $(document).find('#ays-pb-screen-shade_".$id."').css({'opacity': '0', 'display': 'none'});
+                                                            clearInterval(timer_pb_".$id.");
+                                                        });
+                                                    }, 1000);
+                                                }
+                                                
+                                                // Autoclose logic - separate from timer display
+                                                if(".$ays_pb_autoclose." != 0 && !hasTimer){
+                                                    setTimeout(function(){
+                                                        $(document).find('.ays-pb-modal-close_".$id."').trigger('click');
+                                                        $(document).find('.ays-pb-modal_".$id."').attr('class', '".$modal_class." ays-pb-modal_".$id." ".$custom_class." '+ays_pb_effectOut_".$id.");
+                                                        $modal_close_additional_js
+                                                        if(ays_pb_effectOut_".$id." != 'none'){
+                                                            setTimeout(function(){
+                                                                $(document).find('.ays-pb-modal_".$id."').css('display', 'none');
+                                                                ays_flag = true;
+                                                            }, ays_pb_animation_close_speed);
+                                                        }else{
+                                                            $(document).find('.ays-pb-modal_".$id."').css('display', 'none');
+                                                            ays_flag = true;
+                                                        }
+                                                        if ('". $ays_pb_check_sound ."' === 'on' && typeof sound_src !== 'undefined'){
+                                                            var audio = $('#ays_pb_sound_".$id."').get(0);
+                                                            audio.pause();
+                                                            audio.currentTime = 0;
+                                                        }
+                                                    }, ".$ays_pb_autoclose." * 1000);
+                                                }
+                                                
+                                                if(isPageScrollDisabled){
+                                                    $(document).find('body').addClass('pb_disable_scroll_".$id."');
+                                                    $(document).find('html').addClass('pb_disable_scroll_".$id."');
+
+                                                    jQuery(document).on('click', '.ays-pb-modal-close_".$id."', function() {
+                                                        $(document).find('body').removeClass('pb_disable_scroll_".$id."');
+                                                        $(document).find('html').removeClass('pb_disable_scroll_".$id."');
+                                                    });
+                                                }
+                                                
+                                                if ('".$popupbox['onoffoverlay']."' != 'On'){
+                                                    $(document).find('#ays-pb-screen-shade_".$id."').css({'opacity': '0', 'display': 'none !important', 'pointer-events': 'none'});
+                                                    $(document).find('.ays-pb-modal_".$id."').css('pointer-events', 'auto');
+                                                    $(document).find('.av_pop_modals_".$id."').css('pointer-events','none');
+                                                };
+                                            }
+                                        }
+                                        
+                                        // Show popup with delay if set
+                                        if( ays_pb_delayOpen_".$id." !== 0 ){
+                                            setTimeout(function(){
+                                                showPopup_".$id."();
+                                            }, ays_pb_delayOpen_".$id.");
+                                        } else {
+                                            showPopup_".$id."();
+                                        }
+                                    }
+                                }
+                            });
+                        })( jQuery );
+                    });
+                </script>";
+            }
+
             if ($popupbox['onoffoverlay'] != 'On'){
                 $popupbox_view .= "<script>
                     document.addEventListener('DOMContentLoaded', function() {
@@ -3169,10 +3450,10 @@ class Ays_Pb_Public {
                             }
                         }else{
                             $post = get_post($post_id);
-                            $this_post_title = strval($post->post_title);
+                            $this_post_title = isset($post->post_title) ? strval($post->post_title) : '';
                             $except_posts = array();
                             $except_post_types = array();
-                            $postType = $post->post_type;
+                            $postType = isset($post->post_type) ? $post->post_type : '';
                             
                             
                             

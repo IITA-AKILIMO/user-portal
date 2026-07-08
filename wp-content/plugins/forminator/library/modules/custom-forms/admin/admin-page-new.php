@@ -92,5 +92,59 @@ class Forminator_CForm_New_Page extends Forminator_Admin_Page {
 			FORMINATOR_VERSION,
 			true
 		); // inputmask binding.
+
+		Forminator_Assets_Enqueue_Form::load_dompurify_scripts();
+	}
+
+	/**
+	 * Render page content with access guard for registration forms.
+	 *
+	 * @since 1.52.0
+	 */
+	protected function render_page_content() {
+		$form_id = filter_input( INPUT_GET, 'id', FILTER_VALIDATE_INT );
+		if ( $form_id ) {
+			$model = Forminator_Base_Form_Model::get_model( absint( $form_id ) );
+			if ( $model instanceof Forminator_Base_Form_Model
+				&& isset( $model->settings['form-type'] )
+				&& 'registration' === $model->settings['form-type']
+				&& empty( forminator_get_accessible_user_roles() )
+			) {
+				status_header( 403 );
+				$this->render_registration_restriction_notice();
+				return;
+			}
+		}
+
+		parent::render_page_content();
+	}
+
+	/**
+	 * Render the registration access restriction notice.
+	 *
+	 * @since 1.52.0
+	 */
+	private function render_registration_restriction_notice() {
+		?>
+		<div class="sui-box">
+			<div class="sui-box-body">
+				<div
+					role="alert"
+					class="sui-notice sui-notice-error sui-active"
+					style="display: block; text-align: left;"
+					aria-live="assertive"
+				>
+					<div class="sui-notice-content">
+						<div class="sui-notice-message">
+							<span class="sui-notice-icon sui-icon-info" aria-hidden="true"></span>
+							<p>
+								<?php esc_html_e( "You don't have permission to edit this Registration Form. Contact a site administrator if you need access.", 'forminator' ); ?><br />
+							</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<?php
 	}
 }

@@ -58,10 +58,9 @@ abstract class Forminator_GFBlock_Abstract {
 	 * @since 1.0 Gutenberg Integration
 	 */
 	public function register_block() {
-		global $pagenow;
-		if ( is_admin() && 'site-editor.php' === $pagenow ) {
+		if ( is_admin() ) {
 			// Load block scripts.
-			$this->load_assets();
+			add_action( 'enqueue_block_assets', array( $this, 'load_assets' ) );
 
 			register_block_type(
 				'forminator/' . $this->get_slug(),
@@ -76,9 +75,37 @@ abstract class Forminator_GFBlock_Abstract {
 					),
 					'script'          => array( 'forminator-front-scripts', 'select2-forminator', 'jquery-ui-slider' ),
 					'render_callback' => array( $this, 'render_block' ),
+					'api_version'     => 3,
 				)
 			);
 		}
+	}
+
+	/**
+	 * Check if user has permissions to preview block.
+	 *
+	 * @since 1.50.3
+	 *
+	 * @return bool
+	 */
+	public function check_preview_permissions() {
+		// If user can manage option or edit any of the content types, it means that they can access the editor and preview the block.
+		if ( current_user_can( 'manage_options' ) || current_user_can( 'edit_pages' )
+			|| current_user_can( 'edit_posts' ) || current_user_can( 'edit_themes' ) ) {
+			$allow_preview = true;
+		} else {
+			$allow_preview = false;
+		}
+
+		/**
+		 * Filter to modify block preview permissions.
+		 *
+		 * @since 1.50.3
+		 *
+		 * @param bool $allow_preview Whether to allow block preview.
+		 * @param string $form_type The form type (slug) for which the preview is being checked.
+		 */
+		return apply_filters( 'forminator_block_preview_permissions', $allow_preview, $this->get_slug() );
 	}
 
 	/**
@@ -94,7 +121,7 @@ abstract class Forminator_GFBlock_Abstract {
 				array(
 					'methods'             => WP_REST_Server::READABLE,
 					'callback'            => array( $this, 'preview_block_markup' ),
-					'permission_callback' => '__return_true',
+					'permission_callback' => array( $this, 'check_preview_permissions' ),
 					'args'                => array(
 						'module_id' => array(
 							'description' => esc_html__( 'Module ID', 'forminator' ),

@@ -42,6 +42,7 @@
 		this._beforeSubmitCallback = null;
 		this._form                 = null;
 		this.intent                = true;
+		this.billingDetails        = {};
 		this.init();
 	}
 
@@ -92,7 +93,12 @@
 					return;
 				}
 
-				self._stripe.createPaymentMethod( { elements: self._elements } ).then(function (result) {
+				// If Blik payment method, create PaymentIntent and confirm on client side
+				if ( self._stripeData['paymentMethodType'] === 'blik' ) {
+					self.updateAmount();
+				} else {
+
+				self._stripe.createPaymentMethod( { elements: self._elements, params: { billing_details: this.billingDetails } } ).then(function (result) {
 					if (result.error) {
 						let resultError = result.error.message || window.ForminatorFront.cform.payment_failed;
 						self.show_error(resultError);
@@ -108,6 +114,7 @@
 
 					self.updateAmount();
 				});
+				}
 			});
 
 			this.$el.on("forminator:form:submit:stripe:3dsecurity", function(e, secret, subscription) {
@@ -193,15 +200,14 @@
 				this._stripe.retrievePaymentIntent(
 					secret
 				).then(function(result) {
-					if ( result.paymentIntent.status === 'requires_action' || result.paymentIntent.status === 'requires_confirmation' || result.paymentIntent.status === 'requires_source_action' ) {
+					if ( ['requires_action', 'requires_confirmation', 'requires_source_action'].includes( result.paymentIntent.status )
+						||  self.getStripeData('paymentMethodType') === 'blik'
+					) {
 						self._stripe
 							.confirmPayment({
 								clientSecret: secret,
 								elements: self._elements,
 								redirect: 'if_required',
-							  // confirmParams: {
-								// return_url: 'https://stripe.com', // Optional
-							  // },
 							} )
 							.then( function ( result ) {
 								if ( result.error ) {
@@ -231,7 +237,14 @@
 			}
 			var formData = new FormData( this.$el[0] );
 			var self = this;
-			var updateFormData = formData;
+			var updateFormData = new FormData();
+
+			// Remove action from formData.
+			formData.forEach(function (value, key) {
+				if (key !== 'action') {
+					updateFormData.append(key, value);
+				}
+			});
 
 			//Method set() doesn't work in IE11
 			updateFormData.append( 'action', 'forminator_update_payment_amount' );
@@ -290,7 +303,7 @@
 								self._stripeData['paymentid'] = data.data.paymentid;
 								self._stripeData['secret'] = data.data.paymentsecret;
 								if ( self.intent ) {
-									self.mountStripeField(data.data.paymentsecret);
+									self.mountStripeField(data.data.paymentsecret, data.data.amount);
 								}
 							}
 							if (data.data.paymentmethod_failed) {
@@ -367,7 +380,7 @@
 			if ( ! this.intent ) {
 				$target_message.removeAttr("aria-hidden")
 					.prop("tabindex", "-1")
-					.removeClass('forminator-loading')
+					.removeClass('forminator-loading forminator-accessible')
 					.addClass('forminator-error forminator-show');
 				this.focus_to_element($target_message);
 
@@ -562,6 +575,7 @@
 			}
 
 			if ( Object.keys(billingDetails).length ) {
+				this.billingDetails = billingDetails;
 				this._paymentElement.update({
 					defaultValues: {
 						billingDetails,
@@ -583,8 +597,9 @@
 			}
 		},
 
-		mountStripeField: function ( clientSecret = null ) {
-			if ( 'subscription' === clientSecret ) {
+		mountStripeField: function ( clientSecret = null, amount = null ) {
+			let isSubscription = 'subscription' === clientSecret;
+			if ( isSubscription ) {
 				clientSecret = null;
 			}
 			if ( this._paymentElement ) {
@@ -607,6 +622,10 @@
 				// unset paymentMethodTypes because we can't set it without mode attribute.
 				delete  stripeObject.paymentMethodTypes;
 				stripeObject.clientSecret = clientSecret;
+			} else if ( isSubscription && amount ) {
+				stripeObject.mode = 'subscription';
+				stripeObject.amount = amount;
+				stripeObject.currency = this.getStripeData('currency') || 'usd';
 			} else {
 				stripeObject.mode = 'setup';
 				stripeObject.currency = this.getStripeData('currency') || 'usd';
@@ -616,11 +635,20 @@
 
 			this._paymentElement = this._elements.create('payment', paymentOptions );
 
+			let paymentElement = document.getElementById('payment-element-' + fieldId);
+			if( ! paymentElement ) {
+				// In case if the element is not found, we can't mount it, so we stop the process to avoid errors in console.
+				return false;
+			}
 			this._paymentElement.mount('#payment-element-' + fieldId);
 
 			var self = this;
 			this._paymentElement.on('ready', function(event) {
 				self.updateBillingDetails();
+			});
+			this._paymentElement.on('change', function(event) {
+				let isBlik = event.value.type === 'blik';
+				self._stripeData['paymentMethodType'] = isBlik ? 'blik' : '';
 			});
 		},
 

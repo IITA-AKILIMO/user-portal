@@ -46,6 +46,7 @@ class Forminator_Settings_Page extends Forminator_Admin_Page {
 	 * @return void
 	 */
 	public function enqueue_scripts( $hook ) {
+		add_filter( 'forminator_data', array( $this, 'change_forminator_data' ) );
 		parent::enqueue_scripts( $hook );
 		wp_localize_script( 'forminator-admin', 'forminator_addons_data', $this->addons_data );
 
@@ -62,13 +63,6 @@ class Forminator_Settings_Page extends Forminator_Admin_Page {
 			FORMINATOR_VERSION,
 			true
 		);
-
-		add_filter( 'forminator_data', array( $this, 'change_forminator_data' ) );
-		$forminator_data = new Forminator_Admin_Data();
-		$forminator_l10n = new Forminator_Admin_L10n();
-
-		wp_localize_script( 'forminator-admin', 'forminatorData', $forminator_data->get_options_data() );
-		wp_localize_script( 'forminator-admin', 'forminatorl10n', $forminator_l10n->get_l10n_strings() );
 	}
 
 	/**
@@ -198,6 +192,13 @@ class Forminator_Settings_Page extends Forminator_Admin_Page {
 
 			'use-custom-css',
 			'custom_css',
+
+			'slider-track',
+			'slider-track-fill',
+			'slider-handle',
+			'slider-selected-value',
+			'slider-steps-value',
+			'slider-handle-drag',
 		);
 
 		$settings = array();

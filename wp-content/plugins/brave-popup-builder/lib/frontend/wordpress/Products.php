@@ -125,7 +125,7 @@ if ( ! class_exists( 'BravePop_Element_Products' ) ) {
          $buttonNoBGClass = isset($this->data->buttonBackgroundColor) && isset($this->data->buttonBackgroundColor->opacity) && ($this->data->buttonBackgroundColor->opacity === 0) ? 'brave_product__addtocart--noBG':'';
          $addToCartActionFuncs = '';
          $addToCartActionFuncs .= $closeOnAddToCart ? 'brave_close_on_add_to_cart('.$this->popupID.');' :'';
-         $addToCartActionFuncs .= $this->goalItem ? 'brave_complete_goal('.$this->popupID.', \'click\');':'';
+         $addToCartActionFuncs .= $this->goalItem ? 'brave_complete_click_goal(event, '.$this->popupID.', \'click\', this);"':'';
          $addToCartActionFuncs = function_exists('is_checkout') && is_checkout() ? 'brave_update_checkout_on_add_to_cart();':'';
          $addToCartAction = $addToCartActionFuncs ? 'onclick="'.$addToCartActionFuncs.'"':'';
 

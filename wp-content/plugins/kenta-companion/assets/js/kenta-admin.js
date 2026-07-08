@@ -2896,8 +2896,6 @@ var ImportScreen = /*#__PURE__*/function (_Component) {
         });
       }
 
-      console.log(queue);
-
       _this.setState({
         queue: queue,
         stepts: queue.length,
@@ -3013,7 +3011,7 @@ var ImportScreen = /*#__PURE__*/function (_Component) {
                 }), Object.keys(demo.plugins).length > 0 && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxs)("div", {
                   className: "import-screen-section",
                   children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)("h3", {
-                    children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Required Plugin', 'kenta-companion')
+                    children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Required Plugins', 'kenta-companion')
                   }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)("ul", {
                     className: "kenta-plugin-list",
                     children: Object.keys(demo.plugins).map(function (slug) {
@@ -3030,6 +3028,28 @@ var ImportScreen = /*#__PURE__*/function (_Component) {
                             children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Upgrade', 'kenta-companion')
                           })]
                         })]
+                      }, slug);
+                    })
+                  })]
+                }), demo.premiumPlugins && Object.keys(demo.premiumPlugins).length > 0 && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxs)("div", {
+                  className: "import-screen-section",
+                  children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)("h3", {
+                    children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Recommended Premium Plugins', 'kenta-companion')
+                  }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)("p", {
+                    className: "premium-plugins-notice",
+                    children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('NOTE: This template is completely free to import with no charges. However, some features require the premium plugin listed below. We recommend upgrading for a better experience.', 'kenta-companion')
+                  }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)("ul", {
+                    className: "kenta-plugin-list",
+                    children: Object.keys(demo.premiumPlugins).map(function (slug) {
+                      var _data$upsell;
+
+                      var data = demo.premiumPlugins[slug];
+                      return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)("li", {
+                        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)("a", {
+                          href: (_data$upsell = data === null || data === void 0 ? void 0 : data.upsell) !== null && _data$upsell !== void 0 ? _data$upsell : '#',
+                          target: "_blank",
+                          children: data.name
+                        })
                       }, slug);
                     })
                   })]
@@ -3635,6 +3655,9 @@ var TemplateList = /*#__PURE__*/function (_Component) {
                 children: [demo.premium && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("span", {
                   className: "premium-badge",
                   children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Premium', 'kenta-companion')
+                }), demo.mixed && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("span", {
+                  className: "mixed-badge",
+                  children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Partially Free', 'kenta-companion')
                 }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("img", {
                   src: (0,_utils__WEBPACK_IMPORTED_MODULE_1__.demo_files_url)("".concat(slug, "/").concat(demo.screenshot)),
                   alt: slug
@@ -3852,13 +3875,16 @@ var TemplatePreview = /*#__PURE__*/function (_Component) {
                 children: [demo.premium && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("span", {
                   className: "premium-badge",
                   children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Premium', 'kenta-companion')
+                }), demo.mixed && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("span", {
+                  className: "mixed-badge",
+                  children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Partially Free', 'kenta-companion')
                 }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("img", {
                   src: (0,_utils__WEBPACK_IMPORTED_MODULE_2__.demo_files_url)("".concat(slug, "/").concat(demo.screenshot)),
                   alt: demo.name
                 })]
               }), Object.keys(demo.plugins).length > 0 && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.Fragment, {
                 children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("h3", {
-                  children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Required Plugin', 'kenta-companion')
+                  children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Required Plugins', 'kenta-companion')
                 }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("ul", {
                   className: "kenta-plugin-list",
                   children: Object.keys(demo.plugins).map(function (slug) {
@@ -3866,6 +3892,28 @@ var TemplatePreview = /*#__PURE__*/function (_Component) {
                     return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("li", {
                       children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("a", {
                         href: "https://wordpress.org/plugins/" + (slug === _constants__WEBPACK_IMPORTED_MODULE_3__.PREMIUM_KB_SLUG ? _constants__WEBPACK_IMPORTED_MODULE_3__.FREE_KB_SLUG : slug),
+                        target: "_blank",
+                        children: data.name
+                      })
+                    }, slug);
+                  })
+                })]
+              }), demo.premiumPlugins && Object.keys(demo.premiumPlugins).length > 0 && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("div", {
+                className: "import-screen-section",
+                children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("h3", {
+                  children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Recommended Premium Plugins', 'kenta-companion')
+                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("p", {
+                  className: "premium-plugins-notice",
+                  children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('NOTE: This template is completely free to import with no charges. However, some features require the premium plugin listed below. We recommend upgrading for a better experience.', 'kenta-companion')
+                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("ul", {
+                  className: "kenta-plugin-list",
+                  children: Object.keys(demo.premiumPlugins).map(function (slug) {
+                    var _data$upsell;
+
+                    var data = demo.premiumPlugins[slug];
+                    return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("li", {
+                      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("a", {
+                        href: (_data$upsell = data === null || data === void 0 ? void 0 : data.upsell) !== null && _data$upsell !== void 0 ? _data$upsell : '#',
                         target: "_blank",
                         children: data.name
                       })

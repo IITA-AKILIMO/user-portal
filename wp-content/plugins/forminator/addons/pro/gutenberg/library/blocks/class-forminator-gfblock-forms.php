@@ -73,13 +73,13 @@ class Forminator_GFBlock_Forms extends Forminator_GFBlock_Abstract {
 	 * @return string
 	 */
 	public function preview_block( $properties = array() ) {
-		if ( isset( $properties['module_id'] ) ) {
-			$html = forminator_form( $properties['module_id'], true, false );
-
-			return $html;
+		if ( ! isset( $properties['module_id'] ) ) {
+			return false;
 		}
 
-		return false;
+		$render_id = isset( $properties['render_id'] ) ? intval( $properties['render_id'] ) : 0;
+
+		return forminator_form( $properties['module_id'], true, true, $render_id );
 	}
 
 	/**
@@ -93,7 +93,7 @@ class Forminator_GFBlock_Forms extends Forminator_GFBlock_Abstract {
 		wp_enqueue_script(
 			'forminator-block-forms',
 			forminator_gutenberg()->get_plugin_url() . '/js/forms-block.min.js',
-			array( 'wp-blocks', 'wp-i18n', 'wp-element' ),
+			array( 'wp-blocks', 'wp-i18n', 'wp-element', 'wp-block-editor' ),
 			filemtime( forminator_gutenberg()->get_plugin_dir() . 'js/forms-block.min.js' ),
 			false
 		);
@@ -148,6 +148,8 @@ class Forminator_GFBlock_Forms extends Forminator_GFBlock_Abstract {
 		wp_enqueue_script( 'forminator-intlTelInput', $script_src, array( 'jquery' ), $script_version, false ); // intlTelInput.
 
 		wp_localize_script( 'forminator-front-scripts', 'ForminatorFront', forminator_localize_data() );
+
+		Forminator_Assets_Enqueue_Form::load_dompurify_scripts();
 	}
 
 	/**

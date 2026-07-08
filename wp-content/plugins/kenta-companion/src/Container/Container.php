@@ -5,8 +5,8 @@ namespace KentaCompanion\Container;
 use ArrayAccess;
 use Closure;
 use Exception;
-use Illuminate\Contracts\Container\BindingResolutionException;
-use Illuminate\Contracts\Container\Container as ContainerContract;
+use KentaCompanion\Vendor\Illuminate\Contracts\Container\BindingResolutionException;
+use KentaCompanion\Vendor\Illuminate\Contracts\Container\Container as ContainerContract;
 use LogicException;
 use ReflectionClass;
 use ReflectionException;
@@ -137,7 +137,7 @@ class Container implements ArrayAccess, ContainerContract {
 	 *
 	 * @param array|string $concrete
 	 *
-	 * @return \Illuminate\Contracts\Container\ContextualBindingBuilder
+	 * @return \KentaCompanion\Vendor\Illuminate\Contracts\Container\ContextualBindingBuilder
 	 */
 	public function when( $concrete ) {
 		$aliases = [];
@@ -621,7 +621,7 @@ class Container implements ArrayAccess, ContainerContract {
 	 *
 	 * @return mixed
 	 *
-	 * @throws \Illuminate\Contracts\Container\BindingResolutionException
+	 * @throws \KentaCompanion\Vendor\Illuminate\Contracts\Container\BindingResolutionException
 	 */
 	public function make( $abstract, array $parameters = [] ) {
 		return $this->resolve( $abstract, $parameters );
@@ -651,7 +651,7 @@ class Container implements ArrayAccess, ContainerContract {
 	 *
 	 * @return mixed
 	 *
-	 * @throws \Illuminate\Contracts\Container\BindingResolutionException
+	 * @throws \KentaCompanion\Vendor\Illuminate\Contracts\Container\BindingResolutionException
 	 */
 	protected function resolve( $abstract, $parameters = [], $raiseEvents = true ) {
 		$abstract = $this->getAlias( $abstract );
@@ -786,7 +786,7 @@ class Container implements ArrayAccess, ContainerContract {
 	 *
 	 * @return mixed
 	 *
-	 * @throws \Illuminate\Contracts\Container\BindingResolutionException
+	 * @throws \KentaCompanion\Vendor\Illuminate\Contracts\Container\BindingResolutionException
 	 */
 	public function build( $concrete ) {
 		// If the concrete type is actually a Closure, we will just execute it and
@@ -847,7 +847,7 @@ class Container implements ArrayAccess, ContainerContract {
 	 *
 	 * @return array
 	 *
-	 * @throws \Illuminate\Contracts\Container\BindingResolutionException
+	 * @throws \KentaCompanion\Vendor\Illuminate\Contracts\Container\BindingResolutionException
 	 */
 	protected function resolveDependencies( array $dependencies ) {
 		$results = [];
@@ -913,7 +913,7 @@ class Container implements ArrayAccess, ContainerContract {
 	 *
 	 * @return mixed
 	 *
-	 * @throws \Illuminate\Contracts\Container\BindingResolutionException
+	 * @throws \KentaCompanion\Vendor\Illuminate\Contracts\Container\BindingResolutionException
 	 */
 	protected function resolvePrimitive( ReflectionParameter $parameter ) {
 		if ( ! is_null( $concrete = $this->getContextualConcrete( '$' . $parameter->getName() ) ) ) {
@@ -934,7 +934,7 @@ class Container implements ArrayAccess, ContainerContract {
 	 *
 	 * @return mixed
 	 *
-	 * @throws \Illuminate\Contracts\Container\BindingResolutionException
+	 * @throws \KentaCompanion\Vendor\Illuminate\Contracts\Container\BindingResolutionException
 	 */
 	protected function resolveClass( ReflectionParameter $parameter ) {
 		try {
@@ -960,7 +960,7 @@ class Container implements ArrayAccess, ContainerContract {
 	 *
 	 * @return void
 	 *
-	 * @throws \Illuminate\Contracts\Container\BindingResolutionException
+	 * @throws \KentaCompanion\Vendor\Illuminate\Contracts\Container\BindingResolutionException
 	 */
 	protected function notInstantiable( $concrete ) {
 		if ( ! empty( $this->buildStack ) ) {
@@ -981,7 +981,7 @@ class Container implements ArrayAccess, ContainerContract {
 	 *
 	 * @return void
 	 *
-	 * @throws \Illuminate\Contracts\Container\BindingResolutionException
+	 * @throws \KentaCompanion\Vendor\Illuminate\Contracts\Container\BindingResolutionException
 	 */
 	protected function unresolvablePrimitive( ReflectionParameter $parameter ) {
 		$message = "Unresolvable dependency resolving [$parameter] in class {$parameter->getDeclaringClass()->getName()}";
@@ -1207,9 +1207,9 @@ class Container implements ArrayAccess, ContainerContract {
 	/**
 	 * Set the shared instance of the container.
 	 *
-	 * @param \Illuminate\Contracts\Container\Container|null $container
+	 * @param \KentaCompanion\Vendor\Illuminate\Contracts\Container\Container|null $container
 	 *
-	 * @return \Illuminate\Contracts\Container\Container|static
+	 * @return \KentaCompanion\Vendor\Illuminate\Contracts\Container\Container|static
 	 */
 	public static function setInstance( ContainerContract $container = null ) {
 		return static::$instance = $container;

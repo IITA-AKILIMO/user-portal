@@ -10,8 +10,11 @@ function bravepop_render_popup() {
    $brave_popupStep = filter_input(INPUT_GET, 'popup_step');
 
    //Popup Preview
-   if($brave_popupID && is_user_logged_in()){ 
-      return new BravePop_Popup( $brave_popupID, 'popup', true, $brave_popupStep  ? absint($brave_popupStep) : false); 
+   if($brave_popupID && is_user_logged_in() && current_user_can('access_brave_menus')){
+      $popupID = absint($brave_popupID);
+      $popup = get_post($popupID);
+      if(!$popup || $popup->post_type !== 'popup'){ return; }
+      return new BravePop_Popup( $popupID, 'popup', true, $brave_popupStep  ? absint($brave_popupStep) : false);
    }
 
    //Bail if is Customizing the Website from Appearance > Customize or with Elementor
@@ -520,8 +523,36 @@ add_action('wp_ajax_nopriv_bravepop_ajax_load_popup_content', 'bravepop_ajax_loa
 function bravepop_ajax_load_popup_content(){
    if(!isset($_POST['popupID']) || !isset($_POST['security']) || !isset($_POST['type'])){ wp_die(); }
    check_ajax_referer('brave-ajax-nonce', 'security');
-   $Popup = new BravePop_Popup(intval($_POST['popupID']), $_POST['type']);
-   $currentURL = isset($_POST['current_url']) ? $_POST['current_url'] : ''; 
+
+   $popupID = intval($_POST['popupID']);
+   $popup = get_post($popupID);
+   
+   if (!$popup) {
+      wp_die('Popup not found');
+   }
+ 
+   $effective_status = $popup->post_status;
+   
+   // Check if this is a scheduled popup
+   if ($popup->post_status === 'draft') {
+      $post_schedule = json_decode(get_post_meta($popupID, 'popup_schedule', true));
+      if (!empty($post_schedule->active) && !empty($post_schedule->type)) {
+         if (($post_schedule->type === 'days' && !empty($post_schedule->days) && count($post_schedule->days) > 0) || 
+             ($post_schedule->type === 'dates' && !empty($post_schedule->dates) && count($post_schedule->dates) > 0)) {
+            $effective_status = 'scheduled';
+         }
+      }
+   }
+   
+   // Allow access only for published or scheduled popups
+   if ($effective_status !== 'publish' && $effective_status !== 'scheduled') {
+      if (!current_user_can('manage_options')) {
+         wp_die('Access denied');
+      }
+   }
+
+   $Popup = new BravePop_Popup($popupID, sanitize_text_field($_POST['type']));
+   $currentURL = isset($_POST['current_url']) ? esc_url_raw($_POST['current_url']) : ''; 
    $popupContent = $Popup->popup_render_content(true, $currentURL);
 
    echo $popupContent;

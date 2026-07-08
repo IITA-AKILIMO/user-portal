@@ -218,15 +218,18 @@ class Forminator_Custom extends Forminator_Field {
 		$html          = '';
 		$default_value = esc_html( self::get_property( 'default_value', $field ) );
 		$post_value    = self::get_post_data( $name, false );
+		$settings      = $views_obj->model->settings;
+
+		$descr_position = self::get_description_position( $field, $settings );
 
 		switch ( $field_type ) {
 			case 'text':
 				$html .= sprintf(
 					'<input class="forminator-name--field forminator-input" type="text" data-required="%s" name="%s" placeholder="%s" id="%s" %s/>',
-					$required,
-					$name,
+					esc_attr( $required ),
+					esc_attr( $name ),
 					$placeholder,
-					$id,
+					esc_attr( $id ),
 					( $post_value ? 'value= "' . $post_value . '"' : '' )
 				);
 				break;
@@ -239,7 +242,7 @@ class Forminator_Custom extends Forminator_Field {
 					'placeholder' => $placeholder,
 					'required'    => $required,
 				);
-				$html        .= self::create_textarea( $field_markup, $label, $description );
+				$html        .= self::create_textarea( $field_markup, $label, $description, $required, $descr_position );
 				break;
 			case 'dropdown':
 				break;
@@ -248,11 +251,11 @@ class Forminator_Custom extends Forminator_Field {
 			case 'number':
 				$html .= sprintf(
 					'<input class="forminator-number--field forminator-input" type="number" data-required="%s" name="%s" placeholder="%s" value="%s" id="%s" />',
-					$required,
-					$name,
+					esc_attr( $required ),
+					esc_attr( $name ),
 					$placeholder,
 					( $post_value ? $post_value : $default_value ),
-					$id
+					esc_attr( $id )
 				);
 				break;
 			case 'checkbox':
@@ -260,7 +263,7 @@ class Forminator_Custom extends Forminator_Field {
 			case 'radio':
 				break;
 			case 'hidden':
-				$html .= sprintf( '<input class="forminator-hidden--field" type="hidden" id="%s" name="%s" value="%s" />', $id, $name, $default_value );
+				$html .= sprintf( '<input class="forminator-hidden--field" type="hidden" id="%s" name="%s" value="%s" />', esc_attr( $id ), esc_attr( $name ), $default_value );
 				break;
 			default:
 				break;
@@ -282,7 +285,7 @@ class Forminator_Custom extends Forminator_Field {
 			$name = self::get_property( 'custom_field_name', $field, esc_html__( 'field name', 'forminator' ) );
 			if ( empty( $data ) ) {
 				/* translators: %s: Field name */
-				$this->validation_message[ $id ] = sprintf( esc_html__( 'This field is required. Please enter the %s.', 'forminator' ), $name );
+				$this->validation_message[ $id ] = sprintf( esc_html__( 'This field is required. Please enter the %s.', 'forminator' ), esc_html( $name ) );
 			}
 		}
 	}

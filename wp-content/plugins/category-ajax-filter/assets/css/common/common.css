@@ -41,7 +41,7 @@
   flex: 100%;
   padding: 20px;
 }
-.status {
+.caf-post-layout-container .status {
   position: absolute;
   width: 97%;
   text-align: center;
@@ -50,7 +50,7 @@
   display: none;
 }
 
-.status i {
+.caf-post-layout-container .status i {
   top: 30%;
   position: relative;
   font-size: 45px;
@@ -59,10 +59,10 @@
   border-radius: 50%;
   padding: 10px;
 }
-.status img {
+.caf-post-layout-container .status img {
   height: 220px;
 }
-.status.active {
+.caf-post-layout-container .status.active {
   display: block;
   /*background: #333;*/
   opacity: 1;

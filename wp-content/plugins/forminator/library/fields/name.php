@@ -66,6 +66,17 @@ class Forminator_Name extends Forminator_Field {
 	public function __construct() {
 		parent::__construct();
 		$this->name = esc_html__( 'Name', 'forminator' );
+
+		// Set default required error messages.
+		$required       = __( 'This field is required. Please input your name.', 'forminator' );
+		$fname_required = __( 'This field is required. Please input your first name.', 'forminator' );
+		$mname_required = __( 'This field is required. Please input your middle name.', 'forminator' );
+		$lname_required = __( 'This field is required. Please input your last name.', 'forminator' );
+
+		self::$default_required_messages[ $this->type ]            = $required;
+		self::$default_required_messages[ 'fname_' . $this->type ] = $fname_required;
+		self::$default_required_messages[ 'mname_' . $this->type ] = $mname_required;
+		self::$default_required_messages[ 'lname_' . $this->type ] = $lname_required;
 	}
 
 	/**
@@ -76,25 +87,16 @@ class Forminator_Name extends Forminator_Field {
 	 */
 	public function defaults() {
 		return array(
-			'field_label'             => esc_html__( 'Name', 'forminator' ),
-			'placeholder'             => esc_html__( 'E.g. John Doe', 'forminator' ),
-			'prefix_label'            => esc_html__( 'Prefix', 'forminator' ),
-			'fname_label'             => esc_html__( 'First Name', 'forminator' ),
-			'fname_placeholder'       => esc_html__( 'E.g. John', 'forminator' ),
-			'mname_label'             => esc_html__( 'Middle Name', 'forminator' ),
-			'mname_placeholder'       => esc_html__( 'E.g. Smith', 'forminator' ),
-			'lname_label'             => esc_html__( 'Last Name', 'forminator' ),
-			'lname_placeholder'       => esc_html__( 'E.g. Doe', 'forminator' ),
-			'prefix'                  => 'true',
-			'fname'                   => 'true',
-			'mname'                   => 'true',
-			'lname'                   => 'true',
-			'required_message'        => esc_html__( 'Name is required.', 'forminator' ),
-			'prefix_required_message' => esc_html__( 'Prefix is required.', 'forminator' ),
-			'fname_required_message'  => esc_html__( 'First Name is required.', 'forminator' ),
-			'mname_required_message'  => esc_html__( 'Middle Name is required.', 'forminator' ),
-			'lname_required_message'  => esc_html__( 'Last Name is required.', 'forminator' ),
-			'layout_columns'          => '2',
+			'field_label'    => esc_html__( 'Name', 'forminator' ),
+			'prefix_label'   => esc_html__( 'Prefix', 'forminator' ),
+			'fname_label'    => esc_html__( 'First Name', 'forminator' ),
+			'mname_label'    => esc_html__( 'Middle Name', 'forminator' ),
+			'lname_label'    => esc_html__( 'Last Name', 'forminator' ),
+			'prefix'         => 'true',
+			'fname'          => 'true',
+			'mname'          => 'true',
+			'lname'          => 'true',
+			'layout_columns' => '2',
 		);
 	}
 
@@ -160,6 +162,9 @@ class Forminator_Name extends Forminator_Field {
 		$description = self::get_property( 'description', $field, '' );
 		$placeholder = $this->sanitize_value( self::get_property( 'placeholder', $field ) );
 
+		$descr_position   = self::get_property( 'descr_position', $field );
+		$browser_autofill = self::get_property( 'browser_autofill', $field, 'enabled' );
+
 		if ( (bool) $required ) {
 			$ariareq = 'true';
 		}
@@ -185,6 +190,7 @@ class Forminator_Name extends Forminator_Field {
 			'id'            => $id,
 			'class'         => 'forminator-input forminator-name--field',
 			'aria-required' => $ariareq,
+			'autocomplete'  => 'enabled' === $browser_autofill ? 'name' : 'off',
 		);
 
 		$autofill_markup = $this->get_element_autofill_markup_attr( $name );
@@ -193,7 +199,7 @@ class Forminator_Name extends Forminator_Field {
 
 		$html .= '<div class="forminator-field">';
 
-			$html .= self::create_input( $name_attr, $label, $description, $required, $design );
+			$html .= self::create_input( $name_attr, $label, $description, $required, $descr_position );
 
 		$html .= '</div>';
 
@@ -223,6 +229,8 @@ class Forminator_Name extends Forminator_Field {
 		$lname       = self::get_property( 'lname', $field, false );
 		$columns     = self::get_property( 'layout_columns', $field, false );
 		$draft_value = isset( $draft_value['value'] ) ? $draft_value['value'] : '';
+
+		$descr_position = self::get_property( 'descr_position', $field );
 
 		// Return If prefix and first name, middle name and last name is not enabled.
 		if ( empty( $prefix ) && empty( $fname ) && empty( $mname ) && empty( $lname ) ) {
@@ -278,17 +286,20 @@ class Forminator_Name extends Forminator_Field {
 
 			// FIELD: Prefix.
 		if ( $prefix ) {
-
-			$prefix_data = array(
-				'name'       => self::get_subfield_id( $id, '-prefix' ),
-				'id'         => self::get_field_id( $this->form_settings['form_id'] . '__field--' . $id ),
-				'class'      => 'basic' === $design ? '' : 'forminator-select2',
-				'data-multi' => true,
+			$browser_autofill = self::get_property( 'prefix_browser_autofill', $field, 'enabled' );
+			$prefix_data      = array(
+				'name'         => self::get_subfield_id( $id, '-prefix' ),
+				'id'           => self::get_field_id( $this->form_settings['form_id'] . '__field--' . $id ),
+				'class'        => 'basic' === $design ? '' : 'forminator-select2',
+				'data-multi'   => true,
+				'autocomplete' => 'enabled' === $browser_autofill ? 'honorific-prefix' : 'off',
 			);
 
 			$options        = array();
-			$value          = false;
 			$prefix_options = forminator_get_name_prefixes();
+			$default_prefix = self::get_property( 'prefix_placeholder', $field, '' );
+			$value          = $default_prefix;
+			$matched_value  = $default_prefix;
 
 			if ( isset( $draft_value['prefix'] ) ) {
 
@@ -297,8 +308,17 @@ class Forminator_Name extends Forminator_Field {
 			} elseif ( $this->has_prefill( $field, 'prefix' ) ) {
 
 				// We have pre-fill parameter, use its value or $value.
-				$value = $this->get_prefill( $field, false, 'prefix' );
+				$value = $this->get_prefill( $field, $default_prefix, 'prefix' );
 			}
+
+			foreach ( $prefix_options as $key => $pfx ) {
+				if ( strtolower( $key ) === strtolower( $value ) ) {
+					$matched_value = $key;
+					break;
+				}
+			}
+
+			$value = $matched_value;
 
 			foreach ( $prefix_options as $key => $pfx ) {
 				$selected = false;
@@ -321,9 +341,10 @@ class Forminator_Name extends Forminator_Field {
 						$prefix_data,
 						self::get_property( 'prefix_label', $field ),
 						$options,
-						self::get_property( 'prefix_placeholder', $field ),
+						$value,
 						self::get_property( 'prefix_description', $field ),
-						$prefix_required
+						$prefix_required,
+						$descr_position,
 					);
 
 				$html .= '</div>';
@@ -333,8 +354,8 @@ class Forminator_Name extends Forminator_Field {
 
 			// FIELD: First Name.
 		if ( $fname ) {
-
-			$first_name = array(
+			$browser_autofill = self::get_property( 'fname_browser_autofill', $field, 'enabled' );
+			$first_name       = array(
 				'type'          => 'text',
 				'name'          => self::get_subfield_id( $id, '-first-name' ),
 				'placeholder'   => $this->sanitize_value( self::get_property( 'fname_placeholder', $field ) ),
@@ -342,6 +363,7 @@ class Forminator_Name extends Forminator_Field {
 				'class'         => 'forminator-input',
 				'aria-required' => $fname_ariareq,
 				'data-multi'    => true,
+				'autocomplete'  => 'enabled' === $browser_autofill ? 'given-name' : 'off',
 			);
 
 			$autofill_markup = $this->get_element_autofill_markup_attr( self::get_subfield_id( $id, '-first-name' ) );
@@ -367,7 +389,7 @@ class Forminator_Name extends Forminator_Field {
 						esc_html( self::get_property( 'fname_label', $field ) ),
 						esc_html( self::get_property( 'fname_description', $field ) ),
 						$fname_required,
-						$design
+						$descr_position,
 					);
 
 				$html .= '</div>';
@@ -377,8 +399,8 @@ class Forminator_Name extends Forminator_Field {
 
 			// FIELD: Middle Name.
 		if ( $mname ) {
-
-			$middle_name = array(
+			$browser_autofill = self::get_property( 'mname_browser_autofill', $field, 'enabled' );
+			$middle_name      = array(
 				'type'          => 'text',
 				'name'          => self::get_subfield_id( $id, '-middle-name' ),
 				'placeholder'   => $this->sanitize_value( self::get_property( 'mname_placeholder', $field ) ),
@@ -386,6 +408,7 @@ class Forminator_Name extends Forminator_Field {
 				'class'         => 'forminator-input',
 				'aria-required' => $mname_ariareq,
 				'data-multi'    => true,
+				'autocomplete'  => 'enabled' === $browser_autofill ? 'additional-name' : 'off',
 			);
 
 			if ( isset( $draft_value['middle-name'] ) ) {
@@ -407,7 +430,7 @@ class Forminator_Name extends Forminator_Field {
 					esc_html( self::get_property( 'mname_label', $field ) ),
 					esc_html( self::get_property( 'mname_description', $field ) ),
 					$mname_required,
-					$design
+					$descr_position,
 				);
 
 				$html .= '</div>';
@@ -417,8 +440,8 @@ class Forminator_Name extends Forminator_Field {
 
 			// FIELD: Last Name.
 		if ( $lname ) {
-
-			$last_name = array(
+			$browser_autofill = self::get_property( 'lname_browser_autofill', $field, 'enabled' );
+			$last_name        = array(
 				'type'          => 'text',
 				'name'          => self::get_subfield_id( $id, '-last-name' ),
 				'placeholder'   => $this->sanitize_value( self::get_property( 'lname_placeholder', $field ) ),
@@ -426,6 +449,7 @@ class Forminator_Name extends Forminator_Field {
 				'class'         => 'forminator-input',
 				'aria-required' => $lname_ariareq,
 				'data-multi'    => true,
+				'autocomplete'  => 'enabled' === $browser_autofill ? 'family-name' : 'off',
 			);
 
 			$autofill_markup = $this->get_element_autofill_markup_attr( self::get_subfield_id( $id, '-last-name' ) );
@@ -451,7 +475,7 @@ class Forminator_Name extends Forminator_Field {
 					esc_html( self::get_property( 'lname_label', $field ) ),
 					esc_html( self::get_property( 'lname_description', $field ) ),
 					$lname_required,
-					$design
+					$descr_position,
 				);
 
 				$html .= '</div>';
@@ -480,6 +504,8 @@ class Forminator_Name extends Forminator_Field {
 		$settings            = $views_obj->model->settings;
 		$this->field         = $field;
 		$this->form_settings = $settings;
+
+		$field['descr_position'] = self::get_description_position( $field, $settings );
 
 		$multiple = self::get_property( 'multiple_name', $field, false, 'bool' );
 		$design   = $this->get_form_style( $settings );
@@ -596,7 +622,7 @@ class Forminator_Name extends Forminator_Field {
 					$field,
 					'fname_required_message',
 					'first',
-					esc_html__( 'This field is required. Please input your first name.', 'forminator' )
+					self::$default_required_messages[ 'fname_' . $this->type ]
 				);
 				$messages        .= '"' . $this->get_id( $field ) . '-first-name": "' . forminator_addcslashes( $required_message ) . '",' . "\n";
 			}
@@ -607,7 +633,7 @@ class Forminator_Name extends Forminator_Field {
 					$field,
 					'mname_required_message',
 					'middle',
-					esc_html__( 'This field is required. Please input your middle name.', 'forminator' )
+					self::$default_required_messages[ 'mname_' . $this->type ]
 				);
 				$messages        .= '"' . $this->get_id( $field ) . '-middle-name": "' . forminator_addcslashes( $required_message ) . '",' . "\n";
 			}
@@ -618,17 +644,12 @@ class Forminator_Name extends Forminator_Field {
 					$field,
 					'lname_required_message',
 					'last',
-					esc_html__( 'This field is required. Please input your last name.', 'forminator' )
+					self::$default_required_messages[ 'lname_' . $this->type ]
 				);
 				$messages        .= '"' . $this->get_id( $field ) . '-last-name": "' . forminator_addcslashes( $required_message ) . '",' . "\n";
 			}
 		} elseif ( $required ) {
-				// backward compat.
-				$required_message = self::get_property( 'required_message', $field, self::FIELD_PROPERTY_VALUE_NOT_EXIST, 'string' );
-			if ( self::FIELD_PROPERTY_VALUE_NOT_EXIST === $required_message || empty( $required_message ) ) {
-				$required_message = esc_html__( 'This field is required. Please input your name.', 'forminator' );
-			}
-
+				$required_message = self::get_property( 'required_message', $field, self::$default_required_messages[ $this->type ], 'string' );
 				$required_message = apply_filters( 'forminator_name_field_required_validation_message', $required_message, $id, $field );
 				$messages        .= '"' . $this->get_id( $field ) . '": "' . forminator_addcslashes( $required_message ) . '",' . "\n";
 		}
@@ -682,7 +703,7 @@ class Forminator_Name extends Forminator_Field {
 						$field,
 						'fname_required_message',
 						'first',
-						esc_html__( 'This field is required. Please input your first name.', 'forminator' )
+						esc_html( self::$default_required_messages[ 'fname_' . $this->type ] )
 					);
 				}
 
@@ -692,7 +713,7 @@ class Forminator_Name extends Forminator_Field {
 						$field,
 						'mname_required_message',
 						'middle',
-						esc_html__( 'This field is required. Please input your middle name.', 'forminator' )
+						esc_html( self::$default_required_messages[ 'mname_' . $this->type ] )
 					);
 				}
 
@@ -702,17 +723,13 @@ class Forminator_Name extends Forminator_Field {
 						$field,
 						'lname_required_message',
 						'last',
-						esc_html__( 'This field is required. Please input your last name.', 'forminator' )
+						esc_html( self::$default_required_messages[ 'lname_' . $this->type ] )
 					);
 				}
 			}
 		} elseif ( $required ) {
 			if ( empty( $data ) ) {
-				// backward compat.
-				$required_message = self::get_property( 'required_message', $field, self::FIELD_PROPERTY_VALUE_NOT_EXIST, 'string' );
-				if ( self::FIELD_PROPERTY_VALUE_NOT_EXIST === $required_message ) {
-					$required_message = esc_html__( 'This field is required. Please input your name.', 'forminator' );
-				}
+				$required_message = self::get_property( 'required_message', $field, esc_html( self::$default_required_messages[ $this->type ] ), 'string' );
 
 				$required_message                = apply_filters( 'forminator_name_field_required_validation_message', $required_message, $id, $field );
 				$this->validation_message[ $id ] = $required_message;

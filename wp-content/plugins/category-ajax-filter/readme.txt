@@ -1,349 +1,444 @@
-=== Category Ajax Filter ===
+=== Category AJAX Filter — Advanced Filter for Posts & Custom Post Types ===
 Contributors: TrustyPlugins
 Donate link: https://www.buymeacoffee.com/jasveer
-Tags: Filter, elementor, divi, category-filter, post-filter
+Plugin URI: https://trustyplugins.com/category-ajax-filter-pro
+Tags: ajax filter, category filter, taxonomy filter, custom post type, filter
 Requires at least: 6.0
-Tested up to: 6.7
-Stable tag: 2.8.3
+Tested up to: 7.0
+Stable tag: 2.8.5.1
 Requires PHP: 7.0
 License: GPL3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
-Filter blog posts/custom post types by custom taxonomy/category without page reload and with pagination too. It has different filter and post layouts.
+Instantly filter WordPress posts and custom post types by category, tag or taxonomy — no page reload. Works with Elementor, Divi, Gutenberg and more.
 
 == Description ==
-<h4>Support Elementor Builder</h4>
-Filter posts/custom post type's posts by category without reload the page. Select specific taxonomy and terms to show on the frontend. It uses ajax request to filter the posts with many pre-build layouts. Use awesome admin panel to control everything on the frontend like filter layouts, filter color combination, post layouts, post color combination, font size, font-family, pagination etc. Showcase for any type of posts/custom post types.
-<h4>Support Divi Builder</h4>
-Sort Posts/Custom post Types with Ajax functionality. Sort posts with Categories without page reload. It seamlessly loads the posts in a specific section without page reload and with pagination.
 
-== Blog Filter with Ajax==
-Filter your blogs or articles with ajax now. It will work with taxonomy selection and specific terms too. You can select custom/taxonomy, categories, Tags to filter the blog posts with ajax/without page reload. Pagination will work without page reload.
+**Category AJAX Filter (CAF)** is a fast, lightweight WordPress filter plugin that lets visitors instantly filter posts and custom post types by category, tag, or taxonomy — without reloading the page.
 
-== Custom Post Type & Taxonomies Support==
-It does not work only for blog posts, It will support custom post types too. You can filter custom post types posts with ajx filter. You can select specific custom taxonmoies and their terms to showcase. In PRO version you can modify the post layout too. If you want to use custom fields in posts then you can achieve it by using PRo plugin.
- 
-== Filter any Posts without page Reload==
-CAF plugin will work to filter the posts without any page reload. You can browse any categories and pagination too without any page Reload.
- 
-<h4>Support WP Bakery</h4>
+Whether you run a blog, portfolio, directory, or events site, CAF makes it easy to add AJAX-powered filtering to any page using a simple shortcode. No coding required.
 
-== Whats in PRO? ==
-1. Analytics Feature, Check your used filter's insights [clicks]
-2. Overwrite/Modify any of the Filter/Post Layout OR templates Modules to your used theme so it will not effected after plugin upgrade.
-3. Developer Hooks
-4. Selection to Multiple Taxonomy/ Terms
-5. Multiple Taxonomy Filter Added 
-6. Default Terms Selection on Page loads
-7. Auto term selection on Category page
-8. Search bar Feature
-9. More filters/Post Layouts Added
-10. Load More Button 
-11. Sorting options
-12. Ability to hide/show post elements on any layout [title,image,meta,categories,read more,content]
-13. Post Animation Effects
-14. Translation feature for used default strings [All,read more etc]
-15. Font-Awesome Icons for filter terms/categories
-16. Google Fonts family 
-17. Scroll to CAF Container on category click
-18. Parent/child category terms filter Layout
- 
-[youtube https://www.youtube.com/watch?v=OOnLUnPuYgA]
-<a href='https://trustyplugins.com' target='_blank'>CAF PRO DEMO</a> | <a href='https://trustyplugins.com' target='_blank'>BUY PRO</a> 
+= ⚡ Key Features (Free) =
 
-<h4>Do you need filter for woo products/shop ?</h4>
-<a href='https://wordpress.org/plugins/trusty-woo-products-filter/' target='_blank'>Trusty Woo Products Filter</a> 
+* **Custom Post Types & Taxonomies** – Filter any post type: blogs, portfolios, events, directories, recipes and more.
+* **3 Pre-built Filter Layouts** – Get started fast with ready-made filter designs.
+* **4 Pre-built Post Layouts** – Choose how filtered results are displayed.
+* **Flexible Design Controls** – Customize colors, fonts, spacing and sizing to match your brand.
+* **Simple Admin Panel** – Configure everything from one clean settings screen.
+* **Responsive & Lightweight** – Optimized for mobile, tablet and desktop without bloating your site.
+* **Regular Updates & Support** – Actively maintained with fast support turnaround.
+
+= 🖥️ Live Demos (Free) =
+
+* [Simple Blogs](https://trustyplugins.com/simple-blogs-demo/)
+* [Boxed Title](https://trustyplugins.com/boxed-title-demo/)
+* [Glossy Look](https://trustyplugins.com/glossy-look-demo/)
+* [Filter in Sidebar](https://trustyplugins.com/sidebar-filter-demo/)
+* [Dropdown Filter](https://trustyplugins.com/dropdown-filter-demo/)
+
+= 🎯 Who Is This For? =
+
+Category AJAX Filter works great for any content-heavy WordPress site where visitors need to find relevant posts quickly:
+
+* **Blogs** – Let readers filter posts by category and tag instantly.
+* **Portfolio Sites** – Allow visitors to filter projects by type, technology or client.
+* **Directory Sites** – Organize and filter listings using custom taxonomies.
+* **Events & Courses** – Let users filter by date, topic or location.
+* **Recipe or Product Sites** – Enable filtering by ingredient, cuisine, brand or any custom taxonomy.
+
+If your visitors scroll endlessly to find content, CAF solves that with instant AJAX filtering.
+
+= 🗂️ Supported Post Types & Taxonomies =
+
+* WordPress Posts – filter by category and tag
+* Custom Post Types – portfolios, events, recipes, listings, and any CPT you create
+* WordPress Categories & Tags – built-in taxonomy support out of the box
+* Custom Taxonomies & Terms – works with any taxonomy created by plugins or custom code
+
+= 🔌 Works With Your Existing Tools =
+
+**Page Builders** — CAF is shortcode-based and drops into any builder: Gutenberg, [Elementor](https://wordpress.org/plugins/elementor/), [Divi](https://www.elegantthemes.com/gallery/divi/), WPBakery, Oxygen and more.
+
+**CPT Plugins** — Tested and compatible with [Advanced Custom Fields (ACF)](https://wordpress.org/plugins/advanced-custom-fields/), [Custom Post Type UI (CPT UI)](https://wordpress.org/plugins/custom-post-type-ui/), and custom-coded post types.
+
+= How It Works =
+
+Getting started with Category AJAX Filter is quick and simple. Watch the video below to see how you can create and display filters for your posts and custom post types.
+
+https://www.youtube.com/watch?v=iwHcM57q92U&t
+
+= 🚀 Category AJAX Filter Pro =
+
+Upgrade to [Category AJAX Filter Pro](https://trustyplugins.com/category-ajax-filter-pro) for advanced filtering, more layouts and powerful integrations.
+
+**More Filter Types**
+
+* Multiple taxonomy filtering — filter by Category + Tag + custom taxonomy simultaneously
+* Alphabetical / A–Z navigation filter
+* Checkbox filters with icons
+* Tabs filter
+* Voice search
+* Advanced keyword search
+* Parent & child category filters
+* Active filters display (users see and remove applied filters)
+
+**More Post Layouts**
+
+* Timeline (Simple + Full Width)
+* Carousel Slider
+* Masonry (standard + with descriptions)
+* Rounded Corner
+* Gradient Border
+
+**Elementor Loop Builder Support** — Apply AJAX filters to any layout built with Elementor's Loop Builder. Results update instantly inside your existing Elementor design.
+
+**Analytics** — Track which filters visitors use most. See total clicks, per-taxonomy stats, and time-based breakdowns.
+
+**Advanced Pagination** — Load More button, AJAX pagination, or traditional navigation — your choice.
+
+**Additional Pro Features**
+
+* Default terms preloaded on page load
+* Sorting options for filtered results
+* Show/hide post meta (date, author, comment count)
+* Post animation effects
+* Translatable text strings (e.g., "All", "Read More")
+* Font Awesome icon support
+* Google Fonts integration
+* Scroll-to-results on filter click
+* Template override support (customizations survive updates)
+* Developer hooks for custom integrations
+* Priority support
+
+**Pro Demo Layouts**
+
+* [Parent Child Category Filter](https://caf.trustyplugins.com/demos/parent-child-category-filter/)
+* [Multiple Taxonomy Filter](https://caf.trustyplugins.com/demos/multiple-taxonomy-filter/)
+* [Horizontal Dropdown Filter (Modern)](https://caf.trustyplugins.com/demos/multiple-taxonomy-horizontal-dropdown-filter/)
+* [Multiple Taxonomy Dropdown Filter](https://caf.trustyplugins.com/demos/multiple-taxonomy-dropdown-filter/)
+* [Alphabetical Filter](https://caf.trustyplugins.com/demos/alphabetical-navigation-filter/)
+* [Tabs Filter](https://caf.trustyplugins.com/demos/tabs-filter/)
+* [Simple Timeline](https://caf.trustyplugins.com/demos/simple-timeline/)
+* [Full Width Timeline](https://caf.trustyplugins.com/demos/full-width-timeline/)
+* [Carousel Slider](https://caf.trustyplugins.com/demos/carousel-slider/)
+* [Masonry Layout](https://caf.trustyplugins.com/demos/masonry-layout/)
+* [Masonry With Description](https://caf.trustyplugins.com/demos/masonry-with-description/)
+* [Gradient Border](https://caf.trustyplugins.com/demos/gradient-border/)
+* [Full Rounded Corner](https://caf.trustyplugins.com/demos/full-rounded-corner/)
+
+https://www.youtube.com/watch?v=OOnLUnPuYgA
+
+= 📥 Import Ready-Made Layouts =
+
+Don't start from scratch — import any layout from the demo site in seconds:
+
+1. Visit a demo page and copy the exported JSON.
+2. Paste it into the **Import** tab in the CAF admin panel.
+3. Click **Import** — done.
+
+https://www.youtube.com/watch?v=uyEhRD0RiP0
+
+= 🛠️ Coming Soon: CAF Builder =
+
+We're building a visual drag-and-drop builder for filters and post layouts. Design the UI, connect your taxonomies and custom fields, and create fully custom filtering experiences — no code needed. Stay tuned.
 
 == Installation ==
 
-[youtube https://www.youtube.com/watch?v=iwHcM57q92U]
+1. Upload the `category-ajax-filter` folder to the `/wp-content/plugins/` directory, or install directly via the WordPress Plugins screen.
+2. Activate the plugin through the **Plugins** screen in WordPress.
+3. Go to **CAF → Add New Filter** in your WordPress dashboard.
+4. Choose your post type, taxonomy and layout.
+5. Copy the generated shortcode and paste it into any page, post or widget area.
 
-1. Upload the entire 'category-ajax-filter' folder to the '/wp-content/plugins/' directory.
-2. Activate the plugin through the 'Plugins' menu in WordPress.
+Your AJAX filter is live — no page reloads, no complex setup.
 
-== How It Works ==
-[youtube https://www.youtube.com/watch?v=iwHcM57q92U]
-1. After plugin activation you will get new menu 'Category Filter'
-2. Click on 'Add new' and do your layout settings for frontend.
-3. Select filter layout and post layout with specific options.
-4. Go to 'shortcode' Tab and copy your shortcode and paste in any section of the page.
+== Screenshots ==
 
-== Best Usage ==
-
-1. Import Layout from our official demo website <a href='https://trustyplugins.com' target='_blank'>trustyplugins.com</a> 
-2. Go to layouts page and get exported JSON code.
-3. Now you just need to put that JSON code in import tab of plugin's admin panel.
-
-4. Click on Import and CHEERS!!!
-=== Watch Videos ===
-https://www.youtube.com/watch?v=uyEhRD0RiP0
-
-
-
-
- == Frequently Asked Questions == 
-= Is it compatible with custom post types too? =
-Yes. You can use it with any custom post type.
-
-= Is it compatible with Woo-Commerce too? =
-  Yes. After release of 2.7.2 , CAF supports to woocommerce products too. But it will stay with his normal post layout funtionality.
-  It does not add price, add to cart etc field to the post layout. In the PRO version of CAF you can add price etc fields too with the custom code.
-
-= Whats included in its admin panel? =
-You can set specific filter layout, post layout, pagination, color combination and more options in your hand to look it beautiful.
-
-= Can we select specific taxonomies of custom post type? =
-Yes you can select specific taxonomies of any custom post type.
-
-= Can we select specific terms of specific taxonomy? =
-Yes you can select specific terms of any taxonomy.
-
-== Screenshots == 
 1. screenshot-1.png
 2. screenshot-2.png
 3. screenshot-3.png
 
+== Frequently Asked Questions ==
+
+= Does it work with custom post types? =
+
+Yes. CAF supports any post type — default WordPress posts or custom ones created with CPT UI, ACF, or code.
+
+= Does it require a page reload when filtering? =
+
+No. All filtering is AJAX-powered — results update instantly on the same page.
+
+= Which page builders does it support? =
+
+CAF uses shortcodes, so it works with any builder: Gutenberg, Elementor, Divi, WPBakery, Oxygen and others.
+
+= Can I customize the look of the filter and post cards? =
+
+Yes. The free version includes color, font, spacing and layout controls. CAF Pro adds additional layout options and per-element styling.
+
+= Is there a Pro version? =
+
+Yes — [Category AJAX Filter Pro](https://trustyplugins.com/category-ajax-filter-pro) adds multiple taxonomy filtering, 15+ layouts, analytics, voice search, Elementor Loop Builder support and more.
+
+= How do I import a ready-made layout? =
+
+Visit a demo page, copy the exported JSON code, then paste it into the Import tab inside the CAF admin panel and click Import.
+
+= Is it compatible with Elementor? =
+
+Yes, CAF works with Elementor via shortcode. CAF Pro also supports Elementor Loop Builder, allowing AJAX filters to work directly with your Loop Builder layouts.
+
+= Is it compatible with WooCommerce? =
+
+Yes, since version 2.7.2, Category AJAX Filter supports WooCommerce products with its standard post layout functionality. It does not add product-specific fields such as price or add-to-cart buttons by default. In the Pro version, you can include fields like price with custom code. For full WooCommerce product filtering, we've also developed a separate plugin — Trusty Products Filter.
+
+= Will it slow down my site? =
+
+No. CAF is built to be lightweight and only loads assets on pages where a filter shortcode is used.
+
 == Changelog ==
+
+= 2.8.5 = (25/05/2026)
+* Updated admin design compatible with WordPress 7.0.
+* Admin CSS fixed.
+
+= 2.8.4.1 = (10/03/2026)
+* Readme updated.
+
+= 2.8.4 = (08/07/2025)
+* CSS conflict issue fixed [for RankMath, WooCommerce]
 
 = 2.8.3 = (07/11/2024)
 * Sorting feature added at the admin settings panel.
-* vulnerability fixed mentioned by wordfence.
- 
+* Vulnerability fixed mentioned by Wordfence.
 
 = 2.8.2 = (20/05/2024)
-* Plugin scanned with 'plugin-check' and fixed all security warnings
+* Plugin scanned with 'plugin-check' and fixed all security warnings.
 
 = 2.8.1 = (11/04/2024)
-* 'Read More' and 'All' String translation compatibility
+* 'Read More' and 'All' string translation compatibility.
 
 = 2.8 = (26/02/2024)
-* Enhancement [PRO version(8.8) will be removed as addon]
-* If using CAF PRO 8.8 , user can deactivate the free version.
+* Enhancement [PRO version (8.8) will be removed as addon]
+* If using CAF PRO 8.8, user can deactivate the free version.
 
 = 2.7.2.3 = (19/02/2024)
-* Bug Fixes [Duplicate declaration error of static variable]
-
+* Bug fixes [Duplicate declaration error of static variable]
 
 = 2.7.2.2 = (15/02/2024)
-* Fixed License error [compatibility with PRO]
-* Bug Fixes
-* Hooks Added [compatibility with PRO]
+* Fixed license error [compatibility with PRO]
+* Bug fixes.
+* Hooks added [compatibility with PRO]
 
 = 2.7.2.1 = (20/06/2023)
-* Fixed Styling and Responsive Issues
-
+* Fixed styling and responsive issues.
 
 = 2.7.2 = (17/05/2023)
-* Added Support for WooCommerce
+* Added support for WooCommerce.
 
 = 2.7.1 = (17/05/2023)
-* Post Title New tab Link open [fix]
-* Post Description Font Syncing with PRO 
+* Post title new tab link open [fix]
+* Post description font syncing with PRO.
 
-
-= 2.7 = (2/05/2023)
-* Bug fixed 
-* Special Css Add Class Issue fixed
+= 2.7 = (02/05/2023)
+* Bug fixed.
+* Special CSS add class issue fixed.
 
 = 2.6.7 = (18/01/2023)
-* New Pagination added in PRO [Compatible to 8.6.5 ] 
+* New pagination added in PRO [Compatible to 8.6.5]
 
 = 2.6.6 = (06/01/2023)
-* Wordpress Dashboard Icon changed 
+* WordPress dashboard icon changed.
 
 = 2.6.5 = (23/12/2022)
-* Bug Fixed [Fixed Function conflict - get_image_sizes]
+* Bug fixed [Fixed function conflict - get_image_sizes]
 
 = 2.6.4 = (27/07/2022)
-* Bug Fixed [#parse error , #PRO version error]
+* Bug fixed [#parse error, #PRO version error]
 
 = 2.6.3 = (27/07/2022)
-* Bug Fixed [#parse error , #PRO version error]
+* Bug fixed [#parse error, #PRO version error]
 
 = 2.6.2 = (27/07/2022)
-* Bug Fixed [Parse Error - Due to template conflict (date.php,author.php)]
+* Bug fixed [Parse Error - Due to template conflict (date.php, author.php)]
 
 = 2.6 = (26/07/2022)
-* Restrict ABSPATH function added to files
-* Templates Directory added with all used Modules
-* Many of Developer Hooks Added
+* Restrict ABSPATH function added to files.
+* Templates directory added with all used modules.
+* Many developer hooks added.
 * Compatible with CAF PRO [8.6]
 
 = 2.5.2 = (01/07/2022)
 
-
 = 2.5.1 = (01/07/2022)
-* Category Issue fixed when you use PRO with free layouts
+* Category issue fixed when using PRO with free layouts.
 
- = 2.5 = (25/05/2022)
-* Default Filter Layout's More button hook added [Text Change]
+= 2.5 = (25/05/2022)
+* Default filter layout's more button hook added [text change]
 * Inherit added in transform [Typography]
 
- = 2.4 = (01/04/2022)
-* Filter Layout Dropdown Changed [Admin Panel]
-* PRO COMPATIBLE VERSION [8.4]
+= 2.4 = (01/04/2022)
+* Filter layout dropdown changed [Admin Panel]
+* PRO compatible version [8.4]
 
- = 2.3 = (15/03/2022)
-* Double slash in source file bug fixed
+= 2.3 = (15/03/2022)
+* Double slash in source file bug fixed.
 
- = 2.2 = (09/03/2022)
-* BUG FIXED OF PARSE ERROR [OF 2.1]
-* PRO COMPATIBLE CHANGES [8.2]
+= 2.2 = (09/03/2022)
+* Bug fixed of parse error [of 2.1]
+* PRO compatible changes [8.2]
 
- = 2.1 = (08/03/2022)
-* PRO COMPATIBLE CHANGES [8.2]
+= 2.1 = (08/03/2022)
+* PRO compatible changes [8.2]
 
 = 2.0 = (03/03/2022)
-* Fixed isset image warning for all Post Layouts.
-* Add Dynamic CSS for all Post Layouts and Filter Layouts.
-* PRO COMPATIBLE [8.0]
+* Fixed isset image warning for all post layouts.
+* Added dynamic CSS for all post layouts and filter layouts.
+* PRO compatible [8.0]
 
 = 1.9.8 = (02/03/2022)
-* Update Patch to fix 1.9.7
+* Update patch to fix 1.9.7.
 
 = 1.9.7 = (02/03/2022)
-* Fixed isset image warning for all Post Layouts.
-* Add Dynamic CSS for all Post Layouts and Filter Layouts.
-* PRO COMPATIBLE [7.7]
+* Fixed isset image warning for all post layouts.
+* Added dynamic CSS for all post layouts and filter layouts.
+* PRO compatible [7.7]
 
 = 1.9.6 = (24/02/2022)
-* Missing String Translation functions added (Loco Translate)
-* PRO Compatible Version (7.6)
- 
-= 1.9.5 = (08/02/2022) 
-* Fixed Console Error
+* Missing string translation functions added (Loco Translate)
+* PRO compatible version (7.6)
+
+= 1.9.5 = (08/02/2022)
+* Fixed console error.
 
 = 1.9.4 = (05/02/2022)
-* Fixed (Posts found: parsererror) , New Setting option Added to enable/disable Nonce from plugin settings under 'Advanced Tab'(advanced->security)
+* Fixed (Posts found: parsererror), new setting option added to enable/disable Nonce from plugin settings under 'Advanced Tab' (advanced->security).
 
 = 1.9.3 = (04/02/2022)
 * Conflict fixed (jQuery is not defined)
-* Language Translation file added (Russian:RU:Русский)
+* Language translation file added (Russian: RU)
 
 = 1.9.2 = (24/01/2022)
-* Compatible with Wordpress 5.9
-
+* Compatible with WordPress 5.9.
 
 = 1.9.1 = (12/01/2022)
-
-* Whitespace Fixed (Header information)
+* Whitespace fixed (Header information)
 
 = 1.9 = (12/01/2022)
-
-* Compatible with Loco Translate
-* Admin Area translatable
-* localization and Internationalize done
-* Securing (escaping) Output
+* Compatible with Loco Translate.
+* Admin area translatable.
+* Localization and internationalization done.
+* Securing (escaping) output.
 
 = 1.8.9 = (26/11/2021)
-* Compatible version with PRO (Analytics Feature) [Compatible]
+* Compatible version with PRO (Analytics Feature)
 
 = 1.8.8 = (04/09/2021)
-* Bugs fixed, Font Awesome compatible version with PRO [Compatible]
+* Bugs fixed, Font Awesome compatible version with PRO.
 
 = 1.8.7 = (28/08/2021)
 * Meta fields show/hide functionality in PRO version [Compatible]
 
 = 1.8.6 = (05/08/2021)
-* Fixed Shortcode generator error (Dashboard Shortcode Fixes)
+* Fixed shortcode generator error (Dashboard shortcode fixes)
 
 = 1.8.5 = (30/07/2021)
 * jQuery not defined error fixed.
 
 = 1.8.4 = (26/07/2021)
-* Fixes
+* Fixes.
 
 = 1.8.3 = (20/07/2021)
-* Default Color Combination set/User Experience
+* Default color combination set / user experience.
 
 = 1.8.2 = (09/07/2021)
-* Category Bug Fixed for post layouts
+* Category bug fixed for post layouts.
 
 = 1.8.1 = (09/07/2021)
-* Enable/Disable Scroll to Div  [PRO Compatible]
+* Enable/disable scroll to div [PRO Compatible]
 
 = 1.8 =
-* Multiple Taxonomy Selection Feature in PRO [PRO Compatible]
-This version is compatible with PRO that has feature of multiple taxonomy selection. We added one more new filter layout in PRO version. Now you can select multiple taxonomy for all the filters.
+* Multiple taxonomy selection feature in PRO [PRO Compatible]
+This version is compatible with PRO that has the feature of multiple taxonomy selection. We added one more new filter layout in PRO version. Now you can select multiple taxonomy for all the filters.
 
- = 1.7.1 =
-* Select Default Category [PRO Compatible]
- 
- = 1.7 =
-* W3C Compatible Fixes
+= 1.7.1 =
+* Select default category [PRO Compatible]
+
+= 1.7 =
+* W3C compatible fixes.
 
 = 1.6.9 =
-* Read More Button Translation Compatible [PRO Compatible]
- 
+* Read More button translation compatible [PRO Compatible]
+
 = 1.6.8 =
-* W3C Compatible, Bug Fixed [PRO Compatible]
+* W3C compatible, bug fixed [PRO Compatible]
 
 = 1.6.7 =
-* Multiple Checkbox Filter Bug Fixed [PRO Compatible]
+* Multiple checkbox filter bug fixed [PRO Compatible]
 
 = 1.6.6 =
-* Translation Settings for default Strings [PRO Compatible]
-* Font Bug fixed for Glossy Layout
+* Translation settings for default strings [PRO Compatible]
+* Font bug fixed for Glossy Layout.
 
 = 1.6.5 =
-* Search Field added for all filter layouts [PRO Compatible]
+* Search field added for all filter layouts [PRO Compatible]
 
 = 1.6 =
-* Search Field Bug fixed [PRO Compatible]
+* Search field bug fixed [PRO Compatible]
 
 = 1.5.6 =
-* Search Field Added to search through Posts [PRO Compatible]
+* Search field added to search through posts [PRO Compatible]
 
 = 1.5.5 =
-* One Click Demo Import (PRO Compatible)
+* One click demo import (PRO Compatible)
 
 = 1.5.4 =
-* More Button added in filter layout 1 (PRO Compatible)
+* More button added in filter layout 1 (PRO Compatible)
 
 = 1.5.3 =
-* Make PRO compatible for Animation Effects
+* Make PRO compatible for animation effects.
 
 = 1.5.2 =
-* Css Bug fix for Post Layout 1
+* CSS bug fix for Post Layout 1.
 
 = 1.5.1 =
-* Bug fix for Avada Builder
+* Bug fix for Avada Builder.
 
- = 1.5 =
-* Readme updated, Demo site Updated
+= 1.5 =
+* Readme updated, demo site updated.
 
 = 1.4.9 =
-* Bug Fixed,Readme updated
+* Bug fixed, readme updated.
 
 = 1.4.8 =
-* Glossy Layout,Simple Blogs Layout Bug Fixed
+* Glossy Layout, Simple Blogs Layout bug fixed.
 
 = 1.4.7 =
-* Layout Bug Fixed
+* Layout bug fixed.
 
 = 1.4.6 =
-* Layout Bug Fixed
+* Layout bug fixed.
 
 = 1.4.5 =
-* Supported for PRO Version
-* Many More Hooks added
+* Supported for PRO version.
+* Many more hooks added.
 
 = 1.4.3 =
-* Added three more filters
+* Added three more filters.
 
 = 1.4.2 =
-* Added one more filter to change the order of posts (Asc,Desc)
+* Added one more filter to change the order of posts (Asc, Desc).
 
 = 1.4.1 =
-* Post Excerpt Supports (Bug Fixed)
+* Post excerpt supports (bug fixed).
 
 = 1.4 =
-* Backend tab fixes (Now plugin saves the user's last clicked tab)
-* Shortcode tag splitter on post content
-* Post Excerpt Supports
+* Backend tab fixes (now plugin saves the user's last clicked tab)
+* Shortcode tag splitter on post content.
+* Post excerpt supports.
 
 = 1.3 =
-* Added Some filters to sort the posts/filter categories by specific order
+* Added some filters to sort the posts/filter categories by specific order.
 
 = 1.2 =
 * Added a filter function to order by ID for filter categories.
@@ -351,9 +446,7 @@ This version is compatible with PRO that has feature of multiple taxonomy select
 = 1.0.0 =
 * First version of plugin.
 
-== Upgrade Notice == 
-= 1.0 =
-First version of plugin.
+== Upgrade Notice ==
 
-
-
+= 2.8.5 =
+Recommended update — includes admin design improvements and WordPress 7.0 compatibility.

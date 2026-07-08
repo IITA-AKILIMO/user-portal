@@ -5,39 +5,6 @@
 
 	"use strict";
 
-	// Polyfill
-	if (!Object.assign) {
-		Object.defineProperty(Object, 'assign', {
-			enumerable: false,
-			configurable: true,
-			writable: true,
-			value: function(target, firstSource) {
-				'use strict';
-				if (target === undefined || target === null) {
-					throw new TypeError('Cannot convert first argument to object');
-				}
-
-				var to = Object(target);
-				for (var i = 1; i < arguments.length; i++) {
-					var nextSource = arguments[i];
-					if (nextSource === undefined || nextSource === null) {
-						continue;
-					}
-
-					var keysArray = Object.keys(Object(nextSource));
-					for (var nextIndex = 0, len = keysArray.length; nextIndex < len; nextIndex++) {
-						var nextKey = keysArray[nextIndex];
-						var desc = Object.getOwnPropertyDescriptor(nextSource, nextKey);
-						if (desc !== undefined && desc.enumerable) {
-							to[nextKey] = nextSource[nextKey];
-						}
-					}
-				}
-				return to;
-			}
-		});
-	}
-
 	// undefined is used here as the undefined global variable in ECMAScript 3 is
 	// mutable (ie. it can be changed by someone else). undefined isn't really being
 	// passed in so we can ensure the value of it is truly undefined. In ES5, undefined
@@ -104,7 +71,7 @@
 
 			// Listen for fields change to update ZIP mapping
 			this.$el.find(
-				'input.forminator-input, .forminator-field-textarea textarea, .forminator-checkbox input, .forminator-radio input, select.forminator-select2'
+				'input.forminator-input, .forminator-input input, .forminator-field-textarea textarea, .forminator-checkbox input, .forminator-radio input, select.forminator-select2'
 			).each(function () {
 				$( this ).on( 'change', function ( e, param1 ) {
 					if ( param1 !== 'forminator_emulate_trigger' ) {

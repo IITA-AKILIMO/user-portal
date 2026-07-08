@@ -34,20 +34,22 @@ class Bootstrap {
 		kenta_blocks_setting()->add_settings( $defaultSettings );
 
 		// Show opt-in notice
-		if ( ! kb_fs()->is_registered() && current_user_can( 'manage_options' ) ) {
-			kenta_blocks_notices()->add_notice(
-				sprintf(
-				/* translators: %s is the opt-in link */
-					__( 'We made a few tweaks to the Kenta Blocks, %s', 'kenta-blocks' ),
-					sprintf( '<b><a href="%s">%s</a></b>',
-						add_query_arg( [ 'page' => 'kenta-blocks-optin' ], admin_url( 'admin.php' ) ),
-						__( 'Opt in to make Kenta Blocks better!', 'kenta-blocks' )
-					)
-				),
-				'connect_account',
-				__( 'Kenta Blocks', 'kenta-blocks' )
-			);
-		}
+		add_action( 'init', function () { // Fix: Function _load_textdomain_just_in_time was called incorrectly error
+			if ( ! kb_fs()->is_registered() && current_user_can( 'manage_options' ) ) {
+				kenta_blocks_notices()->add_notice(
+					sprintf(
+					/* translators: %s is the opt-in link */
+						__( 'We made a few tweaks to the Kenta Blocks, %s', 'kenta-blocks' ),
+						sprintf( '<b><a href="%s">%s</a></b>',
+							add_query_arg( [ 'page' => 'kenta-blocks-optin' ], admin_url( 'admin.php' ) ),
+							__( 'Opt in to make Kenta Blocks better!', 'kenta-blocks' )
+						)
+					),
+					'connect_account',
+					__( 'Kenta Blocks', 'kenta-blocks' )
+				);
+			}
+		});
 	}
 
 	/**

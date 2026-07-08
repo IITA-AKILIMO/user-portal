@@ -19,7 +19,6 @@ import {
 	PanelRow,
 	RangeControl,
 	SelectControl,
-	Spinner,
 	TextControl,
 	TextareaControl,
 	ToggleControl
@@ -47,21 +46,14 @@ export default function Edit( { attributes, setAttributes, className, clientId }
 	const [ isLoading, setIsLoading ] = useState( false );
 	const [ proxyAttributes, setProxyAttributes ] = useState( attributes );
 
-	const MyLoadingComponent = () => (
-		<div className="automatic-youtube-gallery-block-spinner">
-			<Spinner />
-			{ ayg_block.i18n.is_loading }
-		</div>
-	);
-
-	const MyServerSideRender = () => (
+	const AYGServerSideRender = () => (
 		<ServerSideRender
 			block="automatic-youtube-gallery/block"
 			attributes={ Object.assign( {}, proxyAttributes, { is_admin: true } ) }
 		/>
    	);
 
-   	const MemoizedServerSideRender = useCallback( MyServerSideRender, [ proxyAttributes ] );
+   	const MemoizedServerSideRender = useCallback( AYGServerSideRender, [ proxyAttributes ] );
 
 	const debounceProxyAttributes = () => {
 		setIsLoading( false );
@@ -89,6 +81,8 @@ export default function Edit( { attributes, setAttributes, className, clientId }
 						min={ field.min }
 						max={ field.max }
 						onChange={ onChange( field.name ) }
+						__nextHasNoMarginBottom={ true }
+            			__next40pxDefaultSize={ true }
 					/>
 				</PanelRow>
 			case 'textarea':
@@ -99,6 +93,7 @@ export default function Edit( { attributes, setAttributes, className, clientId }
 						placeholder={ placeholder }
 						value={ attributes[ field.name ] }
 						onChange={ onChange( field.name ) }
+						__nextHasNoMarginBottom={ true }
 					/>
 				</PanelRow>
 			case 'select':
@@ -119,6 +114,8 @@ export default function Edit( { attributes, setAttributes, className, clientId }
 						options={ options }
 						value={ attributes[ field.name ] }
 						onChange={ onChange( field.name ) }
+						__nextHasNoMarginBottom={ true }
+            			__next40pxDefaultSize={ true }
 					/>
 				</PanelRow>
 			case 'checkbox':
@@ -128,6 +125,7 @@ export default function Edit( { attributes, setAttributes, className, clientId }
 						help={ description }
 						checked={ attributes[ field.name ] }
 						onChange={ toggleAttribute( field.name ) }
+						__nextHasNoMarginBottom={ true }
 					/>
 				</PanelRow>
 			case 'color':
@@ -152,6 +150,8 @@ export default function Edit( { attributes, setAttributes, className, clientId }
 						placeholder={ placeholder }
 						value={ attributes[ field.name ] }
 						onChange={ onChange( field.name ) }
+						__nextHasNoMarginBottom={ true }
+            			__next40pxDefaultSize={ true }
 					/>
 				</PanelRow>
 		}		
@@ -163,6 +163,15 @@ export default function Edit( { attributes, setAttributes, className, clientId }
 		switch ( panel ) {
 			case 'gallery':
 				if ( 'video' == attributes.type || 'livestream' == attributes.type ) {
+					value = false;
+				}
+				break;
+			case 'search':
+				if ( 'video' == attributes.type || 'livestream' == attributes.type ) {
+					value = false;
+				}
+
+				if ( 'slider' == attributes.theme || 'slider-popup' == attributes.theme || 'slider-inline' == attributes.theme || 'playlister' == attributes.theme ) {
 					value = false;
 				}
 				break;
@@ -205,17 +214,6 @@ export default function Edit( { attributes, setAttributes, className, clientId }
 				break;
 			case 'autoadvance':
 				if ( 'video' == attributes.type || 'livestream' == attributes.type ) {
-					value = false;
-				}
-				break;
-			case 'more_button_label':
-				if ( 'pager' == attributes.pagination_type ) {
-					value = false;
-				}
-				break;
-			case 'previous_button_label':
-			case 'next_button_label':
-				if ( 'more' == attributes.pagination_type ) {
 					value = false;
 				}
 				break;
@@ -282,7 +280,6 @@ export default function Edit( { attributes, setAttributes, className, clientId }
 
 			<div { ...blockProps }>
 				<Disabled>
-					{ isLoading && <MyLoadingComponent /> }
 					<MemoizedServerSideRender />
 				</Disabled>
 			</div>

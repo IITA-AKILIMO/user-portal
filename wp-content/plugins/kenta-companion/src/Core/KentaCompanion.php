@@ -43,19 +43,22 @@ class KentaCompanion extends Container {
 
 		// opt-in notice
 		add_action( 'current_screen', [ $this, 'remove_optin_notice' ] );
-		if ( ! kenta_fs()->is_registered() && current_user_can( 'manage_options' ) ) {
-			kcmp_notices()->add_notice(
-				sprintf(
-					__( 'We made a few tweaks to the Kenta Companion, %s', 'kenta-companion' ),
-					sprintf( '<b><a href="%s">%s</a></b>',
-						add_query_arg( [ 'page' => 'kenta-companion-optin' ], admin_url( 'admin.php' ) ),
-						__( 'Opt in to make Kenta Companion better!', 'kenta-companion' )
-					)
-				),
-				'connect_account',
-				'Kenta Companion'
-			);
-		}
+
+		add_action( 'init', function() { // Fix: Function _load_textdomain_just_in_time was called incorrectly error
+			if ( ! kenta_fs()->is_registered() && current_user_can( 'manage_options' ) ) {
+				kcmp_notices()->add_notice(
+					sprintf(
+						__( 'We made a few tweaks to the Kenta Companion, %s', 'kenta-companion' ),
+						sprintf( '<b><a href="%s">%s</a></b>',
+							add_query_arg( [ 'page' => 'kenta-companion-optin' ], admin_url( 'admin.php' ) ),
+							__( 'Opt in to make Kenta Companion better!', 'kenta-companion' )
+						)
+					),
+					'connect_account',
+					'Kenta Companion'
+				);
+			}
+		} );
 	}
 
 	/**

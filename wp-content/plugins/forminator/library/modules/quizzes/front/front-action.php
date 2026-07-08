@@ -317,7 +317,7 @@ class Forminator_Quiz_Front_Action extends Forminator_Front_Action {
 				<?php endif; ?>
 
 				<?php if ( isset( $result['image'] ) && ! empty( $result['image'] ) ) : ?>
-					<img src="<?php echo esc_url( $result['image'] ); ?>" aria-hidden="true" class="forminator-result--image" />
+					<img src="<?php echo esc_url( $result['image'] ); ?>" aria-hidden="true" class="forminator-result--image"<?php echo ! empty( $result['image_alt'] ) ? ' alt="' . esc_attr( $result['image_alt'] ) . '"' : ''; ?> />
 				<?php endif; ?>
 
 				<?php echo self::get_result_quiz_buttons( $model ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
@@ -331,7 +331,7 @@ class Forminator_Quiz_Front_Action extends Forminator_Front_Action {
 				<?php if ( 'material' === $theme ) { ?>
 
 					<?php if ( isset( $result['image'] ) && ! empty( $result['image'] ) ) { ?>
-						<img src="<?php echo esc_url( $result['image'] ); ?>" class="forminator-result--image" aria-hidden="true" />
+						<img src="<?php echo esc_url( $result['image'] ); ?>" class="forminator-result--image"<?php echo ! empty( $result['image_alt'] ) ? ' alt="' . esc_attr( $result['image_alt'] ) . '"' : ''; ?> aria-hidden="true" />
 					<?php } ?>
 
 					<div class="forminator-result--content">
@@ -364,7 +364,7 @@ class Forminator_Quiz_Front_Action extends Forminator_Front_Action {
 
 						<?php if ( isset( $result['image'] ) && ! empty( $result['image'] ) ) { ?>
 							<div class="forminator-result--image" style="background-image: url('<?php echo esc_html( $result['image'] ); ?>');" aria-hidden="true">
-								<img src="<?php echo esc_url( $result['image'] ); ?>" />
+								<img src="<?php echo esc_url( $result['image'] ); ?>"<?php echo ! empty( $result['image_alt'] ) ? ' alt="' . esc_attr( $result['image_alt'] ) . '"' : ''; ?> />
 							</div>
 						<?php } ?>
 
@@ -403,9 +403,9 @@ class Forminator_Quiz_Front_Action extends Forminator_Front_Action {
 						<?php endif; ?>
 						<?php if ( $is_tw ) : ?>
 							<li class="forminator-social--icon">
-								<a href="#" data-social="twitter" aria-label="<?php esc_html_e( 'Share on Twitter', 'forminator' ); ?>">
+								<a href="#" data-social="twitter" aria-label="<?php esc_html_e( 'Share on X', 'forminator' ); ?>">
 									<i class="forminator-icon-social-twitter" aria-hidden="true"></i>
-									<span class="forminator-screen-reader-only"><?php esc_html_e( 'Share on Twitter', 'forminator' ); ?></span>
+									<span class="forminator-screen-reader-only"><?php esc_html_e( 'Share on X', 'forminator' ); ?></span>
 								</a>
 							</li>
 						<?php endif; ?>
@@ -845,9 +845,9 @@ class Forminator_Quiz_Front_Action extends Forminator_Front_Action {
 						<?php endif; ?>
 						<?php if ( $is_tw ) : ?>
 							<li class="forminator-social--icon">
-								<a href="#" data-social="twitter" aria-label="<?php esc_html_e( 'Share on Twitter', 'forminator' ); ?>">
+								<a href="#" data-social="twitter" aria-label="<?php esc_html_e( 'Share on X', 'forminator' ); ?>">
 									<i class="forminator-icon-social-twitter" aria-hidden="true"></i>
-									<span class="forminator-screen-reader-only"><?php esc_html_e( 'Share on Twitter', 'forminator' ); ?></span>
+									<span class="forminator-screen-reader-only"><?php esc_html_e( 'Share on X', 'forminator' ); ?></span>
 								</a>
 							</li>
 						<?php endif; ?>

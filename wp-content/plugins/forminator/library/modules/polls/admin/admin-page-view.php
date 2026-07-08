@@ -69,4 +69,31 @@ class Forminator_Poll_Page extends Forminator_Admin_Module_Edit_Page {
 			)
 		);
 	}
+
+	/**
+	 * Update Module Status
+	 *
+	 * Override parent method to add poll-specific validation before publishing.
+	 * Prevents blank polls (without question and answers) from being published
+	 * from the poll dashboard.
+	 *
+	 * @param int    $id     Module Id.
+	 * @param string $status Module status.
+	 * @return WP_Error|void WP_Error if validation fails, void otherwise.
+	 */
+	public function update_module_status( $id, $status ) {
+		if ( 'publish' === $status ) {
+			$model = Forminator_Base_Form_Model::get_model( $id );
+			if ( $model instanceof Forminator_Base_Form_Model ) {
+				if ( ! Forminator_Poll_Admin::has_valid_answers( $model->get_fields_as_array() ) ) {
+					return new WP_Error(
+						'forminator_poll_empty_answers',
+						esc_html__( 'Poll answers cannot be empty.', 'forminator' )
+					);
+				}
+			}
+		}
+
+		return parent::update_module_status( $id, $status );
+	}
 }

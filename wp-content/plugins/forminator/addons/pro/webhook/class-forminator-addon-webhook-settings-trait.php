@@ -48,7 +48,7 @@ trait Forminator_Webhook_Settings_Trait {
 			throw $current_input_exception;
 		}
 
-		$endpoint = wp_http_validate_url( $submitted_data['webhook_url'] );
+		$endpoint = forminator_webhook_validate_url( $submitted_data['webhook_url'] );
 		if ( false === $endpoint ) {
 			$current_input_exception->add_input_exception( esc_html__( 'Please put a valid Webhook URL.', 'forminator' ), 'webhook_url_error' );
 			throw $current_input_exception;

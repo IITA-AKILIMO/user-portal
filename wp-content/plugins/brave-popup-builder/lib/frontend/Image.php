@@ -83,7 +83,7 @@ if ( ! class_exists( 'BravePop_Element_Image' ) ) {
          $customAnim = !empty($this->data->action->play_animation) && isset($this->data->action->custom_animation) ? 'brave_animate_popup(null, '.$this->popupID.', '.$this->stepIndex.', \''.$this->data->action->custom_animation.'\');':'';
          $actionTrack = ($actionType !== 'step' || $actionType !== 'close') && $track && $clickable ? ' onclick="brave_send_ga_event(\''.$eventCategory.'\', \''.$eventAction.'\', \''.$eventLabel.'\');'.$customAnim.'"':'';
          $actionInlineTrack = ($actionType === 'step' || $actionType === 'close') && $track && $clickable ? ' brave_send_ga_event(\''.$eventCategory.'\', \''.$eventAction.'\', \''.$eventLabel.'\');'.$customAnim.'':'';
-         $goalAction = $this->goalItem ? 'brave_complete_goal('.$this->popupID.', \'click\');"':'';
+         $goalAction = $this->goalItem ? 'brave_complete_click_goal(event, '.$this->popupID.', \'click\', this);"':'';
          $closeAfterClick = ($actionType === 'dynamic' ||$actionType === 'url' || $actionType === 'call'|| $actionType === 'javascript') && !empty($this->data->action->actionData->closeAfter) ? true : false;
          $closeAfter = $closeAfterClick ? 'brave_close_popup(\''.$this->popupID.'\', \''.$this->stepIndex.'\'); ':'';
 
@@ -105,6 +105,7 @@ if ( ! class_exists( 'BravePop_Element_Image' ) ) {
          $actionCall = ($actionType === 'call') && $actionPhone ? 'onclick="'.$goalAction.$closeAfter.'" href="tel:'.$actionPhone.'"':'';
          $actionStep = $clickable && $actionType === 'step' && $actionStepNum >=0 ? 'onclick="brave_action_step('.$this->popupID.', '.$this->stepIndex.', '.$actionStepNum.'); '.$actionInlineTrack.' '.$goalAction.'"':'';
          $actionClose = $clickable && $actionType === 'close' ? 'onclick="brave_close_popup(\''.$this->popupID.'\', \''.$this->stepIndex.'\'); '.$actionInlineTrack.' '.$goalAction.'"':'';
+         $actionReload = $actionType === 'reload' ? 'onclick="window.location.reload(); '.$actionInlineTrack.' '.$goalAction.'"':'';
          $noActionAnim = $clickable && $customAnim && $actionType === 'none' ? 'onclick="'.$customAnim.'"' :'';
          $imageURL = isset($this->data->image) ? $this->data->image : '';
          $lightboxClass = $clickable && $actionType === 'lightbox' ? 'brave_element--open_lightbox' : '';
@@ -112,7 +113,7 @@ if ( ! class_exists( 'BravePop_Element_Image' ) ) {
 
 
          $html = new stdClass();
-         $html->start = '<a class="brave_element__inner_link '.$lightboxClass.'" '.$actionLink.' '.$actionCall.' '.$actionDownload.' '.$actionStep . $actionClose. $actionTrack.$actionJS.$lightboxAction.$noActionAnim.'>';
+         $html->start = '<a class="brave_element__inner_link '.$lightboxClass.'" '.$actionLink.' '.$actionCall.' '.$actionDownload.' '.$actionStep . $actionClose . $actionReload. $actionTrack.$actionJS.$lightboxAction.$noActionAnim.'>';
          $html->end = '</a>';
 
          return $html;

@@ -232,6 +232,7 @@ class Forminator_Trello_Form_Hooks extends Forminator_Integration_Form_Hooks {
 	 */
 	private function all_fields_to_markdown() {
 		$form_fields = $this->settings_instance->get_form_fields();
+		$form_fields = self::maybe_add_group_cloned_fields( $form_fields );
 
 		$markdown         = '';
 		$post_element_ids = array();

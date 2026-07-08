@@ -1431,8 +1431,6 @@ class Forminator_API {
 	/**
 	 * Get entries objects
 	 *
-	 * @uses  Forminator_Form_Entry_Model::get_entries
-	 *
 	 * @since 1.2
 	 *
 	 * @param int $form_id Form ID.
@@ -1453,18 +1451,19 @@ class Forminator_API {
 			return new WP_Error( 'missing_form_id', esc_html__( 'Form ID is required!', 'forminator' ) );
 		}
 		if ( $per_page ) {
-			$offset = $current_page > 0 ? --$current_page : 0;
-			$args   = array(
+			$current_page = intval( $current_page );
+			$current_page = $current_page > 0 ? $current_page : 1;
+			$offset       = ( $current_page - 1 ) * $per_page;
+			$args         = array(
 				'form_id'  => $form_id,
 				'is_spam'  => 0,
 				'per_page' => $per_page,
 				'offset'   => $offset,
 			);
-			$count  = 0;
-			return Forminator_Form_Entry_Model::query_entries( $args, $count );
+			return Forminator_Form_Entry_Model::query_entries( $args );
 		}
 
-		return Forminator_Form_Entry_Model::get_entries( $form_id );
+		return Forminator_Form_Entry_Model::get_all_entries( $form_id );
 	}
 
 	/**

@@ -6,7 +6,6 @@
  */
 
 $plugin_url              = forminator_plugin_url();
-$stripe_min_php_version  = apply_filters( 'forminator_payments_stripe_min_php_version', '5.6.0' );
 $stripe_loaded           = forminator_payment_lib_stripe_version_loaded();
 $stripe_is_configured    = false;
 $forminator_currencies   = forminator_currency_list();
@@ -37,40 +36,7 @@ if ( $stripe_loaded ) {
 
 <div class="sui-box-settings-col-2">
 
-	<?php if ( version_compare( PHP_VERSION, $stripe_min_php_version, 'lt' ) ) : ?>
-
-		<div
-			role="alert"
-			class="sui-notice sui-notice-yellow sui-active"
-			style="display: block; text-align: left;"
-			aria-live="assertive"
-		>
-
-			<div class="sui-notice-content">
-
-				<div class="sui-notice-message">
-
-					<span class="sui-notice-icon sui-icon-info" aria-hidden="true"></span>
-
-					<p>
-					<?php
-					printf(
-						/* Translators: 1. Opening <strong> tag, 2. PayPal min php version 3. closing <strong> tag. */
-						esc_html__( 'To be able to use Stripe Payments feature please upgrade your PHP to %1$sversion %2$s%3$s or above.', 'forminator' ),
-						'<strong>',
-						esc_html( $stripe_min_php_version ),
-						'</strong>'
-					);
-					?>
-					</p>
-
-				</div>
-
-			</div>
-
-		</div>
-
-	<?php elseif ( ! $stripe_loaded ) : ?>
+	<?php if ( ! $stripe_loaded ) : ?>
 
 		<div
 			role="alert"

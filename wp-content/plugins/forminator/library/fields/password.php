@@ -73,6 +73,15 @@ class Forminator_Password extends Forminator_Field {
 	public $icon = 'sui-icon-key';
 
 	/**
+	 * Allowed password strength levels.
+	 *
+	 * @since 1.55
+	 *
+	 * @var array
+	 */
+	private static $strength_levels = array( 'short', 'bad', 'good', 'strong' );
+
+	/**
 	 * Confirm prefix
 	 *
 	 * @var string
@@ -89,6 +98,9 @@ class Forminator_Password extends Forminator_Field {
 		parent::__construct();
 
 		$this->name = esc_html__( 'Password', 'forminator' );
+		$required   = __( 'Your password is required.', 'forminator' );
+
+		self::$default_required_messages[ $this->type ] = $required;
 	}
 
 	/**
@@ -153,12 +165,12 @@ class Forminator_Password extends Forminator_Field {
 		$default     = self::get_property( 'default', $field, false );
 		$placeholder = $this->sanitize_value( self::get_property( 'placeholder', $field ) );
 		$field_type  = trim( self::get_property( 'input_type', $field ) );
-		$design      = $this->get_form_style( $settings );
 		$label       = self::get_property( 'field_label', $field, '' );
 		$description = self::get_property( 'description', $field, '' );
 		$limit       = self::get_property( 'limit', $field, 0, 'num' );
 		$limit_type  = self::get_property( 'limit_type', $field, '', 'str' );
 		$is_confirm  = self::get_property( 'confirm-password', $field, '', 'bool' );
+		$has_toggle  = self::get_property( 'password-visibility-toggle', $field, false, 'bool' );
 
 		$autofill_markup = $this->get_element_autofill_markup_attr( self::get_property( 'element_id', $field ) );
 
@@ -188,12 +200,20 @@ class Forminator_Password extends Forminator_Field {
 
 		$html .= '<div class="forminator-field">';
 
+			$wrapper_input = $has_toggle
+				? array(
+					'<div class="forminator-input-with-toggle">',
+					$this->get_password_toggle_markup( $id, $field ) . '</div>',
+				)
+				: array();
+
 			$html .= self::create_input(
 				$input_text,
 				$label,
 				'',
 				$required,
-				$design
+				'above',
+				$wrapper_input,
 			);
 
 		$html .= '</div>';
@@ -201,16 +221,16 @@ class Forminator_Password extends Forminator_Field {
 		// Counter.
 		if ( ! empty( $description ) || ( ! empty( $limit ) && ! empty( $limit_type ) ) ) {
 
-			$html .= sprintf( '<div class="forminator-description forminator-description-password" id="%s">', $id . '-description' );
+			$html .= sprintf( '<div class="forminator-description forminator-description-password" id="%s">', esc_attr( $id . '-description' ) );
 
 			$description = str_replace( '{lostpassword_url}', wp_lostpassword_url( get_permalink() ), $description );
 
 			if ( ! empty( $description ) ) {
-				$html .= wp_kses_post( $description );
+				$html .= self::convert_markdown( wp_kses_post( $description ) );
 			}
 
 			if ( ( ! empty( $limit ) && ! empty( $limit_type ) ) ) {
-				$html .= sprintf( '<span data-limit="%s" data-type="%s">0 / %s</span>', $limit, $limit_type, $limit );
+				$html .= sprintf( '<span data-limit="%s" data-type="%s">0 / %s</span>', esc_attr( $limit ), esc_attr( $limit_type ), esc_html( $limit ) );
 			}
 
 			$html .= '</div>';
@@ -253,17 +273,25 @@ class Forminator_Password extends Forminator_Field {
 
 			$html                           .= '<div class="forminator-row">';
 			$cols                            = 12;
-			$html_before_conf_password_field = sprintf( '<div class="forminator-col forminator-col-%s">', $cols );
+			$html_before_conf_password_field = sprintf( '<div class="forminator-col forminator-col-%s">', esc_attr( $cols ) );
 
 			$html .= apply_filters( 'forminator_before_conf_password_field_markup', $html_before_conf_password_field );
 			$html .= '<div class="forminator-field">';
+
+			$confirm_wrapper_input = $has_toggle
+				? array(
+					'<div class="forminator-input-with-toggle">',
+					$this->get_password_toggle_markup( $id, $field ) . '</div>',
+				)
+				: array();
 
 			$html .= self::create_input(
 				$confirm_input_text,
 				$confirm_password_label,
 				'',
 				$required,
-				$design
+				'above',
+				$confirm_wrapper_input,
 			);
 
 			$html .= '</div>';
@@ -272,11 +300,11 @@ class Forminator_Password extends Forminator_Field {
 			if ( ! empty( $confirm_password_description ) || ( ! empty( $limit ) && ! empty( $limit_type ) ) ) {
 				$html .= sprintf( '<span class="forminator-description" id="%s">', $id . '-description' );
 				if ( ! empty( $confirm_password_description ) ) {
-					$html .= wp_kses_post( $confirm_password_description );
+					$html .= self::convert_markdown( wp_kses_post( $confirm_password_description ) );
 				}
 
 				if ( ( ! empty( $limit ) && ! empty( $limit_type ) ) ) {
-					$html .= sprintf( '<span data-limit="%s" data-type="%s">0 / %s</span>', $limit, $limit_type, $limit );
+					$html .= sprintf( '<span data-limit="%s" data-type="%s">0 / %s</span>', esc_attr( $limit ), esc_attr( $limit_type ), esc_html( $limit ) );
 				}
 				$html .= '</span>';
 			}
@@ -286,15 +314,64 @@ class Forminator_Password extends Forminator_Field {
 	}
 
 	/**
+	 * Get password visibility toggle button markup.
+	 *
+	 * @param string $input_id The ID of the password input.
+	 * @param array  $field    Field settings.
+	 *
+	 * @return string
+	 */
+	private function get_password_toggle_markup( $input_id, $field = array() ) {
+		$show_label = esc_attr__( 'Show password', 'forminator' );
+		$hide_label = esc_attr__( 'Hide password', 'forminator' );
+
+		$eye_show = 'forminator-icon-eye';
+
+		$eye_hide = 'forminator-icon-eye-hide';
+
+		$markup = sprintf(
+			'<button type="button" class="forminator-password-toggle" data-toggle-for="%s" data-label-show="%s" data-label-hide="%s" aria-label="%s" title="%s" tabindex="0">'
+			. '<i class="%s" aria-hidden="true"></i>'
+			. '<i class="%s" aria-hidden="true" style="display:none;"></i>'
+			. '<span class="forminator-screen-reader-only">%s</span>'
+			. '</button>',
+			esc_attr( $input_id ),
+			$show_label,
+			$hide_label,
+			$show_label,
+			$show_label,
+			$eye_show,
+			$eye_hide,
+			$show_label
+		);
+
+		/**
+		 * Filter the password toggle button markup.
+		 *
+		 * @since 1.54.0
+		 *
+		 * @param string $markup   The toggle button HTML markup.
+		 * @param string $input_id The ID of the password input.
+		 * @param array  $field    The field settings array.
+		 */
+		return apply_filters( 'forminator_password_toggle_markup', $markup, $input_id, $field );
+	}
+
+	/**
 	 * Calculate the password score
 	 *
 	 * @since 1.11
 	 *
 	 * @param string $password Password.
+	 * @param string $level    Strength level: 'short', 'bad', 'good', or 'strong'.
 	 *
 	 * @return bool
 	 */
-	private function get_password_strength( $password = '' ) {
+	private function get_password_strength( $password = '', $level = 'strong' ) {
+		if ( ! in_array( $level, self::$strength_levels, true ) ) {
+			$level = 'strong';
+		}
+
 		$symbol_size = 0;
 		$strlen      = mb_strlen( $password );
 
@@ -303,20 +380,48 @@ class Forminator_Password extends Forminator_Field {
 			return true;
 		}
 
-		if ( $strlen < 8 ) {
+		$min_lengths = array(
+			'short'  => 4,
+			'bad'    => 6,
+			'good'   => 8,
+			'strong' => 8,
+		);
+
+		if ( $strlen < $min_lengths[ $level ] ) {
 			return false;
 		}
 
-		if ( preg_match( '/[0-9]/', $password ) ) {
+		// 'short' level only checks minimum length.
+		if ( 'short' === $level ) {
+			return true;
+		}
+
+		// Enforce required character classes before scoring.
+		$has_digit   = (bool) preg_match( '/[0-9]/', $password );
+		$has_lower   = (bool) preg_match( '/[a-z]/', $password );
+		$has_upper   = (bool) preg_match( '/[A-Z]/', $password );
+		$has_special = (bool) preg_match( '/[^a-zA-Z0-9]/', $password );
+
+		if ( 'bad' === $level && ! ( ( $has_lower || $has_upper ) && $has_digit ) ) {
+			return false;
+		}
+		if ( 'good' === $level && ! ( $has_lower && $has_upper && $has_digit ) ) {
+			return false;
+		}
+		if ( 'strong' === $level && ! ( $has_lower && $has_upper && $has_digit && $has_special ) ) {
+			return false;
+		}
+
+		if ( $has_digit ) {
 			$symbol_size += 10;
 		}
-		if ( preg_match( '/[a-z]/', $password ) ) {
+		if ( $has_lower ) {
 			$symbol_size += 20;
 		}
-		if ( preg_match( '/[A-Z]/', $password ) ) {
+		if ( $has_upper ) {
 			$symbol_size += 20;
 		}
-		if ( preg_match( '/[^a-zA-Z0-9]/', $password ) ) {
+		if ( $has_special ) {
 			$symbol_size += 30;
 		}
 		if ( preg_match( '/[=!\-@.,_*#&?^`%$+\/{\[\]|}^?~]/', $password ) ) {
@@ -326,7 +431,50 @@ class Forminator_Password extends Forminator_Field {
 		$nat_log = log( pow( $symbol_size, $strlen ) );
 		$score   = $nat_log / log( 2 );
 
-		return $score >= 54;
+		$thresholds = array(
+			'bad'    => 25,
+			'good'   => 40,
+			'strong' => 54,
+		);
+
+		return $score >= $thresholds[ $level ];
+	}
+
+	/**
+	 * Get all default validation messages keyed by strength level.
+	 *
+	 * This is the single source of truth shared by validation and the admin UI
+	 *
+	 * @since 1.55
+	 *
+	 * @return array<string, string>
+	 */
+	public static function get_strength_messages() {
+		return array(
+			'short'  => __( 'Password must be at least 4 characters.', 'forminator' ),
+			'bad'    => __( 'Password must be at least 6 characters, with letters and numbers.', 'forminator' ),
+			'good'   => __( 'Password must be at least 8 characters, with uppercase, lowercase, and numbers.', 'forminator' ),
+			'strong' => __( 'Password must be at least 8 characters, with uppercase, lowercase, numbers, and symbols.', 'forminator' ),
+		);
+	}
+
+	/**
+	 * Get default validation message for a password strength level.
+	 *
+	 * @since 1.55
+	 *
+	 * @param string $level Strength level: 'short', 'bad', 'good', or 'strong'.
+	 *
+	 * @return string
+	 */
+	private function get_default_strength_message( $level = 'strong' ) {
+		if ( ! in_array( $level, self::$strength_levels, true ) ) {
+			$level = 'strong';
+		}
+
+		$messages = self::get_strength_messages();
+
+		return $messages[ $level ];
 	}
 
 	/**
@@ -371,8 +519,8 @@ class Forminator_Password extends Forminator_Field {
 			}
 		}
 		// Min password strength.
-		if ( isset( $min_password_strength ) && '' !== $min_password_strength && 'none' !== $min_password_strength ) {
-			$rules .= '"forminatorPasswordStrength": true,';
+		if ( in_array( $min_password_strength, self::$strength_levels, true ) ) {
+			$rules .= '"forminatorPasswordStrength": "' . esc_js( $min_password_strength ) . '",';
 		}
 		$rules .= '},';
 
@@ -400,7 +548,7 @@ class Forminator_Password extends Forminator_Field {
 		$is_required      = $this->is_required( $field );
 		$has_limit        = $this->has_limit( $field );
 		$messages         = '';
-		$required_message = self::get_property( 'required_message', $field, '' );
+		$required_message = self::get_property( 'required_message', $field, self::$default_required_messages[ $this->type ] );
 		$is_confirm       = self::get_property( 'confirm-password', $field, '', 'bool' );
 
 		$min_password_strength = self::get_property( 'strength', $field );
@@ -409,12 +557,12 @@ class Forminator_Password extends Forminator_Field {
 		if ( $is_required || $has_limit ) {
 			if ( $is_required ) {
 				$required_error = apply_filters(
-					'forminator_text_field_required_validation_message',
-					! empty( $required_message ) ? $required_message : esc_html__( 'Your password is required.', 'forminator' ),
+					'forminator_password_field_required_validation_message',
+					$required_message,
 					$id,
 					$field
 				);
-				$messages      .= '"required": "' . $required_error . '",' . "\n";
+				$messages      .= '"required": "' . forminator_addcslashes( $required_error ) . '",' . "\n";
 			}
 
 			if ( $has_limit ) {
@@ -425,7 +573,7 @@ class Forminator_Password extends Forminator_Field {
 						$id,
 						$field
 					);
-					$messages        .= '"maxlength": "' . $max_length_error . '",' . "\n";
+					$messages        .= '"maxlength": "' . forminator_addcslashes( $max_length_error ) . '",' . "\n";
 				} else {
 					$max_words_error = apply_filters(
 						'forminator_text_field_words_validation_message',
@@ -433,20 +581,20 @@ class Forminator_Password extends Forminator_Field {
 						$id,
 						$field
 					);
-					$messages       .= '"maxwords": "' . $max_words_error . '",' . "\n";
+					$messages       .= '"maxwords": "' . forminator_addcslashes( $max_words_error ) . '",' . "\n";
 				}
 			}
 		}
 		// Min password strength.
-		if ( isset( $min_password_strength ) && '' !== $min_password_strength && 'none' !== $min_password_strength ) {
+		if ( in_array( $min_password_strength, self::$strength_levels, true ) ) {
 			$strength_validation_message = self::get_property( 'strength_validation_message', $field, '' );
 			$min_strength_error          = apply_filters(
 				'forminator_text_field_min_password_strength_validation_message',
-				! empty( $strength_validation_message ) ? $strength_validation_message : __( 'Your password doesn\'t meet the minimum strength requirement. We recommend using 8 or more characters with a mix of letters, numbers & symbols.', 'forminator' ),
+				! empty( $strength_validation_message ) ? $strength_validation_message : $this->get_default_strength_message( $min_password_strength ),
 				$id,
 				$field
 			);
-			$messages                   .= '"forminatorPasswordStrength": "' . esc_html( $min_strength_error ) . '",' . "\n";
+			$messages                   .= '"forminatorPasswordStrength": "' . forminator_addcslashes( $min_strength_error ) . '",' . "\n";
 		}
 		$messages .= '},';
 
@@ -462,7 +610,7 @@ class Forminator_Password extends Forminator_Field {
 					$field
 				);
 
-				$messages .= '"required": "' . $required_error . '",' . "\n";
+				$messages .= '"required": "' . forminator_addcslashes( $required_error ) . '",' . "\n";
 			}
 
 			$validation_message_not_match = self::get_property( 'validation_message', $field, '' );
@@ -472,7 +620,7 @@ class Forminator_Password extends Forminator_Field {
 				$id,
 				$field
 			);
-			$messages                    .= '"equalTo": "' . $not_match_error . '",' . "\n";
+			$messages                    .= '"equalTo": "' . forminator_addcslashes( $not_match_error ) . '",' . "\n";
 			$messages                    .= '},';
 		}
 
@@ -499,11 +647,11 @@ class Forminator_Password extends Forminator_Field {
 		}
 
 		if ( $this->is_required( $field ) ) {
-			$required_message = self::get_property( 'required_message', $field, '' );
+			$required_message = self::get_property( 'required_message', $field, self::$default_required_messages[ $this->type ] );
 			if ( empty( $data ) ) {
 				$this->validation_message[ $id ] = apply_filters(
-					'forminator_text_field_required_validation_message',
-					( ! empty( $required_message ) ? $required_message : esc_html__( 'This field is required. Please enter text.', 'forminator' ) ),
+					'forminator_password_field_required_validation_message',
+					$required_message,
 					$id,
 					$field
 				);
@@ -529,12 +677,12 @@ class Forminator_Password extends Forminator_Field {
 				}
 			}
 		}
-		if ( isset( $min_password_strength ) && '' !== $min_password_strength && 'none' !== $min_password_strength ) {
+		if ( in_array( $min_password_strength, self::$strength_levels, true ) ) {
 			$strength_validation_message = self::get_property( 'strength_validation_message', $field, '' );
-			if ( ! $this->get_password_strength( $data ) ) {
+			if ( ! $this->get_password_strength( $data, $min_password_strength ) ) {
 				$this->validation_message[ $id ] = apply_filters(
 					'forminator_text_field_min_password_strength_validation_message',
-					! empty( $strength_validation_message ) ? $strength_validation_message : __( 'Your password doesn\'t meet the minimum strength requirement. We recommend using 8 or more characters with a mix of letters, numbers & symbols.', 'forminator' ),
+					! empty( $strength_validation_message ) ? $strength_validation_message : $this->get_default_strength_message( $min_password_strength ),
 					$id,
 					$field
 				);

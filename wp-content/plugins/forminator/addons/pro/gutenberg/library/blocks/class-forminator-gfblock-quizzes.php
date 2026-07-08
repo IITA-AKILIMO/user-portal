@@ -91,7 +91,7 @@ class Forminator_GFBlock_Quizzes extends Forminator_GFBlock_Abstract {
 		wp_enqueue_script(
 			'forminator-block-quizzes',
 			forminator_gutenberg()->get_plugin_url() . '/js/quizzes-block.min.js',
-			array( 'wp-blocks', 'wp-i18n', 'wp-element' ),
+			array( 'wp-blocks', 'wp-i18n', 'wp-element', 'wp-block-editor' ),
 			filemtime( forminator_gutenberg()->get_plugin_dir() . 'js/quizzes-block.min.js' ),
 			false
 		);

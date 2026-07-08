@@ -5,16 +5,31 @@
 
 	if ( forminator_array_value_exists( $properties, $field_image_size ) && 'auto' !== $properties[$field_image_size] ) { ?>
 
+		<?php
+			$custom_img_width  = ( forminator_array_value_exists( $properties, $field_image_width ) && ! empty( $properties[$field_image_width] ) ) ? intval( $properties[$field_image_width] ) : 0;
+			$custom_img_height = ( forminator_array_value_exists( $properties, $field_image_height ) && ! empty( $properties[$field_image_height] ) ) ? intval( $properties[$field_image_height] ) : 0;
+		?>
+
 		#forminator-module-<?php echo $properties['form_id'] ?> .forminator-field .forminator-radio .forminator-radio-image span,
 		#forminator-module-<?php echo $properties['form_id'] ?> .forminator-field .forminator-checkbox .forminator-checkbox-image span {
-			<?php if ( forminator_array_value_exists( $properties, $field_image_width ) && !empty( $properties[$field_image_width] ) ) { ?>
-				width: <?php echo $properties[$field_image_width] ?>px;
+			<?php if ( $custom_img_width > 0 ) { ?>
+				width: <?php echo $custom_img_width ?>px;
 			<?php } else { ?>
 				width: 70px;
-			<?php } if ( forminator_array_value_exists( $properties, $field_image_height ) && !empty( $properties[$field_image_height] ) ) { ?>
-				height: <?php echo $properties[$field_image_height] ?>px;
+			<?php } ?>
+			<?php if ( $custom_img_height > 0 ) { ?>
+				height: <?php echo $custom_img_height ?>px;
 			<?php } else { ?>
 				height: 70px;
+			<?php } ?>
+		}
+
+		/* Override padding-top for inline layout to match custom image height and prevent overlap. */
+		#forminator-module-<?php echo $properties['form_id'] ?> .forminator-field .forminator-radio.forminator-radio-inline.forminator-has_image.forminator-has_bullet,
+		#forminator-module-<?php echo $properties['form_id'] ?> .forminator-field .forminator-checkbox.forminator-checkbox-inline.forminator-has_box {
+			padding-top: <?php echo ( $custom_img_height > 0 ? $custom_img_height : 70 ) + 20 ?>px;
+			<?php if ( $custom_img_width > 0 ) { ?>
+				min-width: <?php echo $custom_img_width ?>px;
 			<?php } ?>
 		}
 

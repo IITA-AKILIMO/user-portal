@@ -98,9 +98,7 @@ class Forminator_Reports {
 					$next_sent = date_i18n( 'Y-m-d', $next_sent ) . ' ' . $report_schedule['time'];
 					break;
 				case 'weekly':
-					$day       = isset( $report_schedule['weekDay'] ) ? $report_schedule['weekDay'] : 'monday';
-					$next_sent = strtotime( 'next ' . $day, $last_sent );
-					$next_sent = date_i18n( 'Y-m-d', $next_sent ) . ' ' . $report_schedule['weekTime'];
+					$next_sent = self::get_weekly_report_date( $last_sent, $report_schedule );
 					break;
 				case 'monthly':
 					$next_sent = $this->get_monthly_report_date( $last_sent, $report_schedule );
@@ -132,6 +130,27 @@ class Forminator_Reports {
 		if ( $last_sent >= $next_sent ) {
 			// If not - next month.
 			$next_sent = strtotime( '+1 month', $next_sent );
+		}
+
+		return date_i18n( 'Y-m-d H:i:s', $next_sent );
+	}
+
+	/**
+	 * Get weekly report date
+	 *
+	 * @param string $last_sent Last sent date.
+	 * @param array  $settings Settings.
+	 *
+	 * @return false|string
+	 */
+	private static function get_weekly_report_date( $last_sent, $settings ) {
+		$week_day  = isset( $settings['weekDay'] ) ? $settings['weekDay'] : 'monday';
+		$week_time = isset( $settings['weekTime'] ) ? date_i18n( 'H:i', strtotime( $settings['weekTime'] ) ) : '00:00';
+		$next_sent = strtotime( "this {$week_day} {$week_time}", $last_sent );
+
+		if ( $last_sent >= $next_sent ) {
+			// If not - next week.
+			$next_sent = strtotime( '+1 week', $next_sent );
 		}
 
 		return date_i18n( 'Y-m-d H:i:s', $next_sent );
@@ -173,7 +192,7 @@ class Forminator_Reports {
 			// Change nl to br.
 			$email_content = stripslashes( $email_content );
 
-			$no_reply_email = 'noreply@' . wp_parse_url( get_site_url(), PHP_URL_HOST );
+			$no_reply_email = get_global_sender_email_address();
 			$headers        = array(
 				'From: Forminator <' . $no_reply_email . '>',
 				'Content-Type: text/html; charset=UTF-8',
@@ -236,6 +255,11 @@ class Forminator_Reports {
 			foreach ( $module_ids as $m => $module_id ) {
 				$views      = Forminator_Form_Views_Model::get_instance()->count_views( $module_id );
 				$submission = Forminator_Form_Entry_Model::count_report_entries( $module_id );
+				$abandoned  = Forminator_Form_Entry_Model::count_report_entries( $module_id, '', '', 'abandoned' );
+				$based_on   = $submission + $abandoned;
+				$dropoff    = 0 < $based_on
+					? number_format( ( $abandoned * 100 ) / $based_on, 1 )
+					: 0;
 				$conversion = 0 < $views
 					? number_format( ( $submission * 100 ) / $views, 1 )
 					: 0;
@@ -244,7 +268,9 @@ class Forminator_Reports {
 					'title'      => forminator_get_form_name( $module_id ),
 					'views'      => $views,
 					'submission' => $submission,
+					'abandoned'  => $abandoned,
 					'conversion' => ! empty( $conversion ) ? $conversion . '%' : '',
+					'dropoff'    => ! empty( $dropoff ) ? $dropoff . '%' : '',
 					'payments'   => null,
 				);
 				if ( Forminator_Form_Entry_Model::has_live_payment( $module_id ) ) {

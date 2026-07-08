@@ -181,6 +181,7 @@ class Forminator_Slack_Form_Hooks extends Forminator_Integration_Form_Hooks {
 		$all_fields_attachments        = array();
 		$all_fields_attachments_fields = array();
 		$form_fields                   = $this->settings_instance->get_form_fields();
+		$form_fields                   = self::maybe_add_group_cloned_fields( $form_fields );
 		$field_format                  = array();
 		$post_element_ids              = array();
 		foreach ( $form_fields as $form_field ) {

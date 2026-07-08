@@ -7,6 +7,11 @@ if ( ! class_exists( 'BravePop_TNP' ) ) {
       public function get_lists(){
          if(class_exists('TNP') && class_exists('Newsletter')){
             $lists = get_option( 'newsletter_subscription_lists', array() );
+            $listsNew = get_option( 'newsletter_lists', array() );
+
+            if(empty($lists) || (is_array($lists) && count($lists) === 0)){
+               $lists = $listsNew;
+            }
 
             //error_log('TNP Lists: '.wp_json_encode($lists));
             $noListItem = new stdClass();
@@ -84,11 +89,24 @@ if ( ! class_exists( 'BravePop_TNP' ) ) {
          // error_log(wp_json_encode($contact));
 
          $userAdded = TNP::subscribe($contact);
+         $addedData = array(
+            'action'=> isset($userData['action']) ? $userData['action'] : 'visitor_added',  
+            'user_id'=> isset($userData['userData']['ID']) ? $userData['userData']['ID'] : false,
+            'esp_user_id'=> isset($userAdded->id) ? $userAdded->id : '',
+            'user_mail'=> $email,
+            'user_data'=> $contact,
+            'list_id' => $list_id,
+            'response' => wp_json_encode($userAdded),
+         );
 
-         if(is_wp_error($userAdded)){
-            return false;
+         if(!is_wp_error($userAdded)){
+            do_action( 'bravepop_added_to_list', 'newsletter_plugin', $addedData );
+            return array( 'success' => true, 'result' => $addedData );
          }else{
-            return true;
+            $errorMsg = 'Unknown Error Occurred.';
+            $errorPayload = array( 'user_mail'=> $email, 'user_data'=> $contact, 'list_id'=> $list_id, 'error' => $errorMsg, 'response'=> wp_json_encode($userAdded) );
+            do_action( 'bravepop_added_to_list_failed', 'newsletter_plugin', $errorPayload );
+            return array( 'success' => false, 'errorMsg' => $errorMsg, 'result' => $errorPayload );
          }
 
       }

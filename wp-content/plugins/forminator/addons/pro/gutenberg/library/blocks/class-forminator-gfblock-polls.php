@@ -91,7 +91,7 @@ class Forminator_GFBlock_Polls extends Forminator_GFBlock_Abstract {
 		wp_enqueue_script(
 			'forminator-block-polls',
 			forminator_gutenberg()->get_plugin_url() . '/js/polls-block.min.js',
-			array( 'wp-blocks', 'wp-i18n', 'wp-element' ),
+			array( 'wp-blocks', 'wp-i18n', 'wp-element', 'wp-block-editor' ),
 			filemtime( forminator_gutenberg()->get_plugin_dir() . 'js/polls-block.min.js' ),
 			false
 		);

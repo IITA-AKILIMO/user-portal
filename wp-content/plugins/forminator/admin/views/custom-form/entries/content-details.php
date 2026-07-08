@@ -26,7 +26,12 @@ function forminator_submissions_content_details( $detail_item, $inside_group = f
 
 					<div class=<?php echo 'group' === $detail_item['type'] ? 'sui-box-settings' : 'sui-box-settings-col-2'; ?>>
 
-					<span class="sui-settings-label sui-dark sui-sm"><?php echo esc_html( $detail_item['label'] ); ?></span>
+					<span class="sui-settings-label sui-dark sui-sm">
+					<?php
+						// PHPCS:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+						echo Forminator_Field::convert_markdown( esc_html( $detail_item['label'] ) );
+					?>
+					</span>
 
 					<table id="fui-table-<?php echo esc_attr( $detail_item['type'] ); ?>" class="sui-table sui-accordion <?php echo 'group' === $detail_item['type'] ? 'fui-table-entries' : 'fui-table-details'; ?>">
 
@@ -50,15 +55,14 @@ function forminator_submissions_content_details( $detail_item, $inside_group = f
 
 									if ( $max_fields === $sub_key && $max_fields < count( $sub_entries ) ) {
 
-										echo '<th></th>';
-
-									} elseif ( $sub_key === $end ) {
-
-										echo '<th>' . esc_html( $sub_entry['label'] ) . '</th>';
+										echo '<th aria-label="' . esc_attr__( 'Other fields', 'forminator' ) . '"></th>';
 
 									} else {
 
-										echo '<th>' . esc_html( $sub_entry['label'] ) . '</th>';
+										echo '<th>' .
+											// PHPCS:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+											Forminator_Field::convert_markdown( esc_html( $sub_entry['label'] ) ) .
+										'</th>';
 
 									}
 								}
@@ -106,6 +110,9 @@ function forminator_submissions_content_details( $detail_item, $inside_group = f
 											echo '</td>';
 									} else {
 										echo '<td style="padding-top: 5px; padding-bottom: 5px;">';
+										if ( strpos( $sub_entry['key'], 'textarea' ) !== false ) {
+											$sub_entry['value'] = forminator_format_html( $sub_entry['value'] );
+										}
 										echo wp_kses_post( $sub_entry['value'] );
 										if ( 1 !== $sub_key && 2 < $end && 'group' === $detail_item['type'] ) {
 											echo '<span class="sui-accordion-open-indicator fui-mobile-only" aria-hidden="true"><i class="sui-icon-chevron-down"></i></span>';
@@ -130,18 +137,35 @@ function forminator_submissions_content_details( $detail_item, $inside_group = f
 												<?php
 												$sub_entries = forminator_submissions_remove_quantity( $sub_entries, $detail_item['type'] );
 												foreach ( $sub_entries as $sub_key => $sub_entry ) {
-
-													$html  = '';
-													$html .= '<div class="sui-box-settings-slim-row sui-sm">';
-													$html .= '<div class="sui-box-settings-col-1">';
-													$html .= '<span class="sui-settings-label sui-sm">' . esc_html( $sub_entry['label'] ) . '</span>';
-													$html .= '</div>';
-													$html .= '<div class="sui-box-settings-col-2">';
-													$html .= '<span class="sui-description">' . $sub_entry['value'] . '</span>';
-													$html .= '</div>';
-													$html .= '</div>';
-
-													echo wp_kses_post( $html );
+													$class_names = 'sui-box-settings-col-2';
+													if ( ! empty( $sub_entry['sub_entries'] ) ) {
+														$class_names .= ' sui-border-frame';
+													}
+													?>
+													<div class="sui-box-settings-slim-row sui-sm">
+														<div class="sui-box-settings-col-1">
+															<span class="sui-settings-label sui-sm">
+																<?php
+																// PHPCS:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+																echo Forminator_Field::convert_markdown( esc_html( $sub_entry['label'] ) );
+																?>
+															</span>
+														</div>
+														<div class="<?php echo esc_attr( $class_names ); ?>">
+															<?php
+															if ( empty( $sub_entry['sub_entries'] ) ) {
+																?>
+																<span class="sui-description">
+																	<?php echo wp_kses_post( $sub_entry['value'] ); ?>
+																</span>
+																<?php
+															} else {
+																forminator_submissions_content_details( $sub_entry, true );
+															}
+															?>
+														</div>
+													</div>
+													<?php
 												}
 												?>
 
@@ -169,7 +193,12 @@ function forminator_submissions_content_details( $detail_item, $inside_group = f
 
 			<?php if ( ! $inside_group ) { ?>
 			<div class="sui-box-settings-col-1">
-				<span class="sui-settings-label sui-sm"><?php echo esc_html( $detail_item['label'] ); ?></span>
+				<span class="sui-settings-label sui-sm">
+					<?php
+					// PHPCS:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+					echo Forminator_Field::convert_markdown( esc_html( $detail_item['label'] ) )
+					?>
+				</span>
 			</div>
 			<?php } ?>
 
@@ -179,7 +208,7 @@ function forminator_submissions_content_details( $detail_item, $inside_group = f
 
 					<?php if ( 'textarea' === $detail_item['type'] && ( isset( $detail_item['rich'] ) && 'true' === $detail_item['rich'] ) ) { ?>
 
-						<div class="fui-rich-textarea"><?php echo wp_kses_post( $detail_item['value'] ); ?></div>
+						<div class="fui-rich-textarea"><?php echo wp_kses_post( forminator_format_html( $detail_item['value'] ) ); ?></div>
 
 						<?php
 					} elseif ( 'number' === $detail_item['type'] || 'currency' === $detail_item['type'] || ( 'calculation' === $detail_item['type'] && is_numeric( $detail_item['value'] ) ) ) {
@@ -190,6 +219,14 @@ function forminator_submissions_content_details( $detail_item, $inside_group = f
 
 						<span class="sui-description" data-inputmask="'alias': 'decimal','rightAlign': false, 'digitsOptional': false, 'groupSeparator': '<?php echo esc_attr( $separator ); ?>', 'radixPoint': '<?php echo esc_attr( $point ); ?>', 'digits': '<?php echo esc_attr( $precision ); ?>'"><?php echo wp_kses_post( $detail_item['value'] ); ?></span>
 
+					<?php } elseif ( 'textarea' === $detail_item['type'] ) { ?>
+
+						<span class="sui-description"><?php echo wp_kses_post( forminator_format_html( $detail_item['value'] ) ); ?></span>
+
+					<?php } elseif ( 'postdata' === $detail_item['type'] ) { ?>
+
+						<span class="sui-description"><?php echo wp_kses_post( forminator_balance_table_tag( $detail_item['value'] ) ); ?></span>
+
 					<?php } else { ?>
 
 						<span class="sui-description"><?php echo wp_kses_post( $detail_item['value'] ); ?></span>
@@ -198,12 +235,19 @@ function forminator_submissions_content_details( $detail_item, $inside_group = f
 
 				<?php } else { ?>
 
-					<?php foreach ( $sub_entries as $sub_entry ) { ?>
+					<?php
+					foreach ( $sub_entries as $sub_entry ) {
+						?>
 
 						<div class="sui-form-field">
 							<div class="sui-row">
 								<div class="sui-col-md-3">
-									<span class="sui-settings-label"><?php echo esc_html( $sub_entry['label'] ); ?></span>
+									<span class="sui-settings-label">
+									<?php
+										// PHPCS:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+										echo Forminator_Field::convert_markdown( esc_html( $sub_entry['label'] ) );
+									?>
+									</span>
 								</div>
 								<div class="sui-col-md-9">
 									<span class="sui-description"><?php echo wp_kses_post( $sub_entry['value'] ); ?></span>

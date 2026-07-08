@@ -401,7 +401,7 @@ trait Forminator_Slack_Settings_Trait {
 
 		if ( 'form' === static::$module_slug ) {
 			$template_params['message'] = $this->get_multi_id_settings( $multi_id, 'message', esc_html__( 'New submission from *{form_name}*', 'forminator' ) );
-			$template_params['fields']  = $this->fields;
+			$template_params['fields']  = $this->form_fields;
 		} elseif ( 'poll' === static::$module_slug ) {
 			$template_params['message'] = $this->get_multi_id_settings( $multi_id, 'message', 'New votes from *{poll_name}*' );
 			$template_params['tags']    = array_merge( array( 'poll_name' => esc_html__( 'Poll Name', 'forminator' ) ), forminator_get_vars() );

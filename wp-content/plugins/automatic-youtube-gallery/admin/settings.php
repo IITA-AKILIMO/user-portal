@@ -70,14 +70,6 @@ class AYG_Admin_Settings {
 	 * @since 1.0.0
 	 */
 	public function display_settings_form() {
-        $gallery_settings = get_option( 'ayg_gallery_settings' );
-        $player_settings  = get_option( 'ayg_player_settings' );
-	
-        $active_tab      = isset( $_GET['tab'] ) && array_key_exists( $_GET['tab'], $this->tabs ) ? sanitize_text_field( $_GET['tab'] ) : 'general';
-        $active_theme    = $gallery_settings['theme'];
-        $pagination_type = $gallery_settings['pagination_type'];
-        $player_type     = isset( $player_settings['player_type'] ) ? $player_settings['player_type'] : 'youtube';
-
 		require_once AYG_DIR . 'admin/templates/settings.php';		
 	}
 
@@ -125,31 +117,43 @@ class AYG_Admin_Settings {
                 'id'          => 'ayg_general_settings',
                 'title'       => __( 'General Settings', 'automatic-youtube-gallery' ),
                 'description' => '',
-                'tab'         => 'general'
+                'tab'         => 'general',
+                'page'        => 'ayg_general_settings'
+            ),
+            array(
+                'id'          => 'ayg_strings_settings',
+                'title'       => __( 'Button & Link Labels', 'automatic-youtube-gallery' ),
+                'description' => '',
+                'tab'         => 'general',
+                'page'        => 'ayg_strings_settings'
             ),
             array(
                 'id'          => 'ayg_gallery_settings',
                 'title'       => __( 'Gallery Settings', 'automatic-youtube-gallery' ),
                 'description' => '',
-				'tab'         => 'gallery'
+				'tab'         => 'gallery',
+                'page'        => 'ayg_gallery_settings'
             ),
             array(
                 'id'          => 'ayg_player_settings',
                 'title'       => __( 'Player Settings', 'automatic-youtube-gallery' ),
                 'description' => '',
-				'tab'         => 'player'
+				'tab'         => 'player',
+                'page'        => 'ayg_player_settings'
             ),
             array(
                 'id'          => 'ayg_livestream_settings',
                 'title'       => __( 'Livestream Settings', 'automatic-youtube-gallery' ),
                 'description' => '',
-				'tab'         => 'livestream'
+				'tab'         => 'livestream',
+                'page'        => 'ayg_livestream_settings'
             ),
             array(
                 'id'          => 'ayg_privacy_settings',
                 'title'       => __( 'GDPR Compliance', 'automatic-youtube-gallery' ),
                 'description' => __( 'These options will help with privacy restrictions such as GDPR and the EU Cookie Law.', 'automatic-youtube-gallery' ),
-                'tab'         => 'privacy'
+                'tab'         => 'privacy',
+                'page'        => 'ayg_privacy_settings'
             ),				
         );
 		
@@ -169,18 +173,22 @@ class AYG_Admin_Settings {
                 'name'              => 'api_key',
                 'label'             => __( 'Youtube API Key', 'automatic-youtube-gallery' ),
                 'description'       => sprintf( 
-                    __( 'Follow <a href="%s" target="_blank">this guide</a> to get your own API key.', 'automatic-youtube-gallery' ),  
+                    __( 'Follow <a href="%s" target="_blank" rel="noopener noreferrer">this guide</a> to get your own API key.', 'automatic-youtube-gallery' ),  
                     'https://plugins360.com/automatic-youtube-gallery/how-to-get-youtube-api-key/' 
                 ),
                 'type'              => 'text',
                 'sanitize_callback' => 'sanitize_text_field'
             ),
             array(
-                'name'              => 'development_mode',
-                'label'             => __( 'Development Mode', 'automatic-youtube-gallery' ),
-                'description'       => __( 'Does not cache API results when checked. We strongly recommend disabling this option when your site is live.', 'automatic-youtube-gallery' ),
-                'type'              => 'checkbox',
-                'sanitize_callback' => 'intval'
+                'name'              => 'force_load_assets', 
+                'label'             => __( 'Force Load Plugin Assets', 'automatic-youtube-gallery' ), 
+                'description'       => __( 'Force-load the plugin\'s CSS and/or JavaScript files on all front-end pages. Enable this option only if layouts do not render correctly due to page builders or theme conflicts.', 'automatic-youtube-gallery' ),
+                'type'              => 'multicheck', 
+                'options'           => array( 
+                    'css' => __( 'Force load CSS (recommended)', 'automatic-youtube-gallery' ), 
+                    'js'  => __( 'Force load JavaScript (advanced)', 'automatic-youtube-gallery' ), 
+                ), 
+                'sanitize_callback' => 'ayg_sanitize_array' 
             ),
             array(
                 'name'              => 'lazyload',
@@ -188,6 +196,52 @@ class AYG_Admin_Settings {
                 'description'       => __( 'Enable this option to lazy load images and videos added by the plugin to enhance page load speed and performance. If you experience any issues with content display, try disabling this option.', 'automatic-youtube-gallery' ),
                 'type'              => 'checkbox',
                 'sanitize_callback' => 'intval'
+            ),
+            array(
+                'name'              => 'development_mode',
+                'label'             => __( 'Development Mode', 'automatic-youtube-gallery' ),
+                'description'       => __( 'Does not cache API results when checked. We strongly recommend disabling this option when your site is live.', 'automatic-youtube-gallery' ),
+                'type'              => 'checkbox',
+                'sanitize_callback' => 'intval'
+            )
+        );
+
+        // Strings Settings
+        $fields['ayg_strings_settings'] = array(
+            array(
+                'name'              => 'more_button_label',
+                'label'             => __( 'More Button Label', 'automatic-youtube-gallery' ),
+                'description'       => __( 'Text for the "Load More" button when pagination type is set to "More Button".', 'automatic-youtube-gallery' ),
+                'type'              => 'text',
+                'sanitize_callback' => 'sanitize_text_field'
+            ),
+            array(
+                'name'              => 'previous_button_label',
+                'label'             => __( 'Previous Button Label', 'automatic-youtube-gallery' ),
+                'description'       => __( 'Text for the "Previous" button when pagination type is set to "Pager".', 'automatic-youtube-gallery' ),
+                'type'              => 'text',
+                'sanitize_callback' => 'sanitize_text_field'
+            ),
+            array(
+                'name'              => 'next_button_label',
+                'label'             => __( 'Next Button Label', 'automatic-youtube-gallery' ),
+                'description'       => __( 'Text for the "Next" button when pagination type is set to "Pager".', 'automatic-youtube-gallery' ),
+                'type'              => 'text',
+                'sanitize_callback' => 'sanitize_text_field'
+            ),
+            array(
+                'name'              => 'show_more_label',
+                'label'             => __( 'Show More Label', 'automatic-youtube-gallery' ),
+                'description'       => __( 'Text for the "Show More" link that expands the video description below the player.', 'automatic-youtube-gallery' ),
+                'type'              => 'text',
+                'sanitize_callback' => 'sanitize_text_field'
+            ),
+            array(
+                'name'              => 'show_less_label',
+                'label'             => __( 'Show Less Label', 'automatic-youtube-gallery' ),
+                'description'       => __( 'Text for the "Show Less" link that collapses the video description below the player.', 'automatic-youtube-gallery' ),
+                'type'              => 'text',
+                'sanitize_callback' => 'sanitize_text_field'
             )
         );
 
@@ -197,7 +251,7 @@ class AYG_Admin_Settings {
         $gallery_settings[] = array(
 			'name'              => 'scroll_top_offset',
 			'label'             => __( 'Page Scroll Top Offset', 'automatic-youtube-gallery' ),
-			'description'       => __( 'Set the top offset in pixels for scrolling to the video player after a thumbnail is clicked.', 'automatic-youtube-gallery' ),
+			'description'       => __( 'Set the top offset in pixels for scrolling to the video player after a thumbnail is clicked. Enter <code>-1</code> to disable automatic scrolling.', 'automatic-youtube-gallery' ),
 			'type'              => 'text',
 			'sanitize_callback' => 'ayg_sanitize_int'
 		);
@@ -293,8 +347,7 @@ class AYG_Admin_Settings {
     public function initialize_settings() {	
         // Register settings sections & fields
         foreach ( $this->sections as $section ) {
-		
-			$page_hook = "ayg_{$section['tab']}_settings";
+            $page_hook = isset( $section['page'] ) ? $section['page'] : $section['id'];
 			
 			// Sections
             if ( false == get_option( $section['id'] ) ) {
@@ -353,7 +406,7 @@ class AYG_Admin_Settings {
 	public function settings_section_callback( $args ) {
         foreach ( $this->sections as $section ) {
             if ( $section['id'] == $args['id'] ) {
-                printf( '<div class="inside">%s</div>', wp_kses_post( $section['description'] ) ); 
+                printf( '<div class="inside"><em>%s</em></div>', wp_kses_post( $section['description'] ) ); 
                 break;
             }
         }
@@ -367,11 +420,11 @@ class AYG_Admin_Settings {
      */
     public function callback_text( $args ) {	
         $value       = esc_attr( $this->get_option( $args['id'], $args['section'], '' ) );
-        $size        = isset( $args['size'] ) && ! is_null( $args['size'] ) ? $args['size'] : 'regular';
+        $size        = isset( $args['size'] ) && ! is_null( $args['size'] ) ? $args['size'] : 'regular-text';
         $type        = isset( $args['type'] ) ? $args['type'] : 'text';
         $placeholder = empty( $args['placeholder'] ) ? '' : ' placeholder="' . $args['placeholder'] . '"';
 		
-        $html        = sprintf( '<input type="%1$s" class="%2$s-text" id="%3$s[%4$s]" name="%3$s[%4$s]" value="%5$s"%6$s/>', $type, $size, $args['section'], $args['id'], $value, $placeholder );
+        $html        = sprintf( '<input type="%1$s" class="%2$s" id="%3$s[%4$s]" name="%3$s[%4$s]" value="%5$s"%6$s/>', $type, $size, $args['section'], $args['id'], $value, $placeholder );
         $html       .= $this->get_field_description( $args );
 		
         echo $html;		
@@ -395,14 +448,14 @@ class AYG_Admin_Settings {
      */
     public function callback_number( $args ) {	
         $value       = esc_attr( $this->get_option( $args['id'], $args['section'], 0 ) );
-        $size        = isset( $args['size'] ) && ! is_null( $args['size'] ) ? $args['size'] : 'regular';
+        $size        = isset( $args['size'] ) && ! is_null( $args['size'] ) ? $args['size'] : 'regular-text';
         $type        = isset( $args['type'] ) ? $args['type'] : 'number';
         $placeholder = empty( $args['placeholder'] ) ? '' : ' placeholder="' . $args['placeholder'] . '"';
         $min         = empty( $args['min'] ) ? '' : ' min="' . $args['min'] . '"';
         $max         = empty( $args['max'] ) ? '' : ' max="' . $args['max'] . '"';
         $step        = empty( $args['max'] ) ? '' : ' step="' . $args['step'] . '"';
 		
-        $html        = sprintf( '<input type="%1$s" class="%2$s-number" id="%3$s[%4$s]" name="%3$s[%4$s]" value="%5$s"%6$s%7$s%8$s%9$s/>', $type, $size, $args['section'], $args['id'], $value, $placeholder, $min, $max, $step );
+        $html        = sprintf( '<input type="%1$s" class="%2$s" id="%3$s[%4$s]" name="%3$s[%4$s]" value="%5$s"%6$s%7$s%8$s%9$s/>', $type, $size, $args['section'], $args['id'], $value, $placeholder, $min, $max, $step );
         $html       .= $this->get_field_description( $args );
 		
         echo $html;		
@@ -479,7 +532,7 @@ class AYG_Admin_Settings {
      */
     public function callback_select( $args ) {	
         $value = esc_attr( $this->get_option( $args['id'], $args['section'], '' ) );
-        $size  = isset( $args['size'] ) && ! is_null( $args['size'] ) ? $args['size'] : 'regular';
+        $size  = isset( $args['size'] ) && ! is_null( $args['size'] ) ? $args['size'] : 'regular-text';
 		
         $html  = sprintf( '<select class="%1$s" name="%2$s[%3$s]" id="%2$s[%3$s]">', $size, $args['section'], $args['id'] );
         foreach ( $args['options'] as $key => $label ) {
@@ -499,10 +552,10 @@ class AYG_Admin_Settings {
      */
     public function callback_textarea( $args ) {	
         $value       = esc_textarea( $this->get_option( $args['id'], $args['section'], '' ) );
-        $size        = isset( $args['size'] ) && ! is_null( $args['size'] ) ? $args['size'] : 'regular';
+        $size        = isset( $args['size'] ) && ! is_null( $args['size'] ) ? $args['size'] : 'regular-text';
         $placeholder = empty( $args['placeholder'] ) ? '' : ' placeholder="'.$args['placeholder'].'"';
 		
-        $html        = sprintf( '<textarea rows="5" cols="55" class="%1$s-text" id="%2$s[%3$s]" name="%2$s[%3$s]"%4$s>%5$s</textarea>', $size, $args['section'], $args['id'], $placeholder, $value );
+        $html        = sprintf( '<textarea rows="5" cols="55" class="%1$s" id="%2$s[%3$s]" name="%2$s[%3$s]"%4$s>%5$s</textarea>', $size, $args['section'], $args['id'], $placeholder, $value );
         $html       .= $this->get_field_description( $args );
 		
         echo $html;		
@@ -550,11 +603,11 @@ class AYG_Admin_Settings {
      */
     public function callback_file( $args ) {	
         $value = esc_attr( $this->get_option( $args['id'], $args['section'], '' ) );
-        $size  = isset( $args['size'] ) && ! is_null( $args['size'] ) ? $args['size'] : 'regular';
+        $size  = isset( $args['size'] ) && ! is_null( $args['size'] ) ? $args['size'] : 'regular-text';
         $id    = $args['section'] . '[' . $args['id'] . ']';
         $label = isset( $args['options']['button_label'] ) ? $args['options']['button_label'] : __( 'Choose File', 'automatic-youtube-gallery' );
 		
-        $html  = sprintf( '<input type="text" class="%1$s-text ayg-settings-url" id="%2$s[%3$s]" name="%2$s[%3$s]" value="%4$s"/>', $size, $args['section'], $args['id'], $value );
+        $html  = sprintf( '<input type="text" class="%1$s ayg-settings-url" id="%2$s[%3$s]" name="%2$s[%3$s]" value="%4$s"/>', $size, $args['section'], $args['id'], $value );
         $html .= '<input type="button" class="button ayg-settings-browse" value="' . $label . '" />';
         $html .= $this->get_field_description( $args );
 		
@@ -569,9 +622,9 @@ class AYG_Admin_Settings {
      */
     public function callback_password( $args ) {	
         $value = esc_attr( $this->get_option( $args['id'], $args['section'], '' ) );
-        $size  = isset( $args['size'] ) && ! is_null( $args['size'] ) ? $args['size'] : 'regular';
+        $size  = isset( $args['size'] ) && ! is_null( $args['size'] ) ? $args['size'] : 'regular-text';
 		
-        $html  = sprintf( '<input type="password" class="%1$s-text" id="%2$s[%3$s]" name="%2$s[%3$s]" value="%4$s"/>', $size, $args['section'], $args['id'], $value );
+        $html  = sprintf( '<input type="password" class="%1$s" id="%2$s[%3$s]" name="%2$s[%3$s]" value="%4$s"/>', $size, $args['section'], $args['id'], $value );
         $html .= $this->get_field_description( $args );
 		
         echo $html;		
@@ -585,9 +638,9 @@ class AYG_Admin_Settings {
      */
     public function callback_color( $args ) {	
         $value = esc_attr( $this->get_option( $args['id'], $args['section'], '#ffffff' ) );
-        $size  = isset( $args['size'] ) && ! is_null( $args['size'] ) ? $args['size'] : 'regular';
+        $size  = isset( $args['size'] ) && ! is_null( $args['size'] ) ? $args['size'] : 'regular-text';
 		
-        $html  = sprintf( '<input type="text" class="%1$s-text ayg-color-picker" id="%2$s[%3$s]" name="%2$s[%3$s]" value="%4$s" data-default-color="%5$s" />', $size, $args['section'], $args['id'], $value, '#ffffff' );
+        $html  = sprintf( '<input type="text" class="%1$s ayg-color-picker" id="%2$s[%3$s]" name="%2$s[%3$s]" value="%4$s" data-default-color="%5$s" />', $size, $args['section'], $args['id'], $value, '#ffffff' );
         $html .= $this->get_field_description( $args );
 		
         echo $html;		

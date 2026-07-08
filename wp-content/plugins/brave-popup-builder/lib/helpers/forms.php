@@ -29,6 +29,7 @@ function bravepop_form_submission(){
    //Fetch Form Settings
    $popupData = json_decode(get_post_meta($popupID, 'popup_data', true));
    $formSubmission = !empty($popupData->settings->form_submission->enabled) ? true : false;
+   $responsePayload = array('sent'=> true);
 
    if(isset($_POST['brave_previewID']) && function_exists('bravepop_demo_form_popup_data')){
       $previewPopupData = bravepop_demo_form_popup_data($_POST['brave_previewID']);
@@ -348,18 +349,19 @@ function bravepop_form_submission(){
          //Finally Add the User to Newsletter
          if(function_exists('bravepop_add_to_newsletter') && $userConsented){
             $userData = array();
-            $subScriptionSuccess = bravepop_add_to_newsletter('form', $type, $emailValue, $listID, $nameValue, $phoneValue, $customFields, $tags, $userData, $doubleOptin, $miscSettings);
-            if(!$subScriptionSuccess){
-               $emailSent = bravepop_subscription_failed_notificaion($popupID, get_option('admin_email'), $type, $nameValue, $emailValue);
+            $subScriptionRes = bravepop_add_to_newsletter('form', $type, $emailValue, $listID, $nameValue, $phoneValue, $customFields, $tags, $userData, $doubleOptin, $miscSettings);
+            if($subScriptionRes === false || !$subScriptionRes['success']){
+               $emailSent = bravepop_subscription_failed_notificaion($popupID, get_option('admin_email'), $type, $nameValue, $emailValue, $subScriptionRes);
                $completed_actions['newsletter_subscription'] = false;
+               $userErrorMsg = apply_filters( 'bravepop_newsletter_subscription_failed_msg', __('⚠️ Subscription Failed! Please try again.', 'bravepop'), $type, $subScriptionRes);
+               $responsePayload['subscribed'] =  false; 
+               $responsePayload['subscriptionError'] = $userErrorMsg;
             }else{
                $completed_actions['newsletter_subscription'] = $type;
+               $responsePayload['subscribed'] =  true;
             }
          }
-
-
        }
-
    }
 
    
@@ -380,55 +382,55 @@ function bravepop_form_submission(){
 
 
    //FINALLY SEND RESPONSE TO USER-------------------------------------
-      $response = array('sent'=> true);
+      
       // Show Custom Message
       if($actionSettings && isset($actionSettings->primaryAction) && $actionSettings->primaryAction === 'content' && isset($actionSettings->primaryActionData->content)){
-         $response['primaryAction'] = 'content';
-         $response['contentMessage'] = nl2br(bravepop_replace_emailShortcodes(html_entity_decode($actionSettings->primaryActionData->content), $fieldSettings, $userQuizData));
+         $responsePayload['primaryAction'] = 'content';
+         $responsePayload['contentMessage'] = nl2br(bravepop_replace_emailShortcodes(html_entity_decode($actionSettings->primaryActionData->content), $fieldSettings, $userQuizData));
          if(!empty($actionSettings->primaryActionData->download) && !empty($actionSettings->primaryActionData->downloadURL)){
-            $response['download'] = true;
-            $response['downloadURL'] = $actionSettings->primaryActionData->downloadURL;
+            $responsePayload['download'] = true;
+            $responsePayload['downloadURL'] = $actionSettings->primaryActionData->downloadURL;
          }
          if(!empty($actionSettings->primaryActionData->autoclose) && isset($actionSettings->primaryActionData->autoclosetime)){
-            $response['autoclose'] = true;
-            $response['autoclosetime'] = $actionSettings->primaryActionData->autoclosetime;
+            $responsePayload['autoclose'] = true;
+            $responsePayload['autoclosetime'] = $actionSettings->primaryActionData->autoclosetime;
          }
       }
       // Open Another Popup
       if($actionSettings && isset($actionSettings->primaryAction) && $actionSettings->primaryAction === 'popup' && isset($actionSettings->primaryActionData->popup)){
-         $response['primaryAction'] = 'popup';
-         $response['popupID'] = $actionSettings->primaryActionData->popup;
+         $responsePayload['primaryAction'] = 'popup';
+         $responsePayload['popupID'] = $actionSettings->primaryActionData->popup;
       }
 
       // Go to Another Step
       if($actionSettings && isset($actionSettings->primaryAction) && $actionSettings->primaryAction === 'step' && isset($actionSettings->primaryActionData->step)){
-         $response['primaryAction'] = 'step';
-         $response['step'] = $actionSettings->primaryActionData->step;
+         $responsePayload['primaryAction'] = 'step';
+         $responsePayload['step'] = $actionSettings->primaryActionData->step;
          if(!empty($actionSettings->primaryActionData->conditionalStep) && isset($actionSettings->primaryActionData->stepConditions) && function_exists('bravepop_get_conditional_redirection_data')){
-            $response['step'] = bravepop_get_conditional_redirection_data('step',$actionSettings->primaryActionData->step, $actionSettings->primaryActionData->stepConditions, $fieldSettings, $userQuizData);
+            $responsePayload['step'] = bravepop_get_conditional_redirection_data('step',$actionSettings->primaryActionData->step, $actionSettings->primaryActionData->stepConditions, $fieldSettings, $userQuizData);
          }
       }
 
       // Redirect User
       if($actionSettings && isset($actionSettings->primaryAction) && $actionSettings->primaryAction === 'redirect' && isset($actionSettings->primaryActionData->redirect)){
-         $response['primaryAction'] = 'redirect';
-         $response['redirectURL'] = bravepop_replace_emailShortcodes($actionSettings->primaryActionData->redirect, $fieldSettings, $userQuizData, !empty($actionSettings->primaryActionData->encodeRedirectURL) ? true : false);
+         $responsePayload['primaryAction'] = 'redirect';
+         $responsePayload['redirectURL'] = bravepop_replace_emailShortcodes($actionSettings->primaryActionData->redirect, $fieldSettings, $userQuizData, !empty($actionSettings->primaryActionData->encodeRedirectURL) ? true : false);
          if(isset($actionSettings->primaryActionData->redirectURLParams) && !empty($actionSettings->primaryActionData->redirectURLParams)){
             $currentURLParamsRaw = html_entity_decode($pageURL);
             $currentURLParams  = explode("?",$currentURLParamsRaw);
             if(isset($currentURLParams[1])){
-               $urlConnector = strpos($response['redirectURL'], '?') !== false ? '&' : '?';
-               $response['redirectURL'] = $response['redirectURL'] . $urlConnector . $currentURLParams[1];
+               $urlConnector = strpos($responsePayload['redirectURL'], '?') !== false ? '&' : '?';
+               $responsePayload['redirectURL'] = $responsePayload['redirectURL'] . $urlConnector . $currentURLParams[1];
             }
          }
-         $response['redirectAfter'] = isset($actionSettings->primaryActionData->redirectAfter) ? $actionSettings->primaryActionData->redirectAfter : '';
-         $response['redirectMessage'] = isset($actionSettings->primaryActionData->redirectMessage) ? nl2br(bravepop_replace_emailShortcodes(html_entity_decode($actionSettings->primaryActionData->redirectMessage), $fieldSettings, $userQuizData)) : '';
+         $responsePayload['redirectAfter'] = isset($actionSettings->primaryActionData->redirectAfter) ? $actionSettings->primaryActionData->redirectAfter : '';
+         $responsePayload['redirectMessage'] = isset($actionSettings->primaryActionData->redirectMessage) ? nl2br(bravepop_replace_emailShortcodes(html_entity_decode($actionSettings->primaryActionData->redirectMessage), $fieldSettings, $userQuizData)) : '';
          if(!empty($actionSettings->primaryActionData->conditionalRedirect) && isset($actionSettings->primaryActionData->redirectConditions) && function_exists('bravepop_get_conditional_redirection_data')){
-            $response['redirectURL'] = bravepop_replace_emailShortcodes(bravepop_get_conditional_redirection_data('redirect',$actionSettings->primaryActionData->redirect, $actionSettings->primaryActionData->redirectConditions, $fieldSettings, $userQuizData), $fieldSettings, $userQuizData);
+            $responsePayload['redirectURL'] = bravepop_replace_emailShortcodes(bravepop_get_conditional_redirection_data('redirect',$actionSettings->primaryActionData->redirect, $actionSettings->primaryActionData->redirectConditions, $fieldSettings, $userQuizData), $fieldSettings, $userQuizData);
          }
       }
 
-      print_r(wp_json_encode($response));
+      print_r(wp_json_encode($responsePayload));
 
       wp_die();
 }
@@ -462,6 +464,48 @@ function bravepopup_validate_recaptcha(){
          $response_body = json_decode( $fieldsResponse['body'] );
 
          if ( !empty( $response_body->success ) && $response_body->score > 0.4 ) {
+            print_r(wp_json_encode(true));
+            wp_die();
+         }else{
+            print_r(wp_json_encode(false));
+            wp_die();
+         }
+      }else{
+         print_r(wp_json_encode(false));
+         wp_die();
+      }
+   }
+   wp_die();
+}
+
+
+add_action('wp_ajax_bravepopup_validate_turnstile', 'bravepopup_validate_turnstile', 0);
+add_action('wp_ajax_nopriv_bravepopup_validate_turnstile', 'bravepopup_validate_turnstile');
+
+function bravepopup_validate_turnstile(){
+   if(!isset($_POST['token']) ){ wp_die(); }
+
+   $securityPassed = check_ajax_referer('brave-ajax-form-nonce', 'security', false);
+
+   if($securityPassed === false) {
+      print_r(wp_json_encode(false));
+      wp_die();
+   }else{
+      $currentSettings = get_option('_bravepopup_settings');
+      $currentIntegrations = $currentSettings && isset($currentSettings['integrations']) ? $currentSettings['integrations'] : array() ;
+      $turnstile_secret = isset($currentIntegrations['turnstile']->secret)  ? $currentIntegrations['turnstile']->secret  : '';
+      $response = $_POST['token']; $user_ip = bravepop_getVisitorIP();
+      $args = array(
+         'method' => 'POST',
+         'body' => array('secret'=> $turnstile_secret, 'response'=> $_POST['token'], 'remoteip'=> bravepop_getVisitorIP() )
+      );
+
+      $fieldsResponse = wp_remote_post( 'https://challenges.cloudflare.com/turnstile/v0/siteverify', $args );
+
+      if( !is_wp_error( $fieldsResponse ) ) {
+         $response_body = json_decode( $fieldsResponse['body'] );
+
+         if ( !empty( $response_body->success ) ) {
             print_r(wp_json_encode(true));
             wp_die();
          }else{

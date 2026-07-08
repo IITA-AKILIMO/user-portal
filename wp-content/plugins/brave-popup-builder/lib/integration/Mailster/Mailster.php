@@ -72,9 +72,9 @@ if ( ! class_exists( 'BravePop_Mailster' ) ) {
          //error_log(wp_json_encode($subscriber_id));
       
          if(is_wp_error($userAdded)){
-            return false;
+           return array( 'success' => false, 'errorMsg' => $userAdded->get_error_message() ); 
          }else{
-            return true;
+            return array( 'success' => true, 'result' => $userAdded );
          }
 
       }

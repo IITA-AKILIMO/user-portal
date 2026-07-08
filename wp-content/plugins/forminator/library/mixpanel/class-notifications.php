@@ -97,10 +97,6 @@ class Forminator_Mixpanel_Notifications extends Events {
 	 * @return void
 	 */
 	private static function event_update_notification( $data ) {
-		if ( ! self::is_tracking_active() ) {
-			return;
-		}
-
 		$module_type = self::settings_value( $data['settings'], 'module', '' );
 
 		self::track_event(
@@ -124,9 +120,6 @@ class Forminator_Mixpanel_Notifications extends Events {
 	 * @return void
 	 */
 	private static function event_delete_notification( $report_id ) {
-		if ( ! self::is_tracking_active() ) {
-			return;
-		}
 		self::track_event(
 			'for_notification_removed',
 			array(

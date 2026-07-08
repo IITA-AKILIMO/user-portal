@@ -16,6 +16,7 @@ if ( ! class_exists( 'BravePop_Element_Form' ) ) {
       protected $totalSteps = 0;
       protected $changesFormHeight = false;
       protected $recaptcha = false;
+      protected $turnstile = false;
       protected $formHeightData;
       protected $wrappedSteps = 1;
       protected $goalItem;
@@ -68,6 +69,13 @@ if ( ! class_exists( 'BravePop_Element_Form' ) ) {
             $this->recaptcha = $reCAPTCHA_site_key;
             add_action( 'wp_footer', array( $this, 'enqueue_recaptcha_js' ), 10 );
          }
+         if(!empty($this->formData->settings->action->turnstile) && class_exists( 'BravePop_Geolocation' ) ){
+            $currentSettings = get_option('_bravepopup_settings');
+            $currentIntegrations = $currentSettings && isset($currentSettings['integrations']) ? $currentSettings['integrations'] : array() ;
+            $turnstile_site_key = isset($currentIntegrations['turnstile']->api)  ? $currentIntegrations['turnstile']->api  : '';
+            $this->turnstile = $turnstile_site_key;
+            add_action( 'wp_footer', array( $this, 'enqueue_turnstile_js' ), 10 );
+         }
          if($this->social_optin && $this->social_settings && class_exists( 'BravePop_Geolocation' ) ) {
             add_action( 'wp_footer', array( $this, 'enqueue_social_optin_js' ), 10 );
          }
@@ -103,6 +111,12 @@ if ( ! class_exists( 'BravePop_Element_Form' ) ) {
       public function enqueue_recaptcha_js( $hook ) {
          if($this->recaptcha){
             wp_enqueue_script( 'brave_recaptcha_js', 'https://www.google.com/recaptcha/api.js?render='.$this->recaptcha ,'','',true);
+         }
+      }
+
+      public function enqueue_turnstile_js( $hook ) {
+         if($this->turnstile){
+            wp_enqueue_script( 'brave_turnstile_js', 'https://challenges.cloudflare.com/turnstile/v0/api.js' ,'','',true);
          }
       }
 
@@ -239,6 +253,7 @@ if ( ! class_exists( 'BravePop_Element_Form' ) ) {
                   heightData: <?php print_r(wp_json_encode($this->formHeightData)); ?>,
                   goal: <?php print_r(wp_json_encode($this->goalItem)); ?>,
                   recaptcha: <?php print_r(wp_json_encode(!empty($this->recaptcha) ? $this->recaptcha : false )); ?>,
+                  turnstile: <?php print_r(wp_json_encode(!empty($this->turnstile) ? $this->turnstile : false )); ?>,
                   social_optin: <?php print_r(wp_json_encode(!empty($this->social_optin) ? $this->social_optin : false )); ?>,
                   totalSteps: <?php print_r($this->totalSteps) ?>,
                   quiz: <?php print_r(wp_json_encode(isset($this->formData->settings->options->type) && $this->formData->settings->options->type === 'quiz' ? true : false)); ?>,
@@ -390,12 +405,12 @@ if ( ! class_exists( 'BravePop_Element_Form' ) ) {
          if(isset($field->validation) && $field->validation === 'email' && $loggedin_user_email && $newsletter_email_field === $field->id){ $defaultValue = 'value="'.$loggedin_user_email.'"'; }
          if($loggedin_user_fullname && $newsletter_name_field === $field->id){ $defaultValue = 'value="'.$loggedin_user_fullname.'"'; }
          if(isset($field->defaultType) && $field->defaultType === 'static' && !empty($field->defaultValue) ){ $defaultValue = 'value="'.$field->defaultValue.'"';  }
-         if(isset($field->defaultType) && $field->defaultType === 'utm' && !empty($field->defaultValue) && isset($_GET[$field->defaultValue]) ){ $defaultValue = 'value="'.$_GET[$field->defaultValue].'"';  }
+         if(isset($field->defaultType) && $field->defaultType === 'utm' && !empty($field->defaultValue) && isset($_GET[$field->defaultValue]) ){ $defaultValue = 'value="'.esc_attr(wp_unslash($_GET[$field->defaultValue])).'"';  }
          if(isset($field->defaultType) && $field->defaultType === 'country'  && !empty($bravepop_global['user_country']) ){ $defaultValue = 'value="'.$bravepop_global['user_country'].'"';  }
          if(isset($field->defaultType) && $field->defaultType === 'ip' && $userIP ){ $defaultValue = 'value="'.$userIP.'"';  }
          if(isset($field->defaultType) && $field->defaultType === 'user_email' && !empty($this->currentUser['email']) ){ $defaultValue = 'value="'.$this->currentUser['email'].'"';  }
          if(isset($field->defaultType) && $field->defaultType === 'user_name' && !empty($this->currentUser['name']) ){ $defaultValue = 'value="'.$this->currentUser['name'].'"';  }
-         
+
          $fieldHTML = '<div id="brave_form_field'.$field->id.'" class="brave_form_field brave_form_field--input '.$isHidden.$hasConditionClass.'">';
             if(isset($field->validation) && $field->validation === 'name'){
                $firstNameLabel = $firstlabel? '<label class="braveform_label">'.$firstlabel.$requiredStar.'</label>' : '';
@@ -408,6 +423,8 @@ if ( ! class_exists( 'BravePop_Element_Form' ) ) {
                $fieldHTML .= '<div class="brave_form_field_error"></div>';
                if(isset($field->validation) && $field->validation === 'email'){
                   $fieldHTML .= '<input type="email" placeholder="'.esc_attr($placeholder).'"  name="'.esc_attr($firstname).'" '.($defaultValue).' class="'.($newsletter_email_field === $field->id ? 'brave_newsletter_emailField' : '').'" '.$condtionCheckAction.' />';
+               }else if(isset($field->validation) && $field->validation === 'phone'){
+                  $fieldHTML .= '<input type="tel" placeholder="'.esc_attr($placeholder).'"  name="'.esc_attr($firstname).'" '.($defaultValue).' '.$condtionCheckAction.' />';
                }else{
                   $fieldHTML .= '<input type="text" placeholder="'.esc_attr($placeholder).'"  name="'.esc_attr($firstname).'" '.($defaultValue).' class="'.($newsletter_name_field === $field->id ? 'brave_newsletter_nameField' : '').'" '.$condtionCheckAction.' />';
                }
@@ -422,7 +439,7 @@ if ( ! class_exists( 'BravePop_Element_Form' ) ) {
          $defaultValue = '';  $userIP = bravepop_getVisitorIP();
          global $bravepop_global;
          if(isset($field->defaultType) && $field->defaultType === 'static' && !empty($field->defaultValue) ){ $defaultValue = $field->defaultValue;  }
-         if(isset($field->defaultType) && $field->defaultType === 'utm' && !empty($field->defaultValue) && isset($_GET[$field->defaultValue]) ){ $defaultValue = $_GET[$field->defaultValue];  }
+         if(isset($field->defaultType) && $field->defaultType === 'utm' && !empty($field->defaultValue) && isset($_GET[$field->defaultValue]) ){ $defaultValue = wp_unslash($_GET[$field->defaultValue]);  }
          if(isset($field->defaultType) && $field->defaultType === 'country' && !empty($bravepop_global['user_country']) ){ $defaultValue = $bravepop_global['user_country'];  }
          if(isset($field->defaultType) && $field->defaultType === 'ip' && $userIP ){ $defaultValue = $userIP;  }
          if(isset($field->defaultType) && $field->defaultType === 'user_email' && !empty($this->currentUser['email']) ){ $defaultValue = $this->currentUser['email'];  }
@@ -436,7 +453,7 @@ if ( ! class_exists( 'BravePop_Element_Form' ) ) {
          }
 
          $fieldHTML = '<div id="brave_form_field'.$field->id.'" class="brave_form_field brave_form_field--hidden">';
-            $fieldHTML .= '<input type="hidden"  name="'.esc_attr($field->id).'" value="'.do_shortcode($defaultValue).'" />';
+            $fieldHTML .= '<input type="hidden"  name="'.esc_attr($field->id).'" value="'.esc_attr(do_shortcode($defaultValue)).'" />';
          $fieldHTML .= '</div>';
 
         return  $fieldHTML;
@@ -455,7 +472,7 @@ if ( ! class_exists( 'BravePop_Element_Form' ) ) {
          $condtionCheckAction = in_array($field->id, $this->conditionedFields) ? 'oninput="brave_check_field_condition(event, \''.$field->id.'\', \''.$this->data->id.'\')"' : '';
 
          if(isset($field->defaultType) && $field->defaultType === 'static' && !empty($field->defaultValue) ){ $defaultValue = $field->defaultValue;  }
-         if(isset($field->defaultType) && $field->defaultType === 'utm' && !empty($field->defaultValue) && isset($_GET[$field->defaultValue]) ){ $defaultValue = $_GET[$field->defaultValue];  }
+         if(isset($field->defaultType) && $field->defaultType === 'utm' && !empty($field->defaultValue) && isset($_GET[$field->defaultValue]) ){ $defaultValue = wp_unslash($_GET[$field->defaultValue]);  }
          if(isset($field->defaultType) && $field->defaultType === 'country'  && !empty($bravepop_global['user_country']) ){ $defaultValue = 'value="'.$bravepop_global['user_country'].'"';  }
          if(isset($field->defaultType) && $field->defaultType === 'ip' && $userIP ){ $defaultValue = 'value="'.$userIP.'"';  }
          if(isset($field->defaultType) && $field->defaultType === 'user_email' && !empty($this->currentUser['email']) ){ $defaultValue = 'value="'.$this->currentUser['email'].'"';  }
@@ -464,7 +481,7 @@ if ( ! class_exists( 'BravePop_Element_Form' ) ) {
          $fieldHTML = '<div id="brave_form_field'.$field->id.'" class="brave_form_field brave_form_field--textarea '.$hasConditionClass.'">';
             $fieldHTML .= $label ? '<label class="braveform_label">'.$field->label.$requiredStar.'</label>' : '';
             $fieldHTML .= '<div class="brave_form_field_error"></div>';
-            $fieldHTML .= '<textarea placeholder="'.esc_attr($placeholder).'" name="'.esc_attr($fieldName).'" style="height:'.esc_attr($height).'" '.$condtionCheckAction.' >'.$defaultValue.'</textarea>';
+            $fieldHTML .= '<textarea placeholder="'.esc_attr($placeholder).'" name="'.esc_attr($fieldName).'" style="height:'.esc_attr($height).'" '.$condtionCheckAction.' >'.esc_textarea($defaultValue).'</textarea>';
          $fieldHTML .= '</div>';
 
         return  $fieldHTML;

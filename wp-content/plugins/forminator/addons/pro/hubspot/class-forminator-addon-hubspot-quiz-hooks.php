@@ -21,6 +21,7 @@ class Forminator_Hubspot_Quiz_Hooks extends Forminator_Integration_Quiz_Hooks {
 	 */
 	protected function custom_entry_fields( $submitted_data, $current_entry_fields ): array {
 		$addon_setting_values = $this->settings_instance->get_settings_values();
+		$addon_setting_values = $this->settings_instance->migrate_list_id( $addon_setting_values );
 		$data                 = array();
 
 		foreach ( $addon_setting_values as $key => $addon_setting_value ) {
@@ -162,9 +163,11 @@ class Forminator_Hubspot_Quiz_Hooks extends Forminator_Integration_Quiz_Hooks {
 			$contact_id = $api->add_update_contact( $args );
 			// Add contact to contact list.
 			$to_object_id = null;
-			if ( ! empty( $list_id ) && ! empty( $contact_id ) && ! is_object( $contact_id ) && (int) $contact_id > 0 ) {
+			if ( ! empty( $contact_id ) && ! is_object( $contact_id ) && (int) $contact_id > 0 ) {
 				$to_object_id = $contact_id;
-				$api->add_to_contact_list( $contact_id, $args['email'], $list_id );
+				if ( ! empty( $list_id ) ) {
+					$api->add_to_contact_list( $contact_id, $list_id );
+				}
 			}
 
 			$create_ticket = isset( $connection_settings['create_ticket'] ) ? $connection_settings['create_ticket'] : '';
@@ -186,10 +189,8 @@ class Forminator_Hubspot_Quiz_Hooks extends Forminator_Integration_Quiz_Hooks {
 				$object_id = $api->create_ticket( $ticket );
 
 				if ( ! is_null( $to_object_id ) && ! is_object( $object_id ) && (int) $object_id > 0 ) {
-					$from_object_id            = $object_id;
-					$associate['fromObjectId'] = $from_object_id;
-					$associate['toObjectId']   = $to_object_id;
-					$api->ticket_associate_contact( $associate );
+					$from_object_id = $object_id;
+					$api->ticket_associate_contact( $from_object_id, $to_object_id );
 				}
 			}
 

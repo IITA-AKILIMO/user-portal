@@ -89,11 +89,18 @@
 				add_class = "forminator-calendar--basic";
 			}
 
+			// if parent has data-color-option add it to the datepicker
+			if ( parent.data( 'color-option' ) ) {
+				add_class += ' forminator-color-option--' + parent.data( 'color-option' );
+			}
+
 
 			this.$el.datepicker({
 				"beforeShow": function (input, inst) {
-					// elementor popup
-					var popup = $(this).closest('.elementor-popup-modal');
+					// Check for any popup modal (Hustle, Bootstrap, Elementor, or other common modals)
+					var popup = $(this).closest(
+						'.modal, .elementor-popup-modal, .mfp-wrap, .fancybox-container, [role="dialog"], [data-popup]'
+					);
 
 					// Remove all Hustle UI related classes
 					( inst.dpDiv ).removeClass( function( index, css ) {
@@ -105,42 +112,17 @@
 						return ( css.match ( /\bforminator-\S+/g ) || []).join( ' ' );
 					});
 					( inst.dpDiv ).addClass( 'forminator-custom-form-' + parent.data( 'form-id' ) + ' ' + add_class );
-					// Enable/disable past dates
-					if ( 'disable' === pastDates ) {
-						$(this).datepicker( 'option', 'minDate', dateValue );
-					} else {
-						$(this).datepicker( 'option', 'minDate', null );
-					}
-					if( minDate ) {
-						var min_date = new Date( minDate.replace(/-/g, '\/').replace(/T.+/, '') );
-						$(this).datepicker( 'option', 'minDate', min_date );
-					}
-					if( maxDate ) {
-						var max_date = new Date( maxDate.replace(/-/g, '\/').replace(/T.+/, '') );
-						$(this).datepicker( 'option', 'maxDate', max_date );
-					}
-					if( startField ) {
-						var startDateVal = self.getLimitDate( startField, startOffset );
-						if( 'undefined' !== typeof startDateVal ) {
-							$(this).datepicker( 'option', 'minDate', startDateVal );
-						}
-					}
+					self.applyDatepickerLimits();
 
-					if( endField ) {
-						var endDateVal = self.getLimitDate( endField, endOffset );
-						if( 'undefined' !== typeof endDateVal ) {
-							$(this).datepicker( 'option', 'maxDate', endDateVal );
-						}
-					}
-
-					// if elementor popup append datepicker with input
+					// Positioning inside popup modals
 					if( popup.length ) {
-						popup.append($('#ui-datepicker-div'));
-						var rect = input.getBoundingClientRect();
+						$(input).after($('#ui-datepicker-div'));
 						setTimeout(function() {
-							inst.dpDiv.css({
-								top: rect.top + rect.height,
-								left: rect.left
+							inst.dpDiv.position({
+								my: 'left top',
+								at: 'left bottom',
+								of: input,
+								collision: 'flipfit'
 							});
 						}, 0);
 					} else {
@@ -166,14 +148,110 @@
 				},
 			});
 
+			this.$el.on('change paste', function () {
+				var $input = $(this);
+				setTimeout(function () {
+					$input.valid();
+				}, 0);
+			});
+
 			//Disables google translator for the datepicker - this prevented that when selecting the date the result is presented as follows: NaN/NaN/NaN
 			$('.ui-datepicker').addClass('notranslate');
+
+			this.syncDateValueWithLimits();
+
+			this.$el.closest( 'form' ).on( 'forminator.front.condition.restart', function () {
+				self.syncDateValueWithLimits();
+			} );
+		},
+
+		parseDateString: function ( dateString ) {
+			return new Date( dateString.replace( /-/g, '\/' ).replace( /T.+/, '' ) );
+		},
+
+		hasDatepickerLimits: function () {
+			return this.$el.data( 'start-date' ) ||
+				this.$el.data( 'end-date' ) ||
+				this.$el.data( 'start-field' ) ||
+				this.$el.data( 'end-field' );
+		},
+
+		applyDatepickerLimits: function () {
+			var dateValue = this.$el.val(),
+				pastDates = this.$el.data( 'past-dates' );
+
+			// Enable/disable past dates.
+			if ( 'disable' === pastDates ) {
+				this.$el.datepicker( 'option', 'minDate', dateValue );
+			} else {
+				this.$el.datepicker( 'option', 'minDate', null );
+			}
+
+			this.$el.datepicker( 'option', 'maxDate', null );
+
+			if ( ! this.hasDatepickerLimits() ) {
+				return false;
+			}
+
+			var minDate = this.$el.data( 'start-date' ),
+				maxDate = this.$el.data( 'end-date' ),
+				startField = this.$el.data( 'start-field' ),
+				endField = this.$el.data( 'end-field' ),
+				startOffset = this.$el.data( 'start-offset' ),
+				endOffset = this.$el.data( 'end-offset' );
+
+			if ( minDate ) {
+				this.$el.datepicker( 'option', 'minDate', this.parseDateString( minDate ) );
+			}
+
+			if ( maxDate ) {
+				this.$el.datepicker( 'option', 'maxDate', this.parseDateString( maxDate ) );
+			}
+
+			if ( startField ) {
+				var startDateVal = this.getLimitDate( startField, startOffset );
+				if ( 'undefined' !== typeof startDateVal ) {
+					this.$el.datepicker( 'option', 'minDate', startDateVal );
+				}
+			}
+
+			if ( endField ) {
+				var endDateVal = this.getLimitDate( endField, endOffset );
+				if ( 'undefined' !== typeof endDateVal ) {
+					this.$el.datepicker( 'option', 'maxDate', endDateVal );
+				}
+			}
+
+			return true;
+		},
+
+		syncDateValueWithLimits: function () {
+			var dateValue = this.$el.val();
+
+			if ( ! dateValue ) {
+				return;
+			}
+
+			var hasLimits = this.applyDatepickerLimits();
+
+			if ( hasLimits ) {
+				this.$el.datepicker( 'setDate', dateValue );
+
+				if ( dateValue !== this.$el.val() ) {
+					this.$el.trigger( 'change' );
+				}
+			}
+
+			// Hide datepicker panel populated by programmatic option/date changes during init.
+			this.$el.datepicker( 'widget' ).hide();
 		},
 
 		getLimitDate: function ( dependentField, offset ) {
-			var fieldVal = $('input[name ="'+ dependentField + '"]').val();
+			var $form = this.$el.closest( '.forminator-custom-form' ),
+				$dependentInput = $form.find( 'input[name ="' + dependentField + '"]' ),
+				fieldVal = $dependentInput.val();
 			if( typeof fieldVal !== 'undefined' ) {
-				var DateFormat = $('input[name ="'+ dependentField + '"]').data('format').replace(/y/g, 'yy'),
+				var DateFormat = $dependentInput.data('format').replace(/y/g, 'yy'),
 					sdata = offset.split('_'),
 					newDate = moment( fieldVal, DateFormat.toUpperCase() );
 				if( '-' === sdata[0] ) {
@@ -181,10 +259,7 @@
 				} else {
 					newDate = newDate.add( sdata[1], sdata[2] );
 				}
-				var formatedDate = moment( newDate ).format( 'YYYY-MM-DD' ),
-					dateVal = new Date( formatedDate );
-
-				return dateVal;
+				return newDate.toDate();
 			}
 		},
 

@@ -198,14 +198,7 @@ class Forminator_Gateway_Stripe {
 	 * @return bool
 	 */
 	public static function is_available() {
-		$min_php_version = apply_filters( 'forminator_payments_stripe_min_php_version', '5.6.0' );
-		$loaded          = forminator_payment_lib_stripe_version_loaded();
-
-		if ( version_compare( PHP_VERSION, $min_php_version, 'lt' ) ) {
-			return false;
-		}
-
-		return $loaded;
+		return forminator_payment_lib_stripe_version_loaded();
 	}
 
 	/**

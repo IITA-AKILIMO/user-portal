@@ -2,14 +2,14 @@
 
 namespace KentaCompanion\Container;
 
-use Illuminate\Contracts\Container\Container;
-use Illuminate\Contracts\Container\ContextualBindingBuilder as ContextualBindingBuilderContract;
+use KentaCompanion\Vendor\Illuminate\Contracts\Container\Container;
+use KentaCompanion\Vendor\Illuminate\Contracts\Container\ContextualBindingBuilder as ContextualBindingBuilderContract;
 
 class ContextualBindingBuilder implements ContextualBindingBuilderContract {
 	/**
 	 * The underlying container instance.
 	 *
-	 * @var \Illuminate\Contracts\Container\Container
+	 * @var \KentaCompanion\Vendor\Illuminate\Contracts\Container\Container
 	 */
 	protected $container;
 
@@ -30,7 +30,7 @@ class ContextualBindingBuilder implements ContextualBindingBuilderContract {
 	/**
 	 * Create a new contextual binding builder.
 	 *
-	 * @param \Illuminate\Contracts\Container\Container $container
+	 * @param \KentaCompanion\Vendor\Illuminate\Contracts\Container\Container $container
 	 * @param string|array $concrete
 	 *
 	 * @return void

@@ -61,7 +61,7 @@
 
 					// isHidden
 					if ($(this).data('isHidden')) {
-						$(this).closest('.forminator-col').addClass('forminator-hidden forminator-hidden-option');
+						$(this).closest('.forminator-col').addClass('forminator-hidden forminator-hidden-option forminator-hidden-calculator');
 						var rowField = $(this).closest('.forminator-row');
 						rowField.addClass('forminator-hidden-option');
 
@@ -95,11 +95,13 @@
 			var slice = Array.prototype.slice;
 
 			return function() {
-				var args = slice.call(arguments);
+				var context = this,
+				    args    = slice.call(arguments);
 
 				var later = function() {
 					timeout = null;
 					memo    = {};
+					func.apply(context, args);
 				};
 
 				clearTimeout(timeout);
@@ -243,7 +245,7 @@
 					var inputId = $input.attr('id');
 
 					if (cFields.indexOf(inputId) < 0) {
-						$input.on('change.forminatorFrontCalculate, blur', function () {
+						$input.on('change.forminatorFrontCalculate', function () {
 							var calcFields = $(this).data('calcFields');
 
 							if (calcFields !== undefined && calcFields.length > 0) {
@@ -344,9 +346,9 @@
 					continue;
 				}
 
-				if(this.is_hidden(inputName)) {
+				const $element = this.get_form_field(inputName);
+				if(forminatorUtils().is_hidden($element)) {
 					replace = 0;
-					const $element = this.get_form_field(inputName);
 					if ( 'zero' !== $element.data('hidden-behavior') ) {
 						var quotedOperand = fullMatch.replace(/([\\\.\+\*\?\[\^\]\$\(\)\{\}\=\!\<\>\|\:])/g, "\\$1");
 						var regexp = new RegExp('([\\+\\-\\*\\/]?)[^\\+\\-\\*\\/\\(]*' + quotedOperand + '[^\\)\\+\\-\\*\\/]*([\\+\\-\\*\\/]?)');
@@ -384,23 +386,6 @@
 				if(this.calculationFields[i].name === element_id) {
 					return this.calculationFields[i];
 				}
-			}
-
-			return false;
-		},
-
-		is_hidden: function (element_id) {
-			var $element_id = this.get_form_field(element_id),
-				$column_field = $element_id.closest('.forminator-col'),
-				$row_field = $column_field.closest('.forminator-row')
-			;
-
-			if( $row_field.hasClass("forminator-hidden-option") || $column_field.hasClass("forminator-hidden-option") ) {
-				return false;
-			}
-
-			if( $row_field.hasClass("forminator-hidden") || $column_field.hasClass("forminator-hidden") ) {
-				return true;
 			}
 
 			return false;
@@ -495,6 +480,11 @@
 		},
 
 		displayErrorMessage: function ($element, errorMessage) {
+			// Skip error display when validations are disabled in Preview.
+			var validationDisabled = $( '#forminator-field-disable_validations' ).is(':checked');
+			if ( validationDisabled ) {
+				return;
+			}
 			var $field_holder = $element.closest('.forminator-field--inner');
 
 			if ($field_holder.length === 0) {

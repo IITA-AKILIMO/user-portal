@@ -639,7 +639,7 @@
   display: block;
   top: 0;
   width: 100%;
-  z-index: 1;
+  z-index: 2;
 }
 
 .df-sheet {
@@ -807,8 +807,8 @@
   right: 0;
   overflow: hidden;
   pointer-events: none;
-  width: auto !important;
-  height: auto !important;
+  overflow: clip;
+  transform-origin: 0 0;
 }
 
 .df-page-content.df-double-internal:not(.df-double-internal-fix) > div {
@@ -1256,7 +1256,7 @@ span.df-share-title {
 .df-reader-scroll-page-number.df-active {
   display: block;
 }
-.df-reader-scroll-page-number div {
+.df-reader-scroll-page-number .df-reader-scroll-page-number-total {
   margin-top: 6px;
   padding-top: 6px;
   border-top: 1px solid #aaa;
@@ -1316,10 +1316,6 @@ span.df-share-title {
   top: -7px;
 }
 
-.df-controls-hidden .df-ui {
-  display: none;
-}
-
 .df-float-off.df-controls-top .df-sidemenu-wrapper {
   top: 42px;
   bottom: 0;
@@ -1345,6 +1341,10 @@ span.df-share-title {
 }
 .df-float-off .df-ui {
   display: flex;
+}
+
+.df-controls-hidden .df-ui {
+  display: none;
 }
 
 .df-link-content .annotationTextContent {
@@ -2405,6 +2405,89 @@ input.df-search-text:not(:placeholder-shown) ~ a.df-search-clear {
 }
 .rtl .df-popup-thumb .df-book-cover:after {
   transform: scaleX(-1);
+}
+
+.zoom-element {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0px;
+  z-index: 1;
+}
+
+.zoom-element > canvas {
+  width: 100%;
+  height: 100%;
+}
+
+.df-zoom-region-active .zoom-element {
+  display: block;
+}
+
+.df-vertical .df-page:before {
+  width: 100%;
+  height: 10%;
+  top: auto;
+}
+.df-vertical .df-page-front:before {
+  top: 0;
+  background-image: -webkit-linear-gradient(top, rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.15) 15%, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0));
+  background-image: -moz-linear-gradient(top, rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.15) 15%, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0));
+  background-image: -ms-linear-gradient(top, rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.15) 15%, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0));
+}
+.df-vertical .df-page-back:before {
+  bottom: 0;
+  background-image: -webkit-linear-gradient(bottom, rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.2) 10%, rgba(0, 0, 0, 0.15) 25%, rgba(0, 0, 0, 0) 70%);
+  background-image: -moz-linear-gradient(bottom, rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.2) 10%, rgba(0, 0, 0, 0.15) 25%, rgba(0, 0, 0, 0) 70%);
+  background-image: -ms-linear-gradient(bottom, rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.2) 10%, rgba(0, 0, 0, 0.15) 25%, rgba(0, 0, 0, 0) 70%);
+}
+
+.df-flipbook-2d.df-vertical .df-viewer-wrapper {
+  -moz-transition: 0.3s top;
+  -o-transition: 0.3s top;
+  -webkit-transition: 0.3s top;
+  transition: 0.3s top;
+}
+.df-flipbook-2d.df-vertical .df-sheet.df-left-side {
+  bottom: 50%;
+  top: auto;
+  left: 0;
+}
+.df-flipbook-2d.df-vertical .df-sheet.df-right-side {
+  top: 50%;
+  left: 0;
+}
+.df-flipbook-2d.df-vertical .df-hard-sheet.df-right-side .df-page-back {
+  -webkit-transform-origin: 50% bottom;
+  -moz-transform-origin: 50% bottom;
+  transform-origin: 50% bottom;
+  z-index: 3 !important;
+}
+.df-flipbook-2d.df-vertical .df-hard-sheet.df-right-side .df-page-front {
+  -webkit-transform-origin: 50% top;
+  -moz-transform-origin: 50% top;
+  transform-origin: 50% top;
+  z-index: 4;
+}
+.df-flipbook-2d.df-vertical .df-hard-sheet.df-left-side .df-page-back {
+  -webkit-transform-origin: 50% bottom;
+  -moz-transform-origin: 50% bottom;
+  transform-origin: 50% bottom;
+}
+.df-flipbook-2d.df-vertical .df-hard-sheet.df-left-side .df-page-front {
+  -webkit-transform-origin: 50% top;
+  -moz-transform-origin: 50% top;
+  transform-origin: 50% top;
+}
+
+.df-zoomview.df-vertical .df-page-front {
+  top: 50%;
+  left: 0;
+}
+.df-zoomview.df-vertical .df-page-back {
+  bottom: 50%;
+  top: auto;
+  left: 0;
 }
 
 /*Test|Hot-Fixes Region End*/

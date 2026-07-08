@@ -73,6 +73,10 @@ abstract class Forminator_Admin_Module {
 		add_filter( 'forminator_data', array( $this, 'add_js_defaults' ) );
 		add_filter( 'forminator_l10n', array( $this, 'add_l10n_strings' ) );
 		add_filter( 'submenu_file', array( $this, 'admin_submenu_file' ), 10, 2 );
+
+		add_filter( 'forminator_form_admin_data', array( 'Forminator_Base_Form_Model', 'add_saved_changes' ), 10, 2 );
+		add_filter( 'forminator_poll_admin_data', array( 'Forminator_Base_Form_Model', 'add_saved_changes' ), 10, 2 );
+		add_filter( 'forminator_quiz_admin_data', array( 'Forminator_Base_Form_Model', 'add_saved_changes' ), 10, 2 );
 	}
 
 	/**
@@ -107,12 +111,12 @@ abstract class Forminator_Admin_Module {
 		remove_submenu_page( 'forminator', $this->page_edit );
 		remove_submenu_page( 'forminator', $this->page_entries );
 		echo '<style>
-			#toplevel_page_forminator ul.wp-submenu li a[href="admin.php?page=forminator-addons"] { color: #fecf2f !important; }
+			#toplevel_page_forminator ul.wp-submenu li a[href="admin.php?page=forminator-addons"] { color: #1ABC9C !important; }
 			#toplevel_page_forminator ul.wp-submenu li a[href="admin.php?page=forminator-templates"] { display: flex; justify-content: space-between; align-items: center; }
 			#toplevel_page_forminator ul.wp-submenu li a[href="admin.php?page=forminator-templates"] .menu-new-tag { font-size: 8px; line-height: 8px; padding: 2px 6px; background: #1ABC9C; border-radius: 9px; text-transform: uppercase; color: #fff; font-weight: 900; height: 100%; letter-spacing: -0.25px; }
 		</style>';
 		if ( ! FORMINATOR_PRO ) {
-			echo '<style>#toplevel_page_forminator ul.wp-submenu li:last-child a[href^="https://wpmudev.com"] { background-color: #8d00b1 !important; color: #fff !important; font-weight: 700 !important; }</style>';
+			echo '<style>#toplevel_page_forminator ul.wp-submenu li:last-child a[href^="https://wpmudev.com"] { background-color: #8d00b1 !important; color: #fff !important; font-weight: 500 !important; letter-spacing: -0.2px; }</style>';
 			echo '<script>jQuery(function() {jQuery(\'#toplevel_page_forminator ul.wp-submenu li:last-child a[href^="https://wpmudev.com"]\').attr("target", "_blank");});</script>';
 		}
 	}
@@ -289,7 +293,9 @@ abstract class Forminator_Admin_Module {
 			array_walk_recursive(
 				$import_data,
 				function ( &$item ) {
-					$item = html_entity_decode( $item, ENT_QUOTES | ENT_HTML5, 'UTF-8' );
+					if ( isset( $item ) ) {
+						$item = html_entity_decode( $item, ENT_QUOTES | ENT_HTML5, 'UTF-8' );
+					}
 				}
 			);
 		}
@@ -367,12 +373,16 @@ abstract class Forminator_Admin_Module {
 					$data['data']['settings']['admin-email-bcc-address'] = self::apply_user_email( $data['data']['settings']['admin-email-bcc-address'], $current_user_email );
 				}
 			} elseif ( ! empty( $data['data']['notifications'] ) ) {
-
+				$email_fields_to_update = array(
+					'recipients',
+					'bcc-email',
+					'cc-email',
+				);
 				foreach ( $data['data']['notifications'] as $notif_key => $notif ) {
-					// Modify the recipients.
-					if ( ! empty( $notif['recipients'] ) ) {
-						$recipients = self::apply_user_email( $notif['recipients'], $current_user_email );
-						$data['data']['notifications'][ $notif_key ]['recipients'] = $recipients;
+					foreach ( $email_fields_to_update as $key ) {
+						if ( ! empty( $notif[ $key ] ) ) {
+							$data['data']['notifications'][ $notif_key ][ $key ] = self::apply_user_email( $notif[ $key ], $current_user_email );
+						}
 					}
 
 					// Modify the routing recipients.
@@ -388,7 +398,6 @@ abstract class Forminator_Admin_Module {
 				}
 			}
 		}
-
 		return $data;
 	}
 

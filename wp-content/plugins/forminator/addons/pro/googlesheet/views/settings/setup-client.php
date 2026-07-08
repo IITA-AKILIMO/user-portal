@@ -43,7 +43,7 @@ foreach ( $template_vars as $key => $val ) {
 	<?php else : ?>
 		<p id="forminator-integration-popup__description" class="sui-description"><?php esc_html_e( 'Set up your Google Sheets oAuth 2.0 client by entering your credentials below.', 'forminator' ); ?></p>
 		<p class="sui-description">
-			<?php if ( forminator_is_show_addons_documentation_link() ) { ?>
+			<?php if ( forminator_is_show_documentation_link() ) { ?>
 				<?php
 				printf(
 				/* Translators: 1. Opening <a> tag with link to generate credential, 2. closing <a> tag. */
@@ -74,7 +74,7 @@ foreach ( $template_vars as $key => $val ) {
 			<input type="text" id="auth-redirect-uri" class="sui-form-control" value="<?php echo esc_html( ! empty( $vars['redirect_url'] ) ? $vars['redirect_url'] : '' ); ?>">
 			<a class="sui-button-icon copy-clipboard-integration" data-shortcode="<?php echo esc_html( ! empty( $vars['redirect_url'] ) ? $vars['redirect_url'] : '' ); ?>">
 				<span aria-hidden="true" class="sui-icon-copy"></span>
-				<span class="sui-screen-reader-text"><?php esc_html_e( 'Copy shortcode', 'forminator' ); ?></span>
+				<span class="sui-screen-reader-text"><?php esc_html_e( 'Copy redirect URI', 'forminator' ); ?></span>
 			</a>
 		</div>
 

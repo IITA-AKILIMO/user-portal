@@ -1,8 +1,8 @@
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
-/***/ 3343:
-/***/ ((module) => {
+/***/ 3343
+(module) {
 
 var $ = Backbone.$,
 	Attachment;
@@ -175,10 +175,10 @@ Attachment = Backbone.Model.extend(/** @lends wp.media.model.Attachment.prototyp
 module.exports = Attachment;
 
 
-/***/ }),
+/***/ },
 
-/***/ 8266:
-/***/ ((module) => {
+/***/ 8266
+(module) {
 
 /**
  * wp.media.model.Attachments
@@ -783,10 +783,10 @@ var Attachments = Backbone.Collection.extend(/** @lends wp.media.model.Attachmen
 module.exports = Attachments;
 
 
-/***/ }),
+/***/ },
 
-/***/ 9104:
-/***/ ((module) => {
+/***/ 9104
+(module) {
 
 /**
  * wp.media.model.PostImage
@@ -944,10 +944,10 @@ var PostImage = Backbone.Model.extend(/** @lends wp.media.model.PostImage.protot
 module.exports = PostImage;
 
 
-/***/ }),
+/***/ },
 
-/***/ 1288:
-/***/ ((module) => {
+/***/ 1288
+(module) {
 
 var Attachments = wp.media.model.Attachments,
 	Query;
@@ -1255,10 +1255,10 @@ Query = Attachments.extend(/** @lends wp.media.model.Query.prototype */{
 module.exports = Query;
 
 
-/***/ }),
+/***/ },
 
-/***/ 4134:
-/***/ ((module) => {
+/***/ 4134
+(module) {
 
 var Attachments = wp.media.model.Attachments,
 	Selection;
@@ -1359,7 +1359,7 @@ Selection = Attachments.extend(/** @lends wp.media.model.Selection.prototype */{
 module.exports = Selection;
 
 
-/***/ })
+/***/ }
 
 /******/ 	});
 /************************************************************************/
@@ -1388,9 +1388,6 @@ module.exports = Selection;
 /******/ 	}
 /******/ 	
 /************************************************************************/
-var __webpack_exports__ = {};
-// This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
-(() => {
 /**
  * @output wp-includes/js/media-models.js
  */
@@ -1629,8 +1626,6 @@ media.query = function( props ) {
 		props: _.extend( _.defaults( props || {}, { orderby: 'date' } ), { query: true } )
 	});
 };
-
-})();
 
 /******/ })()
 ;

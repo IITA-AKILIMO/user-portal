@@ -24,7 +24,7 @@
 				style="display: flex; align-items: center;"
 				>
 
-				<?php wp_nonce_field( 'forminator_' . static::$module_slug . '_request', 'forminatorNonce' ); ?>
+				<?php wp_nonce_field( 'forminator_' . $this::$module_slug . '_request', 'forminatorNonce' ); ?>
 
 				<input type="hidden" id="forminator_bulk_ids" name="ids" value="" />
 				<input type="hidden" name="msearch" value="" />
@@ -46,10 +46,10 @@
 					<?php endforeach; ?>
 				</select>
 
-				<button class="sui-button"><?php esc_html_e( 'Apply', 'forminator' ); ?></button>
+				<button id="forminator_bulk_apply_button" class="sui-button"><?php esc_html_e( 'Apply', 'forminator' ); ?></button>
 
 				<?php if ( 'forminator_forms' === $forminator_post_type ) { ?>
-				<button id="forminator_bulk_apply_preset" data-modal="apply_preset" class="sui-hidden wpmudev-open-modal"></button>
+				<button id="forminator_bulk_apply_preset" data-modal="apply_preset" class="sui-hidden wpmudev-open-modal" aria-labelledby="forminator_bulk_apply_button"></button>
 				<?php } ?>
 
 			</form>
@@ -78,7 +78,7 @@
 <div class="sui-accordion sui-accordion-block" id="forminator-modules-list">
 	<?php
 	if ( empty( $search_keyword ) ) {
-		Forminator_Admin_Module_Edit_Page::show_modules( $modules, static::$module_slug, $preview_dialog, $preview_title, $export_dialog, $forminator_post_type, $soon, $sql_month_start_date, $wizard_page );
+		Forminator_Admin_Module_Edit_Page::show_modules( $modules, $this::$module_slug, $preview_dialog, $preview_title, $export_dialog, $forminator_post_type, $soon, $sql_month_start_date, $wizard_page );
 	}
 	?>
 </div>

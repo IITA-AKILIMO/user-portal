@@ -42,7 +42,8 @@ trait Forminator_Mailerlite_Settings_Trait {
 	 */
 	private function mail_list_data( $submitted_data ) {
 		$default_data = array(
-			'mail_list_id' => '',
+			'mail_list_id'         => '',
+			'enable_double_opt_in' => '',
 		);
 
 		return $this->get_current_data( $default_data, $submitted_data );
@@ -85,8 +86,20 @@ trait Forminator_Mailerlite_Settings_Trait {
 		$html = self::get_choose_list_header( $api_error );
 
 		if ( ! $api_error ) {
+			$opt_in_description = sprintf(
+				/* Translators: 1. Opening <a> tag, 2. closing <a> tag. */
+				esc_html__( 'You\'ll also need to %1$senable double opt-in%2$s in your MailerLite account.', 'forminator' ),
+				'<a target="_blank" href="https://www.mailerlite.com/help/how-to-use-double-opt-in-when-collecting-subscribers#new/enable-double-opt-in-for-api">',
+				'</a>'
+			);
+
 			$html .= '<form enctype="multipart/form-data">';
+			$html .= '<div class="sui-row">';
+			$html .= '<div class="sui-col-md-12">';
 			$html .= self::get_choose_list_field( $current_data, $lists, $list_error );
+			$html .= '</div>';
+			$html .= '</div>';
+			$html .= self::get_double_optin_field( $current_data, $opt_in_description );
 			$html .= '</form>';
 		}
 
@@ -106,8 +119,9 @@ trait Forminator_Mailerlite_Settings_Trait {
 	 * @param string $list_name List name.
 	 */
 	private function save_settings( $submitted_data, $list_name ) {
-		$this->addon_settings['mail_list_id']   = $submitted_data['mail_list_id'];
-		$this->addon_settings['mail_list_name'] = $list_name;
+		$this->addon_settings['mail_list_id']         = $submitted_data['mail_list_id'];
+		$this->addon_settings['enable_double_opt_in'] = $submitted_data['enable_double_opt_in'] ?? '';
+		$this->addon_settings['mail_list_name']       = $list_name;
 
 		$this->save_module_settings_values();
 	}

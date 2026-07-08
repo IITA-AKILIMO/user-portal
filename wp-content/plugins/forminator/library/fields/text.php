@@ -81,6 +81,9 @@ class Forminator_Text extends Forminator_Field {
 		parent::__construct();
 
 		$this->name = esc_html__( 'Input', 'forminator' );
+		$required   = __( 'This field is required. Please enter text.', 'forminator' );
+
+		self::$default_required_messages[ $this->type ] = $required;
 	}
 
 	/**
@@ -94,7 +97,6 @@ class Forminator_Text extends Forminator_Field {
 			'input_type'  => 'line',
 			'limit_type'  => 'characters',
 			'field_label' => esc_html__( 'Text', 'forminator' ),
-			'placeholder' => esc_html__( 'E.g. text placeholder', 'forminator' ),
 		);
 	}
 
@@ -135,6 +137,7 @@ class Forminator_Text extends Forminator_Field {
 		$settings            = $views_obj->model->settings;
 		$this->field         = $field;
 		$this->form_settings = $settings;
+		$descr_position      = self::get_description_position( $field, $settings );
 
 		$html        = '';
 		$name        = self::get_property( 'element_id', $field );
@@ -144,7 +147,6 @@ class Forminator_Text extends Forminator_Field {
 		$default     = esc_html( self::get_property( 'default', $field, false ) );
 		$placeholder = $this->sanitize_value( self::get_property( 'placeholder', $field ) );
 		$field_type  = trim( self::get_property( 'input_type', $field ) );
-		$design      = $this->get_form_style( $settings );
 		$label       = esc_html( self::get_property( 'field_label', $field, '' ) );
 		$description = self::get_property( 'description', $field, '' );
 		$limit       = self::get_property( 'limit', $field, 0, 'num' );
@@ -155,6 +157,20 @@ class Forminator_Text extends Forminator_Field {
 		if ( (bool) $required ) {
 			$ariareq = 'true';
 		}
+
+		$description_block = '';
+		if ( ! empty( $description ) || ( ! empty( $limit ) && ! empty( $limit_type ) ) ) {
+			$description_block .= sprintf( '<span id="%s" class="forminator-description">', esc_attr( $id . '-description' ) );
+			if ( ! empty( $description ) ) {
+				$description_block .= self::convert_markdown( self::esc_description( $description, $name ) );
+			}
+			// Counter.
+			if ( ( ! empty( $limit ) && ! empty( $limit_type ) ) ) {
+				$description_block .= sprintf( '<span data-limit="%s" data-type="%s">0 / %s</span>', esc_attr( $limit ), esc_attr( $limit_type ), esc_html( $limit ) );
+			}
+			$description_block .= '</span>';
+		}
+		$description_block = apply_filters( 'forminator_field_description', $description_block, $description, $id, $descr_position );
 
 		if ( 'paragraph' === $field_type ) {
 
@@ -194,30 +210,23 @@ class Forminator_Text extends Forminator_Field {
 			$textarea = array_merge( $textarea, $autofill_markup );
 
 			$html .= '<div class="forminator-field">';
+			$html .= self::get_field_label( $label, $id, $required );
+
+			if ( 'above' === $descr_position ) {
+				$html .= $description_block;
+			}
 
 				$html .= self::create_textarea(
 					$textarea,
-					$label,
+					'',
 					'',
 					$required,
-					$design
 				);
 
 			$html .= '</div>';
 
-			// Counter.
-			if ( ! empty( $description ) || ( ! empty( $limit ) && ! empty( $limit_type ) ) ) {
-				$html .= sprintf( '<span id="%s" class="forminator-description">', esc_attr( $id . '-description' ) );
-
-				if ( ! empty( $description ) ) {
-					$html .= self::esc_description( $description, $name );
-				}
-
-				if ( ( ! empty( $limit ) && ! empty( $limit_type ) ) ) {
-					$html .= sprintf( '<span data-limit="%s" data-type="%s">0 / %s</span>', $limit, $limit_type, $limit );
-				}
-
-				$html .= '</span>';
+			if ( 'above' !== $descr_position ) {
+				$html .= $description_block;
 			}
 		} else {
 
@@ -256,30 +265,21 @@ class Forminator_Text extends Forminator_Field {
 			$input_text = array_merge( $input_text, $autofill_markup );
 
 			$html .= '<div class="forminator-field">';
+			$html .= self::get_field_label( $label, $id, $required );
+
+			if ( 'above' === $descr_position ) {
+				$html .= $description_block;
+			}
 
 				$html .= self::create_input(
 					$input_text,
-					$label,
+					'',
 					'',
 					$required,
-					$design
 				);
 
-				// Counter.
-			if ( ! empty( $description ) || ( ! empty( $limit ) && ! empty( $limit_type ) ) ) {
-
-				$html .= sprintf( '<span id="%s" class="forminator-description">', esc_attr( $id . '-description' ) );
-
-				if ( ! empty( $description ) ) {
-					$html .= self::esc_description( $description, $name );
-				}
-
-				if ( ( ! empty( $limit ) && ! empty( $limit_type ) ) ) {
-					$html .= sprintf( '<span data-limit="%s" data-type="%s">0 / %s</span>', $limit, $limit_type, $limit );
-				}
-
-				$html .= '</span>';
-
+			if ( 'above' !== $descr_position ) {
+				$html .= $description_block;
 			}
 
 			$html .= '</div>';
@@ -336,7 +336,7 @@ class Forminator_Text extends Forminator_Field {
 		$is_required      = $this->is_required( $field );
 		$has_limit        = $this->has_limit( $field );
 		$messages         = '';
-		$required_message = self::get_property( 'required_message', $field, '' );
+		$required_message = self::get_property( 'required_message', $field, self::$default_required_messages[ $this->type ] );
 
 		if ( $is_required || $has_limit ) {
 			$messages .= '"' . $this->get_id( $field ) . '": {';
@@ -344,7 +344,7 @@ class Forminator_Text extends Forminator_Field {
 			if ( $is_required ) {
 				$required_error = apply_filters(
 					'forminator_text_field_required_validation_message',
-					( ! empty( $required_message ) ? $required_message : esc_html__( 'This field is required. Please enter text.', 'forminator' ) ),
+					$required_message,
 					$id,
 					$field
 				);
@@ -393,11 +393,11 @@ class Forminator_Text extends Forminator_Field {
 		}
 
 		if ( $this->is_required( $field ) && '' === $data ) {
-			$required_message = self::get_property( 'required_message', $field, '' );
+			$required_message = self::get_property( 'required_message', $field, esc_html( self::$default_required_messages[ $this->type ] ) );
 
 			$this->validation_message[ $id ] = apply_filters(
 				'forminator_text_field_required_validation_message',
-				( ! empty( $required_message ) ? $required_message : esc_html__( 'This field is required. Please enter text.', 'forminator' ) ),
+				$required_message,
 				$id,
 				$field
 			);

@@ -33,7 +33,7 @@
 			<li><span class="sui-icon-check sui-md" aria-hidden="true"></span> <?php esc_html_e( 'Smush and Hummingbird Pro performance pack', 'forminator' ); ?></li>
 			<li><span class="sui-icon-check sui-md" aria-hidden="true"></span> <?php esc_html_e( 'Complete marketing suite with Hustle Pro – pop-ups, email, and more', 'forminator' ); ?></li>
 			<li><span class="sui-icon-check sui-md" aria-hidden="true"></span> <?php esc_html_e( 'Customizable Google analytic dashboards with Beehive Pro', 'forminator' ); ?></li>
-			<li><span class="sui-icon-check sui-md" aria-hidden="true"></span> <?php esc_html_e( 'Manage unlimited WordPress sites from the Hub', 'forminator' ); ?></li>
+			<li><span class="sui-icon-check sui-md" aria-hidden="true"></span> <?php esc_html_e( 'Manage unlimited WordPress sites from The Hub', 'forminator' ); ?></li>
 			<li><span class="sui-icon-check sui-md" aria-hidden="true"></span> <?php esc_html_e( '24/7 live WordPress support', 'forminator' ); ?></li>
 			<li><span class="sui-icon-check sui-md" aria-hidden="true"></span> <?php esc_html_e( 'The WPMU DEV Guarantee', 'forminator' ); ?></li>
 		</ol>

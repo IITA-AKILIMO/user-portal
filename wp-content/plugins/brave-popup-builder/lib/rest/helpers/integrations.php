@@ -136,6 +136,11 @@ function bravepop_get_integration_lists($service='', $apiKey='', $secretKey='', 
       $lists = $sendgrid->get_lists($apiKey);
       return $lists;
    }
+   if($service === 'mailwizz')   { 
+      $sendgrid =   new BravePop_Mailwizz();
+      $lists = $sendgrid->get_lists($apiKey);
+      return $lists;
+   }
    if(function_exists('bravepop_external_integration_get_list')){
       return bravepop_get_external_integration_list($service, $apiKey, $secretKey, $accessToken, $apiURL);
    }
@@ -235,7 +240,7 @@ function bravepop_update_captcha_integrations( $integrations ){
    $updatedIntegrations = $currentIntegrations;
 
    $decodedIntegration = json_decode($integrations);
-   if(isset($decodedIntegration->service) && $decodedIntegration->service === 'recaptcha'){
+   if(isset($decodedIntegration->service) && ($decodedIntegration->service === 'recaptcha' || $decodedIntegration->service === 'turnstile')){
       $validateIntegration = true;
 
       if($validateIntegration){
@@ -352,7 +357,7 @@ function bravepop_add_to_newsletter($actionType='form', $type='', $emailValue=''
       if($type === 'sendy'){      $service = new BravePop_Sendy();   }
       if($type === 'omnisend'){      $service = new BravePop_Omnisend();   }
       if($type === 'sender'){      $service = new BravePop_Sender();   }
-
+      if($type === 'mailwizz'){      $service = new BravePop_Mailwizz();   }
 
       if(function_exists('bravepop_external_integration_add_contact')){
          $service =  bravepop_external_integration_add_contact($type);
@@ -396,7 +401,7 @@ function bravepop_newsletter_misc_settings($service, $newsletterSettings, $formF
 }
 
 
-function bravepop_subscription_failed_notificaion($popupID, $emailAddress, $service, $fullName, $subEmailAddress){
+function bravepop_subscription_failed_notificaion($popupID, $emailAddress, $service, $fullName, $subEmailAddress, $subScriptionRes=false){
    if(!$popupID || !$emailAddress || !$subEmailAddress || !$service){ return false; }
    $firstname = $fullName ? $fullName : ''; $lastname = '';
    if(( strpos($fullName, ' ') !== false)){
@@ -405,12 +410,17 @@ function bravepop_subscription_failed_notificaion($popupID, $emailAddress, $serv
       $lastname = $fullname_parts[1] ? $fullname_parts[1] : '';
    }
    $popupName = get_the_title($popupID);
+   $apiErroMsg = $subScriptionRes && isset($subScriptionRes['errorMsg']) ? 'Error Message:'.$subScriptionRes['errorMsg'] : 'Unknown. Probably due to '.$service.' API issues, incomplete data or other reasons';
    //error_log($popupName .' '. $emailAddress .' '. $subEmailAddress .' '. $service);
    if($popupName && $emailAddress && $subEmailAddress && $service){
       $sendto =  $emailAddress;
       $subject = '[Brave][Error] Newsletter Subscription Failed';
       $headers = "Content-Type: text/plain; charset=\"iso-8859-1\"";
-      $theMessage = "Hi,\r\n\r\nYour Brave Campaign '".$popupName."' failed to subscribe a visitor to your Newsletter mailing list (Due to ".$service." API issues, incomplete data or other reasons).\r\nPlease add the visitor to your list manually from your ".$service." Dashboard:  \r\n\r\nFirst Name: ".($firstname ? $firstname: 'Not Given')."\r\nLast Name: ".($lastname ? $lastname: 'Not Given')."\r\nEmail Address: ".$subEmailAddress."\r\n\r\nMessage Sent By Brave Plugin.\r\n".get_bloginfo( 'name' )."";
-      wp_mail( $sendto, $subject, $theMessage, $headers);
+      $theMessage = "Hi,\r\n\r\nYour Brave Campaign '".$popupName."' failed to subscribe a visitor to your Newsletter mailing list.\r\nReason: ".$apiErroMsg."\r\n\r\nPlease add the visitor to your list manually from your ".$service." Dashboard:  \r\n\r\nFirst Name: ".($firstname ? $firstname: 'Not Given')."\r\nLast Name: ".($lastname ? $lastname: 'Not Given')."\r\nEmail Address: ".$subEmailAddress."\r\n\r\nMessage Sent By Brave Plugin.\r\n".get_bloginfo( 'name' )."";
+      $result =  wp_mail( $sendto, $subject, $theMessage, $headers);
+      return $result;
+   }else{
+      return false;
+
    }
 }

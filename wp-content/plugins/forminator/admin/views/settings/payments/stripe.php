@@ -28,13 +28,17 @@ foreach ( $template_vars as $key => $val ) {
 
 <p class="sui-description" style="margin-top: 0; text-align: center;">
 	<?php
-	printf(
-		/* Translators: 1. Opening <a> tag with link Stripe Forminator App, 2. closing <a> tag, 3. Opening <a> tag with link Stripe API key. */
-		esc_html__( 'Enter your Stripe API keys below to connect your account. Install the %1$sStripe Forminator App%2$s to get your Stripe API keys. See instructions on how to get your Stripe API keys %3$shere%2$s.', 'forminator' ),
-		'<a href="https://marketplace.stripe.com/apps/forminator-stripe-app" target="_blank">',
-		'</a>',
-		'<a href="https://wpmudev.com/docs/wpmu-dev-plugins/forminator/#connect-to-stripe" target="_blank">'
-	);
+	esc_html_e( 'Enter your Stripe API keys below to connect your account.', 'forminator' );
+
+	if ( forminator_is_show_documentation_link() ) {
+		printf(
+			/* Translators: 1. Opening <a> tag with link Stripe Forminator App, 2. closing <a> tag, 3. Opening <a> tag with link Stripe API key. */
+			' ' . esc_html__( 'Install the %1$sStripe Forminator App%2$s to get your Stripe API keys. See instructions on how to get your Stripe API keys %3$shere%2$s.', 'forminator' ),
+			'<a href="https://marketplace.stripe.com/apps/forminator-stripe-app" target="_blank">',
+			'</a>',
+			'<a href="https://wpmudev.com/docs/wpmu-dev-plugins/forminator/#connect-to-stripe" target="_blank">'
+		);
+	}
 	?>
 </p>
 
@@ -57,7 +61,11 @@ if ( ! empty( $template_vars['has_deprecated_secret_key'] ) ) {
 						esc_html__( '%1$sNotice%2$s: You are using the deprecated Stripe %1$sSecret Key%2$s. To avoid unexpected issues in your form, we recommend using the new Stripe %3$sRestricted API Key%4$s instead.', 'forminator' ),
 						'<b>',
 						'</b>',
-						'<a href="https://wpmudev.com/docs/wpmu-dev-plugins/forminator/#connect-to-stripe" target="_blank">',
+						'<a href="' .
+							( forminator_is_show_documentation_link()
+								? 'https://wpmudev.com/docs/wpmu-dev-plugins/forminator/#connect-to-stripe'
+								: 'https://docs.stripe.com/keys#create-restricted-api-secret-key' ) .
+							'" target="_blank">',
 						'</a>'
 					);
 					?>
@@ -73,9 +81,10 @@ if ( ! empty( $template_vars['has_deprecated_secret_key'] ) ) {
 
 	<div class="sui-form-field <?php echo esc_attr( ! empty( $vars['test_key_error'] ) ? 'sui-form-field-error' : '' ); ?>">
 
-		<label class="sui-label"><?php esc_html_e( 'Test Publishable Key', 'forminator' ); ?></label>
+		<label for="forminator-field-stripe-test-key" class="sui-label"><?php esc_html_e( 'Test Publishable Key', 'forminator' ); ?></label>
 
 		<input
+			id="forminator-field-stripe-test-key"
 			class="sui-form-control"
 			name="test_key" placeholder="<?php echo esc_attr__( 'Enter your test publishable key', 'forminator' ); ?>"
 			value="<?php echo esc_attr( $vars['test_key'] ); ?>"
@@ -88,9 +97,10 @@ if ( ! empty( $template_vars['has_deprecated_secret_key'] ) ) {
 
 	<div class="sui-form-field <?php echo esc_attr( ! empty( $vars['test_secret_error'] ) ? 'sui-form-field-error' : '' ); ?>">
 
-		<label class="sui-label"><?php esc_html_e( 'Test Restricted API Key', 'forminator' ); ?></label>
+		<label for="forminator-field-stripe-test-secret-key" class="sui-label"><?php esc_html_e( 'Test Restricted API Key', 'forminator' ); ?></label>
 
 		<input
+			id="forminator-field-stripe-test-secret-key"
 			class="sui-form-control"
 			name="test_secret" placeholder="<?php echo esc_attr__( 'Enter your test restricted API key', 'forminator' ); ?>"
 			value="<?php echo esc_attr( $vars['test_secret'] ); ?>"
@@ -104,9 +114,10 @@ if ( ! empty( $template_vars['has_deprecated_secret_key'] ) ) {
 
 	<div class="sui-form-field <?php echo esc_attr( ! empty( $vars['live_key_error'] ) ? 'sui-form-field-error' : '' ); ?>">
 
-		<label class="sui-label"><?php esc_html_e( 'Live Publishable Key', 'forminator' ); ?></label>
+		<label for="forminator-field-stripe-live-key" class="sui-label"><?php esc_html_e( 'Live Publishable Key', 'forminator' ); ?></label>
 
 		<input
+			id="forminator-field-stripe-live-key"
 			class="sui-form-control"
 			name="live_key" placeholder="<?php echo esc_attr__( 'Enter your live publishable key', 'forminator' ); ?>"
 			value="<?php echo esc_attr( $vars['live_key'] ); ?>"
@@ -120,9 +131,10 @@ if ( ! empty( $template_vars['has_deprecated_secret_key'] ) ) {
 
 	<div class="sui-form-field <?php echo esc_attr( ! empty( $vars['live_secret_error'] ) ? 'sui-form-field-error' : '' ); ?>">
 
-		<label class="sui-label"><?php esc_html_e( 'Live Restricted API Key', 'forminator' ); ?></label>
+		<label for="forminator-field-stripe-live-secret-key" class="sui-label"><?php esc_html_e( 'Live Restricted API Key', 'forminator' ); ?></label>
 
 		<input
+			id="forminator-field-stripe-live-secret-key"
 			class="sui-form-control"
 			name="live_secret" placeholder="<?php echo esc_attr__( 'Enter your live restricted API key', 'forminator' ); ?>"
 			value="<?php echo esc_attr( $vars['live_secret'] ); ?>"

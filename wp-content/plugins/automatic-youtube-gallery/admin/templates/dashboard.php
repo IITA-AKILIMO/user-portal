@@ -10,7 +10,7 @@
  */
 ?>
 
-<div id="ayg-dashboard" class="wrap about-wrap full-width-layout ayg-dashboard">
+<div id="ayg-dashboard" class="ayg ayg-dashboard wrap about-wrap full-width-layout">
   <h1><?php esc_html_e( 'Welcome to "Automatic YouTube Gallery"', 'automatic-youtube-gallery' ); ?></h1>
 
   <p class="about-text">

@@ -15,7 +15,7 @@
 	<input type="text" name="<?php echo esc_attr( $this->get_field_name( 'title' ) ); ?>" id="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>" class="widefat" value="<?php echo esc_attr( $instance['title'] ); ?>" />
 </div>
 
-<div class="ayg-editor ayg-editor-field-type-<?php echo esc_attr( $instance['type'] ); ?> ayg-editor-field-theme-<?php echo esc_attr( $instance['theme'] ); ?> ayg-editor-field-pagination_type-<?php echo esc_attr( $instance['pagination_type'] ); ?>">
+<div class="ayg-editor ayg-editor-field-type-<?php echo esc_attr( $instance['type'] ); ?> ayg-editor-field-theme-<?php echo esc_attr( $instance['theme'] ); ?>">
 	<?php foreach ( $fields as $key => $value ) : ?>	
 		<div class="ayg-editor-section ayg-editor-section-<?php echo esc_attr( $key ); ?> <?php if ( 'source' == $key ) echo 'ayg-active'; ?>">
 			<div class="ayg-editor-section-header">            

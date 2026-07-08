@@ -1,9 +1,11 @@
 <wpml-config>    
     <admin-texts>
-        <key name="ayg_gallery_settings">
+        <key name="ayg_strings_settings">
             <key name="more_button_label"/>
             <key name="previous_button_label"/>
             <key name="next_button_label"/>
+            <key name="show_more_label"/>
+            <key name="show_less_label"/>
         </key>
         <key name="ayg_livestream_settings">
             <key name="fallback_message"/>

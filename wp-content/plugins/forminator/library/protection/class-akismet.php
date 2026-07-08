@@ -169,6 +169,8 @@ class Forminator_Akismet extends Forminator_Spam_Protection {
 	 */
 	private function akismet_check( $post_data, $form_id ) {
 		global $akismet_api_host, $akismet_api_port;
+		$post_data = apply_filters( 'forminator_akismet_values', $post_data, $form_id );
+
 		$is_spam = false;
 		$query   = $this->build_query( $post_data );
 

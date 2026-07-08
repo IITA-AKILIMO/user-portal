@@ -23,7 +23,7 @@ $featured = $videos[0]; // Featured Video
                 <h2 class="ayg-player-title"><?php echo esc_html( $featured->title ); ?></h2>  
             <?php endif; ?>
             <?php if ( ! empty( $attributes['player_description'] ) && ! empty( $featured->description ) ) : ?>  
-                <ayg-description class="ayg-player-description"><?php echo wp_kses_post( ayg_get_player_description( $featured ) ); ?></ayg-description>
+                <ayg-description class="ayg-player-description"><?php echo wp_kses_post( ayg_get_player_description( $featured, $attributes ) ); ?></ayg-description>
             <?php endif; ?>
         </div>
     </div>

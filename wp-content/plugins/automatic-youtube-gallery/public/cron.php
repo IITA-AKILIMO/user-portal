@@ -54,19 +54,18 @@ class AYG_Public_Cron {
 	 * @since 2.3.0
 	 */
 	public function cron_event() {
-        $existing_keys = get_option( 'ayg_transient_keys', array() );
+        $existing_keys = ayg_get_option( 'ayg_transient_keys' );
 
-        if ( is_array( $existing_keys ) ) {
-            $filtered_keys = array();
+		$filtered_keys = array();
 
-            foreach ( $existing_keys as $key ) {
-                if ( get_transient( $key ) ) {
-                    $filtered_keys[] = $key;
-                }
-            }
+		foreach ( $existing_keys as $key ) {
+			if ( get_transient( $key ) ) {
+				$filtered_keys[] = $key;
+			}
+		}
 
-            update_option( 'ayg_transient_keys', $filtered_keys );
-        }
+		// Save it to the DB (autoload=no: this list can grow large and is not needed on every page load)
+		update_option( 'ayg_transient_keys', $filtered_keys, false );
 	}
 
 }

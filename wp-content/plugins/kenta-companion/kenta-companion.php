@@ -5,7 +5,7 @@
  * Description:       Kenta Companion is an extension to the Kenta theme. It provides a lot of features and one-click demo import for Kenta Theme.
  * Requires at least: 5.4
  * Requires PHP:      7.4
- * Version:           1.3.1
+ * Version:           1.3.4
  * Author:            WP Moose
  * Author URI:        https://www.wpmoose.com
  * License:           GPL-2.0-or-later
@@ -22,7 +22,7 @@ if ( !defined( 'ABSPATH' ) ) {
  *
  * @since 1.0.0
  */
-define( 'KCMP_VERSION', '1.3.1' );
+define( 'KCMP_VERSION', '1.3.4' );
 define( 'MIN_KENTA_VERSION', '1.4.0' );
 define( 'KCMP_PLUGIN_FILE', __FILE__ );
 define( 'KCMP_PLUGIN_PATH', trailingslashit( plugin_dir_path( KCMP_PLUGIN_FILE ) ) );
@@ -43,22 +43,23 @@ if ( function_exists( 'kenta_fs' ) ) {
                 // Include Freemius SDK.
                 require_once dirname( __FILE__ ) . '/freemius/start.php';
                 $kenta_fs = fs_dynamic_init( array(
-                    'id'             => '10804',
-                    'slug'           => 'kenta-companion',
-                    'type'           => 'plugin',
-                    'public_key'     => 'pk_64db37825bd0972890eb37821be91',
-                    'is_premium'     => false,
-                    'premium_suffix' => 'Premium',
-                    'anonymous_mode' => true,
-                    'has_addons'     => false,
-                    'has_paid_plans' => true,
-                    'menu'           => array(
+                    'id'               => '10804',
+                    'slug'             => 'kenta-companion',
+                    'type'             => 'plugin',
+                    'public_key'       => 'pk_64db37825bd0972890eb37821be91',
+                    'is_premium'       => false,
+                    'premium_suffix'   => 'Premium',
+                    'anonymous_mode'   => true,
+                    'has_addons'       => false,
+                    'has_paid_plans'   => true,
+                    'menu'             => array(
                         'slug'    => 'kenta-companion',
                         'pricing' => false,
                         'contact' => true,
                         'support' => false,
                     ),
-                    'is_live'        => true,
+                    'is_live'          => true,
+                    'is_org_compliant' => true,
                 ) );
             }
             return $kenta_fs;

@@ -76,6 +76,7 @@ if ( ! class_exists( 'BravePop_Ontraport' ) ) {
 
          $args = array( 'method' => 'POST', 'timeout' => 30, 'headers' => array( 'Api-Key' => $this->api_key, 'Api-Appid' => $this->api_secret  ), 'body' => wp_json_encode($contact) );
 
+         // First Create a Contact in Ontraport
          // https://api.ontraport.com/doc/#merge-or-create-a-contact
          $response = wp_remote_post( 'https://api.ontraport.com/1/Contacts/saveorupdate', $args );
          
@@ -83,20 +84,25 @@ if ( ! class_exists( 'BravePop_Ontraport' ) ) {
          $data = json_decode( $body );
          //error_log(wp_json_encode($response));
 
+         // Then add the contact to the list
+         // https://api.ontraport.com/doc/#subscribe-an-object-to-a-campaign-or-sequence
          if(isset($data->data) && (isset($data->data->id) || (isset($data->data->attrs) && isset($data->data->attrs->id)) )){
             $esp_user_id = isset($data->data->id) ? $data->data->id : false;
             if( (isset($data->data->attrs) && isset($data->data->attrs->id))){   $esp_user_id = $data->data->attrs->id;  }
 
-            $addedtoList = $this->add_to_list_action($email, $esp_user_id, $list_id, $userData);
+            $addedtoList = $this->add_to_list_action($email, $esp_user_id, $list_id, $userData, $contact);
 
             return $addedtoList; 
          }else{
-            return false;
+            $errorMsg = $response->get_error_message() ? $response->get_error_message() : 'Unknown Error Occurred. No Error details provided by Ontraport.';
+            $errorPayload = array( 'user_mail'=> $email, 'user_data'=> $contact, 'list_id'=> $list_id, 'error' => $errorMsg, 'response'=> $response );
+            do_action( 'bravepop_added_to_list_failed', 'ontraport', $errorPayload );
+            return array( 'success' => false, 'errorMsg' => $errorMsg, 'result' => $errorPayload );
          }
       }
 
 
-      public function add_to_list_action($email, $espID, $list_id, $userData){
+      public function add_to_list_action($email, $espID, $list_id, $userData, $contact=array()){
             //error_log('#### ESP ID: '. $espID.' | List ID: '.$list_id);
             if(!$espID || !$list_id){ return false; }
             //https://api.ontraport.com/doc/#subscribe-an-object-to-a-campaign-or-sequence
@@ -113,16 +119,19 @@ if ( ! class_exists( 'BravePop_Ontraport' ) ) {
                $addedData = array(
                   'action'=> isset($userData['action']) ? $userData['action'] : 'visitor_added',  
                   'user_id'=> isset($userData['userData']['ID']) ? $userData['userData']['ID'] : false,
-                  'user_mail'=> $email, 'esp_user_id'=> $espID
+                  'user_mail'=> $email, 
+                  'esp_user_id'=> $espID,
+                  'user_data'=> $contact,
+                  'list_id' => $list_id,
+                  'response' => $subResponse,
                ); 
-               do_action( 'bravepop_addded_to_list', 'ontraport', $addedData );
-
-               return true;
-
+               do_action( 'bravepop_added_to_list', 'ontraport', $addedData );
+               return array( 'success' => true, 'result' => $addedData );
             }else{
-
-               return false;
-
+               $errorMsg = $subResponse->get_error_message() ? $subResponse->get_error_message() : 'Unknown Error Occurred. No Error details provided by Ontraport.';
+               $errorPayload = array( 'user_mail'=> $email, 'user_data'=> $contact, 'list_id'=> $list_id, 'error' => $errorMsg, 'response'=> $subResponse );
+               do_action( 'bravepop_added_to_list_failed', 'ontraport', $errorPayload );
+               return array( 'success' => false, 'errorMsg' => $errorMsg, 'result' => $errorPayload );
             }
 
       }

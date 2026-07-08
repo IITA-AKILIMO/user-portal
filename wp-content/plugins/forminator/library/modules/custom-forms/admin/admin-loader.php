@@ -41,6 +41,7 @@ class Forminator_Custom_Form_Admin extends Forminator_Admin_Module {
 		add_action( 'wp_ajax_forminator_delete_template', array( $this, 'delete_template' ) );
 		add_action( 'wp_ajax_forminator_rename_template', array( $this, 'rename_template' ) );
 		add_action( 'wp_ajax_forminator_duplicate_template', array( $this, 'duplicate_template' ) );
+		add_action( 'wp_ajax_forminator_disconnect_hub', array( $this, 'disconnect_hub' ) );
 	}
 
 	/**
@@ -401,7 +402,9 @@ class Forminator_Custom_Form_Admin extends Forminator_Admin_Module {
 				'basic-field-image-size' => 'custom',
 				'basic-fields-style'     => 'open',
 				'store_submissions'      => '1',
+				'description-position'   => 'above',
 			),
+			self::get_default_color_settings(),
 			$settings
 		);
 
@@ -413,6 +416,56 @@ class Forminator_Custom_Form_Admin extends Forminator_Admin_Module {
 		$default_settings = apply_filters( 'forminator_form_default_settings', $default_settings );
 
 		return $default_settings;
+	}
+
+	/**
+	 * Get default color settings
+	 *
+	 * @return array
+	 */
+	public static function get_default_color_settings() {
+		return array(
+			'input-focus-outline-color'                  => '#254DEB',
+			'radio-border-hover'                         => '#097BAA',
+			'radio-background-hover'                     => '#E1F6FF',
+			'radio-outline-focus'                        => '#254DEB',
+			'select-focus-outline-color'                 => '#254DEB',
+			'button-submit-focus-outline-color'          => '#254DEB',
+			'prev-focus-outline-color'                   => '#254DEB',
+			'next-focus-outline-color'                   => '#254DEB',
+			'button-upload-focus-outline-color'          => '#254DEB',
+			'button-upload-delete-focus-outline-color'   => '#254DEB',
+			'multiupload-panel-focus-outline-color'      => '#254DEB',
+			'multiupload-panel-link-focus-outline-color' => '#254DEB',
+			'repeater-button-outline-focus'              => '#254DEB',
+			'repeater-icon-outline-focus'                => '#254DEB',
+			'repeater-link-outline-focus'                => '#254DEB',
+			'consent-cbox-border-hover'                  => '#254DEB',
+			'consent-cbox-background-hover'              => '#254DEB',
+			'consent-cbox-outline-focus'                 => '#254DEB',
+			'slider-handle-outline-color'                => '#254DEB',
+			'rating-focus-outline-color'                 => '#254DEB',
+			'dropdown-search-outline-focus'              => '#254DEB',
+			'dropdown-option-outline-focus'              => '#254DEB',
+			'multiselect-item-outline-focus'             => '#254DEB',
+			'steps-outline-focus'                        => '#254DEB',
+			'calendar-outline-focus'                     => '#254DEB',
+		);
+	}
+
+	/**
+	 * Customizing import data
+	 *
+	 * @param array $import_data Import data.
+	 *
+	 * @return array
+	 */
+	public static function customize_import_data( array $import_data ): array {
+		if ( ! isset( $import_data['data']['settings']['description-position'] ) ) {
+			$import_data['data']['settings']['description-position'] = 'above';
+		}
+
+		return $import_data;
 	}
 
 	/**
@@ -437,7 +490,7 @@ class Forminator_Custom_Form_Admin extends Forminator_Admin_Module {
 		if ( is_wp_error( $module_id ) ) {
 			return;
 		}
-		$wizard_url = admin_url( 'admin.php?page=forminator-cform-wizard&id=' . $module_id );
+		$wizard_url = admin_url( 'admin.php?page=forminator-cform-wizard&create-status=success&id=' . $module_id );
 
 		wp_safe_redirect( $wizard_url );
 	}
@@ -459,12 +512,20 @@ class Forminator_Custom_Form_Admin extends Forminator_Admin_Module {
 				// return WP_Error.
 				return new WP_Error( 'no_template', esc_html__( 'Template is not found.', 'forminator' ) );
 			}
+			if ( ! empty( $template['is_official'] ) ) {
+				add_filter( 'forminator_form_import_data', array( __CLASS__, 'customize_import_data' ) );
+			}
 			$change_recipients = apply_filters( 'forminator_change_template_recipients', true, $template );
+
+			$template_name = Forminator_Custom_Forms::translate_template_name( $template['name'] ?? '' );
+			if ( empty( $name ) ) {
+				$name = $template_name;
+			}
 
 			$extra_args = array(
 				'trigger_from'  => $trigger_from,
 				'template_type' => $template['is_official'] ?? false ? 'preset' : 'cloud',
-				'template_name' => $template['name'] ?? '',
+				'template_name' => $template_name,
 			);
 
 			try {
@@ -555,7 +616,7 @@ class Forminator_Custom_Form_Admin extends Forminator_Admin_Module {
 			$settings = self::get_default_settings( $name, array() );
 		}
 
-		$model->name          = $name;
+		$model->name          = sanitize_title( $name );
 		$model->notifications = $notifications;
 
 		$model->settings = self::validate_settings( $settings );
@@ -609,9 +670,21 @@ class Forminator_Custom_Form_Admin extends Forminator_Admin_Module {
 			$form_model->clear_fields();
 		}
 
-		$fields = isset( $template->fields ) ? $template->fields : array();
+		$fields       = isset( $template->fields ) ? $template->fields : array();
+		$is_paginated = false;
+		$has_captcha  = false;
 		foreach ( $fields as $row ) {
 			foreach ( $row['fields'] as $f ) {
+				$field_type = $f['type'] ?? '';
+				switch ( $field_type ) {
+					case 'page-break':
+						$is_paginated = true;
+						break;
+					case 'captcha':
+						$has_captcha = true;
+						break;
+				}
+
 				$field          = new Forminator_Form_Field_Model();
 				$field->form_id = $row['wrapper_id'];
 				$field->slug    = $f['element_id'];
@@ -629,6 +702,14 @@ class Forminator_Custom_Form_Admin extends Forminator_Admin_Module {
 			$validation_result = forminator_validate_registration_form_settings( $settings );
 			if ( is_wp_error( $validation_result ) ) {
 				return $validation_result;
+			}
+		}
+
+		// Validate captcha placement only when pagination and captcha exist.
+		if ( $is_paginated && $has_captcha ) {
+			$captcha_validation = forminator_validate_captcha_placement_in_paginated_forms( $fields );
+			if ( is_wp_error( $captcha_validation ) ) {
+				return $captcha_validation;
 			}
 		}
 
@@ -677,6 +758,9 @@ class Forminator_Custom_Form_Admin extends Forminator_Admin_Module {
 		if ( is_wp_error( $id ) ) {
 			return $id;
 		}
+
+		// Remove temporary settings.
+		Forminator_Base_Form_Model::remove_temp_settings( $id );
 
 		try {
 			/**
@@ -791,13 +875,13 @@ class Forminator_Custom_Form_Admin extends Forminator_Admin_Module {
 		$page_number = filter_input( INPUT_POST, 'page_number', FILTER_VALIDATE_INT ) ?? 1;
 
 		$templates = array();
-		if ( FORMINATOR_PRO ) {
+		if ( Forminator_Hub_Connector::hub_connector_connected() ) {
 			$templates = Forminator_Template_API::get_templates( false, $page_number );
 			foreach ( $templates as $key => $template ) {
 				$config = json_decode( $template['config'], true );
 				if ( ! empty( $config['data'] ) && ! empty( $config['data']['settings'] ) ) {
 					$settings = $config['data']['settings'];
-					if ( is_wp_error( forminator_validate_registration_form_settings( $settings ) ) ) {
+					if ( is_wp_error( forminator_check_registration_form_permissions( $settings ) ) ) {
 						unset( $templates[ $key ] );
 					}
 				}
@@ -912,6 +996,48 @@ class Forminator_Custom_Form_Admin extends Forminator_Admin_Module {
 		} else {
 			wp_send_json_error( esc_html__( 'Failed to rename template.', 'forminator' ) );
 		}
+	}
+
+	/**
+	 * Disconnect Hub
+	 */
+	public function disconnect_hub() {
+		$nonce = Forminator_Core::sanitize_text_field( '_ajax_nonce' );
+		if ( ! $nonce || ! wp_verify_nonce( $nonce, 'forminator_disconnect_from_hub' ) ) {
+			wp_send_json_error( esc_html__( 'You are not allowed to perform this action.', 'forminator' ) );
+		}
+
+		$message = Forminator_Core::sanitize_text_field( 'message' );
+
+		$result = \WPMUDEV\Hub\Connector\API::get()->logout();
+		if ( ! is_wp_error( $result ) ) {
+			if ( ! empty( $message ) ) {
+				$model_action = 'submit';
+			} else {
+				$model_action = 'skip';
+			}
+			$this->share_hub_deactivation_survey_to_mixpanel( $model_action, $message );
+
+			wp_send_json_success( esc_html__( 'Your site has been disconnected successfully!', 'forminator' ) );
+		} else {
+			wp_send_json_error( esc_html__( 'Unable to disconnect the site.', 'forminator' ) );
+		}
+	}
+
+	/**
+	 * Share hub deactivation survey to Mixpanel
+	 *
+	 * @param string $model_action Model action.
+	 * @param string $message Message.
+	 * @return void
+	 */
+	private function share_hub_deactivation_survey_to_mixpanel( $model_action, $message = '' ) {
+		if ( 'skip' === $model_action && ! Forminator_Core::is_tracking_active() ) {
+			return;
+		}
+		Forminator_Core::init_mixpanel( true );
+		// Share deactivation survey to Mixpanel.
+		do_action( 'forminator_share_hub_deactivation_survey_to_mixpanel', $model_action, $message );
 	}
 
 	/**

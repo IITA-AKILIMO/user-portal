@@ -32,7 +32,7 @@ $method  = 'get_' . forminator_get_prefix( $module_slug, '', false, true );
 $modules = Forminator_API::$method( null, 1, $num_recent, $statuses );
 ?>
 
-<div class="sui-box">
+<div id="forminator-dashboard-box-recent-<?php echo esc_attr( $module_slug ); ?>" class="sui-box">
 
 	<div class="sui-box-header">
 
@@ -42,14 +42,22 @@ $modules = Forminator_API::$method( null, 1, $num_recent, $statuses );
 
 	<div class="sui-box-body">
 
-		<p><?php echo esc_html( $description ); ?></p>
+		<p>
+		<?php
+		if ( count( $modules ) > 0 ) {
+			echo esc_html( $recent_description );
+		} else {
+			echo esc_html( $description );
+		}
+		?>
+		</p>
 
 		<?php // Strict comparison is removed for a reason! ?>
 		<?php if ( 0 === $total ) { ?>
 
 			<p><button class="sui-button sui-button-blue wpmudev-open-modal"
 				data-modal="<?php echo esc_attr( $create_dialog ); ?>">
-				<i class="sui-icon-plus" aria-hidden="true"></i> <?php esc_html_e( 'Create', 'forminator' ); ?>
+				<i class="sui-icon-plus" aria-hidden="true"></i> <?php esc_html_e( 'Add New', 'forminator' ); ?>
 			</button></p>
 
 		<?php } ?>
@@ -122,12 +130,14 @@ $modules = Forminator_API::$method( null, 1, $num_recent, $statuses );
 								</button>
 
 								<ul>
+									<?php if ( Forminator_Admin_Module_Edit_Page::is_module_editable( $module ) ) : ?>
 									<li>
-									<?php $wizard_page_prefix = 'quiz' !== $module_type ? $module_type : ( 'nowrong' === $module['quiz_type'] ? $module['quiz_type'] : 'knowledge' ); ?>
+										<?php $wizard_page_prefix = 'quiz' !== $module_type ? $module_type : ( 'nowrong' === $module['quiz_type'] ? $module['quiz_type'] : 'knowledge' ); ?>
 										<a href="<?php echo esc_url( admin_url( 'admin.php?page=forminator-' . $wizard_page_prefix . '-wizard&id=' . $module['id'] ) ); ?>">
 											<i class="sui-icon-pencil" aria-hidden="true"></i> <?php esc_html_e( 'Edit', 'forminator' ); ?>
 										</a>
 									</li>
+									<?php endif; ?>
 
 									<li><button class="wpmudev-open-modal"
 										data-modal="<?php echo esc_attr( $preview_dialog ); ?>"
@@ -190,7 +200,7 @@ $modules = Forminator_API::$method( null, 1, $num_recent, $statuses );
 									<?php endif; ?>
 
 									<li>
-										<button class="wpmudev-open-modal"
+										<button class="sui-option-red wpmudev-open-modal"
 											data-modal="delete-module"
 											data-modal-title="<?php echo esc_attr( $delete_title ); ?>"
 											data-modal-content="<?php echo esc_attr( $delete_description ); ?>"
@@ -218,7 +228,7 @@ $modules = Forminator_API::$method( null, 1, $num_recent, $statuses );
 
 			<button class="sui-button sui-button-blue wpmudev-open-modal forminator-create-<?php echo esc_attr( $module_slug ); ?>"
 				data-modal="<?php echo esc_attr( $create_dialog ); ?>">
-				<i class="sui-icon-plus" aria-hidden="true"></i> <?php esc_html_e( 'Create', 'forminator' ); ?>
+				<i class="sui-icon-plus" aria-hidden="true"></i> <?php esc_html_e( 'Add New', 'forminator' ); ?>
 			</button>
 
 			<div class="sui-actions-right">

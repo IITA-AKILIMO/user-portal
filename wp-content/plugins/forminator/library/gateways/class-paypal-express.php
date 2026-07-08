@@ -299,14 +299,7 @@ class Forminator_PayPal_Express extends Forminator_Payment_Gateway {
 	}
 
 	public static function is_available() {
-		$min_php_version = apply_filters( 'forminator_payments_paypal_min_php_version', '5.3' );
-		$loaded          = forminator_payment_lib_paypal_version_loaded();
-
-		if ( version_compare( PHP_VERSION, $min_php_version, 'lt' ) ) {
-			return false;
-		}
-
-		return $loaded;
+		return forminator_payment_lib_paypal_version_loaded();
 	}
 
 
@@ -538,7 +531,7 @@ class Forminator_PayPal_Express extends Forminator_Payment_Gateway {
 	 * @return string
 	 */
 	public function forminator_remove_ver_paypal( $src ) {
-		if ( strpos( $src, 'paypal.com' ) && strpos( $src, 'ver=' ) )
+		if ( $src && strpos( $src, 'paypal.com' ) && strpos( $src, 'ver=' ) )
 			$src = remove_query_arg( 'ver', $src );
 		return $src;
 	}

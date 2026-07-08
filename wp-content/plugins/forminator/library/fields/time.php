@@ -68,6 +68,9 @@ class Forminator_Time extends Forminator_Field {
 		parent::__construct();
 
 		$this->name = esc_html__( 'Timepicker', 'forminator' );
+		$required   = __( 'This field is required. Please input a valid hour.', 'forminator' );
+
+		self::$default_required_messages[ $this->type ] = $required;
 	}
 
 	/**
@@ -85,6 +88,7 @@ class Forminator_Time extends Forminator_Field {
 			'hh_placeholder' => esc_html__( 'E.g. 08', 'forminator' ),
 			'mm_label'       => esc_html__( 'Minutes', 'forminator' ),
 			'mm_placeholder' => esc_html__( 'E.g. 00', 'forminator' ),
+			'am_pm_label'    => esc_html__( 'AM/PM', 'forminator' ),
 		);
 	}
 
@@ -153,6 +157,7 @@ class Forminator_Time extends Forminator_Field {
 		$has_limiter      = 'specific' === $restrict_time ? 'has-time-limiter' : '';
 		$required_origin  = $required;
 		$draft_value      = isset( $draft_value['value'] ) ? $draft_value['value'] : '';
+		$descr_position   = self::get_description_position( $field, $settings );
 
 		$default_time_hour   = '';
 		$default_time_minute = '';
@@ -201,6 +206,10 @@ class Forminator_Time extends Forminator_Field {
 			$required = false;
 		}
 
+		if ( 'above' === $descr_position ) {
+			$html .= self::get_description( $description, $id, $descr_position );
+		}
+
 		$html .= '<div class="forminator-timepicker" ';
 		if ( 'twelve' === $type && 'specific' === $restrict_time ) {
 			$is_12_hr = 'twelve' === $type ? true : false;
@@ -242,17 +251,18 @@ class Forminator_Time extends Forminator_Field {
 					$hours ['min']  = '0';
 				}
 
-				$html .= sprintf( '<div id="%s" class="forminator-col forminator-col-%s">', $hours['name'], $cols );
+				$html .= sprintf( '<div id="%s" class="forminator-col forminator-col-%s">', esc_attr( $hours['name'] ), esc_attr( $cols ) );
 
 					$html .= '<div class="forminator-field">';
 
 				if ( 'select' === $field_type ) {
 
 					$hours_data = array(
-						'name'       => $hour_id,
-						'id'         => self::get_field_id( $settings['form_id'] . '__field--' . $hour_id ),
-						'class'      => $is_basic ? 'time-hours ' : 'forminator-select2 time-hours ' . $has_limiter,
-						'data-field' => 'hours',
+						'name'             => $hour_id,
+						'id'               => self::get_field_id( $settings['form_id'] . '__field--' . $hour_id ),
+						'class'            => $is_basic ? 'time-hours ' : 'forminator-select2 time-hours ' . $has_limiter,
+						'data-field'       => 'hours',
+						'data-placeholder' => esc_attr__( 'Select', 'forminator' ),
 					);
 
 					if ( ! empty( $description ) ) {
@@ -273,7 +283,8 @@ class Forminator_Time extends Forminator_Field {
 						$this->get_hours( $type, $increment_hour, $default_time_hour, $limits ),
 						$default_time_hour,
 						'',
-						$required
+						$required,
+						$descr_position,
 					);
 				} else {
 
@@ -282,7 +293,6 @@ class Forminator_Time extends Forminator_Field {
 						self::get_property( 'hh_label', $field ),
 						'',
 						$required,
-						$design
 					);
 				}
 
@@ -317,17 +327,18 @@ class Forminator_Time extends Forminator_Field {
 					$minutes ['step'] = (int) $increment_minute;
 				}
 
-				$html .= sprintf( '<div id="%s" class="forminator-col forminator-col-%s">', $minutes['name'], $cols );
+				$html .= sprintf( '<div id="%s" class="forminator-col forminator-col-%s">', esc_attr( $minutes['name'] ), esc_attr( $cols ) );
 
 					$html .= sprintf( '<div class="forminator-field">', $cols );
 
 				if ( 'select' === $field_type ) {
 
 					$minutes_data = array(
-						'name'       => $min_id,
-						'id'         => self::get_field_id( $settings['form_id'] . '__field--' . $min_id ),
-						'class'      => $is_basic ? 'time-minutes ' : 'forminator-select2 time-minutes ' . $has_limiter,
-						'data-field' => 'minutes',
+						'name'             => $min_id,
+						'id'               => self::get_field_id( $settings['form_id'] . '__field--' . $min_id ),
+						'class'            => $is_basic ? 'time-minutes ' : 'forminator-select2 time-minutes ' . $has_limiter,
+						'data-field'       => 'minutes',
+						'data-placeholder' => esc_attr__( 'Select', 'forminator' ),
 					);
 
 					if ( ! empty( $description ) ) {
@@ -340,7 +351,8 @@ class Forminator_Time extends Forminator_Field {
 						$this->get_minutes( $type, $increment_minute, $default_time_minute, $required_origin ),
 						$default_time_minute,
 						'',
-						$required
+						$required,
+						$descr_position,
 					);
 				} else {
 
@@ -349,7 +361,6 @@ class Forminator_Time extends Forminator_Field {
 						self::get_property( 'mm_label', $field ),
 						'',
 						$required,
-						$design
 					);
 				}
 
@@ -392,13 +403,13 @@ class Forminator_Time extends Forminator_Field {
 						$ampm_value = $default_time_ampm;
 					}
 
-					$html .= sprintf( '<div class="forminator-col forminator-col-%s">', $cols );
+					$html .= sprintf( '<div id="%s" class="forminator-col forminator-col-%s">', esc_attr( $ampm['name'] ), esc_attr( $cols ) );
 
 						$html .= '<div class="forminator-field">';
 
 							$html .= self::create_select(
 								$ampm,
-								'',
+								self::get_property( 'am_pm_label', $field ),
 								$options,
 								$ampm_value
 							);
@@ -413,7 +424,9 @@ class Forminator_Time extends Forminator_Field {
 
 				$html .= '</div>';
 
-				$html .= self::get_description( $description, $id );
+				if ( 'above' !== $descr_position ) {
+					$html .= self::get_description( $description, $id, $descr_position );
+				}
 
 				return apply_filters( 'forminator_field_time_markup', $html, $field );
 	}
@@ -576,7 +589,7 @@ class Forminator_Time extends Forminator_Field {
 		$restrict_message         = self::get_property( 'restrict_message', $field, $default_restrict_message );
 		$restrict_message         = apply_filters(
 			'forminator_time_field_limit_validation_message',
-			forminator_addcslashes( $restrict_message ),
+			$restrict_message,
 			$id,
 			$field
 		);
@@ -584,78 +597,94 @@ class Forminator_Time extends Forminator_Field {
 		$messages .= '"' . $this->get_id( $field ) . '-hours": {' . "\n";
 		$min_hour  = ( 'twelve' === $type ) ? '1' : '0';
 		$max_hour  = ( 'twelve' === $type ) ? '12' : '23';
-		$messages .= '"min": "' . sprintf(
-			apply_filters(
-				'forminator_time_field_hours_min_validation_message',
-				/* translators: 1. Minimum hour, 2. Hours label. */
-				esc_html__( 'Please enter a value greater than or equal to %1$s for %2$s.', 'forminator' )
-			),
-			$min_hour,
-			forminator_addcslashes( $hours_label )
+		$messages .= '"min": "' . forminator_addcslashes(
+			sprintf(
+				apply_filters(
+					'forminator_time_field_hours_min_validation_message',
+					/* translators: 1. Minimum hour, 2. Hours label. */
+					esc_html__( 'Please enter a value greater than or equal to %1$s for %2$s.', 'forminator' )
+				),
+				$min_hour,
+				$hours_label
+			)
 		) . '",' . "\n";
 
-		$messages .= '"max": "' . sprintf(/* translators: ... */
-			apply_filters( 'forminator_time_field_hours_max_validation_message', esc_html__( 'Please enter a value less than or equal to %1$s for %2$s.', 'forminator' ) ),
-			$max_hour,
-			forminator_addcslashes( $hours_label )
+		$messages .= '"max": "' . forminator_addcslashes(
+			sprintf(/* translators: ... */
+				apply_filters( 'forminator_time_field_hours_max_validation_message', esc_html__( 'Please enter a value less than or equal to %1$s for %2$s.', 'forminator' ) ),
+				$max_hour,
+				$hours_label
+			)
 		) . '",' . "\n";
-		$messages .= '"number": "' . sprintf(
-			apply_filters(
-				'forminator_time_field_hours_number_validation_message',
-				/* translators: 1. Hours label. */
-				esc_html__( 'Please enter a valid number for %1$s.', 'forminator' )
-			),
-			forminator_addcslashes( $hours_label )
+		$messages .= '"number": "' . forminator_addcslashes(
+			sprintf(
+				apply_filters(
+					'forminator_time_field_hours_number_validation_message',
+					/* translators: 1. Hours label. */
+					esc_html__( 'Please enter a valid number for %1$s.', 'forminator' )
+				),
+				$hours_label
+			)
 		) . '",' . "\n";
 		if ( $this->is_required( $field ) ) {
 			// Hours validation.
 			$hours_message = apply_filters(
 				'forminator_time_field_hours_required_validation_message',
-				( ! empty( $required_message ) ? '<strong>' . forminator_addcslashes( $hours_label ) . '</strong>: ' . forminator_addcslashes( $required_message ) : esc_html__( 'This field is required. Please input a valid hour.', 'forminator' ) ),
+				( ! empty( $required_message )
+					? '<strong>' . forminator_addcslashes( $hours_label ) . '</strong>: ' . forminator_addcslashes( $required_message )
+					: forminator_addcslashes( self::$default_required_messages[ $this->type ] ) ),
 				$id,
 				$field
 			);
 
-			$messages .= '"required": "' . $hours_message . '",' . "\n";
+			$messages .= '"required": "' . addcslashes( $hours_message, '"\\/' ) . '",' . "\n";
 		}
 
 		if ( 'specific' === $restrict_time ) {
-			$messages .= '"timeLimit": "' . $restrict_message . '",' . "\n";
+			$messages .= '"timeLimit": "' . forminator_addcslashes( $restrict_message ) . '",' . "\n";
 		}
 		$messages .= '},' . "\n";
 
 		// minutes.
 		$messages .= '"' . $this->get_id( $field ) . '-minutes": {' . "\n";
-		$messages .= '"min": "' . sprintf(/* translators: ... */
-			apply_filters( 'forminator_time_field_minutes_min_validation_message', esc_html__( 'Please enter a value greater than or equal to 0 for %1$s.', 'forminator' ) ),
-			forminator_addcslashes( $minutes_label )
+		$messages .= '"min": "' . forminator_addcslashes(
+			sprintf(/* translators: ... */
+				apply_filters( 'forminator_time_field_minutes_min_validation_message', esc_html__( 'Please enter a value greater than or equal to 0 for %1$s.', 'forminator' ) ),
+				$minutes_label
+			)
 		) . '",' . "\n";
-		$messages .= '"max": "' . sprintf(
-			apply_filters(
-				'forminator_time_field_minutes_max_validation_message',
-				/* translators: 1. Minutes label. */
-				esc_html__( 'Please enter a value less than or equal to 59 for %1$s.', 'forminator' )
-			),
-			forminator_addcslashes( $minutes_label )
+		$messages .= '"max": "' . forminator_addcslashes(
+			sprintf(
+				apply_filters(
+					'forminator_time_field_minutes_max_validation_message',
+					/* translators: 1. Minutes label. */
+					esc_html__( 'Please enter a value less than or equal to 59 for %1$s.', 'forminator' )
+				),
+				$minutes_label
+			)
 		) . '",' . "\n";
-		$messages .= '"number": "' . sprintf(
-			apply_filters(
-				'forminator_time_field_minutes_number_validation_message',
-				/* translators: 1. Minutes label. */
-				esc_html__( 'Please enter a valid number for %1$s.', 'forminator' )
-			),
-			forminator_addcslashes( $minutes_label )
+		$messages .= '"number": "' . forminator_addcslashes(
+			sprintf(
+				apply_filters(
+					'forminator_time_field_minutes_number_validation_message',
+					/* translators: 1. Minutes label. */
+					esc_html__( 'Please enter a valid number for %1$s.', 'forminator' )
+				),
+				$minutes_label
+			)
 		) . '",' . "\n";
 		if ( $this->is_required( $field ) ) {
 			// Minutes validation.
 			$minutes_message = apply_filters(
 				'forminator_time_field_minutes_required_validation_message',
-				( ! empty( $required_message ) ? '<strong>' . forminator_addcslashes( $minutes_label ) . '</strong>: ' . forminator_addcslashes( $required_message ) : esc_html__( 'This field is required. Please input a valid minute.', 'forminator' ) ),
+				( ! empty( $required_message )
+					? '<strong>' . forminator_addcslashes( $minutes_label ) . '</strong>: ' . forminator_addcslashes( $required_message )
+					: forminator_addcslashes( __( 'This field is required. Please input a valid minute.', 'forminator' ) ) ),
 				$id,
 				$field
 			);
 
-			$messages .= '"required": "' . $minutes_message . '",' . "\n";
+			$messages .= '"required": "' . addcslashes( $minutes_message, '"\\/' ) . '",' . "\n";
 		}
 		$messages .= '},' . "\n";
 
@@ -764,7 +793,7 @@ class Forminator_Time extends Forminator_Field {
 				$is_valid                                   = false;
 				$this->validation_message[ $id . '-hours' ] = apply_filters(
 					'forminator_time_field_hours_required_validation_message',
-					( ! empty( $required_message ) ? $required_message : esc_html__( 'This field is required. Please input a valid hour.', 'forminator' ) ),
+					( ! empty( $required_message ) ? $required_message : esc_html( self::$default_required_messages[ $this->type ] ) ),
 					$id,
 					$field
 				);

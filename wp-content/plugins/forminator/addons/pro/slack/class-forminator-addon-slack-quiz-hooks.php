@@ -210,7 +210,7 @@ class Forminator_Slack_Quiz_Hooks extends Forminator_Integration_Quiz_Hooks {
 					if ( 'knowledge' === $this->module->quiz_type ) {
 						foreach ( $quiz_entry['value'] as $data ) {
 							$question   = isset( $data['question'] ) ? $data['question'] : '';
-							$answer     = isset( $data['answer'] ) ? $data['answer'] : '';
+							$answer     = self::get_answer( $data );
 							$is_correct = isset( $data['isCorrect'] ) ? $data['isCorrect'] : false;
 
 							$answers[] = array(
@@ -320,6 +320,7 @@ class Forminator_Slack_Quiz_Hooks extends Forminator_Integration_Quiz_Hooks {
 		$all_fields_attachments        = array();
 		$all_fields_attachments_fields = array();
 		$form_fields                   = $this->settings_instance->get_form_fields();
+		$form_fields                   = self::maybe_add_group_cloned_fields( $form_fields );
 		$field_format                  = array();
 		$post_element_ids              = array();
 

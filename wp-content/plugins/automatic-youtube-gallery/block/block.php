@@ -62,8 +62,7 @@ class AYG_Block {
 			array(
 				'options' => $fields,
 				'i18n'    => array(
-					'selected_color' => __( 'Selected Color', 'automatic-youtube-gallery' ),
-					'is_loading'     => __( 'Loading...', 'automatic-youtube-gallery' )
+					'selected_color' => __( 'Selected Color', 'automatic-youtube-gallery' )
 				)
 			)
 		);	
@@ -124,8 +123,17 @@ class AYG_Block {
 			$atts['autoplay'] = false;
 		}
 
-		if ( ! empty( $atts['uid'] ) ) {			
-			$atts['uid'] = md5( $atts['uid'] );
+		// Deprecated since v2.5.8. Retained for backward compatibility.
+		if ( ! empty( $atts['uid'] ) ) {	
+			$atts['deprecated_uid'] = md5( $atts['uid'] );
+			unset( $atts['uid'] );
+		}
+
+		// If popup is enabled and type is video, force theme to popup		
+		if ( isset( $atts['popup'] ) && ! empty( $atts['popup'] ) ) {
+			if ( isset( $atts['type'] ) && 'video' == $atts['type'] ) {
+				$atts['theme'] = 'popup';
+			}
 		}
 
 		// Output

@@ -45,6 +45,13 @@ class Forminator_CForm_View_Page extends Forminator_Admin_View_Page {
 	protected $flatten_field_mappers = array();
 
 	/**
+	 * Custom form model
+	 *
+	 * @var Forminator_Form_Model|null
+	 */
+	protected static $custom_form_model = null;
+
+	/**
 	 * Initialise variables
 	 *
 	 * @param int|null $form_id Form id.
@@ -59,9 +66,10 @@ class Forminator_CForm_View_Page extends Forminator_Admin_View_Page {
 			$this->model_id = $request_form_id;
 			$this->form_id  = ! empty( $form_id ) ? $form_id : $request_form_id;
 			parent::before_render();
-			$form_id           = (int) $this->form_id;
-			$custom_form_model = $this->model;
-			$visible_fields    = $this->get_visible_fields();
+			$form_id                 = (int) $this->form_id;
+			$custom_form_model       = $this->model;
+			self::$custom_form_model = $custom_form_model;
+			$visible_fields          = $this->get_visible_fields();
 
 			/**
 			 * Fires on custom form page entries render before request and result processed
@@ -323,6 +331,7 @@ class Forminator_CForm_View_Page extends Forminator_Admin_View_Page {
 		$mapper['meta_key'] = $field->slug; // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key -- false positive
 		$mapper['label']    = $field->get_label_for_entry();
 		$mapper['type']     = $field_type;
+		$mapper['field']    = $field->to_array();
 
 		if ( 'textarea' === $field_type ) {
 			$field_array    = $field->to_array();
@@ -336,6 +345,7 @@ class Forminator_CForm_View_Page extends Forminator_Admin_View_Page {
 			$mapper['separator'] = $separators['separator'];
 			$mapper['point']     = $separators['point'];
 			$mapper['precision'] = $precision;
+
 		} elseif ( 'name' === $field_type ) {
 			// fields that should be displayed as multi column (sub_metas).
 			$is_multiple_name = filter_var( $field->__get( 'multiple_name' ), FILTER_VALIDATE_BOOLEAN );
@@ -585,7 +595,7 @@ class Forminator_CForm_View_Page extends Forminator_Admin_View_Page {
 			foreach ( $fields_mappers as $fields_mapper ) {
 				if ( ! isset( $fields_mapper['sub_metas'] ) ) {
 					$flatten_fields_mappers[] = $fields_mapper;
-				} elseif ( 'group' !== $fields_mapper['type'] ) {
+				} else {
 					foreach ( $fields_mapper['sub_metas'] as $sub_meta ) {
 						$sub_meta['parent']       = $fields_mapper;
 						$flatten_fields_mappers[] = $sub_meta;
@@ -632,7 +642,12 @@ class Forminator_CForm_View_Page extends Forminator_Admin_View_Page {
 			foreach ( $fields_headers as $header ) {
 				?>
 
-				<th><?php echo esc_html( $header['label'] ); ?></th>
+				<th>
+				<?php
+					// PHPCS:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- esc_html is used inside convert_markdown.
+					echo Forminator_Field::convert_markdown( esc_html( $header['label'] ) );
+				?>
+				</th>
 
 				<?php
 			}
@@ -640,7 +655,7 @@ class Forminator_CForm_View_Page extends Forminator_Admin_View_Page {
 			if ( $fields_left > 0 ) {
 				?>
 
-				<th data-num-hidden-fields="<?php echo esc_attr( $fields_left ); ?>"></th>
+				<th data-num-hidden-fields="<?php echo esc_attr( $fields_left ); ?>" aria-label="<?php esc_attr_e( 'Other fields', 'forminator' ); ?>"></th>
 
 			<?php } ?>
 
@@ -734,12 +749,21 @@ class Forminator_CForm_View_Page extends Forminator_Admin_View_Page {
 			 *
 			 * @var Forminator_Form_Entry_Model $entry */
 
-			// create placeholder.
+			$draft_link = '';
+			if ( ! empty( $entry->draft_id ) && isset( $entry->meta_data['_draft_page_id']['value'] ) ) {
+				$draft_page_id = absint( $entry->meta_data['_draft_page_id']['value'] );
+				if ( $draft_page_id ) {
+					$draft_link = Forminator_CForm_Front_Action::get_draft_link( $entry->draft_id, $draft_page_id );
+				}
+			}
+
 			$iterator = array(
 				'id'         => $numerator_id,
 				'entry_id'   => $entry->entry_id,
 				'draft_id'   => $entry->draft_id,
+				'draft_link' => $draft_link,
 				'entry_date' => $entry->time_created,
+				'status'     => $entry->status,
 				'summary'    => array(),
 				'detail'     => array(),
 			);
@@ -799,6 +823,8 @@ class Forminator_CForm_View_Page extends Forminator_Admin_View_Page {
 					$sub_entries = self::get_sub_entries( $mapper, $entry );
 				}
 
+				$group_has_sub_entries = ! empty( $sub_entries );
+
 				$detail_args = array(
 					'type'        => $type,
 					'label'       => $label,
@@ -811,11 +837,16 @@ class Forminator_CForm_View_Page extends Forminator_Admin_View_Page {
 					$original_keys       = wp_list_pluck( $mapper['sub_metas'], 'key' );
 					$repeated_group_keys = forminator_get_cloned_field_keys( $entry, $original_keys );
 					foreach ( $repeated_group_keys as $slug ) {
-						$sub_entries = self::get_sub_entries( $mapper, $entry, $slug );
+						$cloned_sub_entries    = self::get_sub_entries( $mapper, $entry, $slug );
+						$group_has_sub_entries = $group_has_sub_entries || ! empty( $cloned_sub_entries );
 
-						$detail_args[ 'sub_entries' . $slug ] = $sub_entries;
+						$detail_args[ 'sub_entries' . $slug ] = $cloned_sub_entries;
 					}
 					$detail_args['repeated_group_keys'] = array_merge( array( '' ), $repeated_group_keys );
+				}
+
+				if ( 'group' === $mapper['type'] && ! $group_has_sub_entries ) {
+					continue;
 				}
 
 				if ( ! empty( $mapper['separator'] ) || ! empty( $mapper['point'] ) ) {
@@ -828,6 +859,10 @@ class Forminator_CForm_View_Page extends Forminator_Admin_View_Page {
 					$detail_args['icon']       = $mapper['icon'];
 					$detail_args['suffix']     = $mapper['suffix'];
 					$detail_args['max_rating'] = $mapper['max_rating'];
+				}
+
+				if ( ! empty( $mapper['separators'] ) ) {
+					$detail_args['separators'] = $mapper['separators'];
 				}
 
 				$detail_items[] = $detail_args;
@@ -888,6 +923,12 @@ class Forminator_CForm_View_Page extends Forminator_Admin_View_Page {
 				}
 
 				$sub_entry_value = call_user_func_array( $sub_meta['transform_callback'], $transform_args );
+			}
+			if ( 'amount' === $submeta_key && in_array( $mapper['type'], array( 'paypal', 'stripe', 'stripe-ocs' ), true ) ) {
+				if ( ! empty( $mapper['meta_key'] ) && ! empty( $entry->meta_data[ $mapper['meta_key'] ]['value'] ) ) {
+					$sub_entry_value = $entry->meta_data[ $mapper['meta_key'] ]['value'];
+				}
+				$sub_entry_value = Forminator_Field::get_formatted_amount( $mapper['field'], $sub_entry_value, self::$custom_form_model );
 			}
 			$sub_entry = array(
 				'key'   => $sub_meta['key'],

@@ -24,7 +24,7 @@
       <p class="description">
         <?php
         printf( 
-          __( 'Follow <a href="%s" target="_blank">this guide</a> to get your own API key.', 'automatic-youtube-gallery' ),  
+          __( 'Follow <a href="%s" target="_blank" rel="noopener noreferrer">this guide</a> to get your own API key.', 'automatic-youtube-gallery' ),  
           'https://plugins360.com/automatic-youtube-gallery/how-to-get-youtube-api-key/' 
         );
         ?>

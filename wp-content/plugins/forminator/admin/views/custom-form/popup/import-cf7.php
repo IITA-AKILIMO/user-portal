@@ -59,8 +59,8 @@ $forms     = forminator_list_thirdparty_contact_forms( 'cf7' );
 									esc_html__( "%1\$s2. ConstantContact:%2\$s Forminator doesn't integrate directly with ConstantContact. However, you can use %3\$sWebhook integration%4\$s to send your leads to ConstantContact.", 'forminator' ),
 									'<strong>',
 									'</strong>',
-									'<a href="https://wpmudev.com/docs/wpmu-dev-plugins/forminator/#webhook" target="_blank">',
-									'</a>'
+									forminator_is_show_documentation_link() ? '<a href="https://wpmudev.com/docs/wpmu-dev-plugins/forminator/#webhook" target="_blank">' : '',
+									forminator_is_show_documentation_link() ? '</a>' : ''
 								);
 								?>
 							</li>
@@ -68,7 +68,7 @@ $forms     = forminator_list_thirdparty_contact_forms( 'cf7' );
 								<?php
 								printf(
 								/* Translators: 1. Opening <strong> tag, 2. closing <strong> tag. */
-									esc_html__( "%1\$s3. reCAPTCHA v3 integration:%2\$s At this stage, Forminator can't import your existing reCAPTCHA integration. You can set this up manually on your imported forms once they are transferred.", 'forminator' ),
+									esc_html__( "%1\$s3. Additional settings:%2\$s Forminator doesn't support CF7’s additional form settings.", 'forminator' ),
 									'<strong>',
 									'</strong>'
 								);
@@ -78,17 +78,7 @@ $forms     = forminator_list_thirdparty_contact_forms( 'cf7' );
 								<?php
 								printf(
 								/* Translators: 1. Opening <strong> tag, 2. closing <strong> tag. */
-									esc_html__( "%1\$s4. Additional settings:%2\$s Forminator doesn't support CF7’s additional form settings.", 'forminator' ),
-									'<strong>',
-									'</strong>'
-								);
-								?>
-							</li>
-							<li>
-								<?php
-								printf(
-								/* Translators: 1. Opening <strong> tag, 2. closing <strong> tag. */
-									esc_html__( '%1$s5. Custom field IDs:%2$s Forminator creates a unique ID for each field, and the conditional logic relies on them. However, you can provide a custom CSS class for each field.', 'forminator' ),
+									esc_html__( '%1$s4. Custom field IDs:%2$s Forminator creates a unique ID for each field, and the conditional logic relies on them. However, you can provide a custom CSS class for each field.', 'forminator' ),
 									'<strong>',
 									'</strong>'
 								);
@@ -374,10 +364,10 @@ $forms     = forminator_list_thirdparty_contact_forms( 'cf7' );
 										checked="checked"
 								/>
 								<span aria-hidden="true"></span>
-								<span id="listings-cf7-addon-recaptchav2"><?php esc_html_e( 'Contact Form 7 - reCAPTCHA v2', 'forminator' ); ?></span>
+								<span id="listings-cf7-addon-recaptchav2"><?php esc_html_e( 'Contact Form 7 - reCAPTCHA', 'forminator' ); ?></span>
 							</label>
 
-							<span class="sui-description sui-checkbox-description"><?php esc_html_e( 'Import your reCaptcha v2 API keys and configure the reCaptcha v2 on your imported forms.', 'forminator' ); ?></span>
+								<span class="sui-description sui-checkbox-description"><?php esc_html_e( 'Import your reCAPTCHA API keys and configure reCAPTCHA (v2 or v3) on your imported forms.', 'forminator' ); ?></span>
 
 						</div>
 
@@ -515,18 +505,43 @@ $forms     = forminator_list_thirdparty_contact_forms( 'cf7' );
 			<span class="sui-loading-text"><?php esc_html_e( 'Close', 'forminator' ); ?></span>
 			<i class="sui-icon-loader sui-loading" aria-hidden="true"></i>
 		</button>
-
-		<div class="sui-actions-right">
-
-			<a href="<?php echo esc_url( forminator_get_disable_url( 'cf7', 'contact-form-7/wp-contact-form-7.php' ) ); ?>" class="sui-button">
-				<span class="sui-loading-text">
-					<i class="sui-icon-power-on-off" aria-hidden="true"></i>
-					<?php esc_html_e( 'Deactivate contact form 7', 'forminator' ); ?>
-				</span>
-				<i class="sui-icon-loader sui-loading" aria-hidden="true"></i>
-			</a>
-
-		</div>
+		<?php
+		$has_honeypot       = forminator_is_import_plugin_enabled( 'cf7apps' );
+		$allow_deactivation = true;
+		if ( $has_honeypot ) {
+			if ( is_plugin_active_for_network( 'contact-form-7-honeypot/honeypot.php' ) && is_plugin_active_for_network( 'contact-form-7/wp-contact-form-7.php' ) ) {
+				$deactivate_url = wp_nonce_url( trailingslashit( network_admin_url() ) . 'plugins.php?action=deactivate-selected', 'bulk-plugins' );
+			} elseif ( is_plugin_active_for_network( 'contact-form-7-honeypot/honeypot.php' ) || is_plugin_active_for_network( 'contact-form-7/wp-contact-form-7.php' ) ) {
+				// We can't provide a safe deactivation URL in this case, so we won't show the deactivation button.
+				$allow_deactivation = false;
+			} else {
+				$deactivate_url = wp_nonce_url( 'plugins.php?action=deactivate-selected', 'bulk-plugins' );
+			}
+		} else {
+			$deactivate_url = forminator_get_disable_url( 'cf7', 'contact-form-7/wp-contact-form-7.php' );
+		}
+		if ( $allow_deactivation ) {
+			?>
+			<div class="sui-actions-right">
+				<form action="<?php echo esc_url( $deactivate_url ); ?>" method="POST">
+					<button class="sui-button">
+						<span class="sui-loading-text">
+							<i class="sui-icon-power-on-off" aria-hidden="true"></i>
+						<?php esc_html_e( 'Deactivate contact form 7', 'forminator' ); ?>
+						</span>
+						<i class="sui-icon-loader sui-loading" aria-hidden="true"></i>
+					</button>
+			<?php
+			if ( $has_honeypot ) {
+				?>
+					<input type="hidden" name="checked[0]" value="contact-form-7-honeypot/honeypot.php" />
+					<input type="hidden" name="checked[1]" value="contact-form-7/wp-contact-form-7.php" />
+				<?php
+			}
+			?>
+				</form>
+			</div>
+		<?php } ?>
 
 	</div>
 
@@ -535,16 +550,19 @@ $forms     = forminator_list_thirdparty_contact_forms( 'cf7' );
 <div class="forminator-cf7-imported-fail sui-hidden">
 
 	<div class="sui-box-body wpmudev-popup-form">
-		<?php $support_url = FORMINATOR_PRO ? 'https://wpmudev.com/hub2/support/' : 'https://wordpress.org/support/plugin/forminator'; ?>
+		<?php $support_url = apply_filters( 'forminator_support_url', 'https://wordpress.org/support/plugin/forminator' ); ?>
 		<p>
-			<?php
+		<?php
+		esc_html_e( 'We have encountered an error while importing your forms from Contact Form 7 and selected add-ons.', 'forminator' );
+		if ( forminator_is_show_documentation_link() ) {
 			printf(
 			/* Translators: 1. Opening <a> tag with link to the support url, 2. closing <a> tag. */
-				esc_html__( 'We have encountered an error while importing your forms from Contact Form 7 and selected add-ons. Unable to solve this? Contact our %1$ssupport%2$s team for further help.', 'forminator' ),
+				' ' . esc_html__( 'Unable to solve this? Contact our %1$ssupport%2$s team for further help.', 'forminator' ),
 				'<a href="' . esc_url( $support_url ) . '" target="_blank">',
 				'</a>'
 			);
-			?>
+		}
+		?>
 		</p>
 
 		<div class="sui-notice sui-notice-error">

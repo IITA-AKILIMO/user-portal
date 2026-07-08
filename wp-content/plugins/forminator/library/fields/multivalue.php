@@ -74,6 +74,9 @@ class Forminator_MultiValue extends Forminator_Field {
 		parent::__construct();
 
 		$this->name = esc_html__( 'Checkbox', 'forminator' );
+		$required   = __( 'This field is required. Please select a value.', 'forminator' );
+
+		self::$default_required_messages[ $this->type ] = $required;
 	}
 
 	/**
@@ -145,6 +148,7 @@ class Forminator_MultiValue extends Forminator_Field {
 		$id          = 'forminator-field-' . $id;
 		$uniq_id     = Forminator_CForm_Front::$uid;
 		$post_value  = self::get_post_data( $name, self::FIELD_PROPERTY_VALUE_NOT_EXIST );
+		$custom_name = 'custom-' . $name;
 		$name        = $name . '[]';
 		$required    = self::get_property( 'required', $field, false );
 		$options     = self::get_options( $field );
@@ -152,14 +156,17 @@ class Forminator_MultiValue extends Forminator_Field {
 		$description = self::get_property( 'description', $field, '' );
 		$label       = esc_html( self::get_property( 'field_label', $field, '' ) );
 		$design      = $this->get_form_style( $settings );
+		$descr_id    = $id . '-' . $uniq_id;
 
 		$calc_enabled     = self::get_property( 'calculations', $field, false, 'bool' );
 		$images_enabled   = self::get_property( 'enable_images', $field, false );
 		$images_enabled   = filter_var( $images_enabled, FILTER_VALIDATE_BOOLEAN );
 		$input_visibility = self::get_property( 'input_visibility', $field, 'true' );
 		$input_visibility = filter_var( $input_visibility, FILTER_VALIDATE_BOOLEAN );
+		$draft_values     = $draft_value;
 		$draft_value      = isset( $draft_value['value'] ) && ! empty( $draft_value['value'] ) ? array_map( 'trim', $draft_value['value'] ) : '';
 		$hidden_behavior  = self::get_property( 'hidden_behavior', $field );
+		$descr_position   = self::get_description_position( $field, $settings );
 
 		$draft_valid  = false;
 		$prefil_valid = false;
@@ -168,16 +175,21 @@ class Forminator_MultiValue extends Forminator_Field {
 		$html .= sprintf(
 			'<div role="group" class="%s" aria-labelledby="%s">',
 			esc_attr( $required ? 'forminator-field required' : 'forminator-field' ),
-			esc_attr( 'forminator-checkbox-group-' . $uniq_id . '-label' )
+			esc_attr( 'forminator-checkbox-group-' . $id . '-' . $uniq_id . '-label' )
 		);
 
 		if ( $label ) {
+			$label  = self::convert_markdown( $label );
 			$label .= $required ? ' ' . forminator_get_required_icon() : '';
 			$html  .= sprintf(
 				'<span id="%s" class="forminator-label">%s</span>',
-				'forminator-checkbox-group-' . $uniq_id . '-label',
+				esc_attr( 'forminator-checkbox-group-' . $id . '-' . $uniq_id . '-label' ),
 				$label
 			);
+		}
+
+		if ( 'above' === $descr_position ) {
+			$html .= self::get_description( $description, $descr_id, $descr_position );
 		}
 
 		$hidden_calc_behavior = '';
@@ -207,7 +219,7 @@ class Forminator_MultiValue extends Forminator_Field {
 		}
 
 		foreach ( $options as $option ) {
-			$value             = $option['value'] ? esc_html( $option['value'] ) : esc_html( $option['label'] );
+			$value             = '' !== $option['value'] ? $option['value'] : $option['label'];
 			$input_id          = $id . '-' . $i . '-' . $uniq_id;
 			$option_default    = isset( $option['default'] ) ? filter_var( $option['default'], FILTER_VALIDATE_BOOLEAN ) : false;
 			$calculation_value = $calc_enabled && isset( $option['calculation'] ) ? $option['calculation'] : 0.0;
@@ -262,11 +274,11 @@ class Forminator_MultiValue extends Forminator_Field {
 
 				$html .= sprintf(
 					'<input type="checkbox" name="%s" value="%s" id="%s" aria-labelledby="%s" data-calculation="%s" %s %s%s/>',
-					$name,
-					$value,
-					$input_id,
-					$label_id,
-					$calculation_value,
+					esc_attr( $name ),
+					esc_html( $value ),
+					esc_attr( $input_id ),
+					esc_attr( $label_id ),
+					esc_attr( $calculation_value ),
 					$selected,
 					$hidden_calc_behavior,
 					( ! empty( $description ) ? ' aria-describedby="' . esc_attr( $id . '-' . $uniq_id . '-description' ) . '"' : '' )
@@ -312,7 +324,18 @@ class Forminator_MultiValue extends Forminator_Field {
 			++$i;
 		}
 
-			$html .= self::get_description( $description, $id . '-' . $uniq_id );
+		$custom_input_id         = $id . '-' . ( $i - 1 ) . '-' . $uniq_id;
+		$input_labelledby        = $custom_input_id . '-label';
+		$custom_input_attributes = array(
+			'id'              => 'custom-' . $custom_input_id,
+			'name'            => $custom_name,
+			'aria-labelledby' => $input_labelledby,
+		);
+		$html                   .= self::maybe_add_custom_option( $field, $options, $custom_input_attributes, $draft_values );
+
+		if ( 'above' !== $descr_position ) {
+			$html .= self::get_description( $description, $descr_id, $descr_position );
+		}
 
 		$html .= '</div>';
 
@@ -333,6 +356,13 @@ class Forminator_MultiValue extends Forminator_Field {
 
 		if ( $is_required ) {
 			$rules .= '"' . $this->get_id( $field ) . '[]": "required",';
+
+			$enable_custom_option = self::get_property( 'enable_custom_option', $field, false );
+			if ( $enable_custom_option ) {
+				$rules .= '"custom-' . $this->get_id( $field ) . '": {' . "\n";
+				$rules .= '"customInputForOtherOption": "checkbox",';
+				$rules .= '},' . "\n";
+			}
 		}
 
 		return apply_filters( 'forminator_field_multiple_validation_rules', $rules, $id, $field );
@@ -351,10 +381,7 @@ class Forminator_MultiValue extends Forminator_Field {
 		$is_required = $this->is_required( $field );
 
 		if ( $is_required ) {
-			$required_message = self::get_property( 'required_message', $field );
-			if ( empty( $required_message ) ) {
-				$required_message = __( 'This field is required. Please select a value.', 'forminator' );
-			}
+			$required_message = self::get_property( 'required_message', $field, $this->get_required_error_message() );
 			$required_message = apply_filters(
 				'forminator_multi_field_required_validation_message',
 				$required_message,
@@ -362,6 +389,18 @@ class Forminator_MultiValue extends Forminator_Field {
 				$field
 			);
 			$messages        .= '"' . $this->get_id( $field ) . '[]": "' . forminator_addcslashes( $required_message ) . '",' . "\n";
+
+			$enable_custom_option = self::get_property( 'enable_custom_option', $field, false );
+			if ( $enable_custom_option ) {
+				$custom_value_required_message = self::get_property( 'custom_value_error_message', $field, '' );
+				$custom_value_required_message = apply_filters(
+					'forminator_custom_value_field_required_validation_message',
+					( ! empty( $custom_value_required_message ) ? $custom_value_required_message : esc_html__( 'Please, enter a custom value', 'forminator' ) ),
+					'custom-' . $id,
+					$field
+				);
+				$messages                     .= '"custom-' . $this->get_id( $field ) . '": "' . forminator_addcslashes( $custom_value_required_message ) . '",' . "\n";
+			}
 		}
 
 		return $messages;
@@ -390,7 +429,7 @@ class Forminator_MultiValue extends Forminator_Field {
 			}
 		}
 		if ( $this->is_required( $field ) ) {
-			$required_message = self::get_property( 'required_message', $field, esc_html__( 'This field is required. Please select a value', 'forminator' ) );
+			$required_message = self::get_property( 'required_message', $field, esc_html( $this->get_required_error_message() ) );
 			if ( empty( $data ) ) {
 				$slug = ! empty( $field['original_id'] ) ? $field['original_id'] : $id;
 
@@ -400,6 +439,22 @@ class Forminator_MultiValue extends Forminator_Field {
 					$id,
 					$field
 				);
+			}
+
+			$enable_custom_option = self::get_property( 'enable_custom_option', $field, false );
+			if ( ! empty( $data ) && in_array( 'custom_option', $data, true ) && $enable_custom_option ) {
+				$custom_value_required_message = self::get_property( 'custom_value_error_message', $field, '' );
+				$custom_value                  = Forminator_CForm_Front_Action::$prepared_data[ 'custom-' . $id ] ?? '';
+				if ( trim( $custom_value ) === '' ) {
+					// For cloned fields, use the original ID.
+					$custom_input_name                              = empty( $field['original_id'] ) ? 'custom-' . $id : 'custom-' . $field['original_id'];
+					$this->validation_message[ $custom_input_name ] = apply_filters(
+						'forminator_custom_value_field_required_validation_message',
+						( ! empty( $custom_value_required_message ) ? esc_html( $custom_value_required_message ) : esc_html__( 'Please, enter a custom value', 'forminator' ) ),
+						$custom_input_name,
+						$field
+					);
+				}
 			}
 		}
 	}
@@ -466,7 +521,7 @@ class Forminator_MultiValue extends Forminator_Field {
 			}
 		}
 
-		return floatval( $sums );
+		return self::get_calculable_number_format( $field_settings, $sums );
 	}
 
 	/**

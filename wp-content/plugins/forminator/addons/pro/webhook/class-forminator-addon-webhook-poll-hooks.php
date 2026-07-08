@@ -24,7 +24,9 @@ class Forminator_Webhook_Poll_Hooks extends Forminator_Integration_Poll_Hooks {
 		$data                 = array();
 
 		foreach ( $addon_setting_values as $key => $addon_setting_value ) {
-			// save it on entry field, with name `status-$MULTI_ID`, and value is the return result on sending data towebhook.
+			if ( ! empty( $this->addon->multi_id ) && $key !== $this->addon->multi_id ) {
+				continue;
+			}
 			$data[] = array(
 				'name'  => 'status-' . $key,
 				'value' => $this->get_status_on_send_data( $key, $submitted_data, $addon_setting_value, $current_entry_fields ),

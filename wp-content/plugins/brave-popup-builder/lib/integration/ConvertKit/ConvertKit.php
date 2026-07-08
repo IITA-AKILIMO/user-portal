@@ -116,23 +116,26 @@ if ( ! class_exists( 'BravePop_ConvertKit' ) ) {
          }
 
          $response = wp_remote_post( $API_URL, $args );
-         error_log('$formsResponse: '.json_encode($response));
-
          $body = wp_remote_retrieve_body( $response );
          $data = json_decode( $body );
 
-         if($data && isset($data->subscription)){
-            //error_log('##### USER ADDED #####');
+         if(!is_wp_error( $response ) && $data && isset($data->subscription)){
             $addedData = array(
                'action'=> isset($userData['action']) ? $userData['action'] : 'visitor_added',  
                'user_id'=> isset($userData['userData']['ID']) ? $userData['userData']['ID'] : false,
-               'user_mail'=> $email, 'esp_user_id'=> isset($data->subscription->subscriber->id) ? $data->subscription->subscriber->id : ''
+               'user_mail'=> $email, 
+               'esp_user_id'=> isset($data->subscription->subscriber->id) ? $data->subscription->subscriber->id : '',
+               'user_data'=> $contact,
+               'list_id' => $list_id,
+               'response' => $response,
             ); 
-            do_action( 'bravepop_addded_to_list', 'convertkit', $addedData );
-
-            return $data->subscription; 
+            do_action( 'bravepop_added_to_list', 'convertkit', $addedData );
+            return array( 'success' => true, 'result' => $addedData );
          }else{
-            return false;
+            $errorMsg = $response->get_error_message() ? $response->get_error_message()  : 'Unknown Error Occurred. No Error details provided by Convertkit.';
+            $errorPayload = array( 'user_mail'=> $email, 'user_data'=> $contact, 'list_id'=> $list_id, 'error' => $errorMsg, 'response'=> $response );
+            do_action( 'bravepop_added_to_list_failed', 'convertkit', $errorPayload );
+            return array( 'success' => false, 'errorMsg' => $errorMsg, 'result' => $errorPayload );
          }
 
       }

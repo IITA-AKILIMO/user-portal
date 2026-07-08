@@ -21,6 +21,7 @@ function bravepop_enqueue_front_scripts() {
          'field_required' => __( 'Required', 'bravepop' ),
          'no_html_allowed' => __( 'No Html Allowed', 'bravepop' ),
          'invalid_number' => __( 'Invalid Number', 'bravepop' ),
+         'invalid_phone' => __( 'Invalid Phone Number', 'bravepop' ),
          'invalid_email' => __( 'Invalid Email', 'bravepop' ),
          'invalid_url' => __( 'Invalid URL', 'bravepop' ),
          'invalid_date' => __( 'Invalid Date', 'bravepop' ),

@@ -69,27 +69,6 @@ class Forminator_Poll_View_Page extends Forminator_Admin_View_Page {
 	}
 
 	/**
-	 * Get custom votes
-	 *
-	 * @since 1.0
-	 * @return array
-	 */
-	public function get_custom_votes() {
-		$custom_votes = array();
-		if ( is_object( $this->model ) ) {
-			$entries = Forminator_Form_Entry_Model::get_entries( $this->model->id );
-			foreach ( $entries as $entry ) {
-				$custom_votes[] = $entry->get_meta( 'extra', '' );
-			}
-			if ( ! empty( $custom_votes ) ) {
-				$custom_votes = array_unique( $custom_votes );
-			}
-		}
-
-		return $custom_votes;
-	}
-
-	/**
 	 * Map Custom Votes
 	 *
 	 * @since   1.0.5

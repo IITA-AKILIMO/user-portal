@@ -325,6 +325,10 @@ function forminator_common_admin_enqueue_scripts( $is_new_page = false ) {
 		forminator_print_front_styles();
 		forminator_print_front_scripts();
 	}
+
+	if ( 'forminator-settings' === filter_input( INPUT_GET, 'page' ) ) {
+		forminator_enqueue_color_picker_alpha();
+	}
 }
 
 /**
@@ -676,6 +680,22 @@ function forminator_has_hcaptcha_settings() {
 }
 
 /**
+ * Return if Cloudflare Turnstile keys are filled
+ *
+ * @return bool
+ */
+function forminator_has_turnstile_settings(): bool {
+	$key    = get_option( 'forminator_turnstile_key', false );
+	$secret = get_option( 'forminator_turnstile_secret', false );
+
+	if ( empty( $key ) || empty( $secret ) ) {
+		return false;
+	}
+
+	return true;
+}
+
+/**
  * Return if Stripe is is_connected
  *
  * @since 1.7
@@ -720,26 +740,16 @@ function forminator_get_form_id_helper() {
  * @return array
  */
 function forminator_get_page_ids_helper() {
-	// Sanitize is requied when user uses space inside the translation.
-	$name = sanitize_title( esc_html__( 'forminator', 'forminator' ) );
-	if ( FORMINATOR_PRO ) {
-		$title = sanitize_title( esc_html__( 'Forminator Pro', 'forminator' ) );
-		return array(
-			$title . '_page_forminator-quiz-view',
-			$title . '_page_forminator-cform-view',
-			$title . '_page_forminator-poll-view',
-			$title . '_page_forminator-entries',
-		);
-	} else {
-		// Free version.
-		$title = sanitize_title( esc_html__( 'Forminator', 'forminator' ) );
-		return array(
-			$title . '_page_forminator-quiz-view',
-			$title . '_page_forminator-cform-view',
-			$title . '_page_forminator-poll-view',
-			$title . '_page_forminator-entries',
-		);
-	}
+	// Free version.
+	$title    = sanitize_title( esc_html__( 'Forminator', 'forminator' ) );
+	$page_ids = array(
+		$title . '_page_forminator-quiz-view',
+		$title . '_page_forminator-cform-view',
+		$title . '_page_forminator-poll-view',
+		$title . '_page_forminator-entries',
+	);
+
+	return apply_filters( 'forminator_page_ids', $page_ids );
 }
 
 /**
@@ -887,6 +897,28 @@ function forminator_get_export_logs( $form_id ) {
 }
 
 /**
+ * Get the current post ID from server context (AJAX or non-AJAX).
+ *
+ * @since 1.53.0
+ *
+ * @return int Post ID or 0 if not available.
+ */
+function forminator_get_current_post_id() {
+	static $post_id;
+	if ( isset( $post_id ) ) {
+		return $post_id;
+	}
+
+	if ( ! empty( $_SERVER['REQUEST_URI'] ) && false !== strpos( esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) ), 'admin-ajax.php' ) ) {
+		$post_id = (int) url_to_postid( wp_get_referer() );
+		return $post_id;
+	}
+
+	$post_id = (int) get_the_ID();
+	return $post_id;
+}
+
+/**
  * Return current page url
  *
  * @since 1.0.3
@@ -894,15 +926,36 @@ function forminator_get_export_logs( $form_id ) {
  * @return mixed
  */
 function forminator_get_current_url() {
-	if ( ! empty( $_SERVER['REQUEST_URI'] ) && false !== strpos( esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) ), 'admin-ajax.php' ) ) {
-		$post_id = url_to_postid( wp_get_referer() );
-	} else {
-		$post_id = get_the_ID();
+	static $current_url;
+	if ( isset( $current_url ) ) {
+		return $current_url;
 	}
+	$post_id     = forminator_get_current_post_id();
+	$current_url = $post_id > 0 ? esc_url( get_permalink( $post_id ) ) : '';
 
-	return esc_url( get_permalink( $post_id ) );
+	return $current_url;
 }
 
+/**
+ * Detect whether current request comes from Breakdance builder SSR preview.
+ *
+ * @since 1.54.0
+ *
+ * @return bool
+ */
+function forminator_is_breakdance_builder_preview() {
+
+	$action              = Forminator_Core::sanitize_text_field( 'action' );
+	$page_id             = (int) Forminator_Core::sanitize_text_field( 'page_id' );
+	$triggering_document = (int) Forminator_Core::sanitize_text_field( 'triggeringDocument' );
+	$document_id         = $triggering_document ? $triggering_document : $page_id;
+
+	if ( 'breakdance_server_side_render' !== $action || ! $document_id ) {
+		return false;
+	}
+
+	return current_user_can( 'edit_post', $document_id );
+}
 /**
  * Detect whether current request comes from any page builder preveiw page
  *
@@ -942,6 +995,17 @@ function forminator_is_page_builder_preview() {
 	$action         = Forminator_Core::sanitize_text_field( 'action' );
 	$editor_post_id = (int) Forminator_Core::sanitize_text_field( 'editor_post_id' );
 	if ( defined( 'ELEMENTOR_VERSION' ) && 'elementor_ajax' === $action && $editor_post_id ) {
+		$decision = true;
+		return $decision;
+	}
+
+	// Check Oxygen plugin.
+	if (
+		defined( '__BREAKDANCE_VERSION' ) &&
+		defined( 'BREAKDANCE_MODE' ) &&
+		'oxygen' === BREAKDANCE_MODE &&
+		forminator_is_breakdance_builder_preview()
+	) {
 		$decision = true;
 		return $decision;
 	}
@@ -1355,10 +1419,10 @@ function forminator_reset_settings() {
 	delete_option( 'forminator_custom_upload' );
 	delete_option( 'forminator_custom_upload_root' );
 	delete_option( 'forminator_stripe_configuration' );
+	delete_option( 'forminator_stripe_payment_intents' );
 	delete_option( 'forminator_paypal_configuration' );
-
-	$usage_tracking = get_option( 'forminator_usage_tracking', false );
 	delete_option( 'forminator_usage_tracking' );
+	delete_option( 'forminator_auto_saving' );
 
 	/**
 	 * Forminator_delete_addon_options
@@ -1402,11 +1466,9 @@ function forminator_reset_settings() {
 	/**
 	 * Fires after Settings reset
 	 *
-	 * @param bool $usage_data usage tracking data enable or not
-	 *
 	 * @since 1.27.0
 	 */
-	do_action( 'forminator_after_reset_settings', $usage_tracking );
+	do_action( 'forminator_after_reset_settings' );
 }
 
 /**
@@ -1474,59 +1536,6 @@ function forminator_get_prefix( $module_slug, $form_prefix = '', $ucfirst = fals
 }
 
 /**
- * Reset plugin to fresh install
- *
- * @since 1.6.3
- */
-function forminator_reset_plugin() {
-	global $wpdb;
-
-	/**
-	 * Fires before Plugin reset
-	 *
-	 * @since 1.6.3
-	 */
-	do_action( 'forminator_before_reset_plugin' );
-
-	forminator_reset_settings();
-
-	/**
-	 * Forminator_clear_module_views
-	 *
-	 * @see forminator_clear_module_views()
-	 */
-	$wpdb->query( "TRUNCATE {$wpdb->prefix}frmt_form_views" );
-
-	/**
-	 * Forminator_clear_module_submissions
-	 *
-	 * @see forminator_clear_module_submissions()
-	 */
-	$max_entry_id = $wpdb->get_var( "SELECT MAX(`entry_id`) FROM {$wpdb->prefix}frmt_form_entry" ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-
-	if ( $max_entry_id && is_numeric( $max_entry_id ) && $max_entry_id > 0 ) {
-		for ( $i = 1; $i <= $max_entry_id; $i++ ) {
-			wp_cache_delete( $i, Forminator_Form_Entry_Model::FORM_ENTRY_CACHE_GROUP );
-		}
-	}
-
-	$wpdb->query( "TRUNCATE {$wpdb->prefix}frmt_form_entry" );
-	$wpdb->query( "TRUNCATE {$wpdb->prefix}frmt_form_entry_meta" );
-
-	wp_cache_delete( 'all_form_types', Forminator_Form_Entry_Model::FORM_COUNT_CACHE_GROUP );
-	wp_cache_delete( 'custom-forms_form_type', Forminator_Form_Entry_Model::FORM_COUNT_CACHE_GROUP );
-	wp_cache_delete( 'poll_form_type', Forminator_Form_Entry_Model::FORM_COUNT_CACHE_GROUP );
-	wp_cache_delete( 'quizzes_form_type', Forminator_Form_Entry_Model::FORM_COUNT_CACHE_GROUP );
-
-	/**
-	 * Fires after Plugin reset
-	 *
-	 * @since 1.6.3
-	 */
-	do_action( 'forminator_after_reset_plugin' );
-}
-
-/**
  * Add Slash in string
  *
  * @since 1.8
@@ -1549,11 +1558,10 @@ function forminator_addcslashes( $value, $char = '"\\/' ) {
  *
  * @param string $link_for Accepts: 'docs', 'plugin', 'rate', 'support', 'roadmap'.
  * @param string $campaign  Utm campaign tag to be used in link. Default: ''.
- * @param string $adv_path  Advanced path. Default: ''.
  *
  * @return string
  */
-function forminator_get_link( $link_for, $campaign = '', $adv_path = '' ) {
+function forminator_get_link( $link_for, $campaign = '' ) {
 	$domain   = 'https://wpmudev.com';
 	$wp_org   = 'https://wordpress.org';
 	$utm_tags = "?utm_source=forminator&utm_medium=plugin&utm_campaign={$campaign}";
@@ -1569,13 +1577,10 @@ function forminator_get_link( $link_for, $campaign = '', $adv_path = '' ) {
 			$link = "{$wp_org}/support/plugin/forminator/reviews/#new-post";
 			break;
 		case 'support':
-			$link = FORMINATOR_PRO ? "{$domain}/get-support/" : "{$wp_org}/support/plugin/forminator/";
+			$link = "{$wp_org}/support/plugin/forminator/";
 			break;
 		case 'roadmap':
 			$link = "{$domain}/roadmap/";
-			break;
-		case 'pro_link':
-			$link = "{$domain}/$adv_path";
 			break;
 		default:
 			$link = '';
@@ -1902,6 +1907,59 @@ function forminator_delete_permissions() {
 }
 
 /**
+ * Validate captcha placement in paginated forms.
+ *
+ * Ensures that if a form has pagination (page-breaks), then captcha field
+ * must be placed only on the last page. This prevents users from bypassing
+ * captcha validation by navigating past the captcha page.
+ *
+ * @param array $fields Form fields array from template.
+ * @return bool|WP_Error True if valid, WP_Error if captcha is not on last page.
+ *
+ * @since 1.55.0
+ */
+function forminator_validate_captcha_placement_in_paginated_forms( $fields ) {
+	// Track the last page-break and earliest captcha positions.
+	$last_page_break_position = -1;
+	$first_captcha_position   = -1;
+
+	foreach ( $fields as $wrapper_index => $wrapper ) {
+		if ( ! isset( $wrapper['fields'] ) || ! is_array( $wrapper['fields'] ) ) {
+			continue;
+		}
+
+		foreach ( $wrapper['fields'] as $field ) {
+			if ( ! isset( $field['type'] ) ) {
+				continue;
+			}
+
+			switch ( $field['type'] ) {
+				case 'page-break':
+					if ( $wrapper_index > $last_page_break_position ) {
+						$last_page_break_position = $wrapper_index;
+					}
+					break;
+
+				case 'captcha':
+					if ( -1 === $first_captcha_position || $wrapper_index < $first_captcha_position ) {
+						$first_captcha_position = $wrapper_index;
+					}
+					break;
+			}
+		}
+	}
+
+	if ( $first_captcha_position < $last_page_break_position ) {
+		return new WP_Error(
+			'captcha_placement_invalid',
+			esc_html__( 'Captcha can only be placed on the last page in a paginated form.', 'forminator' )
+		);
+	}
+
+	return true;
+}
+
+/**
  * Searches for $needle in the multidimensional array $haystack.
  *
  * @url https://stackoverflow.com/a/28473219
@@ -1935,7 +1993,6 @@ function forminator_recursive_array_search( $needle, $haystack ) {
 function forminator_get_accessible_user_roles() {
 	// Get the current user object.
 	$current_user = wp_get_current_user();
-
 	// Check if user is logged in | Have access to create user.
 	if ( empty( $current_user ) || ! current_user_can( 'create_users' ) ) {
 		return array();
@@ -1971,31 +2028,91 @@ function forminator_get_accessible_user_roles() {
 }
 
 /**
- * Validate registration form settings.
+ * Check registration form permissions and access.
  *
  * @param array $settings Settings.
  * @return bool|WP_Error
  */
-function forminator_validate_registration_form_settings( $settings ) {
+function forminator_check_registration_form_permissions( $settings ) {
 	if ( ! empty( $settings['form-type'] ) && 'registration' === $settings['form-type'] ) {
 		$error_message = esc_html__( 'Unfortunately, you do not have the required permissions or user role to perform this action.', 'forminator' );
 		if ( ! current_user_can( 'create_users' ) ) {
 			return new WP_Error( 'invalid_access', $error_message );
 		}
+
 		$roles = forminator_get_accessible_user_roles();
 		if ( isset( $settings['registration-user-role'] ) && 'fixed' === $settings['registration-user-role'] ) {
-			if ( isset( $settings['registration-role-field'] ) && ! isset( $roles[ $settings['registration-role-field'] ] ) ) {
+			if ( isset( $settings['registration-role-field'] ) && ! isset( $roles[ $settings['registration-role-field'] ] )
+				&& 'notCreate' !== $settings['registration-role-field'] ) { // Respect the "Don't create a user in the network's main site" option.
 				return new WP_Error( 'invalid_user_role', $error_message );
 			}
 		} elseif ( ! empty( $settings['user_role'] ) && is_array( $settings['user_role'] ) ) {
 			foreach ( $settings['user_role'] as $user_role ) {
-				if ( isset( $user_role['role'] ) && ! isset( $roles[ $user_role['role'] ] ) ) {
+				if ( isset( $user_role['role'] ) && ! isset( $roles[ $user_role['role'] ] )
+					&& 'notCreate' !== $user_role['role'] ) { // Respect the "Don't create a user in the network's main site" option.
 					return new WP_Error( 'invalid_user_role', $error_message );
 				}
 			}
 		}
 	}
 	return true;
+}
+
+/**
+ * Validate registration form settings.
+ *
+ * @param array $settings Settings.
+ * @return bool|WP_Error
+ */
+function forminator_validate_registration_form_settings( $settings ) {
+	// Check permissions first.
+	$permission_check = forminator_check_registration_form_permissions( $settings );
+	if ( is_wp_error( $permission_check ) ) {
+		return $permission_check;
+	}
+
+	// Always validate required fields for registration forms.
+	if ( ! empty( $settings['form-type'] ) && 'registration' === $settings['form-type'] ) {
+		$required_message = esc_html__( 'Please map all required user fields before saving this registration form.', 'forminator' );
+		$required_fields  = array(
+			'registration-username-field',
+			'registration-email-field',
+			'registration-password-field',
+		);
+
+		foreach ( $required_fields as $required_field ) {
+			if ( ! isset( $settings[ $required_field ] ) || '' === trim( (string) $settings[ $required_field ] ) ) {
+				return new WP_Error( 'invalid_required_mapping', $required_message );
+			}
+		}
+	}
+
+	return true;
+}
+
+/**
+ * Can the current user approve a user and create a site.
+ *
+ * @param object $signup Signup.
+ * @return bool
+ */
+function forminator_can_approve_user_and_create_site( $signup ) {
+	$roles = forminator_get_accessible_user_roles();
+	if ( ! empty( $signup->user_data['role'] ) ) {
+		if ( forminator_is_main_site() ) {
+			// Either the 'Don't create a user' option is chosen, or the current user has access to the required user roles.
+			if ( 'notCreate' === $signup->user_data['role'] || isset( $roles[ $signup->user_data['role'] ] ) ) { // Respect the "Don't create a user in the network's main site" option.
+				$option_create_site = forminator_get_property( $signup->settings, 'site-registration' );
+				// Either the 'site-registration' option is disabled, or the current user has access to create sites.
+				if ( 'enable' !== $option_create_site || current_user_can( 'create_sites' ) ) {
+					return true;
+				}
+			}
+		} elseif ( isset( $roles[ $signup->user_data['role'] ] ) ) {
+			return true;
+		}
+	}
+	return false;
 }
 
 /**
@@ -2072,4 +2189,39 @@ function forminator_cloud_templates_disabled(): bool {
 	}
 
 	return $is_disabled;
+}
+
+/**
+ * Check if user registration is enabled in WordPress settings.
+ *
+ * @return bool
+ */
+function forminator_is_user_registration_enabled() {
+	if ( is_multisite() ) {
+		$registration_option = get_site_option( 'registration' );
+		if ( in_array( $registration_option, array( 'all', 'user' ), true ) ) {
+			return true;
+		}
+	} elseif ( get_option( 'users_can_register' ) ) {
+		return true;
+	}
+	return false;
+}
+
+/**
+ * Check if site registration is enabled in WordPress settings.
+ *
+ * @return bool
+ */
+function forminator_is_site_registration_enabled() {
+	// Allow site registration only if on the main site and site registration is enabled.
+	if ( forminator_is_main_site() ) {
+		$registration_option = get_site_option( 'registration' );
+		// Site registration is enabled only if the option is set to 'all'.
+		// For the 'blog' option, only logged-in users can register new sites, so we don't support that here.
+		if ( 'all' === $registration_option ) {
+			return true;
+		}
+	}
+	return false;
 }

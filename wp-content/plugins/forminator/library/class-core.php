@@ -100,6 +100,8 @@ class Forminator_Core {
 			add_action( 'wp_head', array( $this, 'localize_pointers' ) );
 		}
 
+		Forminator_Hub_Connector::get_instance();
+
 		// Get enabled modules.
 		$modules       = new Forminator_Modules();
 		$this->modules = $modules->get_modules();
@@ -122,7 +124,6 @@ class Forminator_Core {
 		if ( is_admin() ) {
 			$this->admin->add_templates_page();
 			$this->admin->add_entries_page();
-			$this->admin->add_addons_page();
 			if ( Forminator::is_addons_feature_enabled() ) {
 				$this->admin->add_integrations_page();
 			}
@@ -131,12 +132,13 @@ class Forminator_Core {
 			}
 			$this->admin->add_settings_page();
 
+			if ( ! forminator_addons_disabled() ) {
+				$this->admin->add_addons_page();
+			}
+
 			if ( ! FORMINATOR_PRO ) {
 				$this->admin->add_upgrade_page();
 			}
-
-			// Call Mixpanel class.
-			new Forminator_Mixpanel();
 		}
 
 		// Protection management.
@@ -152,9 +154,56 @@ class Forminator_Core {
 		// Post meta box.
 		add_action( 'init', array( &$this, 'post_field_meta_box' ) );
 
+		if ( ! FORMINATOR_PRO ) {
+			add_action( 'init', array( __CLASS__, 'load_cross_sell_module' ) );
+		}
+
 		// Clean up Action Scheduler.
 		add_action( 'init', array( $this, 'schedule_action_scheduler_cleanup' ), 999 );
 		add_action( 'forminator_action_scheduler_cleanup', array( &$this, 'action_scheduler_cleanup' ) );
+
+		// Ensure Forminator shortcodes render inside Synced Patterns in Block Editor templates.
+		if ( ! is_admin() ) {
+			add_filter( 'render_block', array( $this, 'maybe_process_forminator_shortcodes' ), 10, 2 );
+		}
+	}
+
+	/**
+	 * Process Forminator shortcodes in block content.
+	 *
+	 * Workaround for Gutenberg not parsing shortcodes inside Synced Patterns
+	 * (formerly Reusable Blocks) when used in Block Editor Page Templates.
+	 *
+	 * @since 1.54.0
+	 *
+	 * @param string $block_content The rendered block content.
+	 * @param array  $block         The parsed block data including blockName.
+	 * @return string The block content with Forminator shortcodes rendered.
+	 */
+	public function maybe_process_forminator_shortcodes( $block_content, $block ) {
+		if ( empty( $block_content ) ) {
+			return $block_content;
+		}
+
+		// Raw/classic blocks are already handled by the_content.
+		// Processing them here can wrap Divi background spans in <p> and break direct-child selectors.
+		if ( ! isset( $block['blockName'] ) || 'core/freeform' === $block['blockName'] ) {
+			return $block_content;
+		}
+
+		if ( false === strpos( $block_content, '[forminator_' ) ) {
+			return $block_content;
+		}
+
+		// Only process if block content contains a Forminator shortcode.
+		if ( has_shortcode( $block_content, 'forminator_form' )
+			|| has_shortcode( $block_content, 'forminator_poll' )
+			|| has_shortcode( $block_content, 'forminator_quiz' )
+		) {
+			$block_content = do_shortcode( $block_content );
+		}
+
+		return $block_content;
 	}
 
 	/**
@@ -215,6 +264,40 @@ class Forminator_Core {
 	}
 
 	/**
+	 * Initialize Mixpanel tracking.
+	 *
+	 * @param bool $force Force tracking.
+	 * @return void
+	 */
+	public static function init_mixpanel( bool $force = false ) {
+		if ( ! forminator_usage_tracking_disabled() && ( ( ! self::is_tracking_active() && ! $force ) || ! is_admin() ) ) {
+			return;
+		}
+
+		if ( ! class_exists( 'WPMUDEV_Analytics_V4' ) ) {
+			$autoload = plugin_dir_path( __FILE__ ) . 'lib/analytics/autoload.php';
+			if ( ! file_exists( $autoload ) ) {
+				return;
+			}
+			// Prefixed vendor autoload.
+			include_once $autoload;
+		}
+
+		include_once plugin_dir_path( __FILE__ ) . 'mixpanel/class-mixpanel.php';
+
+		Forminator_Mixpanel::get_instance();
+	}
+
+	/**
+	 * Check if usage tracking is active.
+	 *
+	 * @return bool
+	 */
+	public static function is_tracking_active() {
+		return get_option( 'forminator_usage_tracking' );
+	}
+
+	/**
 	 * Includes
 	 *
 	 * @since 1.0
@@ -239,6 +322,8 @@ class Forminator_Core {
 		include_once forminator_plugin_dir() . 'library/abstracts/abstract-class-user.php';
 
 		// Classes.
+		/* @noinspection PhpIncludeInspection */
+		include_once forminator_plugin_dir() . 'library/class-abandonment.php';
 		/* @noinspection PhpIncludeInspection */
 		include_once forminator_plugin_dir() . 'library/class-loader.php';
 		/* @noinspection PhpIncludeInspection */
@@ -268,11 +353,11 @@ class Forminator_Core {
 		include_once forminator_plugin_dir() . 'library/render/class-assets-enqueue.php';
 		/* @noinspection PhpIncludeInspection */
 
-		if ( version_compare( PHP_VERSION, '5.3.0', 'ge' ) && file_exists( forminator_plugin_dir() . 'library/gateways/class-paypal-express.php' ) ) {
+		if ( file_exists( forminator_plugin_dir() . 'library/gateways/class-paypal-express.php' ) ) {
 			include_once forminator_plugin_dir() . 'library/gateways/class-paypal-express.php';
 		}
 
-		if ( version_compare( PHP_VERSION, '5.6.0', 'ge' ) && file_exists( forminator_plugin_dir() . 'library/gateways/class-stripe.php' ) ) {
+		if ( file_exists( forminator_plugin_dir() . 'library/gateways/class-stripe.php' ) ) {
 			/* @noinspection PhpIncludeInspection */
 			include_once forminator_plugin_dir() . 'library/gateways/class-stripe.php';
 		}
@@ -311,10 +396,8 @@ class Forminator_Core {
 		/* @noinspection PhpIncludeInspection */
 		include_once forminator_plugin_dir() . 'library/helpers/helper-calculator.php';
 
-		if ( version_compare( PHP_VERSION, '5.6.0', 'ge' ) ) {
-			/* @noinspection PhpIncludeInspection */
-			include_once forminator_plugin_dir() . 'library/helpers/helper-payment.php';
-		}
+		/* @noinspection PhpIncludeInspection */
+		include_once forminator_plugin_dir() . 'library/helpers/helper-payment.php';
 
 		// Model.
 		/* @noinspection PhpIncludeInspection */
@@ -330,6 +413,13 @@ class Forminator_Core {
 		/* @noinspection PhpIncludeInspection */
 		include_once forminator_plugin_dir() . 'library/model/class-form-views-model.php';
 		include_once forminator_plugin_dir() . 'library/model/class-form-reports-model.php';
+
+		include_once forminator_plugin_dir() . 'library/class-forminator-hub-connector.php';
+		$hub_connector_lib = forminator_plugin_dir() . 'library/lib/hub-connector/connector.php';
+		if ( file_exists( $hub_connector_lib ) ) {
+			include_once $hub_connector_lib;
+		}
+
 		if ( is_admin() ) {
 			/* @noinspection PhpIncludeInspection */
 			include_once forminator_plugin_dir() . 'admin/abstracts/class-admin-page.php';
@@ -354,13 +444,39 @@ class Forminator_Core {
 				/* @noinspection PhpIncludeInspection */
 				require_once ABSPATH . 'wp-admin/includes/template.php';
 			}
-			/* @noinspection PhpIncludeInspection */
-			include_once forminator_plugin_dir() . 'library/mixpanel/class-mixpanel.php';
+			self::init_mixpanel();
 		}
 
 		if ( Forminator::is_internal_page_cache_support_enabled() ) {
 			/* @noinspection PhpIncludeInspection */
 			include_once forminator_plugin_dir() . 'library/class-page-cache.php';
+		}
+	}
+
+	/**
+	 * Sets the Plugins Cross Sell submodule.
+	 */
+	public static function load_cross_sell_module() {
+		$cross_sell_path = forminator_plugin_dir() . 'library/lib/plugins-cross-sell-page/plugin-cross-sell.php';
+		if ( ! file_exists( $cross_sell_path ) ) {
+			return;
+		}
+
+		static $cross_sell = null;
+
+		if ( is_null( $cross_sell ) ) {
+			if ( ! class_exists( '\WPMUDEV\Modules\Plugin_Cross_Sell' ) ) {
+				require_once $cross_sell_path;
+			}
+
+			$submenu_params = array(
+				'slug'        => 'forminator',
+				'parent_slug' => 'forminator',
+				'menu_slug'   => 'forminator_cross_sell',
+				'position'    => 17,
+			);
+
+			$cross_sell = new \WPMUDEV\Modules\Plugin_Cross_Sell( $submenu_params );
 		}
 	}
 
@@ -381,7 +497,7 @@ class Forminator_Core {
 	public function setup_post_meta_box() {
 		global $post;
 		if ( is_object( $post ) ) {
-			$is_forminator_meta = get_post_meta( $post->ID, '_has_forminator_meta' );
+			$is_forminator_meta = get_post_meta( $post->ID, '_has_forminator_meta', false );
 			if ( $is_forminator_meta ) {
 				add_meta_box(
 					'forminator-post-meta-box',
@@ -466,20 +582,21 @@ class Forminator_Core {
 	 *
 	 * @param array  $data Data.
 	 * @param string $current_key Current key.
+	 * @param bool   $force Force sanitization.
 	 *
 	 * @return array|string
 	 */
-	public static function sanitize_array( $data, $current_key = '' ) {
-		$data         = wp_unslash( $data );
-		$skipped_keys = array( 'preview_data' );
+	public static function sanitize_array( $data, $current_key = '', $force = false ) {
+		$data = wp_unslash( $data );
+
 		// TODO: Should skip fields that has its own sanitize function.
 		if (
-			in_array( $current_key, $skipped_keys, true ) ||
-			0 === strpos( $current_key, 'url-' ) ||
+			false === $force && ( 0 === strpos( $current_key, 'url-' ) ||
 			0 === strpos( $current_key, 'select-' ) ||
+			0 === strpos( $current_key, 'radio-' ) ||
 			0 === strpos( $current_key, 'checkbox-' ) ||
 			0 === strpos( $current_key, 'password-' ) ||
-			0 === strpos( $current_key, 'confirm_password-' )
+			0 === strpos( $current_key, 'confirm_password-' ) )
 		) {
 			return $data;
 		}
@@ -513,6 +630,7 @@ class Forminator_Core {
 			'payee_info',
 			'payer_info',
 			'payment_note',
+			'product_value',
 		);
 
 		$allow_iframe = array( 'variations' );
@@ -520,7 +638,6 @@ class Forminator_Core {
 			in_array( $current_key, $allow_html, true ) ||
 			0 === strpos( $current_key, 'html-' ) ||
 			0 === strpos( $current_key, 'textarea-' ) ||
-			0 === strpos( $current_key, 'radio-' ) ||
 			false !== strpos( $current_key, '-post-title' ) ||
 			false !== strpos( $current_key, '-post-content' ) ||
 			false !== strpos( $current_key, '-post-excerpt' )
@@ -545,7 +662,8 @@ class Forminator_Core {
 		}
 
 		// Cannot use esc_url_raw coz it strips curly braces.
-		if ( 'redirect-url' === $current_key ) {
+		if ( 'redirect-url' === $current_key
+			|| 'formula' === $current_key ) { // Cannot use sanitize_text_field as it removes percentage strings.
 			return trim( wp_strip_all_tags( $data ) );
 		}
 
@@ -553,7 +671,7 @@ class Forminator_Core {
 			return sanitize_text_field( $data );
 		} else {
 			foreach ( $data as $key => $value ) {
-				$data[ $key ] = self::sanitize_array( $value, $key );
+				$data[ $key ] = self::sanitize_array( $value, $key, $force );
 			}
 
 			return $data;
@@ -743,3 +861,4 @@ class Forminator_Core {
 		return $allowed_html;
 	}
 }
+

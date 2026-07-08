@@ -2,16 +2,13 @@
 /*
 Plugin Name: WP Post Page Clone
 Plugin URI: https://wordpress.org/plugins/wp-post-page-clone
-Description: A plugin to generate duplicate post or page with contents and it's settings.
+Description: A plugin to generate duplicate post or page with contents and it's meta fields and other required settings.
+Version: 1.3
 Author: Gaurang Sondagar
 Author URI: http://gaurangsondagar99.wordpress.com/
-Version: 1.2
+License: GPLv2 or later
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: wp-post-page-clone
-Requires at least: 4.0
-Tested up to: 5.8.2
-Domin Path: Languages
-License: GPLV2
-
 /**
  * Exit if accessed directly
  */
@@ -30,14 +27,13 @@ if (!defined('WP_POST_PAGE_CLONE_PLUGIN_DIRNAME')) {
     define('WP_POST_PAGE_CLONE_PLUGIN_DIRNAME', plugin_basename(dirname(__FILE__)));
 }
 
-
 if(!function_exists('wp_post_page_clone_translate')) {
     /**
      * Function for language translations
      */
     function wp_post_page_clone_translate() {
 
-        load_plugin_textdomain('wp-post-page-clone', false, basename(dirname( __FILE__ ) ) . '/languages' );
+        load_plugin_textdomain('wp-post-page-clone', false, WP_POST_PAGE_CLONE_PLUGIN_DIRNAME . '/languages' );
 
     }
 
@@ -58,23 +54,32 @@ if(!function_exists('wp_post_page_clone')) {
             /*
             * get Nonce value
             */
-            $nonce = $_REQUEST['nonce'];
-            $post_id = (isset($_GET['post']) ? intval($_GET['post']) : intval($_POST['post']));
+            $nonce = isset( $_REQUEST['nonce'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['nonce'] ) ) : '';
+
+            // Safely retrieve post ID
+            if ( isset( $_GET['post'] ) ) {
+                $post_id = intval( $_GET['post'] );
+            } elseif ( isset( $_POST['post'] ) ) {
+                $post_id = intval( $_POST['post'] );
+            } else {
+                $post_id = 0; // Or handle as invalid
+            }
 
             // check access permissions to even consider the cloning....
             if( ! wp_verify_nonce( $nonce, 'wp-post-page-clone-'.$post_id) || ! current_user_can( 'edit_posts' )) {
-                wp_die("You don't have permission to be here", "wp-post-page-clone");
+                wp_die( esc_html__( 'You do not have permission to be here', 'wp-post-page-clone' ) );
             }
 
             if ( !isset( $_GET['post']) || (!isset($_REQUEST['action']) && 'wp_post_page_clone' != $_REQUEST['action'] ) ) {
-                wp_die("No post or page to clone has been supplied!, Please try again!", "wp-post-page-clone");
+                wp_die( esc_html__( 'No post or page to clone has been supplied!, Please try again!', 'wp-post-page-clone' ) );
             }
             
             $post = get_post( $post_id );
             $current_user = wp_get_current_user();
             $post_author = $current_user->ID;
 
-            if( current_user_can('delete_others_posts') || current_user_can( 'setup_network' ) || (current_user_can('edit_posts') && $post_author == $post->post_author)){
+            $allowed_roles = array( 'editor', 'administrator' );
+            if ($post->post_author == $current_user->ID || array_intersect( $allowed_roles, $current_user->roles ) || (current_user_can( 'edit_post', $post->ID ))) {
 
                 if (isset( $post ) && $post != null) {
 
@@ -95,8 +100,15 @@ if(!function_exists('wp_post_page_clone')) {
                         );
 
                         $clone_post_id = wp_insert_post( $args );
+                        if ( is_wp_error( $clone_post_id ) ) {
+                            wp_die( esc_html( $clone_post_id->get_error_message() ) );
+                        }
+                        
 
-                        $taxonomies = get_object_taxonomies($post->post_type);
+                        /*
+                         * get and set terms to the new post draft
+                         */
+                        $taxonomies = array_map('sanitize_text_field',get_object_taxonomies($post->post_type));
                         if (!empty($taxonomies) && is_array($taxonomies)){
                             foreach ($taxonomies as $taxonomy) {
                                     $post_terms = wp_get_object_terms($post_id, $taxonomy, array('fields' => 'slugs'));
@@ -104,29 +116,41 @@ if(!function_exists('wp_post_page_clone')) {
                             }
                         }
 
-                        $post_meta_data = $wpdb->get_results("SELECT meta_key, meta_value FROM $wpdb->postmeta WHERE post_id=$post_id");
-                        if (count($post_meta_data)!=0) {
-                                $clone_query = "INSERT INTO $wpdb->postmeta (post_id, meta_key, meta_value) ";
-                                foreach ($post_meta_data as $meta_data) {
-                                        $meta_key = sanitize_text_field($meta_data->meta_key);
-                                        $meta_value = addslashes($meta_data->meta_value);
-                                        $clone_query_select[]= "SELECT $clone_post_id, '$meta_key', '$meta_value'";
+                        /*
+                        * clone all post meta
+                        */
+                        $post_meta_keys = get_post_custom_keys( $post_id );
+                        if(!empty($post_meta_keys)){
+                            foreach ( $post_meta_keys as $meta_key ) {
+                                $meta_values = get_post_custom_values( $meta_key, $post_id );
+                                foreach ( $meta_values as $meta_value ) {
+                                    $meta_value = maybe_unserialize( $meta_value );
+                                    update_post_meta( $clone_post_id, $meta_key, wp_slash( $meta_value ) );
                                 }
-                                $clone_query.= implode(" UNION ALL ", $clone_query_select);
-                                $wpdb->query($clone_query);
+                            }
                         }
+
+                        /**
+                         * Added plugin's compatibility with Elementor plugin
+                         */
+                        if(is_plugin_active( 'elementor/elementor.php' )){
+                            $elm = Elementor\Core\Files\CSS\Post::create( $clone_post_id );
+                            $elm->update();
+                        } 
 
                         wp_redirect(admin_url('edit.php?post_type='.$post->post_type));
                         exit;
 
                 } else {
 
-                        wp_die(__('Post or Page creation failed, could not find original post:', 'wp-post-page-clone') . $post_id);
+                    wp_die( esc_html__( 'Post or Page creation failed, could not find original post:', 'wp-post-page-clone' ) . ' ' . esc_html( $post_id ) );
+
 
                 }
 
             } else {
-                wp_die('Security issue occure, Please try again!.', 'wp-post-page-clone');
+                wp_die( esc_html__( 'Security issue occure, Please try again!.', 'wp-post-page-clone' ) );
+                
             }
 
     }
@@ -146,10 +170,15 @@ if(!function_exists('wp_post_page_link')) {
      */
     function wp_post_page_link( $actions, $post ) {
 
+            // Remove support for acf-field-group post type
+			if($post->post_type == 'acf-field-group'){
+				return $actions;
+			}
+
             $current_user = wp_get_current_user();
             $post_author = $current_user->ID;
             $allowed_roles = array( 'editor', 'administrator' );
-            if ( array_intersect( $allowed_roles, $current_user->roles ) ) {
+            if ($post->post_author == $current_user->ID || array_intersect( $allowed_roles, $current_user->roles ) || (current_user_can( 'edit_post', $post->ID )) ) {
                     $actions['clone'] = '<a '.$post_author.'==='.$post->post_author.' href="admin.php?action=wp_post_page_clone&amp;post=' . $post->ID . '&amp;nonce='.wp_create_nonce( 'wp-post-page-clone-'.$post->ID ).'" title="'.__('Clone Post and Page', 'wp-post-page-clone').'" rel="permalink">'.__('Click To Clone', 'wp-post-page-clone').'</a>';
             }
 
@@ -163,5 +192,3 @@ if(!function_exists('wp_post_page_link')) {
  */
 add_filter( 'post_row_actions', 'wp_post_page_link', 10, 2 );
 add_filter('page_row_actions', 'wp_post_page_link', 10, 2);
-
-?>

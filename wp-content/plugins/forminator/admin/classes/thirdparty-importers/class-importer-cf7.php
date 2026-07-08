@@ -124,6 +124,11 @@ class Forminator_Admin_Import_CF7 extends Forminator_Import_Mediator {
 		$submit_class      = '';
 		$autofill          = array();
 
+		// global tags.
+		$tags['[_site_title]']       = '{site_title}';
+		$tags['[_site_url]']         = '{site_url}';
+		$tags['[_site_admin_email]'] = get_bloginfo( 'admin_email' );
+
 		// fields import.
 		if ( is_plugin_active( 'cf7-conditional-fields/contact-form-7-conditional-fields.php' ) && in_array( 'conditional', $cf7_addons, true ) ) {
 			$wpcf7cf_entries = CF7CF::getConditions( $id );
@@ -302,8 +307,8 @@ class Forminator_Admin_Import_CF7 extends Forminator_Import_Mediator {
 					case 'email':
 						$new_fields[ $mkey ] = $this->handle_email_field( $field, $new_fields[ $mkey ], $messages );
 						break;
-					case 'captcha':
-						$new_fields[ $mkey ] = $this->handle_captcha_field( $field, $new_fields[ $mkey ], $messages );
+					case 'recaptcha':
+						$new_fields[ $mkey ] = $this->handle_captcha_field( $field, $new_fields[ $mkey ], $messages, $form_html );
 						break;
 					case 'checkbox':
 						$new_fields[ $mkey ] = $this->handle_checkbox_field( $field, $new_fields[ $mkey ], $messages );
@@ -333,6 +338,21 @@ class Forminator_Admin_Import_CF7 extends Forminator_Import_Mediator {
 				}
 			}
 		}//endforeach fields
+
+		if ( $this->should_add_v3_captcha_field( $global ) ) {
+			$captcha_count = isset( $count['captcha'] ) ? $count['captcha'] + 1 : 1;
+			$wrapper       = 'wrapper-' . $this->random_wrapper_int() . '-' . $this->random_wrapper_int();
+
+			$new_fields[] = array(
+				'element_id'       => esc_html( 'captcha-' . $captcha_count ),
+				'type'             => 'captcha',
+				'wrapper_id'       => $wrapper,
+				'cols'             => 12,
+				'form_id'          => $wrapper,
+				'captcha_provider' => 'recaptcha',
+				'captcha_type'     => 'v3_recaptcha',
+			);
+		}
 
 		// admin mail import.
 		$settings['use-admin-email'] = false;
@@ -430,7 +450,9 @@ class Forminator_Admin_Import_CF7 extends Forminator_Import_Mediator {
 		$settings['submitData']['custom-class']       = $submit_class;
 
 		if ( is_plugin_active( 'wpcf7-redirect/wpcf7-redirect.php' ) && in_array( 'redirection', $cf7_addons, true ) ) {
-			$redirect = new WPCF7_Redirect();
+			$resolved_redirect_url = '';
+			$resolved_newtab       = 'sametab';
+			$redirect              = new WPCF7_Redirect();
 			if ( method_exists( $redirect, 'get_fields_values' ) ) {
 				// For old wpcf7-redirect plugin.
 				$redirect_meta = $redirect->get_fields_values( $id );
@@ -438,18 +460,58 @@ class Forminator_Admin_Import_CF7 extends Forminator_Import_Mediator {
 				// For new wpcf7-redirect plugin after their update.
 				$redirect      = new WPCF7R_Form( $id );
 				$redirect_meta = $redirect->get_cf7_redirection_settings();
+
+				// Some newer versions keep redirect destinations on actions instead of redirect meta.
+				if ( empty( $redirect_meta['page_id'] ) && empty( $redirect_meta['external_url'] ) ) {
+					$wpcf7r_actions = $redirect->get_actions( 'default', -1, true );
+
+					foreach ( $wpcf7r_actions as $wpcf7r_action ) {
+						if ( 'redirect' !== $wpcf7r_action->get_type() ) {
+							continue;
+						}
+
+						$redirect_url = '';
+						$page_id      = $wpcf7r_action->get( 'page_id' );
+						$external_url = $wpcf7r_action->get( 'external_url' );
+						$newtab       = ! empty( $wpcf7r_action->get( 'open_in_new_tab' ) ) ? 'newtab_thankyou' : 'sametab';
+
+						if ( ! empty( $external_url ) && ! empty( $wpcf7r_action->get( 'use_external_url' ) ) ) {
+							$redirect_url = $external_url;
+						} elseif ( ! empty( $page_id ) ) {
+							$redirect_url = get_permalink( $page_id );
+						}
+
+						if ( ! empty( $redirect_url ) ) {
+							$resolved_redirect_url = $redirect_url;
+							$resolved_newtab       = $newtab;
+							break;
+						}
+					}
+				}
 			}
 
-			if ( ! empty( $redirect_meta['page_id'] ) || ! empty( $redirect_meta['external_url'] ) ) {
-				if ( $redirect_meta['external_url'] && 'on' === $redirect_meta['use_external_url'] ) {
+			// Fall back to the meta-based redirect format when no action-based redirect was resolved.
+			if ( empty( $resolved_redirect_url ) ) {
+				$redirect_url = '';
+				$newtab       = ! empty( $redirect_meta['open_in_new_tab'] ) && 'on' === $redirect_meta['open_in_new_tab'] ? 'newtab_thankyou' : 'sametab';
+
+				if ( ! empty( $redirect_meta['external_url'] ) && 'on' === $redirect_meta['use_external_url'] ) {
 					$redirect_url = $redirect_meta['external_url'];
-				} else {
+				} elseif ( ! empty( $redirect_meta['page_id'] ) ) {
 					$redirect_url = get_permalink( $redirect_meta['page_id'] );
 				}
 
+				if ( ! empty( $redirect_url ) ) {
+					$resolved_redirect_url = $redirect_url;
+					$resolved_newtab       = $newtab;
+				}
+			}
+
+			// Apply redirect behavior only after resolving a destination.
+			if ( ! empty( $resolved_redirect_url ) ) {
 				$settings['submission-behaviour'] = 'behaviour-redirect';
-				$settings['redirect-url']         = $redirect_url;
-				$settings['newtab']               = 'on' === $redirect_meta['open_in_new_tab'] ? 'newtab_thankyou' : 'sametab';
+				$settings['redirect-url']         = esc_url( $resolved_redirect_url );
+				$settings['newtab']               = $resolved_newtab;
 			}
 		}
 		// for basics generation.
@@ -622,7 +684,7 @@ class Forminator_Admin_Import_CF7 extends Forminator_Import_Mediator {
 	public function handle_acceptance_field( $field, $options, $messages ) {
 		// Check if content exists.
 		if ( isset( $field['content'] ) ) {
-			$options['gdpr_description'] = $field['content'];
+			$options['consent_description'] = $field['content'];
 		}
 
 		if ( ! empty( $messages['accept_terms'] ) ) {
@@ -733,18 +795,60 @@ class Forminator_Admin_Import_CF7 extends Forminator_Import_Mediator {
 	 *
 	 * @since 1.11
 	 *
-	 * @param array $field Field.
-	 * @param array $options Options.
-	 * @param array $messages Messages.
+	 * @param array  $field Field.
+	 * @param array  $options Options.
+	 * @param array  $messages Messages.
+	 * @param string $form_html CF7 form markup.
 	 *
 	 * @return mixed
 	 */
-	public function handle_captcha_field( $field, $options, $messages ) {
+	public function handle_captcha_field( $field, $options, $messages, $form_html = '' ) {
+		$captcha_type = $this->resolve_cf7_recaptcha_type( $field, $form_html );
+
+		$options['captcha_provider'] = 'recaptcha';
+		$options['captcha_type']     = $captcha_type;
+
 		if ( ! empty( $messages['captcha_not_match'] ) ) {
 			$options['recaptcha_error_message'] = $messages['captcha_not_match'];
 		}
 
 		return $options;
+	}
+
+	/**
+	 * Resolve recaptcha type from CF7 form signals.
+	 *
+	 * @since 1.53.1
+	 *
+	 * @param array  $field Field.
+	 * @param string $form_html CF7 form markup.
+	 *
+	 * @return string
+	 */
+	private function resolve_cf7_recaptcha_type( $field, $form_html = '' ) {
+		$has_tag = $this->has_cf7_recaptcha_tag( $form_html );
+		if ( $has_tag ) {
+			return 'v2_checkbox';
+		}
+		return 'v3_recaptcha';
+	}
+
+	/**
+	 * Check whether the CF7 form markup includes a recaptcha tag.
+	 *
+	 * @since 1.53.1
+	 *
+	 * @param string $form_html CF7 form markup.
+	 *
+	 * @return bool
+	 */
+	private function has_cf7_recaptcha_tag( $form_html ) {
+		if ( empty( $form_html ) ) {
+			return false;
+		}
+
+		$matched = 1 === preg_match( '/\[\s*recaptcha(?:[^\]]*)\]/i', $form_html );
+		return $matched;
 	}
 
 	/**
@@ -807,7 +911,7 @@ class Forminator_Admin_Import_CF7 extends Forminator_Import_Mediator {
 						$filtered = array();
 
 						foreach ( $types as $type ) {
-							$filtered[] = $this->filter_filetypes( $type );
+							$filtered = array_merge( $filtered, $this->filter_filetypes( $type ) );
 						}
 
 						$options['filetypes']    = $filtered;
@@ -846,51 +950,50 @@ class Forminator_Admin_Import_CF7 extends Forminator_Import_Mediator {
 	}
 
 	/**
-	 * Filter file types to WP mime types
+	 * Map a single CF7 file type token to Forminator extension key(s).
+	 *
+	 * Accepts category shorthands (image, audio, video, image/*),
+	 * specific MIME types (image/webp, audio/mpeg), bare extensions (jpg, mp3),
+	 * and MIME aliases (image/jpg). Unknown values are passed through as-is.
 	 *
 	 * @since 1.11
 	 *
-	 * @param string $file File type.
+	 * @param string $file File type token from CF7.
 	 *
-	 * @return string
+	 * @return array Forminator extension key(s).
 	 */
 	public function filter_filetypes( $file ) {
-		switch ( $file ) {
-			case 'jpg':
-				$file = 'jpg|jpeg|jpe';
-				break;
-			case 'jpeg':
-				$file = 'jpg|jpeg|jpe';
-				break;
-			case 'mp3':
-				$file = 'mp3|m4a|m4b';
-				break;
-			case '3gp':
-				$file = '3gp|3gpp';
-				break;
-			case 'mp4':
-				$file = 'mp4|m4v';
-				break;
-			case 'mpeg':
-				$file = 'mpeg|mpg|mpe';
-				break;
-			case 'mpg':
-				$file = 'mpeg|mpg|mpe';
-				break;
-			case 'mov':
-				$file = 'mov|qt';
-				break;
-			case 'tiff':
-				$file = 'tiff|tif';
-				break;
-			case 'tif':
-				$file = 'tiff|tif';
-				break;
-			default:
-				break;
+		// Category shorthands expand to the 'all-*' token plus every concrete extension key.
+		$category_map = array(
+			'image'   => 'all-image',
+			'image/*' => 'all-image',
+			'audio'   => 'all-audio',
+			'audio/*' => 'all-audio',
+			'video'   => 'all-video',
+			'video/*' => 'all-video',
+		);
+
+		if ( isset( $category_map[ $file ] ) ) {
+			$base_category = str_replace( '/*', '', $file );
+			$ext_types     = forminator_get_ext_types();
+			$extensions    = isset( $ext_types[ $base_category ] ) ? $ext_types[ $base_category ] : array();
+
+			return array_merge( array( $category_map[ $file ] ), $extensions );
 		}
 
-		return $file;
+		$mime_parts = explode( '/', $file );
+		$token      = isset( $mime_parts[1] ) ? $mime_parts[1] : $file;
+
+		// Match by exact MIME value or by token membership in a pipe-delimited extension key.
+		foreach ( forminator_get_ext_types_with_mime() as $exts ) {
+			foreach ( $exts as $ext_key => $mime ) {
+				if ( $mime === $file || in_array( $token, explode( '|', $ext_key ), true ) ) {
+					return array( $ext_key );
+				}
+			}
+		}
+
+		return array( $token );
 	}
 
 	/**
@@ -1098,19 +1201,50 @@ class Forminator_Admin_Import_CF7 extends Forminator_Import_Mediator {
 	 * @param array $setting Global settings.
 	 */
 	public function import_global_settings( $setting ) {
-		if ( ! empty( $setting ) ) {
-			if ( isset( $setting['captchaV2'] ) ) {
-				if ( class_exists( 'WPCF7_RECAPTCHA' ) ) {
-					$cf7_captcha        = WPCF7_RECAPTCHA::get_instance();
-					$cf7_captcha_key    = $cf7_captcha->is_active() ? $cf7_captcha->get_sitekey() : '';
-					$cf7_captcha_secret = $cf7_captcha->is_active() ? $cf7_captcha->get_secret( $cf7_captcha_key ) : '';
-					if ( $cf7_captcha_key && $cf7_captcha_secret ) {
-						update_option( 'forminator_captcha_key', $cf7_captcha_key );
-						update_option( 'forminator_captcha_secret', $cf7_captcha_secret );
-					}
+		if ( class_exists( 'WPCF7_RECAPTCHA' ) ) {
+			$cf7_captcha        = WPCF7_RECAPTCHA::get_instance();
+			$is_active          = $cf7_captcha->is_active();
+			$cf7_captcha_key    = $is_active ? $cf7_captcha->get_sitekey() : '';
+			$cf7_captcha_secret = $is_active ? $cf7_captcha->get_secret( $cf7_captcha_key ) : '';
+
+			if ( $cf7_captcha_key && $cf7_captcha_secret ) {
+				$recaptcha_version = isset( $setting['captchaV2'] ) ? 'v2' : 'v3';
+
+				if ( 'v3' === $recaptcha_version && ! get_option( 'forminator_v3_captcha_key' ) && ! get_option( 'forminator_v3_captcha_secret' ) ) {
+					update_option( 'forminator_v3_captcha_key', $cf7_captcha_key );
+					update_option( 'forminator_v3_captcha_secret', $cf7_captcha_secret );
+				} elseif ( 'v3' !== $recaptcha_version && ! get_option( 'forminator_captcha_key' ) && ! get_option( 'forminator_captcha_secret' ) ) {
+					update_option( 'forminator_captcha_key', $cf7_captcha_key );
+					update_option( 'forminator_captcha_secret', $cf7_captcha_secret );
 				}
 			}
 		}
+	}
+
+	/**
+	 * Decide if imported form should receive fallback v3 captcha field.
+	 *
+	 * @since 1.53.1
+	 *
+	 * @param array $setting Global settings.
+	 *
+	 * @return bool
+	 */
+	private function should_add_v3_captcha_field( $setting ) {
+		if ( isset( $setting['captchaV2'] ) ) {
+			return false;
+		}
+
+		if ( ! class_exists( 'WPCF7_RECAPTCHA' ) ) {
+			return false;
+		}
+
+		$cf7_captcha = WPCF7_RECAPTCHA::get_instance();
+		$is_active   = $cf7_captcha->is_active();
+		$site_key    = $is_active ? $cf7_captcha->get_sitekey() : '';
+		$secret      = $is_active ? $cf7_captcha->get_secret( $site_key ) : '';
+
+		return ! empty( $site_key ) && ! empty( $secret );
 	}
 
 	/**

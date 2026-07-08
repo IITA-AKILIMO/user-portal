@@ -163,11 +163,11 @@ class AYG_Init {
 		
 		$this->loader->add_action( 'wp_enqueue_scripts', $public, 'register_styles' );
 		$this->loader->add_action( 'wp_enqueue_scripts', $public, 'register_scripts' );
-		$this->loader->add_action( 'enqueue_block_editor_assets', $public, 'enqueue_block_editor_assets' );
-		$this->loader->add_action( 'elementor/editor/after_enqueue_scripts', $public, 'enqueue_block_editor_assets' );
-		$this->loader->add_action( 'elementor/preview/enqueue_scripts', $public, 'enqueue_block_editor_assets' );		
-		$this->loader->add_action( 'wp_ajax_ayg_load_more_videos', $public, 'ajax_callback_load_more_videos' );
-		$this->loader->add_action( 'wp_ajax_nopriv_ayg_load_more_videos', $public, 'ajax_callback_load_more_videos' );
+		$this->loader->add_action( 'enqueue_block_assets', $public, 'enqueue_block_assets' );
+		$this->loader->add_action( 'elementor/editor/after_enqueue_scripts', $public, 'enqueue_editor_assets' );
+		$this->loader->add_action( 'elementor/preview/enqueue_scripts', $public, 'enqueue_editor_assets' );		
+		$this->loader->add_action( 'wp_ajax_ayg_load_videos', $public, 'ajax_callback_load_videos' );
+		$this->loader->add_action( 'wp_ajax_nopriv_ayg_load_videos', $public, 'ajax_callback_load_videos' );
 		$this->loader->add_action( 'wp_ajax_ayg_set_cookie', $public, 'set_gdpr_cookie' );
 		$this->loader->add_action( 'wp_ajax_nopriv_ayg_set_cookie', $public, 'set_gdpr_cookie' );
 

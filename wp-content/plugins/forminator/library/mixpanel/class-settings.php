@@ -16,13 +16,14 @@ class Forminator_Mixpanel_Settings extends Events {
 	 * @since 1.27.0
 	 */
 	public static function init() {
-		add_action( 'forminator_after_dashboard_settings', array( __CLASS__, 'tracking_settings_update' ) );
-		add_action( 'forminator_feature_usage_settings', array( __CLASS__, 'tracking_settings_update' ) );
-		add_action( 'forminator_after_reset_settings', array( __CLASS__, 'tracking_settings_reset' ) );
-		add_action( 'forminator_after_uninstall', array( __CLASS__, 'tracking_plugin_uninstall' ), 10, 2 );
+		add_action( 'forminator_disable_usage_tracking', array( __CLASS__, 'tracking_settings_disabled' ) );
+		add_action( 'forminator_enable_usage_tracking', array( __CLASS__, 'tracking_settings_enabled' ) );
+		add_action( 'forminator_before_reset_settings', array( __CLASS__, 'tracking_settings_reset' ) );
+		add_action( 'forminator_before_uninstall', array( __CLASS__, 'tracking_plugin_uninstall' ) );
 		add_action( 'deactivated_plugin', array( __CLASS__, 'tracking_deactivate' ) );
 		add_action( 'forminator_before_stripe_connected', array( __CLASS__, 'tracking_stripe_rak_use' ), 10, 5 );
 		add_action( 'forminator_after_stripe_migrated', array( __CLASS__, 'tracking_stripe_migrated' ) );
+		add_action( 'forminator_auto_save_setting', array( __CLASS__, 'tracking_auto_save' ) );
 	}
 
 	/**
@@ -31,9 +32,6 @@ class Forminator_Mixpanel_Settings extends Events {
 	 * @return void
 	 */
 	public static function tracking_stripe_migrated() {
-		if ( ! self::is_tracking_active() ) {
-			return;
-		}
 		self::track_event( 'stripe_field_migrated', array() );
 	}
 
@@ -42,15 +40,11 @@ class Forminator_Mixpanel_Settings extends Events {
 	 *
 	 * We need to opt out after settings reset.
 	 *
-	 * @param bool $active usage tracking active or not.
-	 *
 	 * @return void
 	 * @since 1.27.0
 	 */
-	public static function tracking_settings_reset( $active ) {
-		if ( $active ) {
-			self::track_opt_toggle( false, 'Data Reset' );
-		}
+	public static function tracking_settings_reset() {
+		self::track_opt_toggle( false, 'Data Reset' );
 	}
 
 	/**
@@ -64,9 +58,6 @@ class Forminator_Mixpanel_Settings extends Events {
 	 * @since 1.27.0
 	 */
 	public static function tracking_deactivate( $plugin ) {
-		if ( ! self::is_tracking_active() ) {
-			return;
-		}
 		// Only if Forminator plugin.
 		if ( FORMINATOR_PLUGIN_BASENAME !== $plugin ) {
 			return;
@@ -93,39 +84,40 @@ class Forminator_Mixpanel_Settings extends Events {
 	 *
 	 * We need to opt out after plugin uninstall if not keep settings.
 	 *
-	 * @param bool $active usage tracking active or not.
 	 * @param bool $keep_settings Determine whether to save current settings for next time, or reset them.
 	 *
 	 * @return void
 	 *
 	 * @since 1.27.0
 	 */
-	public static function tracking_plugin_uninstall( $active, $keep_settings ) {
-		// Opt out only if it was opted in before and doesn't require to keep settings.
-		if ( $active && $keep_settings ) {
+	public static function tracking_plugin_uninstall( $keep_settings ) {
+		// Opt out only if it doesn't require to keep settings.
+		if ( $keep_settings ) {
 			self::track_opt_toggle( false, 'Data Reset' );
 		}
 	}
 
 	/**
-	 * Handle settings update.
+	 * Handle settings enabling.
 	 *
-	 * @param bool $old_value usage tracking active or not.
-	 *
+	 * @param string $triggered_from Source of the action.
 	 * @return void
-	 *
-	 * @since 1.27.0
 	 */
-	public static function tracking_settings_update( $old_value ) {
-		$active = self::is_tracking_active();
-		if ( ( ! $old_value && ! $active ) || $old_value === $active ) {
-			return;
-		}
-		self::track_opt_toggle( $active, 'Disable Tracking' );
-		if ( $active ) {
-			$properties = Forminator_Mixpanel::module_updates( 'opt-in' );
-			self::track_event( 'for_module_updated', $properties );
-		}
+	public static function tracking_settings_enabled( $triggered_from ) {
+		self::track_opt_toggle( true, $triggered_from );
+		// Track common data.
+		$properties = Forminator_Mixpanel::module_updates( 'opt-in' );
+		self::track_event( 'for_module_updated', $properties );
+	}
+
+	/**
+	 * Handle settings disabling.
+	 *
+	 * @param string $triggered_from Source of the action.
+	 * @return void
+	 */
+	public static function tracking_settings_disabled( $triggered_from = 'Disable Tracking' ) {
+		self::track_opt_toggle( false, $triggered_from );
 	}
 
 	/**
@@ -137,11 +129,9 @@ class Forminator_Mixpanel_Settings extends Events {
 	 * @return void
 	 * @since 1.27.0
 	 */
-	private static function track_opt_toggle( $active, $method = '' ) {
-		$properties = array();
-		if ( ! $active ) {
-			$properties = array( 'Method' => $method );
-		}
+	private static function track_opt_toggle( $active, $method ) {
+		$properties = array( 'Method' => $method );
+
 		self::tracker()->track( $active ? 'Opt In' : 'Opt Out', $properties );
 	}
 
@@ -182,5 +172,17 @@ class Forminator_Mixpanel_Settings extends Events {
 
 			self::track_event( 'for_stripe_rak_use', $properties );
 		}
+	}
+
+	/**
+	 * Track Auto Save setting.
+	 *
+	 * @param bool $auto_save Auto Save status.
+	 *
+	 * @return void
+	 */
+	public static function tracking_auto_save( bool $auto_save ) {
+		$settings = array( 'Auto Save' => $auto_save ? 'Enabled' : 'Disabled' );
+		self::track_event( 'for_general_settings_update', $settings );
 	}
 }

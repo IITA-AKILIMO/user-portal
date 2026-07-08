@@ -115,13 +115,13 @@ class Forminator_Html extends Forminator_Field {
 		$id      = self::get_property( 'element_id', $field );
 		$form_id = false;
 
-		$html .= '<div class="forminator-field forminator-merge-tags" data-field="' . $id . '">';
+		$html .= '<div class="forminator-field forminator-merge-tags" data-field="' . esc_attr( $id ) . '">';
 
 		if ( $label ) {
 
 			$html .= sprintf(
 				'<label class="forminator-label">%s</label>',
-				$label
+				self::convert_markdown( $label )
 			);
 		}
 
@@ -130,17 +130,17 @@ class Forminator_Html extends Forminator_Field {
 			$form_id = $settings['form_id'];
 		}
 
-		// To allow iframes in content.
-		add_filter( 'wp_kses_allowed_html', array( 'Forminator_Core', 'add_iframe_to_kses_allowed_html' ) );
-		$content = wp_kses_post( self::get_property( 'variations', $field ) );
-		remove_filter( 'wp_kses_allowed_html', array( 'Forminator_Core', 'add_iframe_to_kses_allowed_html' ) );
-
 		$html .= forminator_replace_variables(
-			$content,
+			self::get_property( 'variations', $field ),
 			$form_id
 		);
 
 		$html .= '</div>';
+
+		// To allow iframes in content.
+		add_filter( 'wp_kses_allowed_html', array( 'Forminator_Core', 'add_iframe_to_kses_allowed_html' ) );
+		$html = wp_kses_post( $html );
+		remove_filter( 'wp_kses_allowed_html', array( 'Forminator_Core', 'add_iframe_to_kses_allowed_html' ) );
 
 		return $html;
 	}

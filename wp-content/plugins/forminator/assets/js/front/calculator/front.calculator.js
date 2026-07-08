@@ -149,8 +149,12 @@ export default class FrontCalculator {
 			}
 
 			nodeIndex++;
-			while (nodes[nodeIndex] === undefined) {
+			while (nodeIndex < nodes.length && nodes[nodeIndex] === undefined) {
 				nodeIndex++;
+			}
+
+			if (nodeIndex >= nodes.length) {
+				throw ('Error: Found operator that does not stand before an operand.');
 			}
 
 			var rightOperand      = nodes[nodeIndex];

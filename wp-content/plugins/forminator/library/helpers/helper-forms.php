@@ -64,33 +64,32 @@ function forminator_get_user_data( $property ) {
  */
 function forminator_get_post_data( $property, $post_id = null, $default_value = '' ) {
 	global $post;
-
+	$current_post_object = $post;
 	if ( $post_id ) {
 		$post_object = get_post( $post_id );
 		// make sure its wp_post.
 		if ( $post_object instanceof WP_Post ) {
-			// set global $post as $post_object retrieved from `get_post` for next usage.
-			$post = $post_object; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+			$current_post_object = $post_object;
 		}
 	}
 
-	if ( ! $post ) {
+	if ( ! $current_post_object ) {
 		// fallback on wp_ajax, `global $post` not available.
-		$wp_referer = wp_get_referer();
+		$page_url   = filter_input( INPUT_POST, 'current_url', FILTER_VALIDATE_URL );
+		$wp_referer = ! empty( $page_url ) ? $page_url : wp_get_referer();
 		if ( $wp_referer ) {
 			$post_id = url_to_postid( $wp_referer );
 			if ( $post_id ) {
 				$post_object = get_post( $post_id );
 				// make sure its wp_post.
 				if ( $post_object instanceof WP_Post ) {
-					// set global $post as $post_object retrieved from `get_post` for next usage.
-					$post = $post_object; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+					$current_post_object = $post_object;
 				}
 			}
 		}
 	}
 
-	$post_data = forminator_object_to_array( $post );
+	$post_data = forminator_object_to_array( $current_post_object );
 	if ( isset( $post_data[ $property ] ) ) {
 		return $post_data[ $property ];
 	} else {
@@ -539,10 +538,11 @@ function forminator_prepare_css( $css_string, $prefix, $as_array = false, $separ
  *
  * @since 1.0
  *
- * @param int    $total - the total records.
- * @param string $type - The type of page (listings or entries).
+ * @param int       $total - the total records.
+ * @param string    $type - The type of page (listings or entries).
+ * @param null|bool $is_ajax  - If using ajax. Added in 1.52.
  */
-function forminator_list_pagination( $total, $type = 'listings' ) {
+function forminator_list_pagination( $total, $type = 'listings', $is_ajax = false ) {
 	$pagenum     = (int) Forminator_Core::sanitize_text_field( 'paged' );
 	$page_number = max( 1, $pagenum );
 	$per_page    = forminator_form_view_per_page( $type );
@@ -566,6 +566,9 @@ function forminator_list_pagination( $total, $type = 'listings' ) {
 		$mid_size      = 2;
 		$end_size      = 1;
 		$show_skip     = false;
+		$previous_page = min( $total_pages, $page_number - 1 );
+		$next_page     = min( $total_pages, $page_number + 1 );
+		$last_page     = max( $total_pages, $page_number - 1 );
 
 		if ( $total_pages > 10 ) {
 			$show_skip = true;
@@ -586,21 +589,26 @@ function forminator_list_pagination( $total, $type = 'listings' ) {
 		}
 
 		?>
-		<ul class="sui-pagination">
+		<ul class="sui-pagination  
+		<?php
+		if ( $is_ajax ) {
+			echo 'forminator-ajax-pagination'; }
+		?>
+		">
 
 			<?php if ( ! $disable_first ) : ?>
 				<?php
-				$prev_url  = esc_url( add_query_arg( 'paged', min( $total_pages, $page_number - 1 ), $current_url ) );
-				$first_url = esc_url( add_query_arg( 'paged', min( 1, $total_pages ), $current_url ) );
+				$prev_url  = $is_ajax ? '#' : esc_url( add_query_arg( 'paged', $previous_page, $current_url ) );
+				$first_url = $is_ajax ? '#' : esc_url( add_query_arg( 'paged', min( 1, $total_pages ), $current_url ) );
 				?>
 				<?php if ( $show_skip ) : ?>
 					<li class="wpmudev-pagination--prev">
-						<a href="<?php echo esc_url( $first_url ); ?>"><i class="sui-icon-arrow-skip-start" aria-hidden="true"></i></a>
+						<a href="<?php echo esc_url( $first_url ); ?>"  data-page="1"><i class="sui-icon-arrow-skip-start" aria-hidden="true"></i></a>
 					</li>
 				<?php endif; ?>
 				<?php if ( $disable_prev ) : ?>
 					<li class="wpmudev-pagination--prev">
-						<a href="<?php echo esc_url( $prev_url ); ?>"><i class="sui-icon-chevron-left" aria-hidden="true"></i></a>
+						<a href="<?php echo esc_url( $prev_url ); ?>" data-page="<?php echo esc_attr( $previous_page ); ?>"><i class="sui-icon-chevron-left" aria-hidden="true"></i></a>
 					</li>
 				<?php endif; ?>
 			<?php endif; ?>
@@ -608,15 +616,15 @@ function forminator_list_pagination( $total, $type = 'listings' ) {
 			$dots = false;
 			for ( $i = 1; $i <= $total_pages; $i++ ) :
 				$class = ( $page_number === $i ) ? 'sui-active' : '';
-				$url   = esc_url( add_query_arg( 'paged', ( $i ), $current_url ) );
+				$url   = $is_ajax ? '#' : esc_url( add_query_arg( 'paged', ( $i ), $current_url ) );
 				if ( ( $i <= $end_size || ( $current && $i >= $current - $mid_size && $i <= $current + $mid_size ) || $i > $total_pages - $end_size ) ) {
 					?>
-					<li class="<?php echo esc_attr( $class ); ?>"><a href="<?php echo esc_url( $url ); ?>" class="<?php echo esc_attr( $class ); ?>"><?php echo esc_html( $i ); ?></a></li>
+					<li class="<?php echo esc_attr( $class ); ?>"><a href="<?php echo esc_url( $url ); ?>" class="<?php echo esc_attr( $class ); ?>" data-page="<?php echo esc_attr( $i ); ?>"><?php echo esc_html( $i ); ?></a></li>
 					<?php
 					$dots = true;
 				} elseif ( $dots ) {
 					?>
-					<li class="sui-pagination-dots"><span><?php esc_html_e( '&hellip;', 'forminator' ); ?></span></li>
+					<li class="sui-pagination-dots"><span>&hellip;</span></li>
 					<?php
 					$dots = false;
 				}
@@ -627,17 +635,17 @@ function forminator_list_pagination( $total, $type = 'listings' ) {
 
 			<?php if ( ! $disable_last ) : ?>
 				<?php
-				$next_url = esc_url( add_query_arg( 'paged', min( $total_pages, $page_number + 1 ), $current_url ) );
-				$last_url = esc_url( add_query_arg( 'paged', max( $total_pages, $page_number - 1 ), $current_url ) );
+				$next_url = $is_ajax ? '#' : esc_url( add_query_arg( 'paged', $next_page, $current_url ) );
+				$last_url = $is_ajax ? '#' : esc_url( add_query_arg( 'paged', $last_page, $current_url ) );
 				?>
 				<?php if ( $disable_next ) : ?>
 					<li class="wpmudev-pagination--next">
-						<a href="<?php echo esc_url( $next_url ); ?>"><i class="sui-icon-chevron-right" aria-hidden="true"></i></a>
+						<a href="<?php echo esc_url( $next_url ); ?>" data-page="<?php echo esc_attr( $next_page ); ?>"><i class="sui-icon-chevron-right" aria-hidden="true"></i></a>
 					</li>
 				<?php endif; ?>
 				<?php if ( $show_skip ) : ?>
 					<li class="wpmudev-pagination--next">
-						<a href="<?php echo esc_url( $last_url ); ?>"><i class="sui-icon-arrow-skip-end" aria-hidden="true"></i></a>
+						<a href="<?php echo esc_url( $last_url ); ?>"  data-page="<?php echo esc_attr( $last_page ); ?>"><i class="sui-icon-arrow-skip-end" aria-hidden="true"></i></a>
 					</li>
 				<?php endif; ?>
 			<?php endif; ?>
@@ -1102,4 +1110,49 @@ function forminator_get_schedule_time( $schedule ) {
 	}
 
 	return $time;
+}
+
+/**
+ * Replace line breaks
+ *
+ * @since 1.50
+ *
+ * @param string $value Value.
+ *
+ * @return string
+ */
+function forminator_replace_linebreaks( $value ) {
+	return wpautop( $value );
+}
+
+/**
+ * Balance table tag
+ *
+ * @since 1.55
+ *
+ * @param string $content Content.
+ * @return string
+ */
+function forminator_balance_table_tag( $content ) {
+	// Add table tag if content has table element to avoid mess up table structure.
+	if ( ! empty( $content ) && preg_match( '/<(tbody|thead|tfoot|tr|td|th)[\s>]/i', $content ) ) {
+		$content = '<table>' . $content . '</table>';
+		$content = force_balance_tags( $content );
+	}
+
+	return $content;
+}
+
+/**
+ * Format HTML for display
+ *
+ * @since 1.55
+ *
+ * @param string $content Content.
+ * @return string
+ */
+function forminator_format_html( $content ) {
+	$content = forminator_replace_linebreaks( $content );
+	$content = forminator_balance_table_tag( $content );
+	return $content;
 }

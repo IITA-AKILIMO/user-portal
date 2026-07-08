@@ -77,14 +77,15 @@ final class Forminator_Webhook extends Forminator_Integration {
 		// late init to allow translation.
 		$this->_description = esc_html__( 'Get awesome by your form.', 'forminator' );
 		$this->_promotion   = sprintf(
-		/* translators: 1: Zapier link 2. Closing a tag 3. Integrately link 4. Tray.io link 5. Make.com link 6. Workato link 7. Additional text */
-			esc_html__( 'Connect Forminator with automation tools through webhook. You can use this to send submissions to automation apps like %1$sZapier%2$s, %3$sIntegrately%2$s, %4$sTray.io%2$s, %5$sMake%2$s, %6$sWorkato%2$s, and other automation tools that support webhooks.', 'forminator' ),
+		/* translators: 1: Zapier link 2. Closing a tag 3. Integrately link 4. Tray.io link 5. Make.com link 6. Workato link 7. n8n link */
+			esc_html__( 'Connect Forminator with automation tools through webhook. You can use this to send submissions to automation apps like %7$sn8n%2$s, %1$sZapier%2$s, %3$sIntegrately%2$s, %4$sTray.io%2$s, %5$sMake%2$s, %6$sWorkato%2$s, and other automation tools that support webhooks.', 'forminator' ),
 			'<a href="https://zapier.com/" target="_blank">',
 			'</a>',
 			'<a href="https://integrately.com/" target="_blank">',
 			'<a href="https://tray.io/" target="_blank">',
 			'<a href="https://www.make.com/" target="_blank">',
-			'<a href="https://www.workato.com/" target="_blank">'
+			'<a href="https://www.workato.com/" target="_blank">',
+			'<a href="https://n8n.io/" target="_blank">',
 		);
 	}
 
@@ -226,6 +227,23 @@ final class Forminator_Webhook extends Forminator_Integration {
 	 * @return bool
 	 */
 	public function is_allow_multi_on_quiz() {
+		return true;
+	}
+
+	/**
+	 * Check if more webhook connections can be added on a module.
+	 *
+	 * @since 1.54.0
+	 *
+	 * @param string $module_type Module type (form, poll, quiz).
+	 * @return bool
+	 */
+	public function can_add_more_on_module( $module_type ) {
+		$method = 'is_allow_multi_on_' . $module_type;
+		if ( ! method_exists( $this, $method ) || ! $this->$method() ) {
+			return false;
+		}
+
 		return true;
 	}
 }

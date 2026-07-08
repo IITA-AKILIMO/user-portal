@@ -161,8 +161,9 @@ class Forminator_Fields {
 	 * Upgrade actions
 	 */
 	public function upgrade_actions() {
-
-		$this->add_security_files();
+		if ( ! forminator_create_index_file_disabled() ) {
+			$this->add_security_files();
+		}
 		$this->delete_old_temp_dir();
 	}
 
@@ -211,11 +212,7 @@ class Forminator_Fields {
 
 		Forminator_Field::check_upload_root_index_file();
 
-		if ( ! file_exists( $upload_root . 'css/index.php' ) ) {
-			Forminator_Field::add_index_file( $upload_root . 'css/index.php' );
-		}
-		if ( ! file_exists( $upload_root . 'signatures/index.php' ) ) {
-			Forminator_Field::add_index_file( $upload_root . 'signatures/index.php' );
-		}
+		Forminator_Field::add_index_file( $upload_root . 'css' );
+		Forminator_Field::add_index_file( $upload_root . 'signatures' );
 	}
 }

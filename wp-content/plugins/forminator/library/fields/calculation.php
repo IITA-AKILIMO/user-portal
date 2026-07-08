@@ -118,6 +118,7 @@ class Forminator_Calculation extends Forminator_Field {
 		$this->field         = $field;
 		$this->form_settings = $settings;
 		$hidden_behavior     = self::get_property( 'hidden_behavior', $field );
+		$descr_position      = self::get_description_position( $field, $settings );
 
 		$html        = '';
 		$wrapper     = array();
@@ -128,7 +129,6 @@ class Forminator_Calculation extends Forminator_Field {
 		$value       = esc_html( self::get_post_data( $name, self::get_property( 'default_value', $field ) ) );
 		$label       = esc_html( self::get_property( 'field_label', $field, '' ) );
 		$description = self::get_property( 'description', $field, '' );
-		$design      = $this->get_form_style( $settings );
 		$formula     = self::get_property( 'formula', $field, '', 'str' );
 		$is_hidden   = self::get_property( 'hidden', $field, false, 'bool' );
 		$suffix      = self::get_property( 'suffix', $field );
@@ -138,6 +138,14 @@ class Forminator_Calculation extends Forminator_Field {
 		$separators  = $this->forminator_separators( $separator, $field );
 
 		$point = ! empty( $precision ) ? $separators['point'] : '';
+
+		// If this field is in a group and has a group suffix, replace the formula with the suffix for fields in the same group.
+		if ( ! empty( $field['group_suffix'] ) && ! empty( $field['parent_group'] ) ) {
+			$grouped_fields = $views_obj->model->get_grouped_fields_slugs( $field['parent_group'] );
+			foreach ( $grouped_fields as $group_field_slug ) {
+				$formula = str_replace( '{' . $group_field_slug . '}', '{' . $group_field_slug . $field['group_suffix'] . '}', $formula );
+			}
+		}
 
 		if ( is_numeric( $formula ) ) {
 			$formula = $formula . '*1';
@@ -182,6 +190,7 @@ class Forminator_Calculation extends Forminator_Field {
 			'disabled'           => 'disabled', // mark as disabled so this value won't send to backend later.
 			'data-decimals'      => $precision,
 			'data-inputmask'     => "'groupSeparator': '" . $separators['separator'] . "', 'radixPoint': '" . $point . "', 'digits': '" . $precision . "'",
+			'readonly'           => 'readonly',
 		);
 
 		if ( $hidden_behavior && 'zero' === $hidden_behavior ) {
@@ -208,7 +217,7 @@ class Forminator_Calculation extends Forminator_Field {
 				$label,
 				$description,
 				$required,
-				$design,
+				$descr_position,
 				$wrapper
 			);
 

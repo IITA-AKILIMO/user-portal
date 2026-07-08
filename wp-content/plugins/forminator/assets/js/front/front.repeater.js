@@ -5,6 +5,51 @@
 
 	"use strict";
 
+	// Trigger repeater functions after form load.
+	forminator_handle_all_group_field_copies();
+	forminator_add_listener_on_repeater_add_remove();
+
+	// Trigger repeater functions after form load using Ajax.
+	$( document ).on( 'after.load.forminator', () => {
+		forminator_handle_all_group_field_copies();
+		forminator_add_listener_on_repeater_add_remove();
+	} );
+
+	// Trigger repeater functions after elementor popup show.
+	$( document ).on( 'elementor/popup/show', () => {
+		forminator_handle_all_group_field_copies();
+		forminator_add_listener_on_repeater_add_remove();
+	} );
+
+	// Reset group field repeater copies after successful form submission.
+	// forminator:form:submit:success fires only on submission, not on pagination,
+	// so repeater items are not incorrectly wiped when navigating multi-page forms.
+	$( document ).on( 'forminator:form:submit:success', ( e ) => {
+		const form = $( e.target );
+
+		if ( ! form.is( 'form.forminator-custom-form' ) ) {
+			return;
+		}
+
+		form.find( '.forminator-all-group-copies' ).each( function() {
+			const groupField = $( this ),
+				firstBlock = groupField.find( '>.forminator-grouped-fields:first-child' ),
+				fieldOptions = firstBlock.data('options');
+
+			if ( ! fieldOptions || ! fieldOptions.is_repeater ) {
+				return;
+			}
+
+			// Remove all cloned copies - keep only the original first block.
+			groupField.find( '>.forminator-grouped-fields:not(:first-child)' ).remove();
+
+			// Re-add minimum required items and refresh action button visibility.
+			// forminatorChangedRepeaterMin already calls forminatorHideIrrelevantActions internally.
+			forminatorChangedRepeaterMin( groupField, forminatorGetMin( fieldOptions, form ) );
+		} );
+	} );
+
+	function forminator_handle_all_group_field_copies() {
 	setTimeout( function() {
 		// Init Group fields. Clone group fields if minimum more than 1.
 		$( 'div.forminator-all-group-copies' ).each( function() {
@@ -16,6 +61,13 @@
 			if ( ! fieldOptions.is_repeater ) {
 				return;
 			}
+
+			// Initialize pre-existing cloned groups (from draft/preview).
+			groupField.find( '>.forminator-grouped-fields[data-suffix]' ).each( function() {
+				$( this ).trigger( 'forminator-clone-group' );
+			} );
+			// Restart the conditions to reset the visibility of the cloned group fields.
+			form.trigger( 'forminator.front.condition.restart' );
 
 			if ( 'variable' === fieldOptions.min_type ) {
 				const dependMinFromField = form.find( '[name="' + fieldOptions.min + '"]' );
@@ -43,8 +95,10 @@
 
 		} );
 	}, 100 );
+	}
 
 	// Click on Add Item \ Remove Item.
+	function forminator_add_listener_on_repeater_add_remove() {
 	$( 'form.forminator-custom-form' ).on( 'click', '.forminator-repeater-remove, .forminator-repeater-add', function( e ) {
 		e.stopImmediatePropagation();
 		e.preventDefault();
@@ -67,6 +121,7 @@
 
 		forminatorHideIrrelevantActions( fieldOptions, groupField );
 	});
+	}
 
 	/**
 	 * Remove item
@@ -88,7 +143,7 @@
 		}
 
 		removingBlock.remove();
-
+		form.trigger( 'forminator-group-item-removed' );
 		form.trigger( 'forminator:recalculate' );
 	}
 
@@ -141,18 +196,34 @@
 		let newBlock = baseBlock.clone();
 
 		if (form.find('input[name="previous_draft_id"]').length > 0) {
-            newBlock.find('.forminator-input').attr('value', '');
-            newBlock.find('.forminator-textarea').empty();
-            newBlock.find('input[type="radio"], input[type="checkbox"]').each(function () {
+            newBlock.find('.forminator-input').not('[readonly]').attr('value', '');
+            newBlock.find('.forminator-textarea').not('[readonly]').empty();
+            newBlock.find('input[type="radio"], input[type="checkbox"]').not('[readonly], [disabled]').each(function () {
                 $(this).attr('checked', false);
             });
 
             if (newBlock.find('.forminator-select2').length > 0) {
-                newBlock.find('.forminator-select2').each(function (index, value) {
+                newBlock.find('.forminator-select2').not('[disabled]').each(function (index, value) {
                     $(value).find('option:selected').attr('selected', false);
                     $(value).find('option:first').attr('selected', 'selected');
                 });
             }
+
+            // Restore autofill defaults blanked above so editable autofill rows render with the default value.
+            newBlock.find('[data-default]').each(function () {
+                const $autofillField = $(this),
+                    defaultValue = $autofillField.attr('data-default');
+                if ($autofillField.is('select')) {
+                    $autofillField.find('option:selected').attr('selected', false);
+                    $autofillField.find('option').filter(function () {
+                        return $(this).attr('value') === defaultValue || $(this).text() === defaultValue;
+                    }).attr('selected', 'selected');
+                } else if ($autofillField.is('textarea')) {
+                    $autofillField.text(defaultValue);
+                } else {
+                    $autofillField.attr('value', defaultValue);
+                }
+            });
 
             if (newBlock.find('.forminator-rating').length > 0) {
                 newBlock.find('.forminator-rating').each(function (index, value) {
@@ -175,6 +246,11 @@
                 }
             });
         }
+
+		// Remove slider custom labels in the cloned block.
+		newBlock.find('.forminator-slider').each(function () {
+			$(this).find('.forminator-slider-labels').remove();
+		});
 
 		newBlock.find( '.select2-container, .forminator-error-message, .iti__country-container' ).remove();
 
@@ -223,6 +299,14 @@
 		newHtml = newHtml.replace( regexp, '$1$2-' + newSuffix + '$3' );
 
 		newHtml = newHtml.replace( /hasDatepicker|forminator-has_error|forminator-input-with-phone/g, '' );
+		
+		newHtml = newHtml.replace( /(data-(?:start|end)-field=)"([^"]+?)"/g, function(match, p1, p2) {
+			const newField = p2 + '-' + newSuffix;
+			if (!newHtml.includes(`name="${newField}"`)) {
+				return match;
+			}
+			return p1 + '"' + newField + '"';
+		});
 
 		newHtml = forminatorUpdateCalculationFormulas( newHtml, newSuffix, baseBlock );
 

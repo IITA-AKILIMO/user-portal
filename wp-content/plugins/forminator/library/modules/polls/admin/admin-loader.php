@@ -253,6 +253,7 @@ class Forminator_Poll_Admin extends Forminator_Admin_Module {
 				'formName'           => $name,
 				'version'            => FORMINATOR_VERSION,
 				'store_submissions'  => '1',
+				'field-image-size'   => 'custom',
 			),
 			$settings
 		);
@@ -282,7 +283,7 @@ class Forminator_Poll_Admin extends Forminator_Admin_Module {
 			return;
 		}
 
-		$wizard_url = admin_url( 'admin.php?page=forminator-poll-wizard&id=' . $id );
+		$wizard_url = admin_url( 'admin.php?page=forminator-poll-wizard&create-status=success&id=' . $id );
 
 		wp_safe_redirect( $wizard_url );
 	}
@@ -319,7 +320,7 @@ class Forminator_Poll_Admin extends Forminator_Admin_Module {
 			}
 		}
 
-		$model->name     = $name;
+		$model->name     = sanitize_title( $name );
 		$model->settings = self::validate_settings( $settings );
 		$model->status   = $status;
 
@@ -327,6 +328,30 @@ class Forminator_Poll_Admin extends Forminator_Admin_Module {
 		$id = $model->save();
 
 		return $id;
+	}
+
+	/**
+	 * Check if poll has valid answers.
+	 *
+	 * A poll is considered valid if it has at least one answer with a non-empty title.
+	 *
+	 * @param array $answers Poll answers.
+	 * @return bool True if poll has valid answers, false otherwise.
+	 */
+	public static function has_valid_answers( $answers ) {
+		if ( empty( $answers ) ) {
+			return false;
+		}
+
+		foreach ( $answers as $answer ) {
+			$answer_title = isset( $answer['title'] ) ? trim( (string) $answer['title'] ) : '';
+
+			if ( '' === $answer_title ) {
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 	/**
@@ -371,6 +396,10 @@ class Forminator_Poll_Admin extends Forminator_Admin_Module {
 			$answers = wp_slash( $answers );
 		}
 
+		if ( 'publish' === $status && ! self::has_valid_answers( $answers ) ) {
+			return new WP_Error( 'forminator_poll_empty_answers', esc_html__( 'Poll answers cannot be empty.', 'forminator' ) );
+		}
+
 		foreach ( $answers as $answer ) {
 			$field_model  = new Forminator_Form_Field_Model();
 			$answer['id'] = $answer['element_id'];
@@ -391,6 +420,9 @@ class Forminator_Poll_Admin extends Forminator_Admin_Module {
 		if ( is_wp_error( $id ) ) {
 			return $id;
 		}
+
+		// Remove temporary settings.
+		Forminator_Base_Form_Model::remove_temp_settings( $id );
 
 		/**
 		* Action called after poll saved to database

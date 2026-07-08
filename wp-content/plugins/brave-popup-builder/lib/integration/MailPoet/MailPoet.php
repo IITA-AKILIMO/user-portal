@@ -65,10 +65,10 @@ if ( ! class_exists( 'BravePop_MailPoet' ) ) {
                // In case subscriber exists just add him to new lists
                $this->api_key->subscribeToLists($subscriber['email'], [intval($list_id)]);
             }
-            return true;
+           return array( 'success' => true );
          } catch (\Exception $e) {
-            $error_message = $e->getMessage(); 
-            return true;
+            $error_message = $e->getMessage();
+            return array( 'success' => false, 'errorMsg' => $error_message );
             //error_log($error_message);
             //return false;
          }

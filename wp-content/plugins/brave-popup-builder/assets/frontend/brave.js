@@ -440,6 +440,10 @@ function brave_get_field_vals(braveForm, fieldOpts, quiz){
          fieldsData[fieldName].value = fieldValue;
       }
 
+      if(fieldOpts && fieldOpts.type && fieldOpts.type ==='input' && fieldOpts.validation ==='phone'){
+         fieldsData[fieldName].value = fieldValue.replace(/[\s\-()]/g, ""); //clean phone numbers by removing hyphnes and brackets
+      }
+
       //If the Field is only set to show conditionally, and the condition does not need to match, set the required to false
       if(fieldsData[fieldName] && fieldsData[fieldName].required && document.getElementById('brave_form_field'+fieldName).classList.contains('brave_form_field--hasCondition')){
          fieldsData[fieldName].required = false;
@@ -552,8 +556,13 @@ function brave_submit_form(event, settings, supressErrors=false){
             var response = JSON.parse(sentData);
             console.log(status, response);
 
-            if(response.error &&  typeof response.error === 'string'){
-               return alert(response.error);
+            if(response.error && typeof response.error === 'string'){
+               return brave_lightbox_open(null, 'html', response.error)
+            }
+
+            if(response.subscribed === false && response.subscriptionError && typeof response.subscriptionError === 'string'){
+               // return alert(response.subscriptionError);
+               return brave_lightbox_open(null, 'html', response.subscriptionError)
             }
 
             localStorage.setItem('brave_popup_'+settings.popupID+'_formsubmitted', true);
@@ -710,6 +719,48 @@ function brave_submit_form(event, settings, supressErrors=false){
                });
             }else{ console.error('Google Recaptcha Failed! Could not Fetch Token!'); }
         });
+      }else if(settings.turnstile && typeof turnstile !== 'undefined'){
+         // Cloudflare Turnstile - check if widget already exists
+         var turnstileContainer = document.getElementById('brave-turnstile-'+settings.formID);
+         if(!turnstileContainer){
+            turnstileContainer = document.createElement('div');
+            turnstileContainer.id = 'brave-turnstile-'+settings.formID;
+            turnstileContainer.className = 'brave-turnstile-widget';
+            brave_form.appendChild(turnstileContainer);
+         }
+         
+         // Render Turnstile widget
+         turnstile.render('#brave-turnstile-'+settings.formID, {
+            sitekey: settings.turnstile,
+            callback: function(token) {
+               if(token){
+                  var turnstileData = { token: token, security: security, action: 'bravepopup_validate_turnstile' };
+                  brave_ajax_send(ajaxurl, turnstileData, function(status, valid){
+                     console.log('Cloudflare Turnstile Verified!');
+                     // Remove the widget after validation
+                     if(turnstileContainer){ turnstileContainer.remove(); }
+                     if(valid === 'true'){
+                        if(bravepop_emailValidation && emailFields.length > 0){
+                           braveSubmitWithEmailValidation();
+                        }else{
+                           braveSubmitForm();
+                        }
+                     }else{
+                        console.error('Cloudflare Turnstile Failed! Spammer Detected!');
+                        if(brave_form){ brave_form.classList.remove('brave_form_form--loading'); }
+                     }
+                  });
+               }else{ 
+                  console.error('Cloudflare Turnstile Failed! Could not Fetch Token!'); 
+                  if(brave_form){ brave_form.classList.remove('brave_form_form--loading'); }
+               }
+            },
+            'error-callback': function() {
+               console.error('Cloudflare Turnstile Error!');
+               if(turnstileContainer){ turnstileContainer.remove(); }
+               if(brave_form){ brave_form.classList.remove('brave_form_form--loading'); }
+            }
+         });
       }else{
          if(bravepop_emailValidation && emailFields.length > 0){
             braveSubmitWithEmailValidation();
@@ -795,6 +846,15 @@ function brave_validate_fields(fieldID, field){
          return {id: fieldID, type: 'invalid', message: bravepop_global.invalid_number};
       }
    }
+
+   //Validate Phone Numbers
+   if(field.value && field.type==='input' && field.validation === 'phone' ) { 
+      const phoneRegex = /^\+?[0-9]{10,15}$/;
+      if(!phoneRegex.test(field.value)){
+         return {id: fieldID, type: 'invalid', message: bravepop_global.invalid_phone};
+      }
+   }
+
    //Validate url
    if(field.value && field.type==='input' && field.validation === 'url' ) { 
       if(brave_isURL(field.value) === false){
@@ -1923,7 +1983,7 @@ function brave_play_video(popupID, elmentID, videoType, track=null, inline=false
    
 }
 
-function brave_complete_goal(popupID, goalType='view', auto=false){
+function brave_complete_goal(popupID, goalType='view', auto=false, callback=null){
    if(window.location.href.includes('brave_popup') === false && !brave_popup_data[popupID].goaled){ 
       var goalDate = new Date(); var goalYear = goalDate.getFullYear(); var goalMonth = brave_number_padding(goalDate.getMonth() + 1);  var goalDay = brave_number_padding(goalDate.getDate()); 
       var goalData = { 
@@ -1941,7 +2001,34 @@ function brave_complete_goal(popupID, goalType='view', auto=false){
          action: 'bravepop_ajax_popup_complete_goal' 
       };
 
-      brave_ajax_send(bravepop_global.ajaxURL, goalData, function(status, sentData){   brave_popup_data[popupID].goaled = true; console.log('Goal Complete!!!!!!', sentData);  });
+      var beaconSent = false;
+      if (navigator.sendBeacon) {
+         try {
+            var formData = new FormData();
+            Object.keys(goalData).forEach(function(key) {
+               formData.append(key, goalData[key]);
+            });
+            beaconSent = navigator.sendBeacon(bravepop_global.ajaxURL, formData);
+            if (beaconSent) {
+               brave_popup_data[popupID].goaled = true;
+               if (callback && typeof callback === 'function') {
+                  callback();
+               }
+            }
+         } catch (error) {
+            beaconSent = false;
+         }
+      }
+      
+      // Fallback to regular AJAX if Beacon API is not available or failed
+      if (!beaconSent) {
+         brave_ajax_send(bravepop_global.ajaxURL, goalData, function(status, sentData){   
+            brave_popup_data[popupID].goaled = true; 
+            if (callback && typeof callback === 'function') {
+               callback();
+            }
+         });
+      }      
       localStorage.setItem('brave_popup_'+popupID+'_goal_complete', goalData.goalTime);
       var braveGoalCompletEvent = new CustomEvent('brave_goal_complete', { detail: {popupId: parseInt(popupID, 10), goalType: goalType} });
       document.dispatchEvent(braveGoalCompletEvent);
@@ -1951,6 +2038,22 @@ function brave_complete_goal(popupID, goalType='view', auto=false){
             brave_send_ga_event('popup', 'goal', brave_popup_data[popupID].title+' ('+popupID+')' || popupID);
          }, 2000);
       }
+   }
+}
+
+function brave_complete_click_goal(event, popupID, goalType, linkElement) {
+   if (linkElement.href && linkElement.href !== '#' && linkElement.href !== 'javascript:void(0)') {
+      event.preventDefault();
+      
+      brave_complete_goal(popupID, goalType, false, function() {
+         if (linkElement.target === '_blank') {
+            window.open(linkElement.href, '_blank');
+         } else {
+            window.location.href = linkElement.href;
+         }
+      });
+   } else {
+      brave_complete_goal(popupID, goalType, false);
    }
 }
 
@@ -2058,12 +2161,23 @@ function brave_tooltip_close(){
 }
 
 function brave_lightbox_open(elementID, contentType, content){
-   var bravelightbox = document.getElementById('bravepop_element_lightbox');  var bravelightboxContent = document.getElementById('bravepop_element_lightbox_content'); 
+   var bravelightbox = document.getElementById('bravepop_element_lightbox');  
+   var bravelightboxContent = document.getElementById('bravepop_element_lightbox_content'); 
+   if(!bravelightbox){return console.warn('Lightbox Html Div not found in the page.');}
    if(contentType === 'image' && bravelightboxContent){ bravelightboxContent.innerHTML = '<img src="'+content+'" />';bravelightbox.classList.add('bravepop_element_lightbox--open');}
+   if(contentType === 'html' && content){ 
+      bravelightboxContent.innerHTML = content;
+      bravelightbox.classList.add('bravepop_element_lightbox--html');
+      bravelightbox.classList.add('bravepop_element_lightbox--open');
+   }
 }
 function brave_lightbox_close(){
    var bravelightbox = document.getElementById('bravepop_element_lightbox');  var bravelightboxContent = document.getElementById('bravepop_element_lightbox_content'); 
-   if(bravelightbox && bravelightboxContent){ bravelightbox.classList.remove('bravepop_element_lightbox--open'); bravelightboxContent.innerHTML = ''; }
+   if(bravelightbox && bravelightboxContent){ 
+      bravelightbox.classList.remove('bravepop_element_lightbox--open');
+      bravelightbox.classList.remove('bravepop_element_lightbox--html'); 
+      bravelightboxContent.innerHTML = ''; 
+   }
 }
 
 function brave_responsiveness(event, popupID, popupData){

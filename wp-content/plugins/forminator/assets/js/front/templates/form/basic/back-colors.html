@@ -18,6 +18,7 @@
 		<?php } ?>
 	}
 
+	.forminator-ui#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-button-back:focus,
 	.forminator-ui#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-button-back:active {
 		<?php if ( forminator_array_value_exists( $properties, 'basic-prev-background-active' ) && !empty( $properties['basic-prev-background-active'] ) ) { ?>
 			background-color: <?php echo $properties['basic-prev-background-active'] ?>;
@@ -26,5 +27,12 @@
 			color: <?php echo $properties['basic-prev-color-active'] ?>;
 		<?php } ?>
 	}
+
+	<?php if ( forminator_array_value_exists( $properties, 'basic-prev-focus-outline-color' ) && !empty( $properties['basic-prev-focus-outline-color'] ) ) { ?>
+		.forminator-ui#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-button-back:focus {
+			outline: 2px solid <?php echo $properties['basic-prev-focus-outline-color'] ?>;
+			outline-offset: 1px;
+		}
+	<?php } ?>
 
 <?php } ?>

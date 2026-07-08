@@ -25,6 +25,11 @@ function forminator_is_import_plugin_enabled( $plugin ) {
 				$active = true;
 			}
 			break;
+		case 'cf7apps':
+			if ( class_exists( 'CF7Apps' ) ) {
+				$active = true;
+			}
+			break;
 		case 'ninjaforms':
 			if ( class_exists( 'Ninja_Forms' ) ) {
 				$active = false;

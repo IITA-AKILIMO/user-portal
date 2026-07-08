@@ -49,18 +49,13 @@ class Forminator_Template_API {
 	 */
 	private static function get_api_key() {
 		if ( is_null( self::$api_key ) ) {
-			self::$api_key = class_exists( 'WPMUDEV_Dashboard' ) ? WPMUDEV_Dashboard::$api->get_key() : '';
+			if ( class_exists( 'WPMUDEV_Dashboard' ) ) {
+				self::$api_key = WPMUDEV_Dashboard::$api->get_key();
+			} elseif ( Forminator_Hub_Connector::hub_connector_connected() ) {
+				self::$api_key = \WPMUDEV\Hub\Connector\API::get()->get_api_key();
+			}
 		}
 		return self::$api_key;
-	}
-
-	/**
-	 * Check if connected to Hub
-	 *
-	 * @return bool
-	 */
-	public static function is_connected(): bool {
-		return FORMINATOR_PRO && ! empty( self::get_api_key() );
 	}
 
 	/**
@@ -73,6 +68,10 @@ class Forminator_Template_API {
 	 * @return array
 	 */
 	public static function get_templates( bool $is_official, int $page_number = 0, string $category = '', string $search = '' ): array {
+		if ( ! forminator_is_user_allowed( 'forminator-templates' ) && ! forminator_is_user_allowed( 'forminator-cform' ) ) {
+			return array();
+		}
+
 		/**
 		 * Filter templates per page
 		 *
@@ -124,6 +123,9 @@ class Forminator_Template_API {
 	 * @return array
 	 */
 	public static function get_template( int $id ): array {
+		if ( ! forminator_is_user_allowed( 'forminator-templates' ) && ! forminator_is_user_allowed( 'forminator-cform' ) ) {
+			return array();
+		}
 		$template = self::request(
 			'api/hub/v1/forminator-templates/' . $id,
 			'GET'
@@ -265,6 +267,10 @@ class Forminator_Template_API {
 	 * @return array
 	 */
 	public static function get_categories(): array {
+		if ( ! forminator_is_user_allowed( 'forminator-templates' ) && ! forminator_is_user_allowed( 'forminator-cform' ) ) {
+			return array();
+		}
+
 		$categories = self::request(
 			'api/hub/v1/forminator-templates/categories',
 			'GET'
@@ -296,31 +302,42 @@ class Forminator_Template_API {
 			'method' => $method,
 		);
 
-		if ( class_exists( 'WPMUDEV_Dashboard' ) && method_exists( WPMUDEV_Dashboard::$api, 'get_site_id' ) ) {
-			$data['site_id'] = WPMUDEV_Dashboard::$api->get_site_id();
-		}
+		try {
+			if ( class_exists( 'WPMUDEV_Dashboard' ) && method_exists( WPMUDEV_Dashboard::$api, 'get_site_id' ) ) {
+				$data['site_id'] = WPMUDEV_Dashboard::$api->get_site_id();
+			} elseif ( Forminator_Hub_Connector::hub_connector_logged_in() ) {
+				$data['site_id'] = \WPMUDEV\Hub\Connector\Data::get()->hub_site_id();
+			}
 
-		if ( 'GET' === $method ) {
-			$url = add_query_arg( $data, $url );
-		} else {
-			$args['body'] = $data;
-		}
+			if ( 'GET' === $method ) {
+				$url = add_query_arg( $data, $url );
+			} else {
+				$args['body'] = $data;
+			}
 
-		$api_key = self::get_api_key();
-		if ( $api_key ) {
-			$args['headers'] = array(
-				'Authorization' => $api_key,
-			);
-		}
+			$api_key = self::get_api_key();
+			if ( $api_key ) {
+				$args['headers'] = array(
+					'Authorization' => $api_key,
+				);
+			}
 
-		$response = wp_remote_request( $url, $args );
+			$response = wp_remote_request( $url, $args );
 
-		if ( is_wp_error( $response ) || 200 !== wp_remote_retrieve_response_code( $response ) ) {
+			if ( is_wp_error( $response ) || 200 !== wp_remote_retrieve_response_code( $response ) ) {
+				return array();
+			}
+
+			$body = wp_remote_retrieve_body( $response );
+		} catch ( Exception $e ) {
 			return array();
 		}
 
-		$body = wp_remote_retrieve_body( $response );
+		$result = json_decode( $body, true );
+		if ( is_array( $result ) ) {
+			return $result;
+		}
 
-		return json_decode( $body, true );
+		return array();
 	}
 }

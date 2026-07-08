@@ -4,51 +4,87 @@ class Ays_PopupBox_List_Table extends WP_List_Table {
     private $plugin_name;
     private $title_length;
 
+    /**
+     * The wp nonce of this plugin.
+     *
+     * @since    1.0.0
+     * @access   private
+     * @var      string    $ays_quiz_nonce
+     */
+    private $ays_pb_nonce;
+
     /** Class constructor */
     public function __construct($plugin_name) {
         $this->plugin_name = $plugin_name;
         $this->title_length = Ays_Pb_Admin::get_listtables_title_length('popups');
 
         parent::__construct(array(
-            "singular" => __( "PopupBox", "ays-popup-box" ), //singular name of the listed records
-            "plural" => __( "PopupBoxes", "ays-popup-box" ), //plural name of the listed records
+            "singular" => esc_html__( "PopupBox", "ays-popup-box" ), //singular name of the listed records
+            "plural" => esc_html__( "PopupBoxes", "ays-popup-box" ), //plural name of the listed records
             "ajax" => false //does this table support ajax?
         ));
 
         add_action( "admin_notices", array($this, "popupbox_notices") );
+
+        $this->ays_pb_nonce = wp_create_nonce('ays_pb_admin_popups_list_table_nonce');
+
+        if( empty($this->ays_pb_nonce) ){
+            add_action('init', function () {
+                $this->ays_pb_nonce = wp_create_nonce('ays_pb_admin_popups_list_table_nonce');
+            }, 1);
+        }
     }
 
-    public function popupbox_notices() {
-        $status = isset($_REQUEST["status"]) ? sanitize_text_field($_REQUEST["status"]) : "";
-        $type = isset($_REQUEST["type"]) ? sanitize_text_field($_REQUEST["type"]) : "";
+    public function display_tablenav($which) {
 
-        if (empty($status)) return;
+        // Run a security check.
+        if (empty($this->ays_pb_nonce) || ! wp_verify_nonce( $this->ays_pb_nonce, 'ays_pb_admin_popups_list_table_nonce' ) ) {
+            // This nonce is not valid.
+            wp_die('Nonce verification failed!');
+        }
 
-        if ("created" == $status)
-            $updated_message = esc_html( __("PopupBox created.", "ays-popup-box") );
-        elseif ("updated" == $status)
-            $updated_message = esc_html( __("PopupBox saved.", "ays-popup-box") );
-        elseif ("deleted" == $status)
-            $updated_message = esc_html( __("PopupBox deleted.", "ays-popup-box") );
-        elseif ("duplicated" == $status)
-            $updated_message = esc_html( __("PopupBox duplicated.", "ays-popup-box") );
-        elseif ("published" == $status)
-            $updated_message = esc_html( __("PopupBox published.", "ays-popup-box") );
-        elseif ("unpublished" == $status)
-            $updated_message = esc_html( __("PopupBox unpublished.", "ays-popup-box") );
-        elseif ("error" == $status)
-            $updated_message = __( "You're not allowed to add popupbox for more popupboxes please checkout to ", "ays-popup-box")."<a href='https://ays-pro.com/wordpress/popup-box' target='_blank'>PRO ".__("version", "ays-popup-box")."</a>.";
+        if( !is_user_logged_in()){
+            wp_die(  esc_html__( 'Something went wrong', 'quiz-maker' ) );
+        }
 
-        if (empty($updated_message)) return;
+        // Verify unauthorized requests
+        if( !current_user_can( 'manage_options' ) ){
+            wp_die(  esc_html__( 'Something went wrong', 'quiz-maker' ) );
+        }
 
         ?>
-        <div class="notice notice-<?php echo esc_attr($type); ?> is-dismissible">
-            <p> <?php echo $updated_message; ?> </p>
+        <div class="tablenav <?php echo esc_attr($which); ?>">
+
+            <div class="alignleft actions">
+                <?php $this->bulk_actions($which); ?>
+            </div>
+
+            <?php
+            $this->extra_tablenav($which);
+            $this->pagination($which);
+            ?>
+            <br class="clear" />
         </div>
         <?php
     }
 
     protected function get_views() {
+
+        // Run a security check.
+        if (empty($this->ays_pb_nonce) || ! wp_verify_nonce( $this->ays_pb_nonce, 'ays_pb_admin_popups_list_table_nonce' ) ) {
+            // This nonce is not valid.
+            wp_die('Nonce verification failed!');
+        }
+
+        if( !is_user_logged_in()){
+            wp_die(  esc_html__( 'Something went wrong', 'quiz-maker' ) );
+        }
+
+        // Verify unauthorized requests
+        if( !current_user_can( 'manage_options' ) ){
+            wp_die(  esc_html__( 'Something went wrong', 'quiz-maker' ) );
+        }
+
         $published_count = $this->published_popup_count();
         $unpublished_count = $this->unpublished_popup_count();
         $all_count = $this->all_record_count();
@@ -72,48 +108,52 @@ class Ays_PopupBox_List_Table extends WP_List_Table {
             $selected_all = "style='font-weight:bold;'";
         }
 
-        $href = "?page=" . esc_attr($_REQUEST['page']);
+        $href = add_query_arg(
+            'page',
+            isset($_REQUEST['page']) ? sanitize_key(wp_unslash($_REQUEST['page'])) : '',
+            admin_url('admin.php')
+        );
         $href = $this->ays_pb_add_filters_to_link($href);
 
         $status_links = array(
-            "all" => "<a " . $selected_all . " href='" . $href . "'>" . __('All', "ays-popup-box") . " (" . $all_count . ")</a>",
-            "published" => "<a " . $selected_on . " href='" . $href . "&fstatus=published'>" . __('Published', "ays-popup-box") . " (" . $published_count . ")</a>",
-            "unpublished" => "<a " . $selected_off . " href='" . $href . "&fstatus=unpublished'>" . __('Unpublished', "ays-popup-box") . " (" . $unpublished_count . ")</a>"
+            "all" => "<a " . $selected_all . " href='" . esc_url($href) . "'>" . esc_html__('All', "ays-popup-box") . " (" . $all_count . ")</a>",
+            "published" => "<a " . $selected_on . " href='" . esc_url(add_query_arg('fstatus', 'published', $href)) . "'>" . esc_html__('Published', "ays-popup-box") . " (" . $published_count . ")</a>",
+            "unpublished" => "<a " . $selected_off . " href='" . esc_url(add_query_arg('fstatus', 'unpublished', $href)) . "'>" . esc_html__('Unpublished', "ays-popup-box") . " (" . $unpublished_count . ")</a>"
         );
 
         return $status_links;
     }
 
-    public static function published_popup_count() {
+    public function published_popup_count() {
         global $wpdb;
 
         $base_sql = "SELECT COUNT(*) FROM {$wpdb->prefix}ays_pb WHERE onoffswitch='On'";
-        $sql = self::ays_pb_add_filters_to_sql($base_sql);
+        $sql = $this->ays_pb_add_filters_to_sql($base_sql);
 
         return $wpdb->get_var($sql);
     }
 
-    public static function unpublished_popup_count() {
+    public function unpublished_popup_count() {
         global $wpdb;
 
         $base_sql = "SELECT COUNT(*) FROM {$wpdb->prefix}ays_pb WHERE onoffswitch='Off'";
-        $sql = self::ays_pb_add_filters_to_sql($base_sql);
+        $sql = $this->ays_pb_add_filters_to_sql($base_sql);
 
         return $wpdb->get_var($sql);
     }
 
-    public static function all_record_count() {
+    public function all_record_count() {
         global $wpdb;
 
         $base_sql = "SELECT COUNT(*) FROM {$wpdb->prefix}ays_pb WHERE 1=1";
-        $sql = self::ays_pb_add_filters_to_sql($base_sql);
+        $sql = $this->ays_pb_add_filters_to_sql($base_sql);
 
         return $wpdb->get_var($sql);
     }
 
-    protected static function ays_pb_add_filters_to_sql($base_sql) {
+    protected function ays_pb_add_filters_to_sql($base_sql) {
         $sql = $base_sql;
-        $filter_conditions = self::ays_pb_get_filter_conditions();
+        $filter_conditions = $this->ays_pb_get_filter_conditions();
 
         if (!empty($filter_conditions)) {
             $sql .= " AND " . implode(" AND ", $filter_conditions);
@@ -122,7 +162,23 @@ class Ays_PopupBox_List_Table extends WP_List_Table {
         return $sql;
     }
 
-    protected static function ays_pb_get_filter_conditions() {
+    protected function ays_pb_get_filter_conditions() {
+
+        // Run a security check.
+        if (empty($this->ays_pb_nonce) || ! wp_verify_nonce( $this->ays_pb_nonce, 'ays_pb_admin_popups_list_table_nonce' ) ) {
+            // This nonce is not valid.
+            wp_die('Nonce verification failed!');
+        }
+
+        if( !is_user_logged_in()){
+            wp_die(  esc_html__( 'Something went wrong', 'quiz-maker' ) );
+        }
+
+        // Verify unauthorized requests
+        if( !current_user_can( 'manage_options' ) ){
+            wp_die(  esc_html__( 'Something went wrong', 'quiz-maker' ) );
+        }
+
         global $wpdb;
         $conditions = array();
 
@@ -132,7 +188,7 @@ class Ays_PopupBox_List_Table extends WP_List_Table {
         }
 
         if (isset($_GET['filterbyAuthor']) && $_GET['filterbyAuthor'] != '') {
-            $ays_pb_author = esc_sql(sanitize_text_field($_GET['filterbyAuthor']));
+            $ays_pb_author = esc_sql(absint($_GET['filterbyAuthor']));
             $conditions[] = 'JSON_EXTRACT(options, "$.create_author") = ' . $ays_pb_author;
         }
 
@@ -150,24 +206,40 @@ class Ays_PopupBox_List_Table extends WP_List_Table {
     }
 
     protected function ays_pb_add_filters_to_link($href) {
+
+        // Run a security check.
+        if (empty($this->ays_pb_nonce) || ! wp_verify_nonce( $this->ays_pb_nonce, 'ays_pb_admin_popups_list_table_nonce' ) ) {
+            // This nonce is not valid.
+            wp_die('Nonce verification failed!');
+        }
+
+        if( !is_user_logged_in()){
+            wp_die(  esc_html__( 'Something went wrong', 'quiz-maker' ) );
+        }
+
+        // Verify unauthorized requests
+        if( !current_user_can( 'manage_options' ) ){
+            wp_die(  esc_html__( 'Something went wrong', 'quiz-maker' ) );
+        }
+
         if (isset($_GET['filterby']) && absint(sanitize_text_field($_GET['filterby'])) > 0) {
             $cat_id = absint(sanitize_text_field($_GET['filterby']));
-            $href .= '&filterby=' . $cat_id;
+            $href = add_query_arg('filterby', $cat_id, $href);
         }
 
         if (isset($_GET['filterbyAuthor']) && $_GET['filterbyAuthor'] != '') {
-            $ays_pb_author = esc_sql(sanitize_text_field($_GET['filterbyAuthor']));
-            $href .= '&filterbyAuthor=' . $ays_pb_author;
+            $ays_pb_author = absint(wp_unslash($_GET['filterbyAuthor']));
+            $href = add_query_arg('filterbyAuthor', $ays_pb_author, $href);
         }
 
         if (isset($_GET['filterbyType']) && $_GET['filterbyType'] != '') {
-            $ays_pb_type = esc_sql(sanitize_text_field($_GET['filterbyType']));
-            $href .= '&filterbyType=' . $ays_pb_type;
+            $ays_pb_type = sanitize_text_field(wp_unslash($_GET['filterbyType']));
+            $href = add_query_arg('filterbyType', $ays_pb_type, $href);
         }
 
         if (isset($_REQUEST['s']) && $_REQUEST['s'] != '') {
-            $search = esc_sql(sanitize_text_field($_REQUEST['s']));
-            $href .= '&s=' . $search;
+            $search = sanitize_text_field(wp_unslash($_REQUEST['s']));
+            $href = add_query_arg('s', $search, $href);
         }
 
         return $href;
@@ -177,6 +249,22 @@ class Ays_PopupBox_List_Table extends WP_List_Table {
      * Handles data query and filter, sorting, and pagination.
      */
     public function prepare_items() {
+
+        // Run a security check.
+        if (empty($this->ays_pb_nonce) || ! wp_verify_nonce( $this->ays_pb_nonce, 'ays_pb_admin_popups_list_table_nonce' ) ) {
+            // This nonce is not valid.
+            wp_die('Nonce verification failed!');
+        }
+
+        if( !is_user_logged_in()){
+            wp_die(  esc_html__( 'Something went wrong', 'quiz-maker' ) );
+        }
+
+        // Verify unauthorized requests
+        if( !current_user_can( 'manage_options' ) ){
+            wp_die(  esc_html__( 'Something went wrong', 'quiz-maker' ) );
+        }
+
         global $wpdb;
 
         $this->_column_headers = $this->get_column_info();
@@ -186,7 +274,7 @@ class Ays_PopupBox_List_Table extends WP_List_Table {
 
         $per_page = $this->get_items_per_page("popupboxes_per_page", 20);
         $current_page = $this->get_pagenum();
-        $total_items = self::record_count();
+        $total_items = $this->record_count();
 
         $this->set_pagination_args( array(
             "total_items" => $total_items, // WE have to calculate the total number of items
@@ -196,12 +284,12 @@ class Ays_PopupBox_List_Table extends WP_List_Table {
         $search = isset($_REQUEST['s']) ? esc_sql( sanitize_text_field($_REQUEST['s']) ) : false;
         $do_search = $search ? sprintf( " title LIKE '%%%s%%' ", esc_sql($wpdb->esc_like($search)) ) : '';
 
-        $this->items = self::get_ays_popupboxes($per_page, $current_page, $do_search);
+        $this->items = $this->get_ays_popupboxes($per_page, $current_page, $do_search);
     }
 
     /** Text displayed when no customer data is available */
     public function no_items() {
-        echo __("There are no popupboxes yet.", "ays-popup-box");
+        echo esc_html__("There are no popupboxes yet.", "ays-popup-box");
     }
 
     /**
@@ -212,16 +300,16 @@ class Ays_PopupBox_List_Table extends WP_List_Table {
     function get_columns() {
         $columns = array(
             "cb" => "<input type='checkbox' />",
-            "title" => __("Title", "ays-popup-box"),
-            "popup_image" => __("Image", "ays-popup-box"),
-            'category_id' => __('Category', "ays-popup-box"),
-            "onoffswitch" => __("Status", "ays-popup-box"),
-            "modal_content" => __("Type", "ays-popup-box"),
-            "view_type" => __("Template", "ays-popup-box"),
-            "create_date" => __("Created", "ays-popup-box"),
-            "views" => __("Views", "ays-popup-box"),
-            "conversions" => __("Conversions", "ays-popup-box"),
-            "id" => __("ID", "ays-popup-box"),
+            "title" => esc_html__("Title", "ays-popup-box"),
+            "popup_image" => esc_html__("Image", "ays-popup-box"),
+            'category_id' => esc_html__('Category', "ays-popup-box"),
+            "onoffswitch" => esc_html__("Status", "ays-popup-box"),
+            "modal_content" => esc_html__("Type", "ays-popup-box"),
+            "view_type" => esc_html__("Template", "ays-popup-box"),
+            "create_date" => esc_html__("Created", "ays-popup-box"),
+            "views" => esc_html__("Views", "ays-popup-box"),
+            "conversions" => esc_html__("Conversions", "ays-popup-box"),
+            "id" => esc_html__("ID", "ays-popup-box"),
         );
 
         return $columns;
@@ -295,21 +383,77 @@ class Ays_PopupBox_List_Table extends WP_List_Table {
      * @return string
      */
     function column_title($item) {
-        $delete_nonce = wp_create_nonce($this->plugin_name . "-delete-popupbox");
 
-        $popup_name = ( isset($item["popup_name"]) && $item["popup_name"] != "" ) ? stripslashes( sanitize_text_field($item["popup_name"]) ) : stripslashes( sanitize_text_field($item["title"]) );
+        $duplicate_nonce = wp_create_nonce($this->plugin_name . "-duplicate-popupbox-" . absint($item["id"]));
+
+        $popup_name = ( isset($item["popup_name"]) && $item["popup_name"] != "" ) 
+            ? stripslashes( sanitize_text_field($item["popup_name"]) ) 
+            : stripslashes( sanitize_text_field($item["title"]) );
 
         $popup_title_length = intval($this->title_length);
-
         $restitle = Ays_Pb_Admin::ays_pb_restriction_string("word", esc_attr($popup_name), $popup_title_length);
-
-        $title = sprintf("<a href='?page=%s&action=%s&popupbox=%d' title='%s'>%s</a>", esc_attr($_REQUEST["page"]), "edit", absint($item["id"]), esc_attr($popup_name), $restitle);
-
-        $actions = array(
-            'edit' => sprintf( "<a href='?page=%s&action=%s&popupbox=%d'>" . __('Edit', "ays-popup-box") . "</a>", esc_attr($_REQUEST["page"]), "edit", absint($item["id"]) ),
-            'duplicate' => sprintf( "<a href='?page=%s&action=%s&popupbox=%d'>" . __('Duplicate', "ays-popup-box") . '</a>', esc_attr($_REQUEST['page']), 'duplicate', absint($item['id']) ),
-            'delete' => sprintf( "<a class='ays_pb_confirm_del' data-message='%s' href='?page=%s&action=%s&popupbox=%d&_wpnonce=%s'>" . __('Delete', "ays-popup-box") . '</a>', $restitle, esc_attr($_REQUEST['page']), 'delete', absint($item['id']), $delete_nonce )
+        
+        $title = sprintf(
+            '<a href="?page=%s&action=%s&popupbox=%d" title="%s">%s</a>',
+            esc_attr($_REQUEST["page"]),
+            "edit",
+            absint($item["id"]),
+            esc_attr($popup_name),
+            $restitle
         );
+        
+        $actions = array(
+            'edit' => sprintf(
+                '<a href="?page=%s&action=%s&popupbox=%d">%s</a>',
+                esc_attr($_REQUEST["page"]),
+                "edit",
+                absint($item["id"]),
+                esc_html__('Edit', "ays-popup-box")
+            ),
+            'duplicate' => sprintf(
+                '<a href="?page=%s&action=%s&popupbox=%d&_wpnonce=%s">%s</a>',
+                esc_attr($_REQUEST['page']),
+                'duplicate',
+                absint($item['id']),
+                $duplicate_nonce,
+                esc_html__('Duplicate', "ays-popup-box")
+            ),
+        );
+        
+        $delete_nonce = wp_create_nonce($this->plugin_name . "-delete-popupbox");
+        $actions['delete'] = sprintf(
+            '<a class="ays_pb_confirm_del" data-message="%s" href="?page=%s&action=%s&popupbox=%d&_wpnonce=%s">%s</a>',
+            $restitle,
+            esc_attr($_REQUEST['page']),
+            'delete',
+            absint($item['id']),
+            $delete_nonce,
+            esc_html__('Delete', "ays-popup-box")
+        );
+        
+        $status = isset($item['onoffswitch']) ? $item['onoffswitch'] : 'Off';
+
+        if ($status === 'On') {            
+            $unpublish_url = add_query_arg([
+                'page'     => $_REQUEST['page'],
+                'action'   => 'unpublish',
+                'popupbox' => absint($item['id'])
+            ], admin_url('admin.php'));
+
+            $unpublish_url = wp_nonce_url($unpublish_url, 'ays_pb_publish_unpublish_' . absint($item['id']));
+
+            $actions['unpublish'] = '<a href="' . esc_url($unpublish_url) . '">' . esc_html__('Unpublish', 'ays-popup-box') . '</a>';
+        } else {            
+            $publish_url = add_query_arg([
+                'page'     => $_REQUEST['page'],
+                'action'   => 'publish',
+                'popupbox' => absint($item['id'])
+            ], admin_url('admin.php'));
+
+            $publish_url = wp_nonce_url($publish_url, 'ays_pb_publish_unpublish_' . absint($item['id']));
+
+            // $actions['publish'] = '<a href="' . esc_url($publish_url) . '">' . esc_html__('Publish', 'ays-popup-box') . '</a>';
+        }
 
         return $title . $this->row_actions($actions);
     }
@@ -322,6 +466,22 @@ class Ays_PopupBox_List_Table extends WP_List_Table {
      * @return string
      */
     function column_popup_image($item) {
+
+        // Run a security check.
+        if (empty($this->ays_pb_nonce) || ! wp_verify_nonce( $this->ays_pb_nonce, 'ays_pb_admin_popups_list_table_nonce' ) ) {
+            // This nonce is not valid.
+            wp_die('Nonce verification failed!');
+        }
+
+        if( !is_user_logged_in()){
+            wp_die(  esc_html__( 'Something went wrong', 'quiz-maker' ) );
+        }
+
+        // Verify unauthorized requests
+        if( !current_user_can( 'manage_options' ) ){
+            wp_die(  esc_html__( 'Something went wrong', 'quiz-maker' ) );
+        }
+
         global $wpdb;
 
         $popup_image = ( isset($item['bg_image']) && $item['bg_image'] != '' ) ? esc_url($item['bg_image']) : '';
@@ -370,6 +530,22 @@ class Ays_PopupBox_List_Table extends WP_List_Table {
      * @return string
      */
     function column_category_id($item) {
+
+        // Run a security check.
+        if (empty($this->ays_pb_nonce) || ! wp_verify_nonce( $this->ays_pb_nonce, 'ays_pb_admin_popups_list_table_nonce' ) ) {
+            // This nonce is not valid.
+            wp_die('Nonce verification failed!');
+        }
+
+        if( !is_user_logged_in()){
+            wp_die(  esc_html__( 'Something went wrong', 'quiz-maker' ) );
+        }
+
+        // Verify unauthorized requests
+        if( !current_user_can( 'manage_options' ) ){
+            wp_die(  esc_html__( 'Something went wrong', 'quiz-maker' ) );
+        }
+
         global $wpdb;
 
         $sql = "SELECT * FROM {$wpdb->prefix}ays_pb_categories WHERE id=" . absint( sanitize_text_field($item["category_id"]) );
@@ -397,24 +573,24 @@ class Ays_PopupBox_List_Table extends WP_List_Table {
     function column_onoffswitch($item) {
         $onoffswitch = ( isset($item['onoffswitch']) && $item['onoffswitch'] == 'On' ) ? true : false;
 
-        $nonce = $onoffswitch ? wp_create_nonce($this->plugin_name . "-unpublish-popupbox") : wp_create_nonce($this->plugin_name . "-publish-popupbox");
+        $nonce = wp_create_nonce($this->plugin_name . "-change-status-nonce");
 
         $checked = $onoffswitch ? 'checked' : '';
-        $href_value = $onoffswitch ? 'unpublish' : 'publish';
-        $href = sprintf('?page=%s&action=%s&popupbox=%d&_wpnonce=%s', esc_attr($_REQUEST['page']), $href_value, absint($item['id']), $nonce);
+        // $href_value = $onoffswitch ? 'unpublish' : 'publish';
+        // $href = sprintf('?page=%s&action=%s&popupbox=%d&_wpnonce=%s', esc_attr($_REQUEST['page']), $href_value, absint($item['id']), $nonce);
 
-        $href = $this->ays_pb_add_filters_to_link($href);
+        // $href = $this->ays_pb_add_filters_to_link($href);
 
-        if (isset($_GET['fstatus']) && $_GET['fstatus'] != '') {
-            $ays_pb_status = esc_sql(sanitize_text_field($_GET['fstatus']));
-            $href .= '&fstatus=' . $ays_pb_status;
-        }
+        // if (isset($_GET['fstatus']) && $_GET['fstatus'] != '') {
+        //     $ays_pb_status = esc_sql(sanitize_text_field($_GET['fstatus']));
+        //     $href .= '&fstatus=' . $ays_pb_status;
+        // }
 
         $status_html = array();
 
         $status_html[] = '<label class="ays-pb-enable-switch ays-pb-enable-switch-list-table">';
-            $status_html[] = '<input type="checkbox" class="ays-pb-onoffswitch-checkbox"' . $checked . '>';
-            $status_html[] = '<a href="' . $href . '" class="ays-pb-enable-switch-slider ays-pb-enable-switch-round"></a>';
+            $status_html[] = '<input type="checkbox" class="ays-pb-onoffswitch-checkbox-list-table" data-id="'.absint($item['id']).'" data-nonce="'.$nonce.'" '.$checked.'>';
+            $status_html[] = '<span class="ays-pb-enable-switch-slider ays-pb-enable-switch-round"></span>';
         $status_html[] = '</label>';
 
         $status_html = implode('', $status_html);
@@ -433,25 +609,25 @@ class Ays_PopupBox_List_Table extends WP_List_Table {
 
         switch ($item['modal_content']) {
             case 'custom_html':
-                $modal_content = __('Custom Content', "ays-popup-box");
+                $modal_content = esc_html__('Custom Content', "ays-popup-box");
                 break;
             case 'shortcode':
-                $modal_content = __('Shortcode', "ays-popup-box");
+                $modal_content = esc_html__('Shortcode', "ays-popup-box");
                 break;
             case 'video_type':
-                $modal_content = __('Video', "ays-popup-box");
+                $modal_content = esc_html__('Video', "ays-popup-box");
                 break;
             case 'image_type':
-                $modal_content = __('Image', "ays-popup-box");
+                $modal_content = esc_html__('Image', "ays-popup-box");
                 break;
             case 'facebook_type':
-                $modal_content = __('Facebook', "ays-popup-box");
+                $modal_content = esc_html__('Facebook', "ays-popup-box");
                 break;
             case 'notification_type':
-                $modal_content = __('Notification', "ays-popup-box");
+                $modal_content = esc_html__('Notification', "ays-popup-box");
                 break;
             default:
-                $modal_content = __('Custom Content', "ays-popup-box");
+                $modal_content = esc_html__('Custom Content', "ays-popup-box");
                 break;
         }
 
@@ -470,37 +646,37 @@ class Ays_PopupBox_List_Table extends WP_List_Table {
 
         switch ($item['view_type']) {
             case 'default':
-                $view_type = __('Default', "ays-popup-box");
+                $view_type = esc_html__('Default', "ays-popup-box");
                 break;
             case 'lil':
-                $view_type = __('Red', "ays-popup-box");
+                $view_type = esc_html__('Red', "ays-popup-box");
                 break;
             case 'image':
-                $view_type = __('Modern', "ays-popup-box");
+                $view_type = esc_html__('Modern', "ays-popup-box");
                 break;
             case 'minimal':
-                $view_type = __('Minimal', "ays-popup-box");
+                $view_type = esc_html__('Minimal', "ays-popup-box");
                 break;
             case 'template':
-                $view_type = __('Sale', "ays-popup-box");
+                $view_type = esc_html__('Sale', "ays-popup-box");
                 break;
             case 'mac':
-                $view_type = __('MacOs window', "ays-popup-box");
+                $view_type = esc_html__('MacOs window', "ays-popup-box");
                 break;
             case 'ubuntu':
-                $view_type = __('Ubuntu', "ays-popup-box");
+                $view_type = esc_html__('Ubuntu', "ays-popup-box");
                 break;
             case 'winXP':
-                $view_type = __('Windows XP', "ays-popup-box");
+                $view_type = esc_html__('Windows XP', "ays-popup-box");
                 break;
             case 'win98':
-                $view_type = __('Windows 98', "ays-popup-box");
+                $view_type = esc_html__('Windows 98', "ays-popup-box");
                 break;
             case 'cmd':
-                $view_type = __('Command Prompt', "ays-popup-box");
+                $view_type = esc_html__('Command Prompt', "ays-popup-box");
                 break;
             default:
-                $view_type = __('Default', "ays-popup-box");
+                $view_type = esc_html__('Default', "ays-popup-box");
                 break;
         }
 
@@ -532,95 +708,73 @@ class Ays_PopupBox_List_Table extends WP_List_Table {
         return $text;
     }
 
-    public function process_bulk_action() {
-        //Detect when a bulk action is being triggered...
-        $message = "deleted";
-        if ( "delete" === $this->current_action() ) {
-            // In our file that handles the request, verify the nonce.
-            $nonce = esc_attr($_REQUEST["_wpnonce"]);
-
-            if ( !wp_verify_nonce($nonce, $this->plugin_name . "-delete-popupbox") ) {
-                die("Go get a life script kiddies");
-            } else {
-                self::delete_popupboxes( absint($_GET["popupbox"]) );
-
-                $url = esc_url_raw( remove_query_arg(array("action", "popupbox", "_wpnonce")) ) . "&status=" . $message . "&type=success";
-                wp_redirect($url);
-                exit();
-            }
-        }
-
-        // If the delete bulk action is triggered
-        if ( (isset($_POST["action"]) && $_POST["action"] == "bulk-delete") || (isset($_POST["action2"]) && $_POST["action2"] == "bulk-delete") ) {
-            $delete_ids = ( isset($_POST['bulk-delete']) && !empty($_POST['bulk-delete']) ) ? esc_sql($_POST['bulk-delete']) : array();
-
-            // loop over the array of record IDs and delete them
-            foreach ($delete_ids as $id) {
-                self::delete_popupboxes($id);
-            }
-
-            $url = esc_url_raw( remove_query_arg(array("action", "popupbox", "_wpnonce")) ) . "&status=" . $message . "&type=success";
-            wp_redirect($url);
-            exit();
-        } elseif ( (isset($_POST['action']) && $_POST['action'] == 'bulk-published') || (isset($_POST['action2']) && $_POST['action2'] == 'bulk-published') ) {
-            $published_ids = ( isset($_POST['bulk-delete']) && !empty($_POST['bulk-delete']) ) ? esc_sql($_POST['bulk-delete']) : array();
-            $message = 'published';
-
-            // loop over the array of record IDs and publish them
-            foreach ($published_ids as $id) {
-                self::publish_unpublish_popupbox($id, 'published');
-            }
-
-            $url = esc_url_raw( remove_query_arg(array("action", "popupbox", "_wpnonce")) ) . "&status=" . $message . "&type=success";
-            wp_redirect($url);
-        } elseif ( (isset($_POST['action']) && $_POST['action'] == 'bulk-unpublished') || (isset($_POST['action2']) && $_POST['action2'] == 'bulk-unpublished') ) {
-            $unpublished_ids = ( isset($_POST['bulk-delete']) && !empty($_POST['bulk-delete']) ) ? esc_sql($_POST['bulk-delete']) : array();
-            $message = 'unpublished';
-
-            // loop over the array of record IDs and unpublish them
-            foreach ($unpublished_ids as $id) {
-                self::publish_unpublish_popupbox($id , 'unpublish');
-            }
-
-            $url = esc_url_raw( remove_query_arg(array("action", "popupbox", "_wpnonce")) ) . "&status=" . $message . "&type=success";
-            wp_redirect($url);
-        }
-    }
-
     /**
      * Delete a customer record.
      *
      * @param int $id customer ID
      */
-    public static function delete_popupboxes($id) {
+    public function delete_popupboxes($id) {
+
+        // Run a security check.
+        if (empty($this->ays_pb_nonce) || ! wp_verify_nonce( $this->ays_pb_nonce, 'ays_pb_admin_popups_list_table_nonce' ) ) {
+            // This nonce is not valid.
+            wp_die('Nonce verification failed!');
+        }
+
+        if( !is_user_logged_in()){
+            wp_die(  esc_html__( 'Something went wrong', 'quiz-maker' ) );
+        }
+
+        // Verify unauthorized requests
+        if( !current_user_can( 'manage_options' ) ){
+            wp_die(  esc_html__( 'Something went wrong', 'quiz-maker' ) );
+        }
+
         global $wpdb;
 
         $wpdb->delete(
             "{$wpdb->prefix}ays_pb",
-            array("id" => $id),
+            array("id" => intval($id)),
             array("%d")
         );
     }
 
     public function publish_unpublish_popupbox($id, $action) {
-        global $wpdb;
-        $pb_table = $wpdb->prefix . "ays_pb";
 
+        // Run a security check.
+        if (empty($this->ays_pb_nonce) || ! wp_verify_nonce( $this->ays_pb_nonce, 'ays_pb_admin_popups_list_table_nonce' ) ) {
+            // This nonce is not valid.
+            wp_die('Nonce verification failed!');
+        }
+
+        if( !is_user_logged_in()){
+            wp_die(  esc_html__( 'Something went wrong', 'quiz-maker' ) );
+        }
+
+        // Verify unauthorized requests
+        if( !current_user_can( 'manage_options' ) ){
+            wp_die(  esc_html__( 'Something went wrong', 'quiz-maker' ) );
+        }
+        
         if ($id == null) {
             return false;
         }
+
+        global $wpdb;
+        $pb_table = $wpdb->prefix . "ays_pb";
 
         $onoffswitch = ($action == "unpublish") ? "Off" : "On";
 
         $wpdb->update(
             $pb_table,
-            array(
-                "onoffswitch" => $onoffswitch
-            ),
-            array("id" => $id),
+            array("onoffswitch" => $onoffswitch),
+            array("id" => intval($id)),
             array("%s"),
             array("%d")
         );
+
+        // Optional: return true/false or the number of rows updated
+        return $wpdb->rows_affected > 0;
     }
 
     /**
@@ -628,11 +782,27 @@ class Ays_PopupBox_List_Table extends WP_List_Table {
      *
      * @return null|string
      */
-    public static function record_count() {
+    public function record_count() {
+
+        // Run a security check.
+        if (empty($this->ays_pb_nonce) || ! wp_verify_nonce( $this->ays_pb_nonce, 'ays_pb_admin_popups_list_table_nonce' ) ) {
+            // This nonce is not valid.
+            wp_die('Nonce verification failed!');
+        }
+
+        if( !is_user_logged_in()){
+            wp_die(  esc_html__( 'Something went wrong', 'quiz-maker' ) );
+        }
+
+        // Verify unauthorized requests
+        if( !current_user_can( 'manage_options' ) ){
+            wp_die(  esc_html__( 'Something went wrong', 'quiz-maker' ) );
+        }
+
         global $wpdb;
 
         $sql = "SELECT COUNT(*) FROM {$wpdb->prefix}ays_pb";
-        $filter_conditions = self::ays_pb_get_filter_conditions();
+        $filter_conditions = $this->ays_pb_get_filter_conditions();
 
         if (isset($_GET['fstatus']) && !is_null(sanitize_text_field($_GET['fstatus']))) {
             $fstatus = esc_sql(sanitize_text_field($_GET['fstatus']));
@@ -655,11 +825,27 @@ class Ays_PopupBox_List_Table extends WP_List_Table {
      *
      * @return mixed
      */
-    public static function get_ays_popupboxes($per_page = 20, $page_number = 1 , $search = '') {
+    public function get_ays_popupboxes($per_page = 20, $page_number = 1 , $search = '') {
+
+        // Run a security check.
+        if (empty($this->ays_pb_nonce) || ! wp_verify_nonce( $this->ays_pb_nonce, 'ays_pb_admin_popups_list_table_nonce' ) ) {
+            // This nonce is not valid.
+            wp_die('Nonce verification failed!');
+        }
+
+        if( !is_user_logged_in()){
+            wp_die(  esc_html__( 'Something went wrong', 'quiz-maker' ) );
+        }
+
+        // Verify unauthorized requests
+        if( !current_user_can( 'manage_options' ) ){
+            wp_die(  esc_html__( 'Something went wrong', 'quiz-maker' ) );
+        }
+
         global $wpdb;
 
         $sql = "SELECT * FROM {$wpdb->prefix}ays_pb";
-        $filter_conditions = self::ays_pb_get_filter_conditions();
+        $filter_conditions = $this->ays_pb_get_filter_conditions();
 
         if (isset($_GET['fstatus']) && !is_null(sanitize_text_field($_GET['fstatus']))) {
             $fstatus = esc_sql(sanitize_text_field($_GET['fstatus']));
@@ -695,23 +881,6 @@ class Ays_PopupBox_List_Table extends WP_List_Table {
         return $result;
     }
 
-    public function display_tablenav($which) {
-        ?>
-        <div class="tablenav <?php echo esc_attr($which); ?>">
-
-            <div class="alignleft actions">
-                <?php $this->bulk_actions($which); ?>
-            </div>
-
-            <?php
-            $this->extra_tablenav($which);
-            $this->pagination($which);
-            ?>
-            <br class="clear" />
-        </div>
-        <?php
-    }
-
     /**
      * Returns an associative array containing the bulk action
      *
@@ -719,15 +888,31 @@ class Ays_PopupBox_List_Table extends WP_List_Table {
      */
     public function get_bulk_actions() {
         $actions = array(
-            "bulk-published" =>  __('Publish', "ays-popup-box"),
-            "bulk-unpublished" =>  __('Unpublish', "ays-popup-box"),
-            "bulk-delete" =>  __('Delete', "ays-popup-box"),
+            "bulk-published" =>  esc_html__('Publish', "ays-popup-box"),
+            "bulk-unpublished" =>  esc_html__('Unpublish', "ays-popup-box"),
+            "bulk-delete" =>  esc_html__('Delete', "ays-popup-box"),
         );
 
         return $actions;
     }
 
     public function extra_tablenav($which) {
+
+        // Run a security check.
+        if (empty($this->ays_pb_nonce) || ! wp_verify_nonce( $this->ays_pb_nonce, 'ays_pb_admin_popups_list_table_nonce' ) ) {
+            // This nonce is not valid.
+            wp_die('Nonce verification failed!');
+        }
+
+        if( !is_user_logged_in()){
+            wp_die(  esc_html__( 'Something went wrong', 'quiz-maker' ) );
+        }
+
+        // Verify unauthorized requests
+        if( !current_user_can( 'manage_options' ) ){
+            wp_die(  esc_html__( 'Something went wrong', 'quiz-maker' ) );
+        }
+
         global $wpdb;
 
         $titles_sql = "SELECT {$wpdb->prefix}ays_pb_categories.title, {$wpdb->prefix}ays_pb_categories.id FROM {$wpdb->prefix}ays_pb_categories";
@@ -807,7 +992,7 @@ class Ays_PopupBox_List_Table extends WP_List_Table {
         ?>
         <div id="popup-filter-div-<?php echo esc_attr($which); ?>" class="alignleft actions bulkactions">
             <select name="filterby-<?php echo esc_attr($which); ?>" id="bulk-action-selector-<?php echo esc_attr($which); ?>">
-                <option value=""><?php echo __('Select Category', "ays-popup-box")?></option>
+                <option value=""><?php echo esc_html__('Select Category', "ays-popup-box")?></option>
                 <?php
                     foreach ($categories_select as $cat_title) {
                         echo "<option " . $cat_title['selected'] . " value='" . $cat_title['id'] . "'>" . $cat_title['title'] . "</option>";
@@ -815,7 +1000,7 @@ class Ays_PopupBox_List_Table extends WP_List_Table {
                 ?>
             </select>
             <select name="filterbyAuthor-<?php echo esc_attr($which); ?>" id="bulk-action-selector-<?php echo esc_attr($which); ?>">
-                <option value=""><?php echo __('Select Author', "ays-popup-box")?></option>
+                <option value=""><?php echo esc_html__('Select Author', "ays-popup-box")?></option>
                 <?php
                     foreach ($authors_select as $author) {
                         echo "<option " . $author['selected'] . " value='" . $author['id'] . "'>" . $author['display_name'] . "</option>";
@@ -823,20 +1008,38 @@ class Ays_PopupBox_List_Table extends WP_List_Table {
                 ?>
             </select>
             <select name="filterbyType-<?php echo esc_attr($which); ?>" id="bulk-action-selector-<?php echo esc_attr($which); ?>">
-                <option value=""><?php echo __('Select Type', "ays-popup-box")?></option>
+                <option value=""><?php echo esc_html__('Select Type', "ays-popup-box")?></option>
                 <?php
                     foreach ($types_select as $type) {
                         echo "<option " . $type['selected'] . " value='" . $type['value'] . "'>" . $type['title'] . "</option>";
                     }
                 ?>
             </select>
-            <input type="button" id="doaction-<?php echo esc_attr($which); ?>" class="ays-popup-question-tab-all-filter-button-<?php echo esc_attr($which); ?> button" value="<?php echo __("Filter", "ays-popup-box"); ?>">
+            <input type="button" id="doaction-<?php echo esc_attr($which); ?>" class="ays-popup-question-tab-all-filter-button-<?php echo esc_attr($which); ?> button action" value="<?php echo esc_html__("Filter", "ays-popup-box"); ?>">
         </div>
-        <a href="?page=<?php echo esc_attr($_REQUEST['page']); ?>" class="button ays-pb-clear-filters"><?php echo __("Clear filters", "ays-popup-box"); ?></a>
+        <a href="?page=<?php echo esc_attr($_REQUEST['page']); ?>" class="button ays-pb-clear-filters action"><?php echo esc_html__("Clear filters", "ays-popup-box"); ?></a>
         <?php
     }
 
     public function duplicate_popupbox($id) {
+
+        $pb_allowed_html = Ays_Pb_Data::ays_pb_custom_allowed_html();
+
+        // Run a security check.
+        if (empty($this->ays_pb_nonce) || ! wp_verify_nonce( $this->ays_pb_nonce, 'ays_pb_admin_popups_list_table_nonce' ) ) {
+            // This nonce is not valid.
+            wp_die('Nonce verification failed!');
+        }
+
+        if( !is_user_logged_in()){
+            wp_die(  esc_html__( 'Something went wrong', 'quiz-maker' ) );
+        }
+
+        // Verify unauthorized requests
+        if( !current_user_can( 'manage_options' ) ){
+            wp_die(  esc_html__( 'Something went wrong', 'quiz-maker' ) );
+        }
+
         global $wpdb;
 
         $pb_table = $wpdb->prefix . "ays_pb";
@@ -850,13 +1053,13 @@ class Ays_PopupBox_List_Table extends WP_List_Table {
             if (is_super_admin()) {
                 $description = (isset($popup['description']) && $popup['description'] != '') ? stripslashes($popup['description'] ) : '';
             } else {
-                $description = (isset($popup['description']) && $popup['description'] != '') ? stripslashes(wp_kses_post($popup['description'])) : '';
+                $description = (isset($popup['description']) && $popup['description'] != '') ? wp_kses( $popup['description'], $pb_allowed_html ) : '';
             }
         } else {
             if (current_user_can('unfiltered_html')) {
                 $description = (isset($popup['description']) && $popup['description'] != '') ? stripslashes($popup['description']) : '';
             } else {
-                $description = (isset($popup['description']) && $popup['description'] != '') ? stripslashes( wp_kses_post($popup['description']) ) : '';
+                $description = (isset($popup['description']) && $popup['description'] != '') ? wp_kses( $popup['description'], $pb_allowed_html ) : '';
             }
         }
 
@@ -865,13 +1068,13 @@ class Ays_PopupBox_List_Table extends WP_List_Table {
             if (is_super_admin()) {
                 $popup_custom_html = (isset($popup['custom_html']) && $popup['custom_html'] != '') ? stripslashes($popup['custom_html']) : '';
             } else {
-                $popup_custom_html = (isset($popup['custom_html']) && $popup['custom_html'] != '') ? stripslashes( wp_kses_post($popup['custom_html']) ) : '';
+                $popup_custom_html = (isset($popup['custom_html']) && $popup['custom_html'] != '') ? wp_kses( $popup['custom_html'], $pb_allowed_html ) : '';
             }
         } else {
             if (current_user_can('unfiltered_html')) {
                 $popup_custom_html = (isset($popup['custom_html']) && $popup['custom_html'] != '') ? stripslashes($popup['custom_html']) : '';
             } else {
-                $popup_custom_html = (isset($popup['custom_html']) && $popup['custom_html'] != '') ? stripslashes( wp_kses_post($popup['custom_html']) ) : '';
+                $popup_custom_html = (isset($popup['custom_html']) && $popup['custom_html'] != '') ? wp_kses( $popup['custom_html'], $pb_allowed_html ) : '';
             }
         }
 
@@ -885,7 +1088,7 @@ class Ays_PopupBox_List_Table extends WP_List_Table {
 
         $options = json_decode($popup['options'], true);
 
-        $options['create_date'] = date("Y-m-d H:i:s");
+        $options['create_date'] = gmdate("Y-m-d H:i:s");
         $options['author'] = $author;
 
         $result = $wpdb->insert(
@@ -994,8 +1197,9 @@ class Ays_PopupBox_List_Table extends WP_List_Table {
 
         if ($result >= 0) {
             $message = "duplicated";
-            $url = esc_url_raw( remove_query_arg(array('action', 'popupbox')) ) . '&status=' . $message;
-            wp_redirect($url);
+            $url = esc_url_raw( remove_query_arg(array('action', 'popupbox', '_wpnonce')) ) . '&status=' . $message;
+            wp_safe_redirect( $url );
+            exit;
         }
     }
 
@@ -1019,6 +1223,24 @@ class Ays_PopupBox_List_Table extends WP_List_Table {
     }
 
     public function add_or_edit_popupbox() {
+
+        $pb_allowed_html = Ays_Pb_Data::ays_pb_custom_allowed_html();
+
+        // Run a security check.
+        if (empty($this->ays_pb_nonce) || ! wp_verify_nonce( $this->ays_pb_nonce, 'ays_pb_admin_popups_list_table_nonce' ) ) {
+            // This nonce is not valid.
+            wp_die('Nonce verification failed!');
+        }
+
+        if( !is_user_logged_in()){
+            wp_die(  esc_html__( 'Something went wrong', 'quiz-maker' ) );
+        }
+
+        // Verify unauthorized requests
+        if( !current_user_can( 'manage_options' ) ){
+            wp_die(  esc_html__( 'Something went wrong', 'quiz-maker' ) );
+        }
+
 		global $wpdb;
 		$pb_table = $wpdb->prefix . 'ays_pb';
 
@@ -1036,6 +1258,8 @@ class Ays_PopupBox_List_Table extends WP_List_Table {
             'youtube_link' => '',
             'instagram_link' => '',
             'behance_link' => '',
+            'telegram_link' => '',
+            'tiktok_link' => '',
         );
 
         // Id
@@ -1064,13 +1288,13 @@ class Ays_PopupBox_List_Table extends WP_List_Table {
             if (is_super_admin()) {
                 $custom_html = (isset($_POST['ays-pb']['custom_html']) && $_POST['ays-pb']['custom_html'] != '') ? stripslashes($_POST['ays-pb']['custom_html']) : '';
             } else {
-                $custom_html = (isset($_POST['ays-pb']['custom_html']) && $_POST['ays-pb']['custom_html'] != '') ? wp_kses_post($_POST['ays-pb']['custom_html']) : '';
+                $custom_html = (isset($_POST['ays-pb']['custom_html']) && $_POST['ays-pb']['custom_html'] != '') ? wp_kses( $_POST['ays-pb']['custom_html'], $pb_allowed_html ) : '';
             }
         } else {
             if (current_user_can('unfiltered_html')) {
                 $custom_html = (isset($_POST['ays-pb']['custom_html']) && $_POST['ays-pb']['custom_html'] != '') ? stripslashes($_POST['ays-pb']['custom_html']) : '';
             } else {
-                $custom_html = (isset($_POST['ays-pb']['custom_html']) && $_POST['ays-pb']['custom_html'] != '') ? stripslashes( wp_kses_post($_POST['ays-pb']['custom_html']) ) : '';
+                $custom_html = (isset($_POST['ays-pb']['custom_html']) && $_POST['ays-pb']['custom_html'] != '') ? wp_kses( $_POST['ays-pb']['custom_html'], $pb_allowed_html ) : '';
             }
         }
 
@@ -1250,13 +1474,13 @@ class Ays_PopupBox_List_Table extends WP_List_Table {
             if (is_super_admin()) {
                 $description = (isset($_POST['ays-pb']['popup_description']) && $_POST['ays-pb']['popup_description'] != '') ? stripslashes($_POST['ays-pb']['popup_description']) : '';
             } else {
-                $description = (isset($_POST['ays-pb']['popup_description']) && $_POST['ays-pb']['popup_description'] != '') ? wp_kses_post($_POST['ays-pb']['popup_description']) : '';
+                $description = (isset($_POST['ays-pb']['popup_description']) && $_POST['ays-pb']['popup_description'] != '') ? wp_kses( $_POST['ays-pb']['popup_description'], $pb_allowed_html ) : '';
             }
         } else {
             if (current_user_can('unfiltered_html')) {
                 $description = (isset($_POST['ays-pb']['popup_description']) && $_POST['ays-pb']['popup_description'] != '') ? stripslashes($_POST['ays-pb']['popup_description']) : '';
             } else {
-                $description = (isset($_POST['ays-pb']['popup_description']) && $_POST['ays-pb']['popup_description'] != '') ? wp_kses_post($_POST['ays-pb']['popup_description']) : '';
+                $description = (isset($_POST['ays-pb']['popup_description']) && $_POST['ays-pb']['popup_description'] != '') ? wp_kses( $_POST['ays-pb']['popup_description'], $pb_allowed_html ) : '';
             }
         }
 
@@ -1405,7 +1629,7 @@ class Ays_PopupBox_List_Table extends WP_List_Table {
         $enable_social_links = (isset($_POST['ays_pb_enable_social_links']) && $_POST['ays_pb_enable_social_links'] == 'on') ? 'on' : 'off';
 
         // Enable social media links | Heading for share buttons
-        $social_buttons_heading = (isset($_POST['ays_pb_social_buttons_heading']) && $_POST['ays_pb_social_buttons_heading'] != '') ? stripslashes($_POST['ays_pb_social_buttons_heading']) : '';
+        $social_buttons_heading = (isset($_POST['ays_pb_social_buttons_heading']) && $_POST['ays_pb_social_buttons_heading'] != '') ? wp_kses( $_POST['ays_pb_social_buttons_heading'], $pb_allowed_html ) : '';
 
         // Enable social media links | Social media link buttons
         $ays_social_links = (isset($_POST['ays_social_links'])) ? array_map( 'sanitize_text_field', $_POST['ays_social_links'] ) : $social_links_default;
@@ -1431,6 +1655,12 @@ class Ays_PopupBox_List_Table extends WP_List_Table {
         // Enable social media links | Behance link
         $behance_link = (isset($ays_social_links['ays_pb_behance_link']) && $ays_social_links['ays_pb_behance_link'] != '') ? sanitize_text_field($ays_social_links['ays_pb_behance_link']) : '';
 
+        // Enable social media links | Telegram link
+        $telegram_link = (isset($ays_social_links['ays_pb_telegram_link']) && $ays_social_links['ays_pb_telegram_link'] != '') ? sanitize_text_field($ays_social_links['ays_pb_telegram_link']) : '';
+
+        // Enable social media links | TikTok link
+        $tiktok_link = (isset($ays_social_links['ays_pb_tiktok_link']) && $ays_social_links['ays_pb_tiktok_link'] != '') ? sanitize_text_field($ays_social_links['ays_pb_tiktok_link']) : '';
+
         $social_links = array(
             'linkedin_link' => $linkedin_link,
             'facebook_link' => $facebook_link,
@@ -1439,6 +1669,8 @@ class Ays_PopupBox_List_Table extends WP_List_Table {
             'youtube_link' => $youtube_link,
             'instagram_link' => $instagram_link,
             'behance_link' => $behance_link,
+            'telegram_link' => $telegram_link,
+            'tiktok_link' => $tiktok_link,
         );
 
         // Schedule the popup
@@ -1506,7 +1738,10 @@ class Ays_PopupBox_List_Table extends WP_List_Table {
 
         // Show scrollbar
         $show_scrollbar = (isset($_POST['ays_pb_show_scrollbar']) && $_POST['ays_pb_show_scrollbar'] != '') ? 'on' : 'off';
-
+        
+        // Show scrollbar mobile
+        $show_scrollbar_mobile = (isset($_POST['ays_pb_show_scrollbar_mobile']) && $_POST['ays_pb_show_scrollbar_mobile'] != '') ? 'on' : 'off';
+        
         // Template
 		$view_type = (isset($_POST['ays-pb']['view_type']) && $_POST['ays-pb']['view_type'] != '') ? wp_unslash( sanitize_text_field($_POST['ays-pb']['view_type']) ) : '';
 
@@ -1588,6 +1823,12 @@ class Ays_PopupBox_List_Table extends WP_List_Table {
 
         // Description font size | On mobile
         $pb_font_size_for_mobile = (isset($_POST['ays_pb_font_size_for_mobile']) && $_POST['ays_pb_font_size_for_mobile'] != '') ? absint($_POST['ays_pb_font_size_for_mobile']) : 16;
+
+        // Description text align
+        $pb_text_align = (isset($_POST['ays_pb_description_alignment_for_pc']) && $_POST['ays_pb_description_alignment_for_pc'] != '') ? stripslashes( sanitize_text_field($_POST['ays_pb_description_alignment_for_pc']) ) : 'left';
+
+        // Description text align mobile
+        $pb_text_align_mobile = (isset($_POST['ays_pb_description_alignment_for_mobile']) && $_POST['ays_pb_description_alignment_for_mobile'] != '') ? stripslashes( sanitize_text_field($_POST['ays_pb_description_alignment_for_mobile']) ) : 'left';
 
         // Title text shadow | On desktop
         $enable_pb_title_text_shadow = (isset($_POST['ays_enable_title_text_shadow']) && $_POST['ays_enable_title_text_shadow'] != '') ? 'on' : 'off';
@@ -1764,7 +2005,10 @@ class Ays_PopupBox_List_Table extends WP_List_Table {
 
         //close button_size
         $close_button_size = (isset($_POST['ays_pb_close_button_size']) && $_POST['ays_pb_close_button_size'] != '' ) ? abs(sanitize_text_field($_POST['ays_pb_close_button_size'])) : '';
-       
+        
+        //close button padding
+        $close_button_padding = (isset($_POST['ays_pb_close_button_padding']) && $_POST['ays_pb_close_button_padding'] != '' ) ? abs(sanitize_text_field($_POST['ays_pb_close_button_padding'])) : '';
+        
         //close button image
         $close_button_image = (isset($_POST['ays_pb_close_btn_bg_img']) && $_POST['ays_pb_close_btn_bg_img'] != '' ) ? sanitize_url($_POST['ays_pb_close_btn_bg_img']) : '';
 
@@ -1927,6 +2171,7 @@ class Ays_PopupBox_List_Table extends WP_List_Table {
             'social_links' => $social_links,
             'social_buttons_heading' => $social_buttons_heading,
             'close_button_size' => $close_button_size,
+            'close_button_padding' => $close_button_padding,
             'close_button_image' => $close_button_image,
             'border_style' => $border_style,
             'enable_border_style_mobile' => $enable_border_style_mobile,
@@ -2010,6 +2255,8 @@ class Ays_PopupBox_List_Table extends WP_List_Table {
             'pb_min_height' => $pb_min_height,
             'pb_font_size' => $pb_font_size,
             'pb_font_size_for_mobile' => $pb_font_size_for_mobile,
+            'pb_description_alignment_for_pc' => $pb_text_align,
+            'pb_description_alignment_for_mobile' => $pb_text_align_mobile,
             'pb_title_text_shadow' => $pb_title_text_shadow,
             'enable_pb_title_text_shadow' => $enable_pb_title_text_shadow,
             'pb_title_text_shadow_x_offset' => $pb_title_text_shadow_x_offset,
@@ -2040,6 +2287,7 @@ class Ays_PopupBox_List_Table extends WP_List_Table {
             'disable_scroll_on_popup' => $disable_scroll_on_popup,
             'disable_scroll_on_popup_mobile' => $disable_scroll_on_popup_mobile,
             'show_scrollbar' => $show_scrollbar,
+            'show_scrollbar_mobile' => $show_scrollbar_mobile,
             'hide_on_pc' => $hide_on_pc,
             'hide_on_tablets' => $hide_on_tablets,
             'pb_bg_image_direction_on_mobile' => $pb_bg_image_direction_on_mobile,
@@ -2177,6 +2425,8 @@ class Ays_PopupBox_List_Table extends WP_List_Table {
                 '%s',   // options
             )
 			);
+
+            $inserted_id = $wpdb->insert_id;
 			$message = "created";
 		}else{
 			$pb_result = $wpdb->update(
@@ -2284,8 +2534,25 @@ class Ays_PopupBox_List_Table extends WP_List_Table {
             ),
 				array( "%d" )
 			);
+
+            $inserted_id = $id;
 			$message = "updated";
 		}
+
+        if($message == 'created'){
+            setcookie('ays_pb_created_new', $inserted_id, time() + 3600, '/');
+                    
+            $homepage_url = get_home_url();
+            if(!empty($homepage_url)){
+                $custom_post_url = array(
+                    'preview'   => 'true',
+                );
+                $custom_post_url_ready = http_build_query($custom_post_url);
+                $ready_url = get_home_url();
+                $ready_url .= '/?' . $custom_post_url_ready;
+                setcookie('ays_pb_created_new_'.$inserted_id.'_post_id', $ready_url, time() + 3600, '/');
+            }
+        }
 
 		if( $pb_result >= 0 ){
 			if($submit_type != ''){
@@ -2303,11 +2570,140 @@ class Ays_PopupBox_List_Table extends WP_List_Table {
                     ) ) );
             // $url = esc_url_raw( remove_query_arg(false) ) . 'ays_pb_tab='.$ays_pb_tab."&status=" . $message . "&type=success";
                 }
-                wp_redirect( $url );
+                wp_safe_redirect( $url );
+                exit;
             }else{
                 $url = esc_url_raw( remove_query_arg(array("action", "popupbox")  ) ) . "&status=" . $message . "&type=success";
-                wp_redirect( $url );
+                wp_safe_redirect( $url );
+                exit;
             }
 		}
+    }
+
+    public function process_bulk_action() {
+
+        // Detect when a bulk action is being triggered.
+        $action = $this->current_action();
+        if ( ! $action ) {
+            return;
+        }
+
+        if( !is_user_logged_in()){
+            return;
+        }
+
+        // Verify unauthorized requests
+        if( !current_user_can( 'manage_options' ) ){
+            return;
+        }
+
+        if( current_user_can( 'manage_options' ) && is_user_logged_in() ){
+            //Detect when a bulk action is being triggered...
+            $message = "deleted";
+            if ( "delete" === $this->current_action() ) {
+                // In our file that handles the request, verify the nonce.
+                $nonce = esc_attr($_REQUEST["_wpnonce"]);
+
+                if ( !wp_verify_nonce($nonce, $this->plugin_name . "-delete-popupbox") ) {
+                    die("Go get a life script kiddies");
+                } else {
+                    $this->delete_popupboxes( absint($_GET["popupbox"]) );
+
+                    $url = esc_url_raw( remove_query_arg(array("action", "popupbox", "_wpnonce")) ) . "&status=" . $message . "&type=success";
+                    wp_safe_redirect( $url );
+                    exit;
+                }
+            }
+
+            // If the delete bulk action is triggered
+            if ( (isset($_POST["action"]) && $_POST["action"] == "bulk-delete") || (isset($_POST["action2"]) && $_POST["action2"] == "bulk-delete") ) {
+                $delete_ids = ( isset($_POST['bulk-delete']) && !empty($_POST['bulk-delete']) ) ? esc_sql($_POST['bulk-delete']) : array();
+
+                // loop over the array of record IDs and delete them
+                foreach ($delete_ids as $id) {
+                    $this->delete_popupboxes($id);
+                }
+
+                $url = esc_url_raw( remove_query_arg(array("action", "popupbox", "_wpnonce")) ) . "&status=" . $message . "&type=success";
+                wp_safe_redirect( $url );
+                exit;
+            } elseif ( (isset($_POST['action']) && $_POST['action'] == 'bulk-published') || (isset($_POST['action2']) && $_POST['action2'] == 'bulk-published') ) {
+                $published_ids = ( isset($_POST['bulk-delete']) && !empty($_POST['bulk-delete']) ) ? esc_sql($_POST['bulk-delete']) : array();
+                $message = 'published';
+
+                // loop over the array of record IDs and publish them
+                foreach ($published_ids as $id) {
+                    $this->publish_unpublish_popupbox($id, 'published');
+                }
+
+                $url = esc_url_raw( remove_query_arg(array("action", "popupbox", "_wpnonce")) ) . "&status=" . $message . "&type=success";
+                wp_safe_redirect( $url );
+                exit;
+            } elseif ( (isset($_POST['action']) && $_POST['action'] == 'bulk-unpublished') || (isset($_POST['action2']) && $_POST['action2'] == 'bulk-unpublished') ) {
+                $unpublished_ids = ( isset($_POST['bulk-delete']) && !empty($_POST['bulk-delete']) ) ? esc_sql($_POST['bulk-delete']) : array();
+                $message = 'unpublished';
+
+                // loop over the array of record IDs and unpublish them
+                foreach ($unpublished_ids as $id) {
+                    $this->publish_unpublish_popupbox($id , 'unpublish');
+                }
+
+                $url = esc_url_raw( remove_query_arg(array("action", "popupbox", "_wpnonce")) ) . "&status=" . $message . "&type=success";
+                wp_safe_redirect( $url );
+                exit;
+            }
+        }
+    }
+
+    public function popupbox_notices() {
+
+        // Run a security check.
+        if (empty($this->ays_pb_nonce) || ! wp_verify_nonce( $this->ays_pb_nonce, 'ays_pb_admin_popups_list_table_nonce' ) ) {
+            // This nonce is not valid.
+            wp_die('Nonce verification failed!');
+        }
+
+        if( !is_user_logged_in()){
+            wp_die(  esc_html__( 'Something went wrong', 'quiz-maker' ) );
+        }
+
+        // Verify unauthorized requests
+        if( !current_user_can( 'manage_options' ) ){
+            wp_die(  esc_html__( 'Something went wrong', 'quiz-maker' ) );
+        }
+
+        if( empty($_REQUEST['status']) ){
+            return;
+        }
+
+        $status = isset($_REQUEST["status"]) ? sanitize_text_field($_REQUEST["status"]) : "";
+        $type = isset($_REQUEST["type"]) ? sanitize_text_field($_REQUEST["type"]) : "";
+
+        if (empty($status)) return;
+
+        if ("created" == $status)
+            $updated_message = esc_html__("PopupBox created.", "ays-popup-box");
+        elseif ("updated" == $status)
+            $updated_message = esc_html__("PopupBox saved.", "ays-popup-box");
+        elseif ("deleted" == $status)
+            $updated_message = esc_html__("PopupBox deleted.", "ays-popup-box");
+        elseif ("duplicated" == $status)
+            $updated_message = esc_html__("PopupBox duplicated.", "ays-popup-box");
+        elseif ("published" == $status)
+            $updated_message = esc_html__("PopupBox published.", "ays-popup-box");
+        elseif ("unpublished" == $status)
+            $updated_message = esc_html__("PopupBox unpublished.", "ays-popup-box");
+        elseif ("status_changed" == $status)
+            $updated_message = esc_html__("Popup status updated successfully.", "ays-popup-box");
+        elseif ("error" == $status)
+            $updated_message = esc_html__( "You're not allowed to add popupbox for more popupboxes please checkout to ", "ays-popup-box")."<a href='https://ays-pro.com/wordpress/popup-box' target='_blank'>PRO ".esc_html__("version", "ays-popup-box")."</a>.";
+
+        if (empty($updated_message)) return;
+
+        ?>
+        <div class="ays-pb-notice notice notice-<?php echo esc_attr($type); ?> is-dismissible">
+            <p> <?php echo $updated_message; ?> </p>
+        </div>
+        <?php
     }
 }

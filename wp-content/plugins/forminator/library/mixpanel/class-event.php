@@ -30,16 +30,6 @@ abstract class Events {
 	}
 
 	/**
-	 * Check if usage tracking is active.
-	 *
-	 * @return bool
-	 * @since 1.27.0
-	 */
-	protected static function is_tracking_active() {
-		return self::get_value( 'forminator_usage_tracking', false );
-	}
-
-	/**
 	 * Tracking event
 	 *
 	 * @param string $event Event.
@@ -54,19 +44,6 @@ abstract class Events {
 			$event,
 			$properties
 		);
-	}
-
-	/**
-	 * Get a usage tracking value
-	 *
-	 * @param string $key Key for get value.
-	 * @param string $default_value Default value.
-	 *
-	 * @return false|mixed|null
-	 * @since 1.27.0
-	 */
-	protected static function get_value( $key, $default_value = 'false' ) {
-		return get_option( $key, $default_value );
 	}
 
 	/**
@@ -89,5 +66,16 @@ abstract class Events {
 		}
 
 		return $value;
+	}
+
+	/**
+	 * Limit text to Mixpanel character limit
+	 *
+	 * @param mixed $text Text.
+	 * @return string
+	 */
+	protected static function limit_text( $text ) {
+		// Limit text to Mixpanel's character limit of 255.
+		return substr( $text, 0, 255 );
 	}
 }

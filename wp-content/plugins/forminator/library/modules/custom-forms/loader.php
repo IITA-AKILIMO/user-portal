@@ -120,6 +120,7 @@ class Forminator_Custom_Forms extends Forminator_Module {
 		new Forminator_CForm_Front();
 
 		add_action( 'wp_ajax_forminator_preset_templates', array( $this, 'get_preset_templates' ) );
+		add_action( 'wp_ajax_forminator_update_live_preview', array( 'Forminator_CForm_Front', 'update_live_preview' ) );
 
 		add_action( 'wp_ajax_forminator_load_form', array( 'Forminator_CForm_Front', 'ajax_load_module' ) );
 		add_action( 'wp_ajax_nopriv_forminator_load_form', array( 'Forminator_CForm_Front', 'ajax_load_module' ) );
@@ -182,7 +183,7 @@ class Forminator_Custom_Forms extends Forminator_Module {
 	 * @return null
 	 */
 	public static function migrate_leads_forms( $new_version, $old_version ) {
-		if ( version_compare( $old_version, '1.14.7', '>' ) ) {
+		if ( version_compare( $old_version, '1.54.0', '>=' ) ) {
 			return;
 		}
 		Forminator_Migration::migrate_leads_forms();
@@ -317,26 +318,28 @@ class Forminator_Custom_Forms extends Forminator_Module {
 	 */
 	public static function translate_template_name( $name ) {
 		$array = array(
-			'Appointment Booking'              => __( 'Appointment Booking', 'forminator' ),
-			'Conference Registration Form'     => __( 'Conference Registration Form', 'forminator' ),
-			'Course Enrollment Form'           => __( 'Course Enrollment Form', 'forminator' ),
-			'Course Evaluation Form'           => __( 'Course Evaluation Form', 'forminator' ),
-			'Customer Complaint Form'          => __( 'Customer Complaint Form', 'forminator' ),
-			'Customer Feedback Form'           => __( 'Customer Feedback Form', 'forminator' ),
-			'Donation Form'                    => __( 'Donation Form', 'forminator' ),
-			'Event Feedback Form'              => __( 'Event Feedback Form', 'forminator' ),
-			'Event Registration Template'      => __( 'Event Registration Template', 'forminator' ),
-			'Fitness Class Registration'       => __( 'Fitness Class Registration', 'forminator' ),
-			'Home Service Request Form'        => __( 'Home Service Request Form', 'forminator' ),
-			'Job Application Form'             => __( 'Job Application Form', 'forminator' ),
-			'Medical History Form'             => __( 'Medical History Form', 'forminator' ),
-			'Order for Small Businesses'       => __( 'Order for Small Businesses', 'forminator' ),
-			'Real Estate Inquiry Form'         => __( 'Real Estate Inquiry Form', 'forminator' ),
-			'Restaurant Reservation Form'      => __( 'Restaurant Reservation Form', 'forminator' ),
-			'Return Merchandise Authorization' => __( 'Return Merchandise Authorization', 'forminator' ),
-			'RSVP Form'                        => __( 'RSVP Form', 'forminator' ),
-			'Travel Booking Form'              => __( 'Travel Booking Form', 'forminator' ),
-			'Volunteer Sign-up Form'           => __( 'Volunteer Sign-up Form', 'forminator' ),
+			'Appointment Booking'                    => __( 'Appointment Booking', 'forminator' ),
+			'Conference Registration Form'           => __( 'Conference Registration Form', 'forminator' ),
+			'Course Enrollment Form'                 => __( 'Course Enrollment Form', 'forminator' ),
+			'Course Evaluation Form'                 => __( 'Course Evaluation Form', 'forminator' ),
+			'Customer Complaint Form'                => __( 'Customer Complaint Form', 'forminator' ),
+			'Customer Feedback Form'                 => __( 'Customer Feedback Form', 'forminator' ),
+			'Donation Form'                          => __( 'Donation Form', 'forminator' ),
+			'Event Feedback Form'                    => __( 'Event Feedback Form', 'forminator' ),
+			'Event Registration'                     => __( 'Event Registration', 'forminator' ),
+			'Fitness Class Registration'             => __( 'Fitness Class Registration', 'forminator' ),
+			'Home Service Request Form'              => __( 'Home Service Request Form', 'forminator' ),
+			'Job Application Form'                   => __( 'Job Application Form', 'forminator' ),
+			'Medical History Form'                   => __( 'Medical History Form', 'forminator' ),
+			'Small Business Order Request'           => __( 'Small Business Order Request', 'forminator' ),
+			'Real Estate Inquiry Form'               => __( 'Real Estate Inquiry Form', 'forminator' ),
+			'Restaurant Reservation Form'            => __( 'Restaurant Reservation Form', 'forminator' ),
+			'Return Merchandise Authorization (RMA)' => __( 'Return Merchandise Authorization (RMA)', 'forminator' ),
+			'RSVP Form'                              => __( 'RSVP Form', 'forminator' ),
+			'User Registration'                      => __( 'User Registration', 'forminator' ),
+			'Travel Booking Form'                    => __( 'Travel Booking Form', 'forminator' ),
+			'Volunteer Sign-up Form'                 => __( 'Volunteer Sign-up Form', 'forminator' ),
+			'User Login'                             => __( 'User Login', 'forminator' ),
 		);
 		if ( isset( $array[ $name ] ) ) {
 			return $array[ $name ];
@@ -436,6 +439,20 @@ class Forminator_Custom_Forms extends Forminator_Module {
 			)
 		);
 		return $this->filter_accessible_templates( $templates );
+	}
+
+	/**
+	 * Get main templates
+	 *
+	 * @return array
+	 */
+	public function get_main_templates(): array {
+		$templates = $this->get_free_templates();
+
+		// get only first 4.
+		$templates = array_slice( $templates, 0, 4 );
+
+		return self::prepare_templates_data( $templates );
 	}
 
 	/**

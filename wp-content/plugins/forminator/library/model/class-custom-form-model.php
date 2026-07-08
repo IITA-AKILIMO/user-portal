@@ -57,6 +57,13 @@ class Forminator_Form_Model extends Forminator_Base_Form_Model {
 			return $this->get_field( $original_id, $to_array );
 		}
 
+		// Handle slider range subfield suffixes (e.g., slider-1-min, slider-1-max).
+		$suffix = substr( $id, -4 );
+		if ( 0 === strpos( $id, 'slider-' ) && in_array( $suffix, array( '-min', '-max' ), true ) ) {
+			$base_id = substr( $id, 0, -4 );
+			return $this->get_field( $base_id, $to_array );
+		}
+
 		return null;
 	}
 
@@ -381,6 +388,24 @@ class Forminator_Form_Model extends Forminator_Base_Form_Model {
 		foreach ( $fields as $field ) {
 			$field_array = $field->to_formatted_array();
 			if ( isset( $field_array['type'] ) && ( 'stripe' === $field_array['type'] || 'stripe-ocs' === $field_array['type'] ) ) {
+				return $field;
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * Check if Custom form has paypal field
+	 *
+	 * @since 1.41
+	 * @return object|false
+	 */
+	public function has_paypal_field() {
+		$fields = $this->get_real_fields();
+		foreach ( $fields as $field ) {
+			$field_array = $field->to_formatted_array();
+			if ( isset( $field_array['type'] ) && 'paypal' === $field_array['type'] ) {
 				return $field;
 			}
 		}

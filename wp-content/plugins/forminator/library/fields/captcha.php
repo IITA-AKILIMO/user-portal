@@ -155,7 +155,7 @@ class Forminator_Captcha extends Forminator_Field {
 	 */
 	public function markup( $field, $views_obj ) {
 
-		$captcha_badge   = '';
+		$extra_attrs     = '';
 		$hcaptcha_notice = '';
 		$provider        = self::get_property( 'captcha_provider', $field, 'recaptcha' );
 		$alignment       = self::get_property( 'captcha_alignment', $field, 'left' );
@@ -167,7 +167,7 @@ class Forminator_Captcha extends Forminator_Field {
 			$captcha_class = 'forminator-captcha-' . $alignment . ' forminator-g-recaptcha';
 
 			if ( $this->is_invisible_recaptcha( $field ) ) {
-				$captcha_badge  = 'data-badge="' . esc_attr( self::get_property( 'captcha_badge', $field, 'inline' ) ) . '"';
+				$extra_attrs    = 'data-badge="' . esc_attr( self::get_property( 'captcha_badge', $field, 'inline' ) ) . '"';
 				$captcha_size   = 'invisible';
 				$captcha_class .= ' recaptcha-invisible';
 			}
@@ -183,6 +183,12 @@ class Forminator_Captcha extends Forminator_Field {
 					$key = get_option( 'forminator_v3_captcha_key', '' );
 					break;
 			}
+		} elseif ( 'turnstile' === $provider ) {
+			$captcha_class = 'forminator-captcha-' . $alignment . ' forminator-turnstile';
+			$key           = get_option( 'forminator_turnstile_key', '' );
+			$captcha_theme = self::get_property( 'turnstile_theme', $field, 'auto' );
+			$captcha_size  = self::get_property( 'turnstile_size', $field, 'normal' );
+			$extra_attrs   = 'data-language="' . esc_attr( self::get_captcha_language( $field, 'turnstile' ) ) . '"';
 		} else {
 			$key           = get_option( 'forminator_hcaptcha_key', '' );
 			$captcha_type  = self::get_property( 'hcaptcha_type', $field, 'hc_checkbox' );
@@ -201,11 +207,33 @@ class Forminator_Captcha extends Forminator_Field {
 			'<div class="%s" data-theme="%s" %s data-sitekey="%s" data-size="%s"></div> %s',
 			esc_attr( $captcha_class ),
 			esc_attr( $captcha_theme ),
-			$captcha_badge,
+			$extra_attrs,
 			esc_attr( $key ),
 			esc_attr( $captcha_size ),
 			$hcaptcha_notice
 		);
+	}
+
+	/**
+	 * Get captcha language
+	 *
+	 * @param array  $field Field settings.
+	 * @param string $provider Captcha provider.
+	 *
+	 * @return string
+	 */
+	public static function get_captcha_language( $field, $provider = '' ) {
+		$site_language    = get_locale();
+		$captcha_language = get_option( 'forminator_captcha_language', '' );
+		$global_language  = ! empty( $captcha_language ) ? $captcha_language : $site_language;
+		$language         = self::get_property( 'language', $field );
+		$language         = ! empty( $language ) ? $language : $global_language;
+
+		if ( 'turnstile' === $provider ) {
+			$language = strtolower( str_replace( '_', '-', $language ) );
+		}
+
+		return $language;
 	}
 
 
@@ -234,6 +262,8 @@ class Forminator_Captcha extends Forminator_Field {
 					$key = get_option( 'forminator_captcha_key', '' );
 
 			}
+		} elseif ( 'turnstile' === $provider ) {
+			$key = get_option( 'forminator_turnstile_key', '' );
 		} else {
 			$key = get_option( 'forminator_hcaptcha_key', '' );
 		}
@@ -272,6 +302,9 @@ class Forminator_Captcha extends Forminator_Field {
 
 			$error_message = self::get_property( 'recaptcha_error_message', $field, '' );
 
+		} elseif ( 'turnstile' === $provider ) {
+			$secret        = get_option( 'forminator_turnstile_secret', '' );
+			$error_message = self::get_property( 'turnstile_error_message', $field, '' );
 		} else {
 
 			// hcaptcha.

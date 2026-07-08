@@ -1,9 +1,9 @@
 === Kenta Blocks – Responsive Blocks and block templates library ===
 Contributors: ibllex, wpmoose
 Tags: gutenberg blocks, block editor, page builder
-Stable tag: 1.4.4
+Stable tag: 1.4.5
 Requires at least: 5.6
-Tested up to: 6.7
+Tested up to: 6.8
 Requires PHP: 7.4
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -39,6 +39,11 @@ Kenta Blocks is a set of responsive blocks with powerful options and pre-designe
 * [**Posts Excerpt**](https://kentatheme.com/docs/kenta-blocks/blocks-guide/post-excerpt-block-kb/) Display a post's excerpt.
 
 == Changelog ==
+
+= 1.4.5 =
+
+* Ref: WordPress 6.8 ready
+* Fix: _load_textdomain_just_in_time was called incorrect error
 
 = 1.4.4 =
 

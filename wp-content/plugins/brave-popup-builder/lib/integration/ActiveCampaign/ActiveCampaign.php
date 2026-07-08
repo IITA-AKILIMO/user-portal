@@ -88,17 +88,21 @@ if ( ! class_exists( 'BravePop_ActiveCampaign' ) ) {
             'headers' => array( 'content-type' => 'application/json', 'Api-Token' => $this->api_key ),
             'body' => wp_json_encode(array( 'contact' => $contact ))
          );
-
          $response = wp_remote_post( $this->api_url.'/api/3/contact/sync', $addUserargs );
          $body = wp_remote_retrieve_body( $response );
          $data = json_decode( $body );
+         $errorPayload = array( 'user_mail'=> $email, 'user_data'=> $contact, 'list_id'=> $list_id, 'error' => '', 'response'=> $response );
+        // return early if error occurs while syncing contact
+         if(is_wp_error( $response ) || !$data || !isset($data->contact) || !isset($data->contact->id)){
+            $errorMsg = isset($data->errors[0]->detail) ? $data->errors[0]->detail : 'Unknown Error Occurred. No Error details provided by ActiveCampaign.';
+            $errorPayload['error'] = $errorMsg;
+            do_action( 'bravepop_added_to_list_failed', 'activecampaign', $errorPayload );
+            return array( 'success' => false, 'errorMsg' => $errorMsg, 'result' => $errorPayload ); 
+         }
 
-         // error_log('AC Create CONTACT: '. wp_json_encode($response));
-
-         if($data && isset($data->contact) && isset($data->contact->id)){
-            //Then Add User to a List in ActiveCampaign
+         //Add User to a List in ActiveCampaign
+         if(isset($data->contact->id)){
             $user_id = $data->contact->id;
-
             $userToList = array(
                'method' => 'POST',
                'headers' => array( 'content-type' => 'application/json', 'Api-Token' => $this->api_key ),
@@ -114,8 +118,6 @@ if ( ! class_exists( 'BravePop_ActiveCampaign' ) ) {
             $listbody = wp_remote_retrieve_body( $listresponse );
             $listdata = json_decode( $listbody );
 
-            // error_log('AC ADD CONTACT to LIST: '. wp_json_encode($listresponse));
-
             //Add Tags
             if(count($tags) > 0){
                foreach ($tags as $tagIndex => $tag) {
@@ -128,38 +130,33 @@ if ( ! class_exists( 'BravePop_ActiveCampaign' ) ) {
                      $tagsresponse = wp_remote_post( $this->api_url.'/api/3/contactTags', $userToTags );
                      $tagsbody = wp_remote_retrieve_body( $tagsresponse );
                      $tagsdata = json_decode( $tagsbody );
-                     //error_log(wp_json_encode($tagsresponse));
                   }
                }
             }
 
-            //error_log(wp_json_encode($listdata->contacts));
-            // $resCode = wp_remote_retrieve_response_code($listresponse);
-            // isSuccess = $resCode >= 200 && $resCode < 300;
-            if(is_wp_error( $listresponse ) === false && isset($listdata->contacts[0]->id)){
+            if(is_wp_error( $listresponse ) === false && (isset($listdata->contactList->id))){
                $addedData = array(
                   'action'=> isset($userData['action']) ? $userData['action'] : 'visitor_added',  
                   'user_id'=> isset($userData['userData']['ID']) ? $userData['userData']['ID'] : false,
-                  'user_mail'=> $email, 'esp_user_id'=> $listdata->contacts[0]->id
-               ); 
-               do_action( 'bravepop_addded_to_list', 'activecampaign', $addedData );
-            }
-
-            if(is_wp_error( $listresponse ) === false){
-               return $listdata->contacts; 
+                  'user_mail'=> $email,
+                  'user_data'=> $contact,
+                  'esp_user_id'=> $listdata->contactList->id,
+                  'list_id' => $list_id,
+                  'response' => $listresponse,
+               );
+               do_action( 'bravepop_added_to_list', 'activecampaign', $addedData );
+               return array( 'success' => true, 'result' => $addedData );
             }else{
-               return false;
+               $errorMsg = isset($listdata->message) ? $listdata->message : 'Unknown Error Occurred. No Error details provided by ActiveCampaign.';
+               $errorPayload['error'] = $errorMsg;
+               $errorPayload['response'] = $listresponse;
+               do_action( 'bravepop_added_to_list_failed', 'activecampaign', $errorPayload );
+               return array( 'success' => false, 'errorMsg' => $errorMsg, 'result' => $errorPayload );
             }
 
-         }else{
-            return false;
+            
          }
-
-
-
       }
-
-
    }
 
 }

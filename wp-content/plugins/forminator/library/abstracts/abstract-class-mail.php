@@ -18,11 +18,27 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 abstract class Forminator_Mail {
 	/**
+	 * Whether we're currently in email context
+	 *
+	 * @var bool
+	 */
+	protected static $is_email_context = false;
+
+	/**
 	 * Message variables
 	 *
 	 * @var array
 	 */
 	protected $message_vars;
+
+	/**
+	 * Check if we're currently in email context
+	 *
+	 * @return bool
+	 */
+	public static function is_email_context() {
+		return self::$is_email_context;
+	}
 
 	/**
 	 * Default content type
@@ -175,7 +191,7 @@ abstract class Forminator_Mail {
 	public function is_send_admin_mail( $setting ) {
 		if ( isset( $setting['use-admin-email'] ) && ! empty( $setting['use-admin-email'] ) ) {
 			if ( filter_var( $setting['use-admin-email'], FILTER_VALIDATE_BOOLEAN ) ) {
-				if ( isset( $setting['admin-email-title'] ) && isset( $setting['admin-email-editor'] ) ) {
+				if ( ! empty( $setting['admin-email-title'] ) && ! empty( $setting['admin-email-editor'] ) ) {
 					return true;
 				}
 			}
@@ -194,17 +210,18 @@ abstract class Forminator_Mail {
 	 * @param Forminator_Base_Form_Model  $module Base Form Model.
 	 * @param Forminator_Form_Entry_Model $entry Entry Form Model.
 	 * @param array                       $lead_model Lead Model.
+	 * @param string                      $result_slug Result slug.
 	 *
 	 * @return array
 	 */
-	public function get_admin_email_recipients( $notification, $module = null, $entry = null, $lead_model = array() ) {
+	public function get_admin_email_recipients( $notification, $module = null, $entry = null, $lead_model = array(), $result_slug = '' ) {
 
 		$email      = array();
 		$recipients = array();
 		if ( isset( $notification['email-recipients'] ) && 'routing' === $notification['email-recipients'] ) {
 			if ( ! empty( $notification['routing'] ) ) {
 				foreach ( $notification['routing'] as $routing ) {
-					if ( $this->is_routing( $routing, $module ) ) {
+					if ( $this->is_routing( $routing, $module, $result_slug ) ) {
 						if ( false !== strpos( $routing['email'], ',' ) ) {
 							$recipients = array_merge( array_map( 'trim', explode( ',', $routing['email'] ) ), $recipients );
 						} else {
@@ -315,13 +332,12 @@ abstract class Forminator_Mail {
 	 * @param array $notification - Selected PDFs in form notifications.
 	 */
 	public function set_pdfs( $notification ) {
-		if ( ! empty( $notification['email-pdfs'] ) ) {
+		if ( ! empty( $notification['email-pdfs'] ) && ! forminator_addons_disabled() ) {
 			$this->pdfs = $notification['email-pdfs'];
 		} else {
 			$this->pdfs = array();
 		}
 	}
-
 
 	/**
 	 * Set attachment
@@ -333,8 +349,32 @@ abstract class Forminator_Mail {
 	 * @param mixed $entry - Entry.
 	 */
 	public function set_attachment( $attachment, $custom_form = null, $entry = null ) {
-		$this->attachment = apply_filters( 'forminator_custom_form_mail_attachment', $attachment, $custom_form, $entry, $this->pdfs );
+		// Set email context to false to avoid replacing images in PDFs.
+		$old_value              = self::$is_email_context;
+		self::$is_email_context = false;
+		$attachment             = $this->filter_attachments( $attachment );
+		$this->attachment       = apply_filters( 'forminator_custom_form_mail_attachment', $attachment, $custom_form, $entry, $this->pdfs );
+		self::$is_email_context = $old_value;
 	}
+
+	/**
+	 * Filter attachments to make sure only files in upload dir can be attached.
+	 *
+	 * @param array $attachments Attachments to filter.
+	 * @return array
+	 */
+	private function filter_attachments( $attachments ) {
+		if ( ! empty( $attachments ) ) {
+			foreach ( $attachments as $key => $attachment ) {
+				if ( ! forminator_attachment_path_is_allowed( $attachment ) ) {
+					unset( $attachments[ $key ] );
+				}
+			}
+		}
+
+		return $attachments;
+	}
+
 	/**
 	 * Set headers
 	 *
@@ -479,26 +519,5 @@ abstract class Forminator_Mail {
 		}
 
 		return false;
-	}
-
-	/**
-	 * Get the result slug for Personality Quiz
-	 *
-	 * @since   1.15.3
-	 *
-	 * @param   array $form_data Submitted data.
-	 *
-	 * @return  string
-	 */
-	public static function get_result_slug( $form_data ) {
-		if ( ! empty( $form_data ) ) {
-			if ( isset( $form_data['entry'] ) ) {
-				if ( isset( $form_data['entry'][0]['value']['result'] ) ) {
-					return $form_data['entry'][0]['value']['result']['slug'];
-				}
-			}
-		}
-
-		return '';
 	}
 }

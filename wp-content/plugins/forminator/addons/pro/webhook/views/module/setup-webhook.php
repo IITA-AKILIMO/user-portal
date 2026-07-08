@@ -76,7 +76,7 @@ foreach ( $template_vars as $key => $val ) {
 			<span class="sui-error-message"><?php echo esc_html( $vars['webhook_url_error'] ); ?></span>
 		<?php endif; ?>
 
-		<?php if ( forminator_is_show_addons_documentation_link() ) : ?>
+		<?php if ( forminator_is_show_documentation_link() ) : ?>
 			<div class="sui-description">
 				<?php
 				printf(

@@ -7,18 +7,21 @@
 
 $forminator_usage_tracking = get_option( 'forminator_usage_tracking', false );
 ?>
-<div class="sui-box-settings-row">
+<div id="forminator-section-settings-usage-tracking" class="sui-box-settings-row">
 
 	<div class="sui-box-settings-col-1">
 		<span class="sui-settings-label"><?php esc_html_e( 'Usage Tracking', 'forminator' ); ?></span>
 		<span class="sui-description">
 			<?php
-			printf(
-				/* translators: 1: Anchor tag with forminator data tracking doc URL, 2: Close anchor tag */
-				esc_html__( 'Help us improve Forminator by sharing anonymous and non-sensitive usage data. See %1$smore info%2$s about the data we collect', 'forminator' ),
-				'<a href="https://wpmudev.com/docs/privacy/our-plugins/#usage-tracking-fm" target="_blank">',
-				'</a>'
-			);
+			esc_html_e( 'Help us improve Forminator by sharing anonymous and non-sensitive usage data.', 'forminator' );
+			if ( forminator_is_show_documentation_link() ) {
+				printf(
+					/* translators: 1: Anchor tag with forminator data tracking doc URL, 2: Close anchor tag */
+					' ' . esc_html__( 'See %1$smore info%2$s about the data we collect', 'forminator' ),
+					'<a href="https://wpmudev.com/docs/privacy/our-plugins/#usage-tracking-for" target="_blank">',
+					'</a>'
+				);
+			}
 			?>
 		</span>
 	</div>

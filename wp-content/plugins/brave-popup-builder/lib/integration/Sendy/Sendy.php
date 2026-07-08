@@ -60,20 +60,24 @@ if ( ! class_exists( 'BravePop_Sendy' ) ) {
                   
          $body = wp_remote_retrieve_body( $response );
          $success =   (strpos($body, "You're subscribed!") !== false) || (strpos($body, "You're already subscribed!" ) !== false)  ? true : false; 
-         // error_log('### Sendy ADD Response: '. wp_json_encode($body));
-         // error_log('### Sendy ADD Success: '. wp_json_encode($success));
 
          if($success){
             $addedData = array(
                'action'=> isset($userData['action']) ? $userData['action'] : 'visitor_added',  
                'user_id'=> isset($userData['userData']['ID']) ? $userData['userData']['ID'] : false,
-               'user_mail'=> $email
+               'user_mail'=> $email,
+               'esp_user_id'=> '',
+               'user_data'=> $contact,
+               'list_id' => $list_id,
+               'response' => $response,
             ); 
-            do_action( 'bravepop_addded_to_list', 'sendy', $addedData );
-
-            return true; 
+            do_action( 'bravepop_added_to_list', 'sendy', $addedData );
+            return array( 'success' => true, 'result' => $addedData );
          }else{
-            return false;
+            $errorMsg = $response->get_error_message() ? $response->get_error_message() : 'Unknown Error Occurred. No Error details provided by Sendy.';
+            $errorPayload = array( 'user_mail'=> $email, 'user_data'=> $contact, 'list_id'=> $list_id, 'error' => $errorMsg, 'response'=> $response );
+            do_action( 'bravepop_added_to_list_failed', 'sendy', $errorPayload );
+            return array( 'success' => false, 'errorMsg' => $errorMsg, 'result' => $errorPayload );
          }
       }
 

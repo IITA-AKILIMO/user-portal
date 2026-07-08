@@ -5,7 +5,7 @@
  * Plugin URI: https://kentatheme.com/blocks/
  * Description: Kenta Blocks is a set of responsive blocks with powerful options and pre-designed templates library.
  * Author: WP Moose
- * Version: 1.4.4
+ * Version: 1.4.5
  * Requires at least: 5.6
  * Requires PHP: 7.4
  * License: GPLv3
@@ -59,7 +59,7 @@ if ( function_exists( 'kb_fs' ) ) {
      *
      * @since 0.0.1
      */
-    define( 'KENTA_BLOCKS_VERSION', '1.4.4' );
+    define( 'KENTA_BLOCKS_VERSION', '1.4.5' );
     define( 'KENTA_BLOCKS_PLUGIN_FILE', __FILE__ );
     define( 'KENTA_BLOCKS_PLUGIN_PATH', trailingslashit( plugin_dir_path( KENTA_BLOCKS_PLUGIN_FILE ) ) );
     define( 'KENTA_BLOCKS_PLUGIN_URL', trailingslashit( plugins_url( '/', KENTA_BLOCKS_PLUGIN_FILE ) ) );

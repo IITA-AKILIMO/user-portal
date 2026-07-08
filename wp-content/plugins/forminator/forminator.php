@@ -1,13 +1,14 @@
 <?php
 /**
  * Plugin Name: Forminator
- * Version: 1.39.2
+ * Version: 1.55.1
  * Plugin URI:  https://wpmudev.com/project/forminator/
- * Description: Capture user information (as detailed as you like), engage users with interactive polls that show real-time results and graphs, “no wrong answer” Facebook-style quizzes and knowledge tests.
+ * Description: Build powerful, customizable forms with ease using Forminator’s drag-and-drop builder, conditional logic, payment support, real-time analytics, and seamless integrations—no coding needed.
  * Author: WPMU DEV
  * Author URI: https://wpmudev.com
+ * Update URI: wordpress.org/plugins/forminator/
  * Requires at least: 6.4
- * Tested up to: 6.7
+ * Tested up to: 7.0
  * Requires PHP: 7.4
  * Text Domain: forminator
  * Domain Path: /languages/
@@ -36,8 +37,37 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 if ( ! defined( 'ABSPATH' ) ) {
 	die();
 }
+
 // Constants.
 require_once plugin_dir_path( __FILE__ ) . 'constants.php';
+
+// Exit early if PHP version is below the minimum requirement.
+if ( version_compare( PHP_VERSION, FORMINATOR_MIN_PHP_VERSION, '<' ) ) {
+
+	$forminator_php_notice = function () {
+		printf(
+			wp_kses_post( /* translators: %1$s - Opening div and p tags, %2$s - Minimum PHP version, %3$s - Hosting URL, %4$s - Closing p and div tags */
+				__( '%1$sYour site is running an outdated version of PHP that is no longer supported or receiving security updates. Please update PHP to at least version %2$s at your hosting provider in order to activate Forminator, or consider switching to <a href="%3$s" target="_blank" rel="noopener noreferrer">WPMU DEV Hosting</a>.%4$s', 'forminator' )
+			),
+			'<div class="notice notice-error is-dismissible"><p>',
+			esc_html( FORMINATOR_MIN_PHP_VERSION ),
+			esc_url( 'https://wpmudev.com/hosting/?utm_source=forminator&utm_medium=plugin&utm_campaign=forminator_pluginlist_phpupgrade_hosting' ),
+			'</p></div>'
+		);
+	};
+
+	add_action( 'admin_notices', $forminator_php_notice );
+	add_action( 'network_admin_notices', $forminator_php_notice );
+
+	add_action(
+		'admin_init',
+		function () {
+			deactivate_plugins( plugin_basename( __FILE__ ) );
+		}
+	);
+
+	return;
+}
 
 // Include API.
 require_once plugin_dir_path( __FILE__ ) . 'library/class-api.php';
@@ -104,6 +134,7 @@ if ( ! class_exists( 'Forminator' ) ) {
 		public function __construct() {
 			add_action( 'admin_init', array( $this, 'initialize_admin' ) );
 			add_action( 'admin_init', array( $this, 'add_custom_cap' ) );
+			add_action( 'template_redirect', array( $this, 'maybe_remove_cache_bust_query_arg' ) );
 
 			$this->includes();
 			$this->include_vendors();
@@ -125,6 +156,7 @@ if ( ! class_exists( 'Forminator' ) ) {
 			add_option( 'forminator_activation_hook', 'activated' );
 
 			self::set_free_installation_timestamp();
+			self::set_activation_dates();
 		}
 
 		/**
@@ -152,7 +184,9 @@ if ( ! class_exists( 'Forminator' ) ) {
 				delete_option( 'forminator_activation_hook' );
 				flush_rewrite_rules();
 			}
+			
 		}
+		
 
 		/**
 		 * Add manage_forminator custom capability
@@ -164,6 +198,32 @@ if ( ! class_exists( 'Forminator' ) ) {
 			if ( $admin ) {
 				$admin->add_cap( 'manage_forminator', true );
 			}
+		}
+
+		/**
+		 * Remove forminator_cache_bust query arg from frontend URLs.
+		 *
+		 * @since 1.54.0
+		 *
+		 * @return void
+		 */
+		public function maybe_remove_cache_bust_query_arg() {
+			if ( is_admin() || wp_doing_ajax() || wp_is_json_request() ) {
+				return;
+			}
+
+			$cache_bust = Forminator_Core::sanitize_text_field( 'forminator_cache_bust' );
+			if ( empty( $cache_bust ) ) {
+				return;
+			}
+
+			$redirect_url = remove_query_arg( 'forminator_cache_bust' );
+			if ( empty( $redirect_url ) ) {
+				return;
+			}
+
+			wp_safe_redirect( $redirect_url );
+			exit;
 		}
 
 		/**
@@ -356,6 +416,7 @@ if ( ! class_exists( 'Forminator' ) ) {
 			include_once forminator_plugin_dir() . 'library/class-core.php';
 			include_once forminator_plugin_dir() . 'library/class-integration-loader.php';
 			include_once forminator_plugin_dir() . 'library/calculator/class-calculator.php';
+			
 		}
 
 		/**
@@ -364,15 +425,61 @@ if ( ! class_exists( 'Forminator' ) ) {
 		 * @since 1.10
 		 */
 		public static function set_free_installation_timestamp() {
-			// We need the install date only on free version.
-			if ( FORMINATOR_PRO ) {
-				return;
-			}
+			
 
 			$install_date = get_site_option( 'forminator_free_install_date' );
 
 			if ( empty( $install_date ) ) {
 				update_site_option( 'forminator_free_install_date', current_time( 'timestamp' ) ); // phpcs:ignore WordPress.DateTime.CurrentTimeTimestamp.Requested -- We are using the current timestamp based on the site's timezone.
+			}
+		}
+
+		/**
+		 * Set activation dates
+		 *
+		 * @since 1.51.0
+		 *
+		 * @return void
+		 */
+		public static function set_activation_dates() {
+			$activation_date   = get_site_option( 'forminator_first_activation_date' );
+			$current_timestamp = time();
+
+			if ( empty( $activation_date ) ) {
+				$activation_date = get_site_option( 'forminator_free_install_date' );
+				if ( empty( $activation_date ) ) {
+					$form_created_date = self::get_earliest_form_creation_date();
+					$activation_date   = empty( $form_created_date ) ? $current_timestamp : $form_created_date;
+				}
+				// Ensure activation date is not in the future.
+				if ( $activation_date > $current_timestamp ) {
+					$activation_date = $current_timestamp;
+				}
+				update_site_option( 'forminator_first_activation_date', $activation_date );
+			}
+			update_site_option( 'forminator_last_activation_date', $current_timestamp );
+		}
+
+		/**
+		 * Get earliest form created date
+		 *
+		 * @since 1.51.0
+		 *
+		 * @return string
+		 */
+		private static function get_earliest_form_creation_date() {
+			$args  = array(
+				'post_type'      => array( 'forminator_forms', 'forminator_polls', 'forminator_quizzes' ),
+				'post_status'    => 'any',
+				'posts_per_page' => 1,
+				'order'          => 'ASC',
+				'orderby'        => 'post_date',
+			);
+			$query = new WP_Query( $args );
+			if ( ! empty( $query->posts[0] ) ) {
+				return strtotime( $query->posts[0]->post_date );
+			} else {
+				return '';
 			}
 		}
 
@@ -396,47 +503,8 @@ if ( ! class_exists( 'Forminator' ) ) {
 		 * @since 1.0
 		 */
 		private function include_vendors() {
-			if ( file_exists( forminator_plugin_dir() . 'library/lib/dash-notice/wpmudev-dash-notification.php' ) ) {
-				// load dashboard notice.
-				global $wpmudev_notices;
-				$wpmudev_notices[] = array(
-					'id'      => 2097296,
-					'name'    => FORMINATOR_PRO ? 'Forminator Pro' : 'Forminator',
-					'screens' => array(
-						'toplevel_page_forminator',
-						'toplevel_page_forminator-network',
-						'forminator_page_forminator-cform',
-						'forminator_page_forminator-cform-network',
-						'forminator_page_forminator-poll',
-						'forminator_page_forminator-poll-network',
-						'forminator_page_forminator-quiz',
-						'forminator_page_forminator-quiz-network',
-						'forminator_page_forminator-settings',
-						'forminator_page_forminator-settings-network',
-						'forminator_page_forminator-cform-wizard',
-						'forminator_page_forminator-cform-wizard-network',
-						'forminator_page_forminator-cform-view',
-						'forminator_page_forminator-cform-view-network',
-						'forminator_page_forminator-poll-wizard',
-						'forminator_page_forminator-poll-wizard-network',
-						'forminator_page_forminator-poll-view',
-						'forminator_page_forminator-poll-view-network',
-						'forminator_page_forminator-nowrong-wizard',
-						'forminator_page_forminator-nowrong-wizard-network',
-						'forminator_page_forminator-knowledge-wizard',
-						'forminator_page_forminator-knowledge-wizard-network',
-						'forminator_page_forminator-quiz-view',
-						'forminator_page_forminator-quiz-view-network',
-					),
-				);
-				// @noinspection PhpIncludeInspection.
-				include_once forminator_plugin_dir() . 'library/lib/dash-notice/wpmudev-dash-notification.php';
-			}
-
 			// Prefixed vendor autoload.
 			include_once forminator_plugin_dir() . 'library/external/vendor/autoload.php';
-
-			include_once forminator_plugin_dir() . 'library/lib/analytics/autoload.php';
 
 			if ( ! FORMINATOR_PRO ) {
 
@@ -513,11 +581,11 @@ if ( ! class_exists( 'Forminator' ) ) {
 // Functions.
 require_once plugin_dir_path( __FILE__ ) . 'functions.php';
 
-if ( file_exists( forminator_plugin_dir() . 'library/external/src/Forminator/woocommerce/action-scheduler/action-scheduler.php' ) ) {
+if ( file_exists( forminator_plugin_dir() . 'library/lib/action-scheduler/action-scheduler.php' ) ) {
 	add_action(
 		'plugins_loaded',
 		function () {
-			require_once forminator_plugin_dir() . 'library/external/src/Forminator/woocommerce/action-scheduler/action-scheduler.php';
+			require_once forminator_plugin_dir() . 'library/lib/action-scheduler/action-scheduler.php';
 		},
 		-10 // Don't change.
 	);

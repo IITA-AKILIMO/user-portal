@@ -137,6 +137,13 @@ abstract class Forminator_Field {
 	public $validation_message = array();
 
 	/**
+	 * Description position
+	 *
+	 * @var string
+	 */
+	public static $description_position = '';
+
+	/**
 	 * Activated Autofill Providers for this field based @see autofill_settings
 	 *
 	 * @since 1.0.5
@@ -168,6 +175,13 @@ abstract class Forminator_Field {
 	public $is_calculable = false;
 
 	const FIELD_NOT_CALCULABLE = 'FIELD_NOT_CALCULABLE';
+
+	/**
+	 * Default error messages for required fields.
+	 *
+	 * @var array
+	 */
+	public static $default_required_messages = array();
 
 	/**
 	 * The Constructor
@@ -294,9 +308,47 @@ abstract class Forminator_Field {
 
 		if ( ! empty( $field['options_order'] ) && 'random' === $field['options_order'] ) {
 			shuffle( $options );
+			if ( ! empty( $field['enable_custom_option'] ) ) {
+				// Move custom option to the end of the array.
+				$key = array_search( 'custom_option', array_column( $options, 'key' ), true );
+				if ( false !== $key ) {
+					$custom_option = $options[ $key ];
+					unset( $options[ $key ] );
+					$options[] = $custom_option;
+					$options   = array_values( $options );
+				}
+			}
 		}
 
 		return $options;
+	}
+
+	/**
+	 * Get description position
+	 *
+	 * @param array $field Field settings.
+	 * @param array $settings Form Settings.
+	 *
+	 * @return string
+	 */
+	public static function get_description_position( array $field, array $settings ): string {
+		$possible_values = array( 'above', 'below' );
+		$field_pos       = self::get_property( 'description-position', $field );
+		// Check field description position.
+		if ( in_array( $field_pos, $possible_values, true ) ) {
+			return $field_pos;
+		}
+		if ( ! empty( $field['type'] ) && 'group' === $field['type'] && empty( $field_pos ) ) {
+			return 'above';
+		}
+
+		// Check form description position.
+		if ( ! empty( $settings['description-position'] ) && in_array( $settings['description-position'], $possible_values, true ) ) {
+			return $settings['description-position'];
+		}
+
+		// For backward compatibility.
+		return 'below';
 	}
 
 	/**
@@ -334,16 +386,17 @@ abstract class Forminator_Field {
 	 *
 	 * @param string $description Description.
 	 * @param string $get_id Id.
+	 * @param string $descr_position Description position.
 	 *
 	 * @return string
 	 */
-	public static function get_description( $description, $get_id = '' ) {
+	public static function get_description( $description, $get_id = '', $descr_position = 'above' ) {
 		$html = '';
 		if ( ! empty( $description ) ) {
 			$html .= sprintf(
 				'<span id="%s" class="forminator-description">%s</span>',
 				esc_attr( $get_id . '-description' ),
-				self::esc_description( $description, $get_id )
+				self::convert_markdown( self::esc_description( $description, $get_id ) )
 			);
 		}
 
@@ -351,7 +404,8 @@ abstract class Forminator_Field {
 			'forminator_field_description',
 			$html,
 			$description,
-			$get_id
+			$get_id,
+			$descr_position
 		);
 	}
 
@@ -397,12 +451,12 @@ abstract class Forminator_Field {
 	 * @param string $label Label.
 	 * @param string $description Description.
 	 * @param bool   $required Required.
-	 * @param string $design Design.
+	 * @param string $descr_position Description position.
 	 * @param array  $wrapper_input Wrapper Input.
 	 *
 	 * @return mixed
 	 */
-	public static function create_input( $attr = array(), $label = '', $description = '', $required = false, $design = '', $wrapper_input = array() ) {
+	public static function create_input( $attr = array(), $label = '', $description = '', $required = false, $descr_position = 'above', $wrapper_input = array() ) {
 
 		$html = '';
 
@@ -426,15 +480,19 @@ abstract class Forminator_Field {
 
 		$html .= self::get_field_label( $label, $get_id, $required );
 
+		if ( 'above' === $descr_position ) {
+			$html .= self::get_description( $description, $get_id, $descr_position );
+		}
+
 		if ( isset( $wrapper_input[0] ) ) {
 			$html .= $wrapper_input[0];
 		}
 
-		if ( isset( $wrapper_input[2] ) && ! empty( $wrapper_input[2] ) ) {
+		if ( ! empty( $wrapper_input[2] ) ) {
 			$html .= sprintf( '<span class="forminator-icon-%s" aria-hidden="true"></span>', $wrapper_input[2] );
 		}
 
-		if ( isset( $wrapper_input[3] ) && ! empty( $wrapper_input[3] ) ) {
+		if ( ! empty( $wrapper_input[3] ) ) {
 			$html .= sprintf( '<span class="forminator-prefix">%s</span>', $wrapper_input[3] );
 		}
 
@@ -444,8 +502,8 @@ abstract class Forminator_Field {
 			$html .= $wrapper_input[1];
 		}
 
-		if ( ! empty( $description ) ) {
-			$html .= self::get_description( $description, $get_id );
+		if ( 'above' !== $descr_position ) {
+			$html .= self::get_description( $description, $get_id, $descr_position );
 		}
 
 		return apply_filters( 'forminator_field_create_input', $html, $attr, $label, $description );
@@ -461,11 +519,11 @@ abstract class Forminator_Field {
 	 * @param string $label Field Label.
 	 * @param string $description Field Description.
 	 * @param bool   $required Required.
-	 * @param string $design Design.
+	 * @param string $description_position Description Position.
 	 *
 	 * @return mixed
 	 */
-	public static function create_textarea( $attr = array(), $label = '', $description = '', $required = false, $design = '' ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
+	public static function create_textarea( $attr = array(), $label = '', $description = '', $required = false, $description_position = 'above' ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
 
 		$html    = '';
 		$content = isset( $attr['content'] ) ? $attr['content'] : '';
@@ -484,10 +542,14 @@ abstract class Forminator_Field {
 
 		$html .= self::get_field_label( $label, $attr['id'], $required );
 
+		if ( 'above' === $description_position ) {
+			$html .= self::get_description( $description, $attr['id'], $description_position );
+		}
+
 		$html .= sprintf( '<textarea %s >%s</textarea>', $markup, wp_kses_post( $content ) );
 
-		if ( ! empty( $description ) ) {
-			$html .= self::get_description( $description, $attr['id'] );
+		if ( 'above' !== $description_position ) {
+			$html .= self::get_description( $description, $attr['id'], $description_position );
 		}
 
 		return apply_filters( 'forminator_field_create_textarea', $html, $attr, $label, $description );
@@ -504,10 +566,11 @@ abstract class Forminator_Field {
 	 * @param bool    $required Required.
 	 * @param string  $default_height Height.
 	 * @param integer $limit Limit.
+	 * @param bool    $media_buttons Whether to show media buttons or not.
 	 *
 	 * @return mixed
 	 */
-	public static function create_wp_editor( $attr = array(), $label = '', $description = '', $required = false, $default_height = '140', $limit = 0 ) {
+	public static function create_wp_editor( $attr = array(), $label = '', $description = '', $required = false, $default_height = '140', $limit = 0, $media_buttons = false ) {
 		$html = '';
 
 		$content = isset( $attr['content'] ) ? $attr['content'] : '';
@@ -519,35 +582,69 @@ abstract class Forminator_Field {
 		$editor_id = 'forminator-wp-editor-' . ( isset( $attr['id'] ) ? $attr['id'] : '' );
 		if ( $label ) {
 			$html .= '<div class="forminator-field--label">';
-			$html .= sprintf( '<label for="%s" id="forminator-label-%s" class="forminator-label">%s</label>', $editor_id, $attr['id'], esc_html( $label ) . ( $required ? ' ' . forminator_get_required_icon() : '' ) );
+			$html .= sprintf(
+				'<label for="%s" id="forminator-label-%s" class="forminator-label">%s</label>',
+				$editor_id,
+				$attr['id'],
+				self::convert_markdown( esc_html( $label ) ) . ( $required ? ' ' . forminator_get_required_icon() : '' )
+			);
 			$html .= '</div>';
+		}
+
+		if ( 'above' === self::$description_position ) {
+			$html .= self::get_description( $description, '', self::$description_position );
 		}
 
 		$wp_editor_class = isset( $attr['class'] ) ? $attr['class'] : '';
 
 		if ( $required ) {
-			apply_filters( 'the_editor', array( __CLASS__, 'add_required_wp_editor' ) );
+			add_filter( 'the_editor', array( __CLASS__, 'add_required_wp_editor' ) );
 			$wp_editor_class .= ' do-validate forminator-wp-editor-required';
 		} elseif ( ! empty( $limit ) ) {
 			$wp_editor_class .= ' do-validate';
+		}
+
+		$settings = array(
+			'textarea_name' => isset( $attr['name'] ) ? $attr['name'] : '',
+			'media_buttons' => $media_buttons,
+			'editor_class'  => $wp_editor_class,
+			'editor_height' => $default_height,
+		);
+
+		if ( did_action( 'elementor/loaded' ) ) {
+			// Disable TinyMCE and Quicktags in Elementor to prevent console errors when wp.editor.initialize is triggered.
+			$settings['tinymce']       = false;
+			$settings['quicktags']     = false;
+			$settings['media_buttons'] = false;
 		}
 
 		ob_start();
 		wp_editor(
 			$content,
 			$editor_id,
-			array(
-				'textarea_name' => isset( $attr['name'] ) ? $attr['name'] : '',
-				'media_buttons' => false,
-				'editor_class'  => $wp_editor_class,
-				'editor_height' => $default_height,
-			)
+			$settings
 		);
-
+		if ( did_action( 'elementor/loaded' ) ) {
+			// Ensure the editor script is loaded; otherwise, wp.editor.initialize will not function in the Elementor popup.
+			Forminator_CForm_Front::$load_wp_enqueue_editor = true;
+			$args = self::get_tinymce_args( $editor_id, $media_buttons );
+			?>
+			<script>
+				jQuery(function() {
+					setTimeout(() => {
+						<?php
+						// Initialize the editor when the textarea is visible in the DOM, as we created the editor without TinyMCE and Quicktags, so we need to initialize it manually.
+						?>
+						forminator_init_wp_editor_on_visible( "<?php echo esc_attr( $editor_id ); ?>", <?php echo wp_kses_post( $args ); ?>, true );
+					}, 10); /* Small delay to ensure the textarea is rendered in the DOM. */
+				});
+			</script>
+			<?php
+		}
 		$html .= ob_get_clean();
 
-		if ( ! empty( $description ) ) {
-			$html .= self::get_description( $description );
+		if ( 'above' !== self::$description_position ) {
+			$html .= self::get_description( $description, '', self::$description_position );
 		}
 
 		return apply_filters( 'forminator_field_create_wp_editor', $html, $attr, $label, $description );
@@ -586,10 +683,37 @@ abstract class Forminator_Field {
 				'<label for="%s" id="%s" class="forminator-label">%s</label>',
 				esc_attr( $id ),
 				esc_attr( $id . '-label' ),
-				esc_html( $label ) . ( $required ? ' ' . forminator_get_required_icon() : '' )
+				self::convert_markdown( esc_html( $label ) ) . ( $required ? ' ' . forminator_get_required_icon() : '' )
 			);
 		}
 		return $html;
+	}
+
+	/**
+	 * Convert markdown to HTML.
+	 *
+	 * @param string $original_string Original string.
+	 *
+	 * @return string
+	 */
+	public static function convert_markdown( string $original_string ): string {
+		$string = $original_string;
+
+		// Apply markdown replacements.
+		$patterns = array(
+			'/(?<=^|\s)`(\S(?:.*?\S)?)`(?=\s|$)/u'   => '<span class="forminator-monospace" style="font-family: monospace;">$1</span>',
+			'/(?<=^|\s)~(\S(?:.*?\S)?)~(?=\s|$)/u'   => '<del>$1</del>',
+			'/(?<=^|\s)_(\S(?:.*?\S)?)_(?=\s|$)/u'   => '<em>$1</em>',
+			'/(?<=^|\s)\*(\S(?:.*?\S)?)\*(?=\s|$)/u' => '<strong>$1</strong>',
+		);
+		foreach ( $patterns as $pattern => $replacement ) {
+			$string = preg_replace( $pattern, $replacement, $string );
+		}
+
+		/**
+		 * Filter for custom markdown.
+		 */
+		return apply_filters( 'forminator_markdown_result', $string, $original_string );
 	}
 
 	/**
@@ -613,10 +737,11 @@ abstract class Forminator_Field {
 	 * @param string $value Field value.
 	 * @param string $description Field description.
 	 * @param bool   $required Required.
+	 * @param string $descr_position Description position.
 	 *
 	 * @return mixed
 	 */
-	public static function create_select( $attr = array(), $label = '', $options = array(), $value = '', $description = '', $required = false ) {
+	public static function create_select( $attr = array(), $label = '', $options = array(), $value = '', $description = '', $required = false, $descr_position = 'above' ) {
 
 		$html = '';
 
@@ -642,6 +767,10 @@ abstract class Forminator_Field {
 
 		$html .= self::get_field_label( $label, $get_id, $required );
 
+		if ( 'above' === $descr_position ) {
+			$html .= self::get_description( $description, $get_id, $descr_position );
+		}
+
 		$markup .= ' data-default-value="' . esc_attr( $value ) . '"';
 
 		$html .= sprintf( '<select %s>', $markup );
@@ -650,8 +779,8 @@ abstract class Forminator_Field {
 
 		$html .= '</select>';
 
-		if ( ! empty( $description ) ) {
-			$html .= self::get_description( $description, $get_id );
+		if ( 'above' !== $descr_position ) {
+			$html .= self::get_description( $description, $get_id, $descr_position );
 		}
 
 		return apply_filters( 'forminator_field_create_select', $html, $attr, $label, $options, $value, $description );
@@ -764,10 +893,15 @@ abstract class Forminator_Field {
 		if ( 'multiple' === $file_type ) {
 			$mainclass = 'forminator-multi-upload';
 			$class    .= ' ' . $id . '-' . $form_id;
-
+		} elseif ( 'none' !== $design ) {
+			$upload_attr['tabindex'] = '-1';
 		}
 
 		$upload_data = self::implode_attr( $upload_attr );
+
+		if ( 'above' === self::$description_position ) {
+			$html .= self::get_description( $description, $id, self::$description_position );
+		}
 
 		$html .= sprintf(
 			'<div class="%s %s" data-element="%s"%s>',
@@ -836,8 +970,8 @@ abstract class Forminator_Field {
 		$html .= '</div>';
 
 		// Check if description is not empty and append it.
-		if ( ! empty( $description ) ) {
-			$html .= self::get_description( $description, $id );
+		if ( 'above' !== self::$description_position ) {
+			$html .= self::get_description( $description, $id, self::$description_position );
 		}
 
 		return apply_filters( 'forminator_field_create_file_upload', $html, $id, $name, $required );
@@ -905,9 +1039,6 @@ abstract class Forminator_Field {
 	public function is_valid_entry() {
 		$this->is_valid = empty( $this->validation_message );
 		if ( ! $this->is_valid ) {
-			foreach ( $this->validation_message as $field_name => $error ) {
-				Forminator_CForm_Front_Action::$submit_errors[][ $field_name ] = $error;
-			}
 			return $this->validation_message;
 		}
 
@@ -976,7 +1107,8 @@ abstract class Forminator_Field {
 
 			if ( in_array( $element_id, Forminator_CForm_Front_Action::$hidden_fields, true ) ) {
 				$current_is_hidden      = true;
-				$is_condition_fulfilled = isset( $condition['rule'] ) && 'is_not' === $condition['rule']
+				$opposite_operators     = array( 'is_not', 'does_not_contain', 'day_is_not', 'month_is_not' );
+				$is_condition_fulfilled = isset( $condition['rule'] ) && in_array( $condition['rule'], $opposite_operators, true )
 					&& isset( $condition['value'] ) && ! is_null( $condition['value'] ) && '' !== $condition['value'];
 			} else {
 				$current_is_hidden      = false;
@@ -992,8 +1124,14 @@ abstract class Forminator_Field {
 
 			// Check parent conditions only if the current condition is matched.
 			if ( $is_condition_fulfilled && ! $current_is_hidden && Forminator_Front_Action::$module_object ) {
-				$parent_field  = Forminator_Front_Action::$module_object->get_field( $element_id );
-				$parent_hidden = self::is_hidden( $parent_field, array(), $group_suffix );
+				$parent_field = Forminator_Front_Action::$module_object->get_field( $element_id );
+				// If the parent field and the current field are in the same group, we need to pass the group suffix to check their visibility correctly.
+				if ( ! empty( $field_settings['parent_group'] ) && ! empty( $parent_field['parent_group'] )
+					&& $field_settings['parent_group'] === $parent_field['parent_group'] ) {
+						$parent_hidden = self::is_hidden( $parent_field, array(), $group_suffix );
+				} else {
+					$parent_hidden = self::is_hidden( $parent_field );
+				}
 
 				if ( $parent_hidden ) {
 					--$condition_fulfilled;
@@ -1039,19 +1177,17 @@ abstract class Forminator_Field {
 			return $conditions;
 		}
 
-		$parent_group   = $field_settings['parent_group'] ?? '';
-		$grouped_fields = Forminator_Front_Action::$module_object->get_grouped_fields_slugs( $parent_group );
-
-		if ( empty( $grouped_fields ) ) {
+		$parent_group = $field_settings['parent_group'] ?? '';
+		if ( empty( $parent_group ) ) {
 			return $conditions;
 		}
 
 		foreach ( $conditions as $key => $condition ) {
-			foreach ( $grouped_fields as $g_field ) {
-				if ( $condition['element_id'] === $g_field
-					|| 0 === strpos( $condition['element_id'], $g_field . '-' ) ) {
-					$conditions[ $key ]['element_id'] .= $group_suffix;
-				}
+			$dependent = Forminator_Front_Action::$module_object->get_field( $condition['element_id'], false );
+			$dep_group = $dependent ? $dependent->parent_group : '';
+
+			if ( $dep_group === $parent_group ) {
+				$conditions[ $key ]['element_id'] .= $group_suffix;
 			}
 		}
 
@@ -1121,6 +1257,21 @@ abstract class Forminator_Field {
 		} elseif ( stripos( $element_id, 'rating-' ) !== false ) {
 			$rating_value           = explode( '/', $field_value )[0] ?? 0;
 			$is_condition_fulfilled = self::is_condition_fulfilled( $rating_value, $condition );
+		} elseif ( stripos( $element_id, 'currency-' ) !== false
+			|| stripos( $element_id, 'number-' ) !== false ) {
+			$is_condition_fulfilled = false;
+			$form_field             = Forminator_Front_Action::$module_object->get_field( $element_id );
+			if ( $form_field ) {
+				$field_value            = self::forminator_replace_number( $form_field, $field_value );
+				$is_condition_fulfilled = self::is_condition_fulfilled( $field_value, $condition );
+			}
+		} elseif ( stripos( $element_id, 'consent-' ) !== false ) {
+			// Consent fields always submit the canonical value 'checked'. Conditions saved
+			// under a non-English admin locale may store a translated string instead, so
+			// normalize the condition value before comparison.
+			$normalized_condition          = $condition;
+			$normalized_condition['value'] = 'checked';
+			$is_condition_fulfilled        = self::is_condition_fulfilled( $field_value, $normalized_condition );
 		} else {
 			$is_condition_fulfilled = self::is_condition_fulfilled( $field_value, $condition, $form_id );
 		}
@@ -1141,8 +1292,10 @@ abstract class Forminator_Field {
 	 */
 	public static function is_condition_fulfilled( $form_field_value, $condition, $form_id = null ) {
 		if ( is_array( $form_field_value ) ) {
+			$form_field_value = forminator_htmlspecialchars_decode_array( $form_field_value );
 			$form_field_value = forminator_trim_array( $form_field_value );
 		} else {
+			$form_field_value = htmlspecialchars_decode( $form_field_value );
 			$form_field_value = strtolower( trim( $form_field_value ) );
 		}
 
@@ -1156,6 +1309,26 @@ abstract class Forminator_Field {
 		// $form_field_value = strtolower( $form_field_value );
 		// }.
 
+		$element_id = $condition['element_id'];
+		if ( stripos( $element_id, 'upload-' ) !== false && is_array( $form_field_value ) ) {
+			// Treat unfilled uploads as empty strings so blank "is not" conditions stay unmatched.
+			// Single file upload type.
+			if ( ! empty( $form_field_value['file']['name'] ) ) {
+				$form_field_value = $form_field_value['file']['name'];
+				// Multiple file upload type.
+			} elseif ( ! empty( $form_field_value['file'] ) && is_array( $form_field_value['file'] ) ) {
+				$file_names = array();
+				foreach ( $form_field_value['file'] as $file ) {
+					if ( ! empty( $file['file_name'] ) ) {
+						$file_names[] = $file['file_name'];
+					}
+				}
+				$form_field_value = empty( $file_names ) ? '' : $file_names;
+			} else {
+				$form_field_value = '';
+			}
+		}
+
 		if ( is_string( $condition_value ) ) {
 			$condition_value = strtolower( $condition_value );
 		}
@@ -1167,7 +1340,7 @@ abstract class Forminator_Field {
 					return in_array( $condition_value, $form_field_value ); //phpcs:ignore WordPress.PHP.StrictInArray.MissingTrueStrict
 				}
 				if ( is_numeric( $condition_value ) ) {
-					return ( (int) $form_field_value === (int) $condition_value );
+					return ( (float) $form_field_value === (float) $condition_value );
 				}
 
 				return ( $form_field_value === $condition_value );
@@ -1175,6 +1348,10 @@ abstract class Forminator_Field {
 				if ( is_array( $form_field_value ) ) {
 					// possible input is "1" to be compared with 1.
 					return ! in_array( $condition_value, $form_field_value ); //phpcs:ignore WordPress.PHP.StrictInArray.MissingTrueStrict
+				}
+
+				if ( is_numeric( $condition_value ) ) {
+					return ( (float) $form_field_value !== (float) $condition_value );
 				}
 
 				return ( $form_field_value !== $condition_value );
@@ -1197,12 +1374,44 @@ abstract class Forminator_Field {
 
 				return $form_field_value < $condition_value;
 			case 'contains':
+				if ( is_array( $form_field_value ) ) {
+					foreach ( $form_field_value as $value ) {
+						if ( stripos( $value, $condition_value ) !== false ) {
+							return true;
+						}
+					}
+					return false;
+				}
 				return ( stripos( $form_field_value, $condition_value ) === false ? false : true );
 			case 'does_not_contain':
+				if ( is_array( $form_field_value ) ) {
+					foreach ( $form_field_value as $value ) {
+						if ( stripos( $value, $condition_value ) !== false ) {
+							return false;
+						}
+					}
+					return true;
+				}
 				return ! ( stripos( $form_field_value, $condition_value ) !== false );
 			case 'starts':
+				if ( is_array( $form_field_value ) ) {
+					foreach ( $form_field_value as $value ) {
+						if ( stripos( $value, $condition_value ) === 0 ) {
+							return true;
+						}
+					}
+					return false;
+				}
 				return ( stripos( $form_field_value, $condition_value ) === 0 ? true : false );
 			case 'ends':
+				if ( is_array( $form_field_value ) ) {
+					foreach ( $form_field_value as $value ) {
+						if ( substr( $value, - strlen( $condition_value ) ) === $condition_value ) {
+							return true;
+						}
+					}
+					return false;
+				}
 				return ( substr( $form_field_value, - strlen( $condition_value ) ) === $condition_value );
 
 			case 'day_is':
@@ -1589,25 +1798,40 @@ abstract class Forminator_Field {
 		}
 
 		$element_id = self::get_property( 'element_id', $field_array );
-		if ( is_array( $field_data ) ) {
-			foreach ( $field_data as $element_id_suffix => $field_datum ) {
-				$element_id                = $element_id . '-' . $element_id_suffix;
-				$element_autofill_settings = self::get_element_autofill_settings( $element_id, $autofill_settings );
-				if ( ! self::element_autofill_is_editable( $element_autofill_settings ) ) {
-					// refill with autofill provider.
-					$field_data[ $element_id_suffix ] = $this->maybe_replace_to_autofill_value( $field_datum, $element_autofill_settings );
+		$is_array   = is_array( $field_data );
+
+		$parts           = explode( '-', $element_id );
+		$base_element_id = implode( '-', array_slice( $parts, 0, 2 ) );
+
+		$targets = array();
+		if ( $is_array ) {
+			$sub_prefix = $base_element_id . '-';
+			foreach ( $autofill_settings as $autofill_element_id => $element_autofill_settings ) {
+				if ( 0 !== strpos( $autofill_element_id, $sub_prefix ) ) {
+					continue;
 				}
+				$targets[ substr( $autofill_element_id, strlen( $sub_prefix ) ) ] = $element_autofill_settings;
 			}
 		} else {
-			$element_autofill_settings = self::get_element_autofill_settings( $element_id, $autofill_settings );
+			$targets[''] = self::get_element_autofill_settings( $base_element_id, $autofill_settings );
+		}
 
-			if ( ! self::element_autofill_is_editable( $element_autofill_settings ) ) {
-				$current_data = $field_data;
-				// refill with autofill provider.
-				$field_data = $this->maybe_replace_to_autofill_value( $field_data, $element_autofill_settings );
-				if ( ! strlen( $field_data ) ) {
-					$field_data = $current_data;
-				}
+		foreach ( $targets as $suffix => $element_autofill_settings ) {
+			if ( self::element_autofill_is_editable( $element_autofill_settings ) ) {
+				continue;
+			}
+
+			$current  = $is_array ? ( isset( $field_data[ $suffix ] ) ? $field_data[ $suffix ] : '' ) : $field_data;
+			$replaced = $this->maybe_replace_to_autofill_value( $current, $element_autofill_settings );
+
+			if ( null === $replaced || ( is_scalar( $replaced ) && '' === (string) $replaced ) ) {
+				continue;
+			}
+
+			if ( $is_array ) {
+				$field_data[ $suffix ] = $replaced;
+			} else {
+				$field_data = $replaced;
 			}
 		}
 
@@ -1641,13 +1865,24 @@ abstract class Forminator_Field {
 			return array();
 		}
 
-		$element_autofill_settings = self::get_element_autofill_settings( $element_id, $autofill_settings );
+		// Strip the trailing group-row suffix (e.g. `address-1-city-2`) to match base autofill keys.
+		$lookup_id = $element_id;
+		if ( ! isset( $autofill_settings[ $lookup_id ] ) ) {
+			$stripped = preg_replace( '/-\d+$/', '', $element_id, 1 );
+			if ( null !== $stripped && isset( $autofill_settings[ $stripped ] ) ) {
+				$lookup_id = $stripped;
+			}
+		}
+
+		$element_autofill_settings = self::get_element_autofill_settings( $lookup_id, $autofill_settings );
 		$value                     = $this->maybe_replace_to_autofill_value( '', $element_autofill_settings );
 
 		// only return value when its autofilled.
 		if ( ! empty( $value ) ) {
 			$markup_attr = array(
-				'value' => $value,
+				'value'        => $value,
+				// Preserved through repeater JS clone so newly added group rows keep the autofill value.
+				'data-default' => $value,
 			);
 			// only disable if value is not empty.
 			if ( ! self::element_autofill_is_editable( $element_autofill_settings ) ) {
@@ -1806,6 +2041,27 @@ abstract class Forminator_Field {
 	}
 
 	/**
+	 * Get calculable number format
+	 *
+	 * @since 1.52.0
+	 *
+	 * @param mixed $field_settings Field settings.
+	 * @param mixed $value Value.
+	 * @return string
+	 */
+	public static function get_calculable_number_format( $field_settings, $value ) {
+		// Apply configured decimal precision for fields that define it.
+		$precision_field_types = array( 'number', 'currency', 'calculation' );
+		$field_type            = isset( $field_settings['type'] ) ? $field_settings['type'] : '';
+		if ( in_array( $field_type, $precision_field_types, true ) ) {
+			$precision = self::get_calculable_precision( $field_settings );
+			return number_format( floatval( $value ), $precision, '.', '' );
+		}
+
+		return $value;
+	}
+
+	/**
 	 * Return if field has pre-fill value filled
 	 *
 	 * @since 1.10
@@ -1889,9 +2145,10 @@ abstract class Forminator_Field {
 	 * Get TinyMCE arguments for js on front-end
 	 *
 	 * @param string $id Editor ID.
+	 * @param bool   $media_buttons Whether to show the Add Media button.
 	 * @return string
 	 */
-	public static function get_tinymce_args( $id ) {
+	public static function get_tinymce_args( $id, $media_buttons = false ) {
 		$args = "{
 			tinymce: {
 				wpautop  : true,
@@ -1939,7 +2196,8 @@ abstract class Forminator_Field {
 
 			},
 			quicktags: true,
-		}";
+			mediaButtons: " . ( $media_buttons ? 'true' : 'false' ) . ',
+		}';
 
 		/**
 		 * Filter TinyMCE arguments for js on front-end.
@@ -1958,7 +2216,7 @@ abstract class Forminator_Field {
 	 * Number separators
 	 *
 	 * @param string $separator Separator.
-	 * @param string $field Field.
+	 * @param array  $field Field.
 	 *
 	 * @return array
 	 */
@@ -2008,7 +2266,8 @@ abstract class Forminator_Field {
 		$precision  = self::get_calculable_precision( $field );
 		$separator  = self::get_property( 'separators', $field, 'blank' );
 		$separators = self::forminator_separators( $separator, $field );
-		$data_value = (float) str_replace( $separators['point'], '.', $number );
+		// All unformatted numbers use either a comma or a dot as the decimal point. We need to convert commas to dots.
+		$data_value = (float) str_replace( ',', '.', $number );
 		$formatted  = number_format( $data_value, $precision, $separators['point'], $separators['separator'] );
 
 		if ( ! empty( $field['prefix'] ) || ! empty( $field['suffix'] ) ) {
@@ -2047,14 +2306,21 @@ abstract class Forminator_Field {
 	 * Check index and htaccess files inside root directory. And create them if need it.
 	 */
 	public static function check_upload_root_index_file() {
+		global $wp_locale_switcher;
+
+		// Return if $wp_locale_switcher is not ready.
+		if ( ! $wp_locale_switcher ) {
+			return false;
+		}
+
 		$upload_root = forminator_upload_root();
-		if ( is_wp_error( $upload_root ) ) {
+		if ( is_wp_error( $upload_root ) || ! is_dir( $upload_root ) || ! wp_is_writable( $upload_root ) ) {
 			return;
 		}
 		// Make sure it was not called before WP init.
-		if ( ! file_exists( $upload_root . 'index.php' ) && function_exists( 'insert_with_markers' ) ) {
+		if ( function_exists( 'insert_with_markers' ) ) {
 			self::add_index_file( $upload_root );
-			self::add_htaccess_file();
+			self::add_htaccess_file( $upload_root );
 		}
 	}
 
@@ -2066,8 +2332,9 @@ abstract class Forminator_Field {
 	 * @return void
 	 */
 	public static function add_index_file( $dir ) {
-		$dir = untrailingslashit( $dir );
-		if ( ! is_dir( $dir ) || ! wp_is_writable( $dir ) || is_link( $dir ) ) {
+		$dir             = untrailingslashit( $dir );
+		$index_file_path = $dir . '/index.php';
+		if ( is_file( $index_file_path ) || ! is_dir( $dir ) || ! wp_is_writable( $dir ) || is_link( $dir ) ) {
 			return;
 		}
 		$dp = opendir( $dir );
@@ -2081,7 +2348,6 @@ abstract class Forminator_Field {
 
 		global $wp_filesystem;
 		if ( WP_Filesystem() ) {
-			$index_file_path = $dir . '/index.php';
 			// creates an empty index.php file.
 			$wp_filesystem->put_contents( $index_file_path, '', FS_CHMOD_FILE );
 		}
@@ -2114,38 +2380,20 @@ abstract class Forminator_Field {
 		}
 
 		self::check_upload_root_index_file();
-		if ( ! file_exists( forminator_get_upload_path( $form_id ) . 'index.php' ) ) {
-			self::add_index_file( forminator_get_upload_path( $form_id ) );
-		}
-		if ( ! file_exists( $path . 'index.php' ) ) {
-			self::add_index_file( $path );
-		}
+		self::add_index_file( forminator_get_upload_path( $form_id ) );
+		self::add_index_file( $path );
 	}
 
 	/**
 	 * Add htaccess file
+	 *
+	 * @param string $upload_root Upload root.
+	 * @return void
 	 */
-	public static function add_htaccess_file() {
-		global $wp_locale_switcher;
-
-		// Return if $wp_locale_switcher is not ready.
-		if ( ! $wp_locale_switcher ) {
-			return false;
-		}
-
-		$upload_root = forminator_upload_root();
-
-		if ( is_wp_error( $upload_root ) || ! is_dir( $upload_root ) ) {
-			return;
-		}
-
-		if ( ! wp_is_writable( $upload_root ) ) {
-			return;
-		}
-
+	public static function add_htaccess_file( $upload_root ) {
 		$htaccess_file = $upload_root . '.htaccess';
 		if ( file_exists( $htaccess_file ) ) {
-			wp_delete_file( $htaccess_file );
+			return;
 		}
 		$rules = '# Disable parsing of PHP for some server configurations.
 <Files *>
@@ -2189,5 +2437,148 @@ abstract class Forminator_Field {
 
 		// Generate and save the attachment metas into the database.
 		wp_update_attachment_metadata( $attachment_id, wp_generate_attachment_metadata( $attachment_id, $file ) );
+	}
+
+	/**
+	 * Get required error message
+	 *
+	 * @return string
+	 */
+	protected function get_required_error_message() {
+		return self::$default_required_messages[ $this->type ];
+	}
+
+	/**
+	 * Maybe add custom option input.
+	 *
+	 * @param mixed $field Field.
+	 * @param mixed $options Field options.
+	 * @param mixed $attributes Input field attributes.
+	 * @param array $draft_value Draft value.
+	 * @return string
+	 */
+	public static function maybe_add_custom_option( $field, $options, $attributes = array(), $draft_value = null ) {
+		$enable_custom_option = self::get_property( 'enable_custom_option', $field, false );
+		$html                 = '';
+		if ( $enable_custom_option ) {
+			if ( ! isset( $attributes['class'] ) ) {
+				$attributes['class'] = 'forminator-input';
+			}
+			// Get placeholder from options if exists.
+			$key = array_search( 'custom_option', array_column( $options, 'key' ), true );
+			if ( false !== $key ) {
+				if ( ! empty( $options[ $key ]['placeholder'] ) ) {
+					$attributes['placeholder'] = $options[ $key ]['placeholder'];
+				}
+				if ( ! isset( $attributes['aria-labelledby'] ) && ! empty( $options[ $key ]['label'] ) ) {
+					$attributes['aria-label'] = $options[ $key ]['label'];
+				}
+			}
+			if ( isset( $draft_value['custom_value'] ) ) {
+				$attributes['value'] = isset( $draft_value['custom_value']['value'] ) ? $draft_value['custom_value']['value'] : '';
+			}
+			$html .= '<div class="forminator-field forminator-custom-input">';
+			$html .= self::create_input(
+				$attributes,
+				false,
+				'',
+				true,
+			);
+			$html .= '</div>';
+		}
+		return $html;
+	}
+
+	/**
+	 * * Get formatted amount for Stripe and PayPal fields
+	 *
+	 * @param array        $field Field.
+	 * @param string|array $amount_data Amount Data.
+	 * @param object       $module Module.
+	 * @return string
+	 */
+	public static function get_formatted_amount( $field, $amount_data, $module = null ) {
+		if ( is_array( $amount_data ) ) {
+			$amount = $amount_data['amount'];
+			// find the selected payment plan.
+			if ( ! empty( $field['payments'] ) && ! empty( $amount_data['product_name'] ) ) {
+				foreach ( $field['payments'] as $payment ) {
+					if ( $payment['plan_name'] === $amount_data['product_name'] ) {
+						$field = $payment;
+						break;
+					}
+				}
+			}
+		} else {
+			$amount = $amount_data;
+		}
+
+		$amount_type     = self::get_property( 'amount_type', $field, 'fixed' );
+		$amount_variable = self::get_property( 'variable', $field, '' );
+		if ( empty( $amount_variable ) || 'fixed' === $amount_type ) {
+			return $amount;
+		}
+		if ( null === $module ) {
+			if ( empty( Forminator_Front_Action::$module_object ) ) {
+				return $amount;
+			}
+			$module = Forminator_Front_Action::$module_object;
+		}
+		$field = $module->get_field( $amount_variable, false );
+		if ( ! $field ) {
+			return $amount;
+		}
+		$field_settings = $field->to_formatted_array();
+		if ( ! $field_settings ) {
+			return $amount;
+		}
+		// Remove the currency key since it's displayed separately.
+		unset( $field_settings['currency'] );
+		return self::forminator_number_formatting( $field_settings, $amount );
+	}
+
+	/**
+	 * Get rich text editor script
+	 *
+	 * @since 1.53
+	 *
+	 * @param string $id Editor ID.
+	 * @param bool   $media_buttons Whether to show the Add Media button.
+	 * @return string
+	 */
+	public function get_richtext_editor_script( $id, $media_buttons = false ) {
+		$args            = self::get_tinymce_args( $id, $media_buttons );
+		$is_block_editor = filter_input( INPUT_POST, 'is_block_editor', FILTER_VALIDATE_BOOLEAN );
+		if ( $is_block_editor ) {
+			// Message to show when rich text editor preview is not available in Gutenberg block editor.
+			$message = '<div style="all: initial;"><div class="block-editor-warning"><div class="block-editor-warning__contents"><p class="block-editor-warning__message">'
+						. esc_html__( 'The rich text editor can\'t be previewed in the block editor. Save the post and view the form on the frontend to see it.', 'forminator' )
+						. '</p></div></div></div>';
+			$script  = '<script>
+				if ( typeof wp !== "undefined" && wp.editor && typeof wp.editor.initialize === "function" ) {
+					wp.editor.initialize("' . esc_attr( $id ) . '", ' . $args . ');
+				} else {
+				 	let textElement = document.getElementById("' . esc_attr( $id ) . '");
+					if( textElement ) {
+						textElement.outerHTML = \'' . $message . '\';
+					}
+				}</script>';
+		} elseif ( did_action( 'elementor/loaded' ) ) {
+				$script = '<script>
+				(function ($, document) {
+					setTimeout(() => {
+						const editor = typeof tinymce !== "undefined" && tinymce.get( "' . esc_attr( $id ) . '" );
+						let textarea = document.getElementById("' . esc_attr( $id ) . '");
+						if ( textarea && ( textarea.offsetParent !== null || editor ) ) {
+							wp.editor.initialize("' . esc_attr( $id ) . '", ' . wp_kses_post( $args ) . ');
+						} else {
+							forminator_init_wp_editor_on_visible("' . esc_attr( $id ) . '", ' . wp_kses_post( $args ) . ');
+						}
+					}, 50);
+				})(jQuery, document);</script>';
+		} else {
+			$script = '<script>wp.editor.initialize("' . esc_attr( $id ) . '", ' . $args . ');</script>';
+		}
+		return $script;
 	}
 }

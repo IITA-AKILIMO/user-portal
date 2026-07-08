@@ -191,13 +191,16 @@ class Forminator_CForm_Front_User_Login extends Forminator_User {
 				}
 			}
 		}
-		$user_fields = array(
-			'user_login'    => $username,
-			'user_password' => $password,
-			'remember'      => $remember,
-		);
 
-		$sign_on = wp_signon( $user_fields );
+		// If there is no Defender or the authentication is not a WP_Error, we can proceed to sign on the user.
+		if ( empty( $sign_on ) || ( ! is_wp_error( $sign_on ) ) ) {
+			$user_fields = array(
+				'user_login'    => $username,
+				'user_password' => $password,
+				'remember'      => $remember,
+			);
+			$sign_on     = wp_signon( $user_fields );
+		}
 
 		$response['authentication'] = '';
 		$response['user']           = $sign_on;

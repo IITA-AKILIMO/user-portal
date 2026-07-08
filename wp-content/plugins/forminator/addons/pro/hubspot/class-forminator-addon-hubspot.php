@@ -509,10 +509,10 @@ final class Forminator_Hubspot extends Forminator_Integration {
 			}
 			if ( ! empty( $pipeline_request->results ) ) {
 				foreach ( $pipeline_request->results as $key => $data ) {
-					if ( isset( $data->pipelineId ) && $pipeline === $data->pipelineId ) { // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+					if ( isset( $data->id ) && $pipeline === $data->id ) {
 						foreach ( $data->stages as $stages => $stage ) {
-							if ( isset( $stage->stageId ) && isset( $stage->label ) ) { // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
-								$status[ $stage->stageId ] = $stage->label; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+							if ( isset( $stage->id ) && isset( $stage->label ) ) {
+								$status[ $stage->id ] = $stage->label;
 							}
 						}
 					}

@@ -31,6 +31,8 @@ class Forminator_CForm_User_Data {
 			add_action( 'wp_ajax_forminator_resend_activation_link', array( $this, 'resend_activation_link' ) );
 			// Resend Notification Email.
 			add_action( 'wp_ajax_forminator_resend_notification_email', array( $this, 'resend_notification_email' ) );
+			// Resend Draft Email.
+			add_action( 'wp_ajax_forminator_resend_draft_email', array( $this, 'resend_draft_email' ) );
 			// Delete user signup.
 			if ( ! is_multisite() ) {
 				add_action( 'delete_user', array( $this, 'delete_signup_user' ) );
@@ -215,6 +217,73 @@ class Forminator_CForm_User_Data {
 			wp_send_json_success( esc_html__( 'Notification Emails have been sent successfully.', 'forminator' ) );
 		} else {
 			wp_send_json_error( esc_html__( 'Entry ID is not set.', 'forminator' ) );
+		}
+	}
+
+	/**
+	 * Resend Draft Email from admin entries page
+	 */
+	public function resend_draft_email() {
+		forminator_validate_ajax( 'forminatorResendDraftEmail', false, 'forminator-entries' );
+
+		$entry_id = Forminator_Core::sanitize_text_field( 'entry_id' );
+		$email    = Forminator_Core::sanitize_text_field( 'email' );
+
+		if ( empty( $entry_id ) ) {
+			wp_send_json_error( esc_html__( 'Entry ID is not set.', 'forminator' ) );
+		}
+
+		if ( empty( $email ) || ! is_email( $email ) ) {
+			wp_send_json_error( esc_html__( 'Please enter a valid email address.', 'forminator' ) );
+		}
+
+		$entry = new Forminator_Form_Entry_Model( $entry_id );
+		if ( empty( $entry->form_id ) || empty( $entry->draft_id ) ) {
+			wp_send_json_error( esc_html__( 'Draft entry was not found.', 'forminator' ) );
+		}
+
+		$form_id     = $entry->form_id;
+		$draft_id    = $entry->draft_id;
+		$custom_form = Forminator_Form_Model::model()->load( $form_id );
+		if ( ! is_object( $custom_form ) ) {
+			wp_send_json_error( esc_html__( 'Invalid form ID.', 'forminator' ) );
+		}
+
+		// Get page_id from entry metadata to reconstruct draft link.
+		$draft_page_id = isset( $entry->meta_data['_draft_page_id']['value'] )
+			? absint( $entry->meta_data['_draft_page_id']['value'] ) : 0;
+
+		if ( empty( $draft_page_id ) ) {
+			wp_send_json_error( esc_html__( 'Could not determine the page for this draft. The draft link cannot be reconstructed.', 'forminator' ) );
+		}
+
+		$draft_link = Forminator_CForm_Front_Action::get_draft_link( $draft_id, $draft_page_id );
+		$settings   = $custom_form->settings;
+		$retention  = isset( $settings['sc_draft_retention'] ) ? $settings['sc_draft_retention'] : 30;
+
+		$submitted_data = array(
+			'email-1'          => $email,
+			'draft_link'       => $draft_link,
+			'retention_period' => $retention,
+		);
+
+		$front_action       = new Forminator_CForm_Front_Action();
+		$draft_notification = $front_action->get_draft_notification( $custom_form->notifications, $submitted_data );
+
+		if ( empty( $draft_notification ) ) {
+			wp_send_json_error( esc_html__( 'No draft email notification is configured for this form.', 'forminator' ) );
+		}
+
+		unset( $custom_form->notifications );
+		$custom_form->notifications[] = $draft_notification;
+
+		$forminator_mail_sender = new Forminator_CForm_Front_Mail();
+		$mail_sent              = $forminator_mail_sender->process_mail( $custom_form, $entry, $submitted_data );
+
+		if ( $mail_sent ) {
+			wp_send_json_success( esc_html__( 'Draft email has been sent successfully.', 'forminator' ) );
+		} else {
+			wp_send_json_error( esc_html__( 'Failed to send the draft email. Please try again.', 'forminator' ) );
 		}
 	}
 

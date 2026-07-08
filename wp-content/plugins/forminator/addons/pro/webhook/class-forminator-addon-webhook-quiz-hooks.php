@@ -24,7 +24,9 @@ class Forminator_Webhook_Quiz_Hooks extends Forminator_Integration_Quiz_Hooks {
 		$data                 = array();
 
 		foreach ( $addon_setting_values as $key => $addon_setting_value ) {
-			// save it on entry field, with name `status-$MULTI_ID`, and value is the return result on sending data towebhook.
+			if ( ! empty( $this->addon->multi_id ) && $key !== $this->addon->multi_id ) {
+				continue;
+			}
 			$data[] = array(
 				'name'  => 'status-' . $key,
 				'value' => $this->get_status_on_send_data( $key, $submitted_data, $addon_setting_value, $current_entry_fields ),
@@ -169,8 +171,14 @@ class Forminator_Webhook_Quiz_Hooks extends Forminator_Integration_Quiz_Hooks {
 							// bit cleanup.
 							$question_id = str_replace( 'question-', '', $question_id );
 
-							$question   = isset( $data['question'] ) ? $data['question'] : '';
-							$answer     = isset( $data['answers'] ) ? $data['answers'] : '';
+							$question = isset( $data['question'] ) ? $data['question'] : '';
+							if ( ! empty( $data['answer'] ) ) {
+								$answer = $data['answer'];
+							} elseif ( ! empty( $data['answers'] ) ) {
+								$answer = $data['answers'];
+							} else {
+								$answer = '';
+							}
 							$is_correct = isset( $data['isCorrect'] ) ? $data['isCorrect'] : false;
 
 							$answers[ $question_id ] = array(

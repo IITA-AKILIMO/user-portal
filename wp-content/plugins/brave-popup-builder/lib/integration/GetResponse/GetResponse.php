@@ -112,18 +112,23 @@ if ( ! class_exists( 'BravePop_GetResponse' ) ) {
          $body = wp_remote_retrieve_body( $response );
          $data = json_decode( $body );
 
-
          if($response && isset($response['response']) && isset($response['response']['code']) && $response['response']['code'] === 202){
             $addedData = array(
                'action'=> isset($userData['action']) ? $userData['action'] : 'visitor_added',  
                'user_id'=> isset($userData['userData']['ID']) ? $userData['userData']['ID'] : false,
-               'user_mail'=> $email, 'esp_user_id'=> ''
+               'user_mail'=> $email, 
+               'esp_user_id'=> '',
+               'user_data'=> $contact,
+               'list_id' => $list_id,
+               'response' => $response,
             ); 
-            do_action( 'bravepop_addded_to_list', 'getresponse', $addedData );
-
-            return true; 
+            do_action( 'bravepop_added_to_list', 'getresponse', $addedData );
+            return array( 'success' => true, 'result' => $addedData );
          }else{
-            return false;
+            $errorMsg = isset($data->message) ? $data->message.'. '(isset($data->context->errorDescription) ? $data->context->errorDescription :'') : 'Unknown Error Occurred. No Error details provided by Getresponse.';
+            $errorPayload = array( 'user_mail'=> $email, 'user_data'=> $contact, 'list_id'=> $list_id, 'error' => $errorMsg, 'response'=> $response );
+            do_action( 'bravepop_added_to_list_failed', 'getresponse', $errorPayload );
+            return array( 'success' => false, 'errorMsg' => $errorMsg, 'result' => $errorPayload );
          }
 
       }

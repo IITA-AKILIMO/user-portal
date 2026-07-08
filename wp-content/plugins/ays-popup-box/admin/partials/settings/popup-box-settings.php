@@ -65,9 +65,13 @@ $categories_title_length = (isset($options['categories_title_length']) && intval
             <input type="hidden" name="ays_pb_tab" value="<?php echo esc_attr($ays_pb_tab); ?>">
             <div class="ays-pb-heading-box">
                 <div class="ays-pb-wordpress-user-manual-box">
-                    <a href="https://ays-pro.com/wordpress-popup-box-plugin-user-manual" target="_blank">
-                        <img src="<?php echo AYS_PB_ADMIN_URL . '/images/icons/text-file.svg' ?>">
-                        <span><?php echo __("View Documentation", "ays-popup-box"); ?></span>
+                    <a href="https://www.youtube.com/watch?v=0cZOSdiKqTI" target="_blank">
+                        <img src="<?php echo esc_url(AYS_PB_ADMIN_URL) . '/images/icons/youtube-video-icon.svg' ?>">
+                        <span><?php echo esc_html__("How to create Popup", "ays-popup-box"); ?></span>
+                    </a>
+                    <a href="https://popup-plugin.com/docs" target="_blank">
+                        <img src="<?php echo esc_url(AYS_PB_ADMIN_URL) . '/images/icons/text-file.svg' ?>">
+                        <span><?php echo esc_html__("View Documentation", "ays-popup-box"); ?></span>
                     </a>
                 </div>
             </div>
@@ -87,36 +91,43 @@ $categories_title_length = (isset($options['categories_title_length']) && intval
                     <div class="nav-tab-wrapper" style="position:sticky; top:35px;">
                         <a href="#tab1" data-tab="tab1"
                            class="nav-tab <?php echo ($ays_pb_tab == 'tab1') ? 'nav-tab-active' : ''; ?>">
-                            <?php echo __("General", "ays-popup-box"); ?>
+                            <?php echo esc_html__("General", "ays-popup-box"); ?>
                         </a>
                         <a href="#tab2" data-tab="tab2" class="nav-tab <?php echo ($ays_pb_tab == 'tab2') ? 'nav-tab-active' : ''; ?>">
-                            <?php echo __("Integrations", "ays-popup-box");?>
+                            <?php echo esc_html__("Integrations", "ays-popup-box");?>
                         </a>
                         <a href="#tab3" data-tab="tab3"
                            class="nav-tab <?php echo ($ays_pb_tab == 'tab3') ? 'nav-tab-active' : ''; ?>">
-                            <?php echo __("Shortcodes", "ays-popup-box"); ?>
+                            <?php echo esc_html__("Shortcodes", "ays-popup-box"); ?>
                         </a>
                         <a href="#tab4" data-tab="tab4" class="nav-tab <?php echo ($ays_pb_tab == 'tab4') ? 'nav-tab-active' : ''; ?>">
-                            <?php echo __("Message variables", "ays-popup-box");?>
+                            <?php echo esc_html__("Message variables", "ays-popup-box");?>
                         </a>
                     </div>
                 </div>
                 <div class="ays-pb-tabs-wrapper">
                     <div id="tab1" class="ays-pb-tab-content <?php echo ($ays_pb_tab == 'tab1') ? 'ays-pb-tab-content-active' : ''; ?>">
-                        <p class="ays-pb-subtitle"><?php echo __('General Settings', "ays-popup-box") ?></p>
+                        <div style="display: flex; justify-content: space-between;">
+                            <p class="ays-pb-subtitle"><?php echo esc_html__('General Settings', "ays-popup-box") ?></p>
+                            <span style="margin-top: 20px;">
+                                <a class="ays-pb-doc-link" href="https://popup-plugin.com/docs/general-tab/" target="_blank" style="font-size: 14px;">
+                                    <?php echo esc_html__('How to Use General Tab?', "ays-popup-box"); ?>
+                                </a>
+                            </span>
+                        </div>
                         <hr/>
                         <div class="" style="padding:15px;">
                             <fieldset>
                                 <legend>
-                                    <strong style="font-size:30px;"><img src="<?php echo AYS_PB_ADMIN_URL . "/images/icons/question-circle.svg"?>"></strong>
-                                    <h5><?php echo __('Default popup parameters',"ays-popup-box")?></h5>
+                                    <strong style="font-size:30px;"><img src="<?php echo esc_url(AYS_PB_ADMIN_URL) . "/images/icons/question-circle.svg"?>"></strong>
+                                    <h5><?php echo esc_html__('Default popup parameters',"ays-popup-box")?></h5>
                                 </legend>
                                 <div class="form-group row">
                                     <div class="col-sm-4">
                                         <label for="ays_pb_wp_editor_height">
-                                            <?php echo __( "WP Editor height", "ays-popup-box" ); ?>
-                                            <a class="ays_help" data-toggle="tooltip" title="<?php echo __('Give the default height value to the WP Editor. It will apply to all WP Editors within the plugin on the dashboard.',"ays-popup-box"); ?>">
-                                                <img src="<?php echo AYS_PB_ADMIN_URL . "/images/icons/info-circle.svg"?>">
+                                            <?php echo esc_html__( "WP Editor height", "ays-popup-box" ); ?>
+                                            <a class="ays_help" data-toggle="tooltip" title="<?php echo esc_html__('Give the default height value to the WP Editor. It will apply to all WP Editors within the plugin on the dashboard.',"ays-popup-box"); ?>">
+                                                <img src="<?php echo esc_url(AYS_PB_ADMIN_URL) . "/images/icons/info-circle.svg"?>">
                                             </a>
                                         </label>
                                     </div>
@@ -128,15 +139,15 @@ $categories_title_length = (isset($options['categories_title_length']) && intval
                             <hr>
                             <fieldset>
                                 <legend>
-                                    <strong style="font-size:30px;"><img src="<?php echo AYS_PB_ADMIN_URL . "/images/icons/text.svg"?>"></strong>
-                                    <h5><?php echo __('Excerpt words count in list tables',"ays-popup-box")?></h5>
+                                    <strong style="font-size:30px;"><img src="<?php echo esc_url(AYS_PB_ADMIN_URL) . "/images/icons/text.svg"?>"></strong>
+                                    <h5><?php echo esc_html__('Excerpt words count in list tables',"ays-popup-box")?></h5>
                                 </legend>
                                 <div class="form-group row">
                                     <div class="col-sm-4">
                                         <label for="ays_popup_title_length">
-                                            <?php echo __( "Popup list table", "ays-popup-box" ); ?>
-                                            <a class="ays_help" data-toggle="tooltip" title="<?php echo __('Determine the length of the Popups to be shown in the Popup List Table by putting your preferred count of words in the following field. (E.g., if you put 10,  you will see the first 10 words of each Popup Title on the Popups page of your dashboard).', "ays-popup-box"); ?>">
-                                                    <img src="<?php echo AYS_PB_ADMIN_URL . "/images/icons/info-circle.svg"?>">
+                                            <?php echo esc_html__( "Popup list table", "ays-popup-box" ); ?>
+                                            <a class="ays_help" data-toggle="tooltip" title="<?php echo esc_html__('Determine the length of the Popups to be shown in the Popup List Table by putting your preferred count of words in the following field. (E.g., if you put 10,  you will see the first 10 words of each Popup Title on the Popups page of your dashboard).', "ays-popup-box"); ?>">
+                                                    <img src="<?php echo esc_url(AYS_PB_ADMIN_URL) . "/images/icons/info-circle.svg"?>">
                                             </a>
                                         </label>
                                     </div>
@@ -148,9 +159,9 @@ $categories_title_length = (isset($options['categories_title_length']) && intval
                                 <div class="form-group row">
                                     <div class="col-sm-4">
                                         <label for="ays_categories_title_length">
-                                            <?php echo __( "Popup categories list table", "ays-popup-box" ); ?>
-                                            <a class="ays_help" data-toggle="tooltip" title="<?php echo __('Determine the length of the results to be shown in the Popup categories List Table by putting your preferred count of words in the following field. (For example: if you put 10,  you will see the first 10 words of each result in the Popup categories page of your dashboard).', "ays-popup-box"); ?>">
-                                                <img src="<?php echo AYS_PB_ADMIN_URL . "/images/icons/info-circle.svg"?>">
+                                            <?php echo esc_html__( "Popup categories list table", "ays-popup-box" ); ?>
+                                            <a class="ays_help" data-toggle="tooltip" title="<?php echo esc_html__('Determine the length of the results to be shown in the Popup categories List Table by putting your preferred count of words in the following field. (For example: if you put 10,  you will see the first 10 words of each result in the Popup categories page of your dashboard).', "ays-popup-box"); ?>">
+                                                <img src="<?php echo esc_url(AYS_PB_ADMIN_URL) . "/images/icons/info-circle.svg"?>">
                                             </a>
                                         </label>
                                     </div>
@@ -162,16 +173,16 @@ $categories_title_length = (isset($options['categories_title_length']) && intval
                             <hr>
                             <fieldset>
                                 <legend>
-                                    <strong style="font-size:30px;"><img src="<?php echo AYS_PB_ADMIN_URL . "/images/icons/music.svg"?>"></strong>
-                                    <h5><?php echo __('Popup sound',"ays-popup-box")?></h5>
+                                    <strong style="font-size:30px;"><img src="<?php echo esc_url(AYS_PB_ADMIN_URL) . "/images/icons/music.svg"?>"></strong>
+                                    <h5><?php echo esc_html__('Popup sound',"ays-popup-box")?></h5>
                                 </legend>
                                 <div class="form-group row">
                                     <div class="col-sm-4">
                                         <label for="">
                                             <span>
-                                                <?php echo  __('Opening and closing sounds',"ays-popup-box") ?>
-                                                <a class="ays_help" data-toggle="tooltip" title="<?php echo __('Insert popup opening and closing sound by clicking on “Select sound”.', "ays-popup-box"); ?>">
-                                                    <img src="<?php echo AYS_PB_ADMIN_URL . "/images/icons/info-circle.svg"?>">
+                                                <?php echo  esc_html__('Opening and closing sounds',"ays-popup-box") ?>
+                                                <a class="ays_help" data-toggle="tooltip" title="<?php echo esc_html__('Insert popup opening and closing sound by clicking on “Select sound”.', "ays-popup-box"); ?>">
+                                                    <img src="<?php echo esc_url(AYS_PB_ADMIN_URL) . "/images/icons/info-circle.svg"?>">
                                                 </a>
                                             </span>
                                         </label>
@@ -180,13 +191,13 @@ $categories_title_length = (isset($options['categories_title_length']) && intval
                                         <div class="form-group row">
                                             <div class="col-sm-12">
                                                 <label for="ays_pb_opening_sound">
-                                                    <?php echo __( "Opening sound", "ays-popup-box" ); ?>
+                                                    <?php echo esc_html__( "Opening sound", "ays-popup-box" ); ?>
                                                 </label>
                                                 <div class="ays-bg-music-container">
-                                                    <a class="add-pb-bg-music" href="javascript:void(0);"><?php echo __("Select sound", "ays-popup-box"); ?></a>
+                                                    <a class="add-pb-bg-music" href="javascript:void(0);"><?php echo esc_html__("Select sound", "ays-popup-box"); ?></a>
                                                     <audio controls src="<?php echo $ays_pb_sound; ?>" class="ays-bg-opening-music-audio"></audio>
                                                     <input type="hidden" name="ays_pb_sound" class="ays_pb_bg_music ays_pb_bg_music_opening_input" value="<?php echo $ays_pb_sound; ?>" id="ays_pb_opening_sound">
-                                                    <img src="<?php echo AYS_PB_ADMIN_URL . "/images/icons/times.svg"?>" class="ays_pb_sound_close_btn ays_pb_sound_opening_btn" style="<?php echo ($ays_pb_sound == '') ? 'display:none' : 'display:block'; ?>">
+                                                    <img src="<?php echo esc_url(AYS_PB_ADMIN_URL) . "/images/icons/times.svg"?>" class="ays_pb_sound_close_btn ays_pb_sound_opening_btn" style="<?php echo ($ays_pb_sound == '') ? 'display:none' : 'display:block'; ?>">
                                                 </div>
                                             </div>
                                         </div>
@@ -195,13 +206,13 @@ $categories_title_length = (isset($options['categories_title_length']) && intval
                                         <div class="form-group row">
                                             <div class="col-sm-12">
                                                 <label for="ays_pb_closing_sound">
-                                                    <?php echo __( "Closing sound", "ays-popup-box" ); ?>
+                                                    <?php echo esc_html__( "Closing sound", "ays-popup-box" ); ?>
                                                 </label>
                                                 <div class="ays-bg-music-container">
-                                                    <a class="add-pb-bg-music" href="javascript:void(0);"><?php echo __("Select sound", "ays-popup-box"); ?></a>
+                                                    <a class="add-pb-bg-music" href="javascript:void(0);"><?php echo esc_html__("Select sound", "ays-popup-box"); ?></a>
                                                     <audio controls src="<?php echo $ays_pb_close_sound; ?>" class="ays-bg-closing-music-audio"></audio>
                                                     <input type="hidden" name="ays_pb_close_sound" class="ays_pb_bg_music ays_pb_bg_music_closing_input" value="<?php echo $ays_pb_close_sound; ?>" id="ays_pb_closing_sound">
-                                                    <img src="<?php echo AYS_PB_ADMIN_URL . "/images/icons/times.svg"?>" class="ays_pb_sound_close_btn ays_pb_sound_closing_btn" style="<?php echo ($ays_pb_close_sound == '') ? 'display:none' : 'display:block'; ?>">
+                                                    <img src="<?php echo esc_url(AYS_PB_ADMIN_URL) . "/images/icons/times.svg"?>" class="ays_pb_sound_close_btn ays_pb_sound_closing_btn" style="<?php echo ($ays_pb_close_sound == '') ? 'display:none' : 'display:block'; ?>">
                                                 </div>
                                             </div>
                                         </div>
@@ -212,16 +223,16 @@ $categories_title_length = (isset($options['categories_title_length']) && intval
                             <hr>
                             <fieldset>
                                 <legend>
-                                    <strong style="font-size:30px;"><img src="<?php echo AYS_PB_ADMIN_URL . "/images/icons/code-file.svg"?>"></strong>
-                                    <h5><?php echo __('Animation CSS File',"ays-popup-box")?></h5>
+                                    <strong style="font-size:30px;"><img src="<?php echo esc_url(AYS_PB_ADMIN_URL) . "/images/icons/code-file.svg"?>"></strong>
+                                    <h5><?php echo esc_html__('Animation CSS File',"ays-popup-box")?></h5>
                                 </legend>
                                 <div class="form-group row">
                                     <div class="col-sm-4">
                                         <label for="ays_pb_exclude_animation_css">
                                             <span>
-                                                <?php echo  __('Exclude the Animation CSS file',"ays-popup-box") ?>
-                                                <a class="ays_help" data-toggle="tooltip" title="<?php echo __('If the option is enabled, then, the Animation CSS (given by the plugin) will not be applied to the website.', "ays-popup-box"); ?>">
-                                                    <img src="<?php echo AYS_PB_ADMIN_URL . "/images/icons/info-circle.svg"?>">
+                                                <?php echo  esc_html__('Exclude the Animation CSS file',"ays-popup-box") ?>
+                                                <a class="ays_help" data-toggle="tooltip" title="<?php echo esc_html__('If the option is enabled, then, the Animation CSS (given by the plugin) will not be applied to the website.', "ays-popup-box"); ?>">
+                                                    <img src="<?php echo esc_url(AYS_PB_ADMIN_URL) . "/images/icons/info-circle.svg"?>">
                                                 </a>
                                             </span>
                                         </label>
@@ -234,26 +245,43 @@ $categories_title_length = (isset($options['categories_title_length']) && intval
                             <hr>
                             <fieldset> 
                                 <legend>
-                                    <strong style="font-size:30px;"><img src="<?php echo AYS_PB_ADMIN_URL . "/images/icons/globe.svg"?>"></strong>
-                                    <h5><?php echo __('Who will have permission to Popup menu',"ays-popup-box")?></h5>
+                                    <strong style="font-size:30px;"><img src="<?php echo esc_url(AYS_PB_ADMIN_URL) . "/images/icons/globe.svg"?>"></strong>
+                                    <h5><?php echo esc_html__('Who will have permission to Popup menu',"ays-popup-box")?></h5>
                                 </legend>
-                                <div class="col-sm-12 ays-pro-features-v2-main-box">
-                                    <div class="ays-pro-features-v2-small-buttons-box">
-                                        <div>
-                                            <a href="https://youtu.be/Hl5i52g5lNo" target="_blank" class="ays-pro-features-v2-video-button">
-                                                <div>
-                                                    <img src="<?php echo AYS_PB_ADMIN_URL . "/images/icons/pro-features-icons/Video_24x24.svg" ?>">
-                                                    <img src="<?php echo AYS_PB_ADMIN_URL . "/images/icons/pro-features-icons/Video_24x24_Hover.svg" ?>" class="ays-pb-new-video-button-hover">
-                                                </div>
-                                                <div class="ays-pro-features-v2-video-text">
-                                                    <?php echo __("Watch video" , "ays-popup-box"); ?>
-                                                </div>
-                                            </a>
+                                <div class="col-sm-12 pro_features_main pro_features_popup ays-pro-features-v2-main-box ays_pb_hide_for_notification_type">
+
+                                    <div class="pro_features pro_features_popup pro_features_background_bolder">
+                                        <div class="pro-features-popup-conteiner">
+                                            <div class="pro-features-popup-title">
+                                                <?php echo __("Who Will Have Permission to Popup Menu", 'ays-popup-box'); ?>
+                                            </div>
+                                            <div class="pro-features-popup-content" data-link="https://youtu.be/Hl5i52g5lNo">
+                                                <p>
+                                                    <?php echo __("With this feature, you can choose which user roles can access and manage the popup menu. By default, only administrators have permission, but you can extend it to editors, authors, or other roles. The video shows step by step how to assign these permissions. Once saved, selected roles can instantly manage popups, making collaboration easier and reducing dependency on administrators. It’s a quick and effective way to manage roles and streamline popup creation.", 'ays-popup-box'); ?>
+                                                </p>                                                
+                                            </div>
+                                            <div class="pro-features-popup-button" data-link="https://popup-plugin.com/?utm_source=dashboard&utm_medium=popup-free&utm_campaign=pro-popup-box-permission-menu-<?php echo esc_attr( AYS_PB_NAME_VERSION ); ?>">
+                                                <?php echo __("Pricing", 'ays-popup-box'); ?>
+                                            </div>
                                         </div>
-                                        <a href="https://ays-pro.com/wordpress/popup-box" target="_blank" class="ays-pro-features-v2-upgrade-button">
+                                    </div>
+
+                                    <div class="ays-pro-features-v2-small-buttons-box">
+                                        <div>                                            
+                                            <div class="ays-pb-new-watch-video-button-box ays-pb-new-watch-video-button-box-mobile-style">
+                                                <div>
+                                                    <img src="<?php echo esc_url(AYS_PB_ADMIN_URL) . "/images/icons/pro-features-icons/Video_24x24.svg" ?>">
+                                                    <img src="<?php echo esc_url(AYS_PB_ADMIN_URL) . "/images/icons/pro-features-icons/Video_24x24_Hover.svg" ?>" class="ays-pb-new-video-button-hover ays-pb-new-watch-video-button-hover">
+                                                </div>
+                                                <div class="ays-pb-new-watch-video-button">
+                                                    <?php echo esc_html__("Watch video" , "ays-popup-box"); ?>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <a href="https://popup-plugin.com" target="_blank" class="ays-pro-features-v2-upgrade-button">
                                             <div class="ays-pro-features-v2-upgrade-icon" style="background-image: url('<?php echo esc_attr(AYS_PB_ADMIN_URL); ?>/images/icons/pro-features-icons/Locked_24x24.svg');" data-img-src="<?php echo esc_attr(AYS_PB_ADMIN_URL); ?>/images/icons/pro-features-icons/Locked_24x24.svg"></div>
                                             <div class="ays-pro-features-v2-upgrade-text">
-                                                <?php echo __("Upgrade" , "ays-popup-box"); ?>
+                                                <?php echo esc_html__("Upgrade" , "ays-popup-box"); ?>
                                             </div>
                                         </a>
                                     </div>
@@ -261,9 +289,9 @@ $categories_title_length = (isset($options['categories_title_length']) && intval
                                     <div class="form-group row">
                                         <div class="col-sm-4">
                                             <label for="ays_user_roles">
-                                                <?php echo __( "Select user role", "ays-popup-box" ); ?>
-                                                <a class="ays_help ays-pb-help-pro" data-toggle="tooltip" title="<?php echo __('Select user roles allowed to see the plugin on their WP dashboard and make changes in the plugins settings.',"ays-popup-box")?>">
-                                                        <img src="<?php echo AYS_PB_ADMIN_URL . "/images/icons/info-circle.svg"?>">
+                                                <?php echo esc_html__( "Select user role", "ays-popup-box" ); ?>
+                                                <a class="ays_help ays-pb-help-pro" data-toggle="tooltip" title="<?php echo esc_html__('Select user roles allowed to see the plugin on their WP dashboard and make changes in the plugins settings.',"ays-popup-box")?>">
+                                                        <img src="<?php echo esc_url(AYS_PB_ADMIN_URL) . "/images/icons/info-circle.svg"?>">
                                                 </a>
                                             </label>
                                         </div>
@@ -274,7 +302,7 @@ $categories_title_length = (isset($options['categories_title_length']) && intval
                                         </div>
                                     </div>
                                     <blockquote>
-                                        <?php echo __( "Ability to manage Popup Box plugin only for selected user roles.", "ays-popup-box" ); ?>
+                                        <?php echo esc_html__( "Ability to manage Popup Box plugin only for selected user roles.", "ays-popup-box" ); ?>
                                     </blockquote>
                                 </div>
                             </fieldset>
@@ -282,32 +310,39 @@ $categories_title_length = (isset($options['categories_title_length']) && intval
                     </div>
                     <div id="tab2" class="ays-pb-tab-content <?php echo ($ays_pb_tab == 'tab2') ? 'ays-pb-tab-content-active' : ''; ?>">
                         <p class="ays-subtitle">
-                            <?php echo __('Integrations',"ays-popup-box");?>
+                            <?php echo esc_html__('Integrations',"ays-popup-box");?>
                         </p>
                         <blockquote class="ays-pb-integration-tab-note">
-                            <p><?php echo __('The Integrations tab works only with Contact Form, Subscription and Send File after subscription types',"ays-popup-box");?>
+                            <p><?php echo esc_html__('The Integrations tab works only with Contact Form, Subscription and Send File after subscription types',"ays-popup-box");?>
                         </blockquote>
                         <?php
                             do_action( 'ays_pb_settings_page_integrations' );
                         ?>
                     </div>
                     <div id="tab3" class="ays-pb-tab-content <?php echo ($ays_pb_tab == 'tab3') ? 'ays-pb-tab-content-active' : ''; ?>">
-                        <p class="ays-pb-subtitle"><?php echo __('Shortcodes', "ays-popup-box") ?></p>
+                        <div style="display: flex; justify-content: space-between;">
+                            <p class="ays-pb-subtitle"><?php echo esc_html__('Shortcodes', "ays-popup-box") ?></p>
+                            <span style="margin-top: 20px;">
+                                <a class="ays-pb-doc-link" href="https://popup-plugin.com/docs/shortcodes-tab" target="_blank" style="font-size: 14px;">
+                                    <?php echo esc_html__('How to Personalize Popups with Shortcodes?', "ays-popup-box"); ?>
+                                </a>
+                            </span>
+                        </div>
                         <hr/>
                         <div class="" style="padding:15px;">
                             <fieldset>
                                 <legend>
-                                    <strong style="font-size:30px;"><img src="<?php echo AYS_PB_ADMIN_URL . "/images/icons/users-black.svg"?>"></strong>
-                                    <h5><?php echo __('User Information',"ays-popup-box")?></h5>
+                                    <strong style="font-size:30px;"><img src="<?php echo esc_url(AYS_PB_ADMIN_URL) . "/images/icons/users-black.svg"?>"></strong>
+                                    <h5><?php echo esc_html__('User Information',"ays-popup-box")?></h5>
                                 </legend>
                                 <div class="form-group row" style="padding:0px;margin:0;">
                                     <div class="col-sm-12" style="padding:20px;">
                                         <div class="form-group row">
                                             <div class="col-sm-4">
                                                 <label for="ays_pb_user_first_name">
-                                                    <?php echo __( "User first name", "ays-popup-box" ); ?>
-                                                    <a class="ays_help" data-toggle="tooltip" title="<?php echo esc_attr( __("Shows the logged-in user's First Name. If the user is not logged-in, the shortcode will be empty.","ays-popup-box") ); ?>">
-                                                        <img src="<?php echo AYS_PB_ADMIN_URL . "/images/icons/info-circle.svg"?>">
+                                                    <?php echo esc_html__( "User first name", "ays-popup-box" ); ?>
+                                                    <a class="ays_help" data-toggle="tooltip" title="<?php echo esc_attr( esc_html__("Shows the logged-in user's First Name. If the user is not logged-in, the shortcode will be empty.","ays-popup-box") ); ?>">
+                                                        <img src="<?php echo esc_url(AYS_PB_ADMIN_URL) . "/images/icons/info-circle.svg"?>">
                                                     </a>
                                                 </label>
                                             </div>
@@ -320,9 +355,9 @@ $categories_title_length = (isset($options['categories_title_length']) && intval
                                         <div class="form-group row">
                                             <div class="col-sm-4">
                                                 <label for="ays_pb_user_last_name">
-                                                    <?php echo __( "User last name", "ays-popup-box" ); ?>
-                                                    <a class="ays_help" data-toggle="tooltip" title="<?php echo esc_attr( __("Shows the logged-in user's Last Name. If the user is not logged-in, the shortcode will be empty.","ays-popup-box") ); ?>">
-                                                            <img src="<?php echo AYS_PB_ADMIN_URL . "/images/icons/info-circle.svg"?>">
+                                                    <?php echo esc_html__( "User last name", "ays-popup-box" ); ?>
+                                                    <a class="ays_help" data-toggle="tooltip" title="<?php echo esc_attr( esc_html__("Shows the logged-in user's Last Name. If the user is not logged-in, the shortcode will be empty.","ays-popup-box") ); ?>">
+                                                            <img src="<?php echo esc_url(AYS_PB_ADMIN_URL) . "/images/icons/info-circle.svg"?>">
                                                     </a>
                                                 </label>
                                             </div>
@@ -336,9 +371,9 @@ $categories_title_length = (isset($options['categories_title_length']) && intval
                                         <div class="form-group row">
                                             <div class="col-sm-4">
                                                 <label for="ays_pb_user_display_name">
-                                                    <?php echo __( "User display name", "ays-popup-box" ); ?>
-                                                    <a class="ays_help" data-toggle="tooltip" title="<?php echo esc_attr( __("Shows the logged-in user's Display name. If the user is not logged-in, the shortcode will be empty.","ays-popup-box") ); ?>">
-                                                            <img src="<?php echo AYS_PB_ADMIN_URL . "/images/icons/info-circle.svg"?>">
+                                                    <?php echo esc_html__( "User display name", "ays-popup-box" ); ?>
+                                                    <a class="ays_help" data-toggle="tooltip" title="<?php echo esc_attr( esc_html__("Shows the logged-in user's Display name. If the user is not logged-in, the shortcode will be empty.","ays-popup-box") ); ?>">
+                                                            <img src="<?php echo esc_url(AYS_PB_ADMIN_URL) . "/images/icons/info-circle.svg"?>">
                                                     </a>
                                                 </label>
                                             </div>
@@ -352,9 +387,9 @@ $categories_title_length = (isset($options['categories_title_length']) && intval
                                         <div class="form-group row">
                                             <div class="col-sm-4">
                                                 <label for="ays_pb_user_nickname">
-                                                    <?php echo __( "User nickname", "ays-popup-box" ); ?>
-                                                    <a class="ays_help" data-toggle="tooltip" title="<?php echo esc_attr( __("Shows the logged-in user's nickname. If the user is not logged-in, the shortcode will be empty.","ays-popup-box") ); ?>">
-                                                            <img src="<?php echo AYS_PB_ADMIN_URL . "/images/icons/info-circle.svg"?>">
+                                                    <?php echo esc_html__( "User nickname", "ays-popup-box" ); ?>
+                                                    <a class="ays_help" data-toggle="tooltip" title="<?php echo esc_attr( esc_html__("Shows the logged-in user's nickname. If the user is not logged-in, the shortcode will be empty.","ays-popup-box") ); ?>">
+                                                            <img src="<?php echo esc_url(AYS_PB_ADMIN_URL) . "/images/icons/info-circle.svg"?>">
                                                     </a>
                                                 </label>
                                             </div>
@@ -368,9 +403,9 @@ $categories_title_length = (isset($options['categories_title_length']) && intval
                                         <div class="form-group row">
                                             <div class="col-sm-4">
                                                 <label for="ays_pb_user_email">
-                                                    <?php echo __( "User email", "ays-popup-box" ); ?>
-                                                    <a class="ays_help" data-toggle="tooltip" title="<?php echo esc_attr( __("Shows the logged-in user's email. If the user is not logged-in, the shortcode will be empty.","ays-popup-box") ); ?>">
-                                                            <img src="<?php echo AYS_PB_ADMIN_URL . "/images/icons/info-circle.svg"?>">
+                                                    <?php echo esc_html__( "User email", "ays-popup-box" ); ?>
+                                                    <a class="ays_help" data-toggle="tooltip" title="<?php echo esc_attr( esc_html__("Shows the logged-in user's email. If the user is not logged-in, the shortcode will be empty.","ays-popup-box") ); ?>">
+                                                            <img src="<?php echo esc_url(AYS_PB_ADMIN_URL) . "/images/icons/info-circle.svg"?>">
                                                     </a>
                                                 </label>
                                             </div>
@@ -384,9 +419,9 @@ $categories_title_length = (isset($options['categories_title_length']) && intval
                                         <div class="form-group row">
                                             <div class="col-sm-4">
                                                 <label for="ays_pb_current_author">
-                                                    <?php echo __( "Show current popup author", "ays-popup-box" ); ?>
-                                                    <a class="ays_help" data-toggle="tooltip" title="<?php echo esc_attr( __("It will show the current author of the particular popup.","ays-popup-box") ); ?>">
-                                                            <img src="<?php echo AYS_PB_ADMIN_URL . "/images/icons/info-circle.svg"?>">
+                                                    <?php echo esc_html__( "Show current popup author", "ays-popup-box" ); ?>
+                                                    <a class="ays_help" data-toggle="tooltip" title="<?php echo esc_attr( esc_html__("It will show the current author of the particular popup.","ays-popup-box") ); ?>">
+                                                            <img src="<?php echo esc_url(AYS_PB_ADMIN_URL) . "/images/icons/info-circle.svg"?>">
                                                     </a>
                                                 </label>
                                             </div>
@@ -399,9 +434,9 @@ $categories_title_length = (isset($options['categories_title_length']) && intval
                                         <div class="form-group row">
                                             <div class="col-sm-4">
                                                 <label for="ays_pb_category_description">
-                                                    <?php echo __( "Show user roles", "ays-popup-box" ); ?>
-                                                    <a class="ays_help" data-toggle="tooltip" title="<?php echo esc_attr( __("Shows the logged-in user's role(s). If the user is not logged-in, the shortcode will be empty.","ays-popup-box") ); ?>">
-                                                        <img src="<?php echo AYS_PB_ADMIN_URL . "/images/icons/info-circle.svg"?>">
+                                                    <?php echo esc_html__( "Show user roles", "ays-popup-box" ); ?>
+                                                    <a class="ays_help" data-toggle="tooltip" title="<?php echo esc_attr( esc_html__("Shows the logged-in user's role(s). If the user is not logged-in, the shortcode will be empty.","ays-popup-box") ); ?>">
+                                                        <img src="<?php echo esc_url(AYS_PB_ADMIN_URL) . "/images/icons/info-circle.svg"?>">
                                                     </a>
                                                 </label>
                                             </div>
@@ -417,16 +452,16 @@ $categories_title_length = (isset($options['categories_title_length']) && intval
                         <fieldset>
                             <legend>
                                 <strong style="font-size:30px;">[ ]</strong>
-                                <h5><?php echo __('Popup categories',"ays-popup-box"); ?></h5>
+                                <h5><?php echo esc_html__('Popup categories',"ays-popup-box"); ?></h5>
                             </legend>
                             <div class="form-group row" style="padding:0px;margin:0;">
                                 <div class="col-sm-12" style="padding:20px;">
                                     <div class="form-group row">
                                         <div class="col-sm-4">
                                             <label for="ays_pb_cat_title">
-                                                <?php echo __( "Shortcode", "ays-popup-box" ); ?>
-                                                <a class="ays_help" data-toggle="tooltip" title="<?php echo __('You need to insert Your Popup Category ID in the shortcode. It will show the category title. If there is no popup category available/unavailable with that particular Popup Box Category ID, the shortcode will stay empty.',"ays-popup-box"); ?>">
-                                                    <img src="<?php echo AYS_PB_ADMIN_URL . "/images/icons/info-circle.svg"?>">
+                                                <?php echo esc_html__( "Shortcode", "ays-popup-box" ); ?>
+                                                <a class="ays_help" data-toggle="tooltip" title="<?php echo esc_html__('You need to insert Your Popup Category ID in the shortcode. It will show the category title. If there is no popup category available/unavailable with that particular Popup Box Category ID, the shortcode will stay empty.',"ays-popup-box"); ?>">
+                                                    <img src="<?php echo esc_url(AYS_PB_ADMIN_URL) . "/images/icons/info-circle.svg"?>">
                                                 </a>
                                             </label>
                                         </div>
@@ -442,9 +477,9 @@ $categories_title_length = (isset($options['categories_title_length']) && intval
                                     <div class="form-group row">
                                         <div class="col-sm-4">
                                             <label for="ays_pb_cat_description">
-                                                <?php echo __( "Shortcode", "ays-popup-box" ); ?>
-                                                <a class="ays_help" data-toggle="tooltip" title="<?php echo __('You need to insert Your Popup Category ID in the shortcode. It will show the category description. If there is no popup category available/unavailable with that particular Popup Box Category ID, the shortcode will stay empty.',"ays-popup-box"); ?>">
-                                                    <img src="<?php echo AYS_PB_ADMIN_URL . "/images/icons/info-circle.svg"?>">
+                                                <?php echo esc_html__( "Shortcode", "ays-popup-box" ); ?>
+                                                <a class="ays_help" data-toggle="tooltip" title="<?php echo esc_html__('You need to insert Your Popup Category ID in the shortcode. It will show the category description. If there is no popup category available/unavailable with that particular Popup Box Category ID, the shortcode will stay empty.',"ays-popup-box"); ?>">
+                                                    <img src="<?php echo esc_url(AYS_PB_ADMIN_URL) . "/images/icons/info-circle.svg"?>">
                                                 </a>
                                             </label>
                                         </div>
@@ -459,16 +494,23 @@ $categories_title_length = (isset($options['categories_title_length']) && intval
                         </div>
                     </div>
                     <div id="tab4" class="ays-pb-tab-content <?php echo ($ays_pb_tab == 'tab4') ? 'ays-pb-tab-content-active' : ''; ?>">
-                        <p class="ays-subtitle">
-                            <?php echo __('Message variables',"ays-popup-box")?>
-                            <a class="ays_help" data-toggle="tooltip" data-html="true" title="<p style='margin-bottom:3px;'><?php echo __( 'You can copy these variables and paste them in the following options from the popup settings', "ays-popup-box" ); ?>:</p>
-                                <p style='padding-left:10px;margin:0;'>- <?php echo __( 'Custom Content', "ays-popup-box" ); ?></p> ">
-                                <img src="<?php echo AYS_PB_ADMIN_URL . "/images/icons/info-circle.svg"?>">
-                            </a>
-                        </p>
+                        <div style="display: flex; justify-content: space-between;">
+                            <p class="ays-subtitle">
+                                <?php echo esc_html__('Message variables',"ays-popup-box")?>
+                                <a class="ays_help" data-toggle="tooltip" data-html="true" title="<p style='margin-bottom:3px;'><?php echo esc_html__( 'You can copy these variables and paste them in the following options from the popup settings', "ays-popup-box" ); ?>:</p>
+                                    <p style='padding-left:10px;margin:0;'>- <?php echo esc_html__( 'Custom Content', "ays-popup-box" ); ?></p> ">
+                                    <img src="<?php echo esc_url(AYS_PB_ADMIN_URL) . "/images/icons/info-circle.svg"?>">
+                                </a>
+                            </p>
+                            <span>
+                                <a class="ays-pb-doc-link" href="https://popup-plugin.com/docs/message-variables-tab" target="_blank" style="font-size: 14px;">
+                                    <?php echo esc_html__('How to Personalize Popups with Message Variables?', "ays-popup-box"); ?>
+                                </a>
+                            </span>
+                        </div>
                         <blockquote>
-                            <p><?php echo __( "You can copy these variables and paste them in the following options from the popup settings", "ays-popup-box" ); ?>:</p>
-                            <p style="text-indent:10px;margin:0;">- <?php echo __( "Custom Content", "ays-popup-box" ); ?></p>
+                            <p><?php echo esc_html__( "You can copy these variables and paste them in the following options from the popup settings", "ays-popup-box" ); ?>:</p>
+                            <p style="text-indent:10px;margin:0;">- <?php echo esc_html__( "Custom Content", "ays-popup-box" ); ?></p>
                         </blockquote>
                         <hr>
                         <div class="form-group row">
@@ -479,7 +521,7 @@ $categories_title_length = (isset($options['categories_title_length']) && intval
                                     </strong>
                                     <span> - </span>
                                     <span style="font-size:18px;">
-                                        <?php echo __( "The title of the popup", "ays-popup-box"); ?>
+                                        <?php echo esc_html__( "The title of the popup", "ays-popup-box"); ?>
                                     </span>
                                 </p>
                                 <p class="vmessage">
@@ -488,7 +530,7 @@ $categories_title_length = (isset($options['categories_title_length']) && intval
                                     </strong>
                                     <span> - </span>
                                     <span style="font-size:18px;">
-                                        <?php echo __( "The user's display name that was filled in their WordPress site during registration.", "ays-popup-box"); ?>
+                                        <?php echo esc_html__( "The user's display name that was filled in their WordPress site during registration.", "ays-popup-box"); ?>
                                     </span>
                                 </p>
                                 <p class="vmessage">
@@ -497,7 +539,7 @@ $categories_title_length = (isset($options['categories_title_length']) && intval
                                     </strong>
                                     <span> - </span>
                                     <span style="font-size:18px;">
-                                        <?php echo __( "The user's email that was filled in their WordPress site during registration.", "ays-popup-box"); ?>
+                                        <?php echo esc_html__( "The user's email that was filled in their WordPress site during registration.", "ays-popup-box"); ?>
                                     </span>
                                 </p>
                                 <p class="vmessage">
@@ -506,7 +548,7 @@ $categories_title_length = (isset($options['categories_title_length']) && intval
                                     </strong>
                                     <span> - </span>
                                     <span style="font-size:18px;">
-                                        <?php echo __( "The user's first name that was filled in their WordPress site during registration.", "ays-popup-box"); ?>
+                                        <?php echo esc_html__( "The user's first name that was filled in their WordPress site during registration.", "ays-popup-box"); ?>
                                     </span>
                                 </p>
                                 <p class="vmessage">
@@ -515,7 +557,16 @@ $categories_title_length = (isset($options['categories_title_length']) && intval
                                     </strong>
                                     <span> - </span>
                                     <span style="font-size:18px;">
-                                        <?php echo __( "The user's last name that was filled in their WordPress site during registration.", "ays-popup-box"); ?>
+                                        <?php echo esc_html__( "The user's last name that was filled in their WordPress site during registration.", "ays-popup-box"); ?>
+                                    </span>
+                                </p>
+                                <p class="vmessage">
+                                    <strong>
+                                        <input type="text" onClick="this.setSelectionRange(0, this.value.length)" readonly value="%%admin_email%%" />
+                                    </strong>
+                                    <span> - </span>
+                                    <span style="font-size:18px;">
+                                        <?php echo esc_html__( "Shows the admin's email that was filled in their WordPress profile.", "ays-popup-box"); ?>
                                     </span>
                                 </p>
                                 <p class="vmessage">
@@ -524,7 +575,7 @@ $categories_title_length = (isset($options['categories_title_length']) && intval
                                     </strong>
                                     <span> - </span>
                                     <span style="font-size:18px;">
-                                        <?php echo __( "It will show the author of the current popup.", "ays-popup-box"); ?>
+                                        <?php echo esc_html__( "It will show the author of the current popup.", "ays-popup-box"); ?>
                                     </span>
                                 </p>
                                 <p class="vmessage">
@@ -533,7 +584,16 @@ $categories_title_length = (isset($options['categories_title_length']) && intval
                                     </strong>
                                     <span> - </span>
                                     <span style="font-size:18px;">
-                                        <?php echo __( "It will show the author email of the current form.", "ays-popup-box"); ?>
+                                        <?php echo esc_html__( "It will show the author email of the current form.", "ays-popup-box"); ?>
+                                    </span>
+                                </p>
+                                <p class="vmessage">
+                                    <strong>
+                                        <input type="text" onClick="this.setSelectionRange(0, this.value.length)" readonly value="%%current_popup_author_display_name%%" class='ays-popup-message-variables-inputs'/>
+                                    </strong>
+                                    <span> - </span>
+                                    <span style="font-size:18px;">
+                                        <?php echo esc_html__( "Shows the current popup author's Display name that was filled in their WordPress profile.", "ays-popup-box"); ?>
                                     </span>
                                 </p>
                                 <p class="vmessage">
@@ -542,7 +602,7 @@ $categories_title_length = (isset($options['categories_title_length']) && intval
                                     </strong>
                                     <span> - </span>
                                     <span style="font-size:18px;">
-                                        <?php echo __( "Prints the webpage link where the current popup is displayed.", "ays-popup-box"); ?>
+                                        <?php echo esc_html__( "Prints the webpage link where the current popup is displayed.", "ays-popup-box"); ?>
                                     </span>
                                 </p>
                                 <p class="vmessage">
@@ -551,7 +611,7 @@ $categories_title_length = (isset($options['categories_title_length']) && intval
                                     </strong>
                                     <span> - </span>
                                     <span style="font-size:18px;">
-                                        <?php echo __( "The user's role(s) when logged-in. In case the user is not logged-in, the field will be empty.", "ays-popup-box"); ?>
+                                        <?php echo esc_html__( "The user's role(s) when logged-in. In case the user is not logged-in, the field will be empty.", "ays-popup-box"); ?>
                                     </span>
                                 </p>
                                 <p class="vmessage">
@@ -560,7 +620,7 @@ $categories_title_length = (isset($options['categories_title_length']) && intval
                                     </strong>
                                     <span> - </span>
                                     <span style="font-size:18px;">
-                                        <?php echo __( "The user's nickname that was filled in their WordPress profile.", "ays-popup-box"); ?>
+                                        <?php echo esc_html__( "The user's nickname that was filled in their WordPress profile.", "ays-popup-box"); ?>
                                     </span>
                                 </p>
                                 <p class="vmessage">
@@ -569,7 +629,7 @@ $categories_title_length = (isset($options['categories_title_length']) && intval
                                     </strong>
                                     <span> - </span>
                                     <span style="font-size:18px;">
-                                        <?php echo __( "The creation date of the popup.", "ays-popup-box"); ?>
+                                        <?php echo esc_html__( "The creation date of the popup.", "ays-popup-box"); ?>
                                     </span>
                                 </p>
                                 <p class="vmessage">
@@ -578,7 +638,160 @@ $categories_title_length = (isset($options['categories_title_length']) && intval
                                     </strong>
                                     <span> - </span>
                                     <span style="font-size:18px;">
-                                        <?php echo __( "It will show the current date upon opening a popup.", "ays-popup-box"); ?>
+                                        <?php echo esc_html__( "It will show the current date upon opening a popup.", "ays-popup-box"); ?>
+                                    </span>
+                                </p>
+                                <p class="vmessage">
+                                    <strong>
+                                        <input type="text" onClick="this.setSelectionRange(0, this.value.length)" readonly value="%%current_time%%" class='ays-pb-message-variables-inputs'/>
+                                    </strong>
+                                    <span> - </span>
+                                    <span style="font-size:18px;">
+                                        <?php echo esc_html__( "It will show the current time upon opening a popup.", "ays-popup-box"); ?>
+                                    </span>
+                                </p>
+                                <p class="vmessage">
+                                    <strong>
+                                        <input type="text" onClick="this.setSelectionRange(0, this.value.length)" readonly value="%%current_day%%" class='ays-pb-message-variables-inputs'/>
+                                    </strong>
+                                    <span> - </span>
+                                    <span style="font-size:18px;">
+                                        <?php echo esc_html__( "It will show the current day upon opening a popup.", "ays-popup-box"); ?>
+                                    </span>
+                                </p>
+                                <p class="vmessage">
+                                    <strong>
+                                        <input type="text" onClick="this.setSelectionRange(0, this.value.length)" readonly value="%%current_month%%" class='ays-pb-message-variables-inputs'/>
+                                    </strong>
+                                    <span> - </span>
+                                    <span style="font-size:18px;">
+                                        <?php echo esc_html__( "It will show the current month upon opening a popup.", "ays-popup-box"); ?>
+                                    </span>
+                                </p>
+                                <p class="vmessage">
+                                    <strong>
+                                        <input type="text" onClick="this.setSelectionRange(0, this.value.length)" readonly value="%%user_id%%" class='ays-pb-message-variables-inputs'/>
+                                    </strong>
+                                    <span> - </span>
+                                    <span style="font-size:18px;">
+                                        <?php echo esc_html__( "The user's ID when logged-in. In case the user is not logged-in, the field will be empty.", "ays-popup-box"); ?>
+                                    </span>
+                                </p>
+                                <p class="vmessage">
+                                    <strong>
+                                        <input type="text" onClick="this.setSelectionRange(0, this.value.length)" readonly value="%%user_registered%%" class='ays-pb-message-variables-inputs'/>
+                                    </strong>
+                                    <span> - </span>
+                                    <span style="font-size:18px;">
+                                        <?php echo esc_html__( "The user's registration date when logged-in. In case the user is not logged-in, the field will be empty.", "ays-popup-box"); ?>
+                                    </span>
+                                </p>
+                                <p class="vmessage">
+                                    <strong>
+                                        <input type="text" onClick="this.setSelectionRange(0, this.value.length)" readonly value="%%post_author_nickname%%" class='ays-pb-message-variables-inputs'/>
+                                    </strong>
+                                    <span> - </span>
+                                    <span style="font-size:18px;">
+                                        <?php echo esc_html__( "Shows the post author's nickname that was filled in their WordPress profile.", "ays-popup-box"); ?>
+                                    </span>
+                                </p>
+                                <p class="vmessage">
+                                    <strong>
+                                        <input type="text" onClick="this.setSelectionRange(0, this.value.length)" readonly value="%%post_author_email%%" class='ays-pb-message-variables-inputs'/>
+                                    </strong>
+                                    <span> - </span>
+                                    <span style="font-size:18px;">
+                                        <?php echo esc_html__( "Shows the post author's email that was filled in their WordPress profile.", "ays-popup-box"); ?>
+                                    </span>
+                                </p>
+                                <p class="vmessage">
+                                    <strong>
+                                        <input type="text" onClick="this.setSelectionRange(0, this.value.length)" readonly value="%%post_author_first_name%%" class='ays-pb-message-variables-inputs'/>
+                                    </strong>
+                                    <span> - </span>
+                                    <span style="font-size:18px;">
+                                        <?php echo esc_html__( "The First name of the author of the post.", "ays-popup-box"); ?>
+                                    </span>
+                                </p>
+                                <p class="vmessage">
+                                    <strong>
+                                        <input type="text" onClick="this.setSelectionRange(0, this.value.length)" readonly value="%%post_author_last_name%%" class='ays-pb-message-variables-inputs'/>
+                                    </strong>
+                                    <span> - </span>
+                                    <span style="font-size:18px;">
+                                        <?php echo esc_html__( "The Last name of the author of the post.", "ays-popup-box"); ?>
+                                    </span>
+                                </p>
+                                <p class="vmessage">
+                                    <strong>
+                                        <input type="text" onClick="this.setSelectionRange(0, this.value.length)" readonly value="%%post_author_display_name%%" class='ays-pb-message-variables-inputs'/>
+                                    </strong>
+                                    <span> - </span>
+                                    <span style="font-size:18px;">
+                                        <?php echo esc_html__( "The Display name of the author of the post.", "ays-popup-box"); ?>
+                                    </span>
+                                </p>
+                                <p class="vmessage">
+                                    <strong>
+                                        <input type="text" onClick="this.setSelectionRange(0, this.value.length)" readonly value="%%post_author_website_url%%" class='ays-pb-message-variables-inputs'/>
+                                    </strong>
+                                    <span> - </span>
+                                    <span style="font-size:18px;">
+                                        <?php echo esc_html__( "The website url of the author of the post.", "ays-popup-box"); ?>
+                                    </span>
+                                </p>
+                                <p class="vmessage">
+                                    <strong>
+                                        <input type="text" onClick="this.setSelectionRange(0, this.value.length)" readonly value="%%post_author_roles%%" class='ays-pb-message-variables-inputs'/>
+                                    </strong>
+                                    <span> - </span>
+                                    <span style="font-size:18px;">
+                                        <?php echo esc_html__( "The role(s) of the author of the post when logged-in. In case the user is not logged-in, the field will be empty.", "ays-popup-box"); ?>
+                                    </span>
+                                </p>
+                                <p class="vmessage">
+                                    <strong>
+                                        <input type="text" onClick="this.setSelectionRange(0, this.value.length)" readonly value="%%post_title%%" class='ays-pb-message-variables-inputs'/>
+                                    </strong>
+                                    <span> - </span>
+                                    <span style="font-size:18px;">
+                                        <?php echo esc_html__( "The Post title of the current post.", "ays-popup-box"); ?>
+                                    </span>
+                                </p>
+                                <p class="vmessage">
+                                    <strong>
+                                        <input type="text" onClick="this.setSelectionRange(0, this.value.length)" readonly value="%%post_id%%" class='ays-pb-message-variables-inputs'/>
+                                    </strong>
+                                    <span> - </span>
+                                    <span style="font-size:18px;">
+                                        <?php echo esc_html__( "The ID of the current post.", "ays-popup-box"); ?>
+                                    </span>
+                                </p>
+                                <p class="vmessage">
+                                    <strong>
+                                        <input type="text" onClick="this.setSelectionRange(0, this.value.length)" readonly value="%%site_title%%" class='ays-pb-message-variables-inputs'/>
+                                    </strong>
+                                    <span> - </span>
+                                    <span style="font-size:18px;">
+                                        <?php echo esc_html__( "The title of the website.", "ays-popup-box"); ?>
+                                    </span>
+                                </p>
+                                <p class="vmessage">
+                                    <strong>
+                                        <input type="text" onClick="this.setSelectionRange(0, this.value.length)" readonly value="%%site_description%%" class='ays-pb-message-variables-inputs'/>
+                                    </strong>
+                                    <span> - </span>
+                                    <span style="font-size:18px;">
+                                        <?php echo esc_html__( "The description of the website.", "ays-popup-box"); ?>
+                                    </span>
+                                </p>
+                                <p class="vmessage">
+                                    <strong>
+                                        <input type="text" onClick="this.setSelectionRange(0, this.value.length)" readonly value="%%home_page_url%%" class='ays-pb-message-variables-inputs'/>
+                                    </strong>
+                                    <span> - </span>
+                                    <span style="font-size:18px;">
+                                        <?php echo esc_html__( "The URL of the home page.", "ays-popup-box"); ?>
                                     </span>
                                 </p>
                             </div>
@@ -597,11 +810,54 @@ $categories_title_length = (isset($options['categories_title_length']) && intval
                 'data-toggle' => 'tooltip',
                 'data-delay'=> '{"show":"300"}'
             );
-            submit_button(__('Save changes', "ays-popup-box"), 'primary ays-button', 'ays_submit', false, $other_attributes);
+            submit_button(esc_html__('Save changes', "ays-popup-box"), 'primary ays-button', 'ays_submit', false, $other_attributes);
             echo $loader_iamge;
             ?>
             </h1>
         </form>
+
+        <div class="ays-modal" id="pro-features-popup-modal">
+            <div class="ays-modal-content">
+                <!-- Modal Header -->
+                <div class="ays-modal-header">
+                    <span class="ays-close-pro-popup">&times;</span>
+                    <!-- <h2></h2> -->
+                </div>
+
+                <!-- Modal body -->
+                <div class="ays-modal-body">
+                   <div class="row">
+                        <div class="col-sm-6 pro-features-popup-modal-left-section">
+                        </div>
+                        <div class="col-sm-6 pro-features-popup-modal-right-section">
+                           <div class="pro-features-popup-modal-right-box">
+                                <div class="pro-features-popup-modal-right-box-icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.2" overflow="visible" preserveAspectRatio="none" viewBox="0 0 24 24" width="50" height="50"><g><path xmlns:default="http://www.w3.org/2000/svg" id="lock" d="M9.33,11.35v-2c0.01-1.47,1.2-2.66,2.67-2.66c1.47,0,2.67,1.2,2.67,2.67v2H9.33V11.35z M17.99,12.35  c0-0.55-0.45-1-1-1h-0.33v-2c0.03-1.25-0.47-2.46-1.37-3.33c-1.8-1.82-4.73-1.83-6.55-0.03C8.73,6,8.72,6.01,8.71,6.02  c-0.9,0.87-1.4,2.08-1.37,3.33v2H7c-0.55,0-1,0.45-1,1v6c0,0.55,0.45,1,1,1h10c0.55,0,1-0.45,1-1v-6l0,0H17.99z" style="fill: rgb(50 49 48);" vector-effect="non-scaling-stroke"/></g></svg>
+                                    <!-- <i class="ays_fa ays_fa_lock"></i> -->
+                                </div>
+
+                                <div class="pro-features-popup-modal-right-box-title"></div>
+
+                                <div class="pro-features-popup-modal-right-box-content"></div>
+
+                                <div class="pro-features-popup-modal-right-box-button">
+                                    <a href="#" class="pro-features-popup-modal-right-box-link" target="_blank"></a>
+                                </div>
+
+                                <div class="pro-features-popup-modal-right-box-footer-text">
+                                    <span class="ays_quiz_small_hint_text_for_message_variables"><?php echo esc_html__( "One-time payment", 'ays-popup-box' ); ?></span>
+                                </div>
+                           </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal footer -->
+                <div class="ays-modal-footer" style="display:none">
+                </div>
+            </div>
+        </div>
+
     </div>
 </div>
 <script>

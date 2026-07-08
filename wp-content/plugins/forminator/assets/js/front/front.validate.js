@@ -41,7 +41,7 @@
 	$.extend( ForminatorFrontValidate.prototype, {
 
 		init: function () {
-			$( '.forminator-select2' ).on('change', this.element, function (e, param1) {
+			$( '.forminator-select2, .forminator-rating' ).on('change', this.element, function (e, param1) {
 				if ( 'forminator_emulate_trigger' !== param1 ) {
 					$( this ).trigger('focusout');
 				}
@@ -71,8 +71,10 @@
 			$form.data('validator', null).unbind('validate').validate({
 
 				ignore( index, element ) {
+					const validationDisabled = $( '#forminator-field-disable_validations' ).is(':checked');
 					// Add support for hidden required fields (uploads, wp_editor) and for skipping pagination when required.
 					return (
+						validationDisabled ||
 						( $( element ).is( ':hidden:not(.do-validate)' ) &&
 								! $( element ).closest(
 									'.forminator-pagination'
@@ -120,6 +122,14 @@
 					if ( $( element ).hasClass('hasDatepicker') === false ) {
 						$( element ).valid();
 					}
+					//validate Confirm email.
+					if ( $( element ).hasClass( 'forminator-email--field' ) ) {
+						let name = $( element ).attr( 'name' ),
+							confirmEmail = $( 'input[name="confirm_' + name + '"]' );
+						if ( confirmEmail.length && confirmEmail.val() ) {
+							confirmEmail.valid();
+						}
+					}
 					$( element ).trigger('validation:focusout');
 				},
 
@@ -129,10 +139,26 @@
 					var holderField = holder.closest( '.forminator-field' );
 					var holderDate  = holder.closest( '.forminator-date-input' );
 					var holderTime  = holder.closest( '.forminator-timepicker' );
+					var holderMultiUpload = holder.closest( '.forminator-multi-upload' );
 					var holderError = '';
 					var getColumn   = false;
 					var getError    = false;
 					var getDesc     = false;
+
+					if (holderMultiUpload.length > 0) {
+						if ( holderField.find( '.forminator-uploaded-file.forminator-has_error' ).length > 0 ) {
+							return;
+						}
+
+						const hasUploadError = Array.isArray(this.errorList) &&
+							this.errorList.some(err =>
+								err.element === element && [ 'required', 'multiFileValid' ].includes( err.method )
+							);
+						if (!hasUploadError) {
+							// Handle validation separately for multi-upload fields except for upload-required errors.
+							return;
+						}
+					}
 
 					var errorMessage    = this.errorMap[element.name];
 					var errorId         = holder.attr('id') + '-error';
@@ -156,12 +182,7 @@
 									$( errorMarkup ).insertBefore( getColumn.find( '.forminator-error-message[data-error-field="year"]' ) );
 
 								} else {
-
-									if ( 0 === getDesc.length ) {
-										getColumn.append( errorMarkup );
-									} else {
-										$( errorMarkup ).insertBefore( getDesc );
-									}
+									forminatorUtils().add_error_message( getDesc, getColumn, errorMarkup );
 								}
 
 								if ( 0 === holderField.find( '.forminator-error-message' ).length ) {
@@ -181,12 +202,7 @@
 									);
 
 								} else {
-
-									if ( 0 === getDesc.length ) {
-										getColumn.append( errorMarkup );
-									} else {
-										$( errorMarkup ).insertBefore( getDesc );
-									}
+									forminatorUtils().add_error_message( getDesc, getColumn, errorMarkup );
 								}
 
 								if ( 0 === holderField.find( '.forminator-error-message' ).length ) {
@@ -198,12 +214,7 @@
 							}
 
 							if ( 'year' === holder.data( 'field' ) ) {
-
-								if ( 0 === getDesc.length ) {
-									getColumn.append( errorMarkup );
-								} else {
-									$( errorMarkup ).insertBefore( getDesc );
-								}
+								forminatorUtils().add_error_message( getDesc, getColumn, errorMarkup );
 
 								if ( 0 === holderField.find( '.forminator-error-message' ).length ) {
 
@@ -238,12 +249,7 @@
 										getColumn.find( '.forminator-error-message[data-error-field="minutes"]' )
 									);
 								} else {
-
-									if ( 0 === getDesc.length ) {
-										getColumn.append( errorMarkup );
-									} else {
-										$( errorMarkup ).insertBefore( getDesc );
-									}
+									forminatorUtils().add_error_message( getDesc, getColumn, errorMarkup );
 								}
 
 								if ( 0 === holderField.find( '.forminator-error-message' ).length ) {
@@ -255,12 +261,7 @@
 							}
 
 							if ( 'minutes' === holder.data( 'field' ) ) {
-
-								if ( 0 === getDesc.length ) {
-									getColumn.append( errorMarkup );
-								} else {
-									$( errorMarkup ).insertBefore( getDesc );
-								}
+								forminatorUtils().add_error_message( getDesc, getColumn, errorMarkup );
 
 								if ( 0 === holderField.find( '.forminator-error-message' ).length ) {
 
@@ -283,12 +284,7 @@
 						var getDesc  = holderField.find( '.forminator-description' );
 
 						if ( 0 === getError.length ) {
-
-							if ( 0 === getDesc.length ) {
-								holderField.append( errorMarkup );
-							} else {
-								$( errorMarkup ).insertBefore( getDesc );
-							}
+							forminatorUtils().add_error_message( getDesc, holderField, errorMarkup );
 						}
 
 						holderError = holderField.find( '.forminator-error-message' );
@@ -324,17 +320,31 @@
 
 					var holder      = $( element );
 					var holderField = holder.closest( '.forminator-field' );
+					var holderMultiUpload = holder.closest( '.forminator-multi-upload' );
 					var holderTime  = holder.closest( '.forminator-timepicker' );
 					var holderDate  = holder.closest( '.forminator-date-input' );
 					var holderError = '';
+					// Skip unhighlight for delete button in upload field.
+					if (holder.hasClass("forminator-uploaded-file--delete")) {
+						return;
+					}
+					if ( holderMultiUpload.length > 0 && holderField.find( '.forminator-uploaded-file.forminator-has_error' ).length > 0 ) {
+						return;
+					}
 
 					var errorId = holder.attr('id') + '-error';
 					var ariaDescribedby = holder.attr('aria-describedby');
+
+					// Check if the field contains custom input for the "Other" option and has an error.
+					var hasCustomOptionError = holder.closest( '.forminator-field-radio, .forminator-field-checkbox, .forminator-field-select' ).find('.forminator-custom-input.forminator-has_error').length > 0;
 
 					if ( holderDate.length > 0 ) {
 						holderError = holderDate.parent().find( '.forminator-error-message[data-error-field="' + holder.data( 'field' ) + '"]' );
 					} else if ( holderTime.length > 0 ) {
 						holderError = holderTime.parent().find( '.forminator-error-message[data-error-field="' + holder.data( 'field' ) + '"]' );
+					} else if ( hasCustomOptionError ) {
+						// If the "Other" option and has an error, don't remove the custom input error.
+						holderError = holder.closest( '.forminator-field-radio, .forminator-field-checkbox, .forminator-field-select' ).find( '#' + errorId );
 					} else {
 						holderError = holderField.find( '.forminator-error-message' );
 					}
@@ -354,12 +364,14 @@
 					// Remove invalid attribute for screen readers
 					holder.removeAttr( 'aria-invalid' );
 
-					// Remove error message
-					holderError.remove();
+					setTimeout( function () {
+						// Remove error message
+						holderError.remove();
 
-					// Remove error class
-					holderField.removeClass( 'forminator-has_error' );
-					holder.trigger('validation:unhighlight');
+						// Remove error class
+						holderField.removeClass( 'forminator-has_error' );
+						holder.trigger('validation:unhighlight');
+					}, 100 ); // Small timeout to ensure the submit button can be clicked.
 
 				},
 
@@ -367,12 +379,15 @@
 
 				messages: messages
 
-			});
+		});
 
 			$form.off('forminator.validate.signature').on('forminator.validate.signature', function () {
-				//validator.element( $( this ).find( "input[id$='_data']" ) );
 				var validator = $( this ).validate();
-				validator.form();
+				var $signatureInput = $( this ).find( "input[id$='_data']" );
+				// Only validate if the element exists and has a type property
+				if ( $signatureInput.length && $signatureInput[0] && typeof $signatureInput[0].type !== 'undefined' ) {
+					validator.element( $signatureInput );
+				}
 			});
 
 			// Inline validation for upload field.
@@ -389,6 +404,20 @@
 			// Trigger change for the required checkbox field.
 			$( '.forminator-field.required input[type="checkbox"]' ).on( 'input', function () {
 				$( this ).not( ':checked' ).trigger( 'focusout' );
+			});
+
+			// Remove error messages after disabling validation.
+			$(document).on('change', '#forminator-field-disable_validations', function () {
+				const validationDisabled = $(this).is(':checked');
+				const validator = $form.data('validator');
+
+				if (validationDisabled && validator) {
+					validator.resetForm();
+					// Manually call unhighlight to remove error messages.
+					$form.find(':input').each(function () {
+						validator.settings.unhighlight(this);
+					});
+				}
 			});
 		}
 	});
@@ -450,6 +479,17 @@
 					'yy.mm.dd' === param
 				? /^\d{4}-\d{1,2}-\d{1,2}$/ : /^\d{1,2}-\d{1,2}-\d{4}$/,
 			adata, gg, mm, aaaa, xdata;
+		value = value.trim();
+		// Reject if the value doesn't use the separator the admin configured.
+		var expectedSep = param.indexOf('/') !== -1 ? '/' : ( param.indexOf('.') !== -1 ? '.' : '-' );
+		var separators = value.match(/[\/.\-\s]/g);
+		if ( separators ) {
+			for ( var i = 0; i < separators.length; i++ ) {
+				if ( separators[i] !== expectedSep ) {
+					return this.optional(element) || check;
+				}
+			}
+		}
 		value = value.replace(/[ /.]/g, '-');
 		if (re.test(value)) {
 			if ('dd/mm/yy' === param || 'dd-mm-yy' === param || 'dd.mm.yy' === param) {
@@ -509,6 +549,32 @@
 	$.validator.addMethod("trim", function( value, element, param ) {
 		return true === this.optional( element ) || 0 !== value.trim().length;
 	});
+	$.validator.addMethod("equalToClosestEmail", function (value, element, param) {
+		let target = $(element).closest('.forminator-row-with-confirmation-email').find('input[type="email"]').first();
+		return target.length && value === target.val();
+	} );
+	$.validator.addMethod("emailFilter", function (email, element, param) {
+		if ( ! email )	{
+			return true;
+		}
+		const emailList = param.email_list.split('|'),
+			isDeny = 'deny' === param.filter_type;
+
+		for (let item of emailList) {
+			// Remove spaces in email addresses.
+			item = item.replace(/[\s\n\r\t]/g, '');
+			// Escape special characters.
+			item = item.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+			// Support * as wildcard.
+			item = item.replace(/\\\*/g, '.*');
+			// Add end delimiter.
+			const regex = new RegExp(item + '$');
+			if (regex.test(email)) {
+				return ! isDeny;
+			}
+		}
+		return isDeny;
+	} );
 	$.validator.addMethod("emailWP", function (value, element, param) {
 		if (this.optional(element)) {
 			return true;
@@ -558,34 +624,42 @@
 	});
 	$.validator.addMethod("forminatorPasswordStrength", function (value, element, param) {
 		var passwordStrength = value.trim();
+		var allowedLevels = [ 'short', 'bad', 'good', 'strong' ];
+		var level = ( typeof param === 'string' && allowedLevels.indexOf( param ) !== -1 ) ? param : 'strong';
 
 		// Password is optional and is empty so don't check strength.
 		if ( passwordStrength.length == 0 ) {
 			return true;
 		}
 
-		//at least 8 characters
-		if ( ! passwordStrength || passwordStrength.length < 8) {
+		var minLengths = { 'short': 4, 'bad': 6, 'good': 8, 'strong': 8 };
+		var minLength = minLengths[ level ];
+
+		if ( ! passwordStrength || passwordStrength.length < minLength ) {
 			return false;
 		}
 
+		// 'short' level only checks minimum length.
+		if ( level === 'short' ) {
+			return true;
+		}
+
+		// Enforce required character classes before scoring.
+		var hasDigit   = /[0-9]/.test( passwordStrength );
+		var hasLower   = /[a-z]/.test( passwordStrength );
+		var hasUpper   = /[A-Z]/.test( passwordStrength );
+		var hasSpecial = /[^a-zA-Z0-9]/.test( passwordStrength );
+
+		if ( level === 'bad'    && ! ( ( hasLower || hasUpper ) && hasDigit ) ) { return false; }
+		if ( level === 'good'   && ! ( hasLower && hasUpper && hasDigit ) )      { return false; }
+		if ( level === 'strong' && ! ( hasLower && hasUpper && hasDigit && hasSpecial ) ) { return false; }
+
+		// Build the character-set size using the already-computed class flags.
 		var symbolSize = 0, natLog, score;
-		//at least one number
-		if ( passwordStrength.match(/[0-9]/) ) {
-			symbolSize += 10;
-		}
-		//at least one lowercase letter
-		if ( passwordStrength.match(/[a-z]/) ) {
-			symbolSize += 20;
-		}
-		//at least one uppercase letter
-		if ( passwordStrength.match(/[A-Z]/) ) {
-			symbolSize += 20;
-		}
-		if ( passwordStrength.match(/[^a-zA-Z0-9]/) ) {
-			symbolSize += 30;
-		}
-		//at least one special character
+		if ( hasDigit )   { symbolSize += 10; }
+		if ( hasLower )   { symbolSize += 20; }
+		if ( hasUpper )   { symbolSize += 20; }
+		if ( hasSpecial ) { symbolSize += 30; }
 		if ( passwordStrength.match(/[=!\-@.,_*#&?^`%$+\/{\[\]|}^?~]/) ) {
 			symbolSize += 30;
 		}
@@ -593,7 +667,10 @@
 		natLog = Math.log( Math.pow(symbolSize, passwordStrength.length) );
 		score = natLog / Math.LN2;
 
-		return score >= 54;
+		var thresholds = { 'bad': 25, 'good': 40, 'strong': 54 };
+		var threshold = thresholds[ level ];
+
+		return score >= threshold;
 	});
 
 	$.validator.addMethod("extension", function (value, element, param) {
@@ -612,6 +689,17 @@
 		}
 
 		return this.optional(element) || check;
+	});
+
+	$.validator.addMethod("multiFileValid", function (value, element, param) {
+		const $element = $(element),
+			$field = $element.closest( '.forminator-field' ),
+			hasFileError = $field.find( '.forminator-uploaded-file.forminator-has_error' ).length > 0,
+			hasFiles = $field.find( '.forminator-uploaded-files li' ).length > 0,
+			isRequired = $element.hasClass( 'forminator-input-file-required' );
+
+		// Keep multi-upload validity aligned with the rendered file list, not the hidden input value.
+		return ! hasFileError && ( hasFiles || ! isRequired );
 	});
 
 	// $.validator.methods.required = function(value, element, param) {
@@ -664,6 +752,37 @@
 		return true !== chosenTime ? comparison: true;
 	});
 
+	// Validate custom input for "Other" option.
+	$.validator.addMethod( 'customInputForOtherOption', function ( value, element, param ) {
+		let name = $( element ).attr( 'name' );
+		let optionName = name.replace( 'custom-', '' );
+		if( param === 'radio' || param === 'single-select' ) {
+			let optionValue = null;
+			if( param === 'radio' ) {
+				optionValue = $( element ).closest( '#' + optionName ).find( 'input[name="' + optionName + '"]:checked' ).val();
+			} else {
+				optionValue = $( element ).closest( '#' + optionName ).find( 'select[name="' + optionName + '"] option:selected' ).val();
+			}
+			if( optionValue === 'custom_option' ) {
+				return 0 !== value.trim().length;
+			}
+		} else if( param === 'checkbox' || param === 'multi-select' ) {
+			let checkedOptions = null;
+			if( param === 'checkbox' ) {
+				checkedOptions = $( element ).closest( '#' + optionName ).find( 'input[name="' + optionName + '[]"]:checked' );
+			} else {
+				checkedOptions = $( element ).closest( '#' + optionName ).find( 'select[name="' + optionName + '[]"] option:selected' );
+			}
+			let optionValues = checkedOptions.map(function () {
+				return this.value;
+			}).get();
+			if( optionValues.includes( 'custom_option' ) ) {
+				return 0 !== value.trim().length;
+			}
+		}
+		return true;
+	});
+
 	function parseFloatFromString( value ) {
 		value = String( value ).trim();
 
@@ -704,7 +823,7 @@
 				minutes = minutesDiv.find( '.time-minutes' ).val();
 			}
 
-			meridiem = minutesDiv.next().find( 'select[name$="ampm"] option:selected' ).val();
+			meridiem = minutesDiv.next().find( 'select.time-ampm option:selected' ).val();
 		}
 
 		if (

@@ -5,16 +5,8 @@
  * @package Forminator
  */
 
-$entries          = $this->get_entries();
-$form_type        = $this->get_form_type();
-$count            = $this->get_total_entries();
-$entries_per_page = $this->get_per_page();
-$first_item       = $count;
-$page_number      = $this->get_paged();
-
-if ( $page_number > 1 ) {
-	$first_item = $count - ( ( $page_number - 1 ) * $entries_per_page );
-}
+$entries   = $this->get_entries();
+$form_type = $this->get_form_type();
 ?>
 
 <?php foreach ( $entries as $entry ) : ?>
@@ -25,7 +17,7 @@ if ( $page_number > 1 ) {
 			<label class="sui-checkbox">
 				<input name="ids[]" value="<?php echo esc_attr( $entry->entry_id ); ?>" type="checkbox" id="quiz-answer-<?php echo esc_attr( $entry->entry_id ); ?>">
 				<span></span>
-				<div class="sui-description"><?php echo esc_attr( $first_item ); ?></div>
+				<div class="sui-description"><?php echo esc_attr( $entry->entry_id ); ?></div>
 			</label>
 		</td>
 
@@ -49,7 +41,7 @@ if ( $page_number > 1 ) {
 					<?php // ROW: Title. ?>
 					<div class="fui-entries-block">
 
-						<h2 class="fui-entries-title"><?php echo '#' . esc_attr( $first_item ); ?></h2>
+						<h2 class="fui-entries-title"><?php echo '#' . esc_attr( $entry->entry_id ); ?></h2>
 
 						<p class="sui-description"><?php echo esc_html( gmdate( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), strtotime( $entry->date_created_sql ) ) ); ?></p>
 
@@ -256,6 +248,5 @@ if ( $page_number > 1 ) {
 	</tr>
 
 	<?php
-	--$first_item;
 
 endforeach;

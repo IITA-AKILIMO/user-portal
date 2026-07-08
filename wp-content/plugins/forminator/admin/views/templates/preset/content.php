@@ -14,7 +14,7 @@ $templates_categories = $custom_form_instance->get_templates_categories();
 	role="tabpanel"
 	tabindex="0"
 	id="all-templates-content"
-	class="sui-tab-content active"
+	class="sui-tab-content<?php echo 'preset' === $args['current_tab'] ? ' active' : ''; ?>"
 	aria-labelledby="all-templates"
 >
 	<div class="sui-row-with-sidenav">
@@ -64,7 +64,6 @@ $templates_categories = $custom_form_instance->get_templates_categories();
 								/>
 							</div>
 						</div>
-
 <!--						<div class="sui-actions-right">-->
 <!--							<div class="sui-pagination-wrap">-->
 								<!-- ELEMENT: List of Pages. -->
