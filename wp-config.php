@@ -101,6 +101,9 @@ define('FS_CHMOD_FILE', 0644);
 #define( 'WP_DEBUG_DISPLAY', true);
 //@ini_set( 'display_errors', 0 );
 /* Add any custom values between this line and the "stop editing" line. */
+define( 'FORMINATOR_ENCRYPTION_KEY', 'lGG**`VO*l|Or5vix$0JexRmW(Fg1Q0(an]qVlE19#:r|i,#F!vl&Vf&&&anNw7K' );
+
+
 /* That's all, stop editing! Happy publishing. */
 /** Absolute path to the WordPress directory. */
 if ( ! defined( 'ABSPATH' ) ) {
